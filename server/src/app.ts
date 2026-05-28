@@ -8,43 +8,21 @@ import expressWs from "express-ws";
 import logger from "morgan";
 import cors from "cors";
 import buildRoute from "@/core";
-import path from "path";
 import fs from "fs";
 import u from "@/utils";
 import jwt from "jsonwebtoken";
 import socketInit from "@/socket/index";
-import { isEletron } from "@/utils/getPath";
 
 const app = express();
 const server = http.createServer(app);
 
-async function checkPermissions() {
-  if (!isEletron()) return true;
-  const userDataPath = u.getPath();
-  try {
-    fs.mkdirSync(userDataPath, { recursive: true });
-    const testFile = path.join(userDataPath, ".access_test");
-    fs.writeFileSync(testFile, "test");
-    fs.unlinkSync(testFile);
-  } catch (e) {
-    const { dialog, app } = require("electron");
-    const { response } = await dialog.showMessageBox({
-      type: "warning",
-      title: "权限不足",
-      message: "应用无法访问数据目录",
-      detail: `无法读写以下目录：\n${userDataPath}\n\n请联系管理员授予权限，或以管理员身份运行本程序。`,
-      buttons: ["确认退出"],
-      defaultId: 0,
-    });
-    if (response === 0) {
-      app.quit();
-    }
-  }
+function resolvePort(randomPort: boolean): number {
+  if (randomPort) return 0;
+  const port = Number.parseInt(process.env.PORT ?? "", 10);
+  return Number.isFinite(port) && port > 0 ? port : 10588;
 }
 
-export default async function startServe(randomPort: Boolean = false) {
-  await checkPermissions();
-
+export default async function startServe(randomPort: boolean = false) {
   await u.writeVersion();
   const io = new Server(server, { cors: { origin: "*" } });
   socketInit(io);
@@ -133,11 +111,12 @@ export default async function startServe(randomPort: Boolean = false) {
     res.status(err.status || 500).send(err);
   });
 
-  const port = randomPort ? 0 : 10588;
+  const port = resolvePort(randomPort);
   return await new Promise((resolve) => {
     server.listen(port, async () => {
       const address = server.address();
       const realPort = typeof address === "string" ? address : address?.port;
+      if (realPort) process.env.PORT = String(realPort);
       console.log(`[服务启动成功]: http://localhost:${realPort}`);
       resolve(realPort);
     });
@@ -159,5 +138,6 @@ export function closeServe(): Promise<void> {
   });
 }
 
-const isElectron = typeof process.versions?.electron !== "undefined";
-if (!isElectron) startServe();
+if (require.main === module) {
+  void startServe();
+}
