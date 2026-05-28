@@ -6,6 +6,7 @@ import { error, success } from "@/lib/responseFormat";
 import { validateFields } from "@/middleware/middleware";
 import { Output, tool } from "ai";
 import { assetItemSchema } from "@/agents/productionAgent/tools";
+import { resolveNegativePrompt } from "@/utils/negativePrompt";
 const router = express.Router();
 export type AssetData = z.infer<typeof assetItemSchema>;
 
@@ -47,6 +48,7 @@ export default router.post(
     }
 
     const projectSettingData = await u.db("o_project").where("id", projectId).select("imageModel", "imageQuality", "artStyle", "videoRatio").first();
+    const storyboardNegativePromptSource = u.getArtPrompt(projectSettingData?.artStyle ?? "", "art_skills", "director_storyboard");
 
     // 按 sort 顺序查出每个 storyboard 关联的 assetId 有序列表
     const assets2StoryboardRows = await u
@@ -86,6 +88,7 @@ export default router.post(
           src: null,
           state: i.state,
           videoDesc: i.videoDesc,
+          negativePrompt: i.negativePrompt,
           shouldGenerateImage: i.shouldGenerateImage,
         })),
       ),
@@ -94,13 +97,21 @@ export default router.post(
     const generateTask = async (item: (typeof storyboardData)[number]) => {
       const repeloadObj = {
         prompt: item.prompt!,
+        negativePrompt: resolveNegativePrompt(
+          { prompt: item.prompt!, negativePromptSource: storyboardNegativePromptSource },
+          { mediaType: "image", modelKey: projectSettingData?.imageModel as `${string}:${string}` },
+        ),
         size: projectSettingData?.imageQuality as "1K" | "2K" | "4K",
         aspectRatio: projectSettingData?.videoRatio as `${number}:${number}`,
       };
       try {
+        await u.db("o_storyboard").where("id", item.id).update({
+          negativePrompt: repeloadObj.negativePrompt,
+        });
         const imageCls = await u.Ai.Image(projectSettingData?.imageModel as `${string}:${string}`).run(
           {
             referenceList: await getAssetsImageBase64(assetRecord[item.id!] || []),
+            negativePromptSource: storyboardNegativePromptSource,
             ...repeloadObj,
           },
           {

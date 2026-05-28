@@ -70,6 +70,14 @@ export default async (knex: Knex): Promise<void> => {
   await addColumn("o_assets2Storyboard", "sort", "integer");
   await addColumn("o_modelPrompt", "fileName", "string");
   await addColumn("o_modelPrompt", "path", "string");
+  await addColumn("o_tasks", "prompt", "text");
+  await addColumn("o_tasks", "negativePrompt", "text");
+  await addColumn("o_image", "prompt", "text");
+  await addColumn("o_image", "negativePrompt", "text");
+  await addColumn("o_storyboard", "negativePrompt", "text");
+  await addColumn("o_video", "prompt", "text");
+  await addColumn("o_video", "negativePrompt", "text");
+  await addColumn("o_videoTrack", "negativePrompt", "text");
   if (isMysql(knex)) await alterColumnType("memories", "role", "text");
   if (isMysql(knex)) await alterColumnType("o_tasks", "relatedObjects", "text");
 
@@ -228,5 +236,9 @@ export default async (knex: Knex): Promise<void> => {
   const minimaxVer = await u.vendor.getVendor("minimax").version;
   if (Number(minimaxVer) < 2.1) {
     u.vendor.writeCode("minimax", vendorData["minimax.ts"]);
+  }
+  const klingVer = await u.vendor.getVendor("klingai").version;
+  if (Number(klingVer) < 2.1) {
+    u.vendor.writeCode("klingai", vendorData["klingai.ts"]);
   }
 };

@@ -3,6 +3,7 @@ import { devToolsMiddleware } from "@ai-sdk/devtools";
 import axios from "axios";
 import { transform } from "sucrase";
 import u from "@/utils";
+import { NegativePromptContext, NegativePromptInput, resolveNegativePrompt, withNegativePrompt } from "@/utils/negativePrompt";
 
 type AiType =
   | "scriptAgent"
@@ -146,10 +147,17 @@ async function withTaskRecord<T>(
   relatedObjects: string,
   projectId: number,
   fn: (modelName: `${string}:${string}`, think: Boolean, thinkLevel: 0 | 1 | 2 | 3) => Promise<T>,
+  generationDetails?: GenerationTaskDetails | ((modelName: `${string}:${string}`) => GenerationTaskDetails | Promise<GenerationTaskDetails>),
 ): Promise<T> {
   const modelName = await resolveModelName(modelKey);
   const [_, model] = modelName.split(/:(.+)/);
-  const taskRecord = await u.task(projectId, taskClass, model, { describe: describe, content: relatedObjects });
+  const details = typeof generationDetails === "function" ? await generationDetails(modelName) : generationDetails;
+  const taskRecord = await u.task(projectId, taskClass, model, {
+    describe: describe,
+    content: relatedObjects,
+    prompt: details?.prompt,
+    negativePrompt: details?.negativePrompt,
+  });
   try {
     const result = await fn(modelName, false, 0);
 
@@ -231,6 +239,9 @@ export type ReferenceList = { type: "image"; base64: string } | { type: "audio";
 
 interface ImageConfig {
   prompt: string;
+  negativePrompt?: string;
+  negativePromptSource?: string;
+  disableNegativePrompt?: boolean;
   referenceList?: Extract<ReferenceList, { type: "image" }>[];
   size: "1K" | "2K" | "4K";
   aspectRatio: `${number}:${number}`;
@@ -243,6 +254,19 @@ interface TaskRecord {
   projectId: number; // 项目ID
 }
 
+interface GenerationTaskDetails {
+  prompt?: string;
+  negativePrompt?: string;
+}
+
+function buildGenerationTaskDetails(input: NegativePromptInput, context: NegativePromptContext): GenerationTaskDetails {
+  const requestInput = withNegativePrompt(input, context);
+  return {
+    prompt: requestInput.prompt,
+    negativePrompt: requestInput.negativePrompt ?? resolveNegativePrompt(input, context),
+  };
+}
+
 class AiImage {
   private key: `${string}:${string}`;
   private result: string = "";
@@ -253,13 +277,16 @@ class AiImage {
     const modelName = await resolveModelName(this.key);
     const exec = async (mn: `${string}:${string}`) => {
       const fn = await getVendorTemplateFn("imageRequest", mn);
-      await referenceList2imageBase642(mn.split(/:(.+)/)[0], input);
-      this.result = await fn(input);
+      const requestInput = withNegativePrompt(input, { mediaType: "image", modelKey: mn });
+      await referenceList2imageBase642(mn.split(/:(.+)/)[0], requestInput);
+      this.result = await fn(requestInput);
       if (this.result.startsWith("http")) this.result = await urlToBase64(this.result);
       return this;
     };
     if (taskRecord) {
-      await withTaskRecord(this.key, taskRecord.taskClass, taskRecord.describe, taskRecord.relatedObjects, taskRecord.projectId, exec);
+      await withTaskRecord(this.key, taskRecord.taskClass, taskRecord.describe, taskRecord.relatedObjects, taskRecord.projectId, exec, (mn) =>
+        buildGenerationTaskDetails(input, { mediaType: "image", modelKey: mn }),
+      );
       return this;
     }
     await exec(modelName);
@@ -284,6 +311,9 @@ interface VideoConfig {
   resolution: string;
   aspectRatio: "16:9" | "9:16";
   prompt: string;
+  negativePrompt?: string;
+  negativePromptSource?: string;
+  disableNegativePrompt?: boolean;
   referenceList?: ReferenceList[];
   audio?: boolean;
   mode: VideoMode[];
@@ -300,14 +330,17 @@ class AiVideo {
     try {
       const exec = async (mn: `${string}:${string}`) => {
         const fn = await getVendorTemplateFn("videoRequest", mn);
-        await referenceList2imageBase642(mn.split(/:(.+)/)[0], input);
+        const requestInput = withNegativePrompt(input, { mediaType: "video", modelKey: mn });
+        await referenceList2imageBase642(mn.split(/:(.+)/)[0], requestInput);
 
-        this.result = await fn(input);
+        this.result = await fn(requestInput);
 
         if (this.result.startsWith("http")) this.result = await urlToBase64(this.result);
       };
       if (taskRecord) {
-        await withTaskRecord(this.key, taskRecord.taskClass, taskRecord.describe, taskRecord.relatedObjects, taskRecord.projectId, exec);
+        await withTaskRecord(this.key, taskRecord.taskClass, taskRecord.describe, taskRecord.relatedObjects, taskRecord.projectId, exec, (mn) =>
+          buildGenerationTaskDetails(input, { mediaType: "video", modelKey: mn }),
+        );
         return this;
       }
       await exec(modelName);

@@ -19,9 +19,11 @@ export default async function taskRecord(
   opts: {
     describe?: string;
     content?: any;
+    prompt?: string;
+    negativePrompt?: string;
   } = {},
 ) {
-  const { content, describe = "" } = opts;
+  const { content, describe = "", prompt, negativePrompt } = opts;
 
   let opteorContent: string | undefined;
   if (content === undefined || content === null) {
@@ -44,6 +46,8 @@ export default async function taskRecord(
     relatedObjects: opteorContent,
     model: modelName,
     describe,
+    prompt,
+    negativePrompt,
     state: taskStateMap[0],
     startTime: Date.now(),
   });

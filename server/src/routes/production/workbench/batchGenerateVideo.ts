@@ -5,6 +5,7 @@ import { v4 as uuidv4 } from "uuid";
 import { success } from "@/lib/responseFormat";
 import { validateFields } from "@/middleware/middleware";
 import { ReferenceList } from "@/utils/ai";
+import { resolveNegativePrompt } from "@/utils/negativePrompt";
 const router = express.Router();
 
 type Type = "imageReference" | "startImage" | "endImage" | "videoReference" | "audioReference";
@@ -53,7 +54,8 @@ export default router.post(
     }
 
     // 获取生成视频比例
-    const ratio = await u.db("o_project").select("videoRatio").where("id", projectId).first();
+    const project = await u.db("o_project").select("videoRatio", "artStyle").where("id", projectId).first();
+    const negativePromptSource = u.getArtPrompt(project?.artStyle ?? "", "art_skills", "director_storyboard");
 
     // 为每个 track 预处理数据并插入数据库，返回任务列表
     const tasks = await Promise.all(
@@ -80,21 +82,25 @@ export default router.post(
         );
 
         const videoPath = `/${projectId}/video/${uuidv4()}.mp4`;
+        const negativePrompt = resolveNegativePrompt({ prompt, negativePromptSource }, { mediaType: "video", modelKey: model });
         const [videoId] = await u.db("o_video").insert({
           filePath: videoPath,
           time: Date.now(),
           state: "生成中",
+          prompt,
+          negativePrompt,
           scriptId,
           projectId,
           videoTrackId: trackId,
         });
+        await u.db("o_videoTrack").where("id", trackId).update({ negativePrompt });
 
-        return { videoId, videoPath, prompt, duration, images, trackId };
+        return { videoId, videoPath, prompt, negativePrompt, duration, images, trackId };
       }),
     );
 
     res.status(200).send(success(tasks.map((t) => ({ videoId: t.videoId, trackId: t.trackId }))));
-    for (const { videoId, videoPath, prompt, duration, images } of tasks) {
+    for (const { videoId, videoPath, prompt, negativePrompt, duration, images } of tasks) {
       // 所有任务全部并发后台执行，完全不阻塞任何进程
       const base64 = await Promise.all(
         images.map(async (item) => {
@@ -102,16 +108,18 @@ export default router.post(
           return { base64: await u.oss.getImageBase64(item.path), type: item.sources == "audio" ? "audio" : "image" };
         }),
       );
-      const relatedObjects = { projectId, videoId, scriptId, type: "视频" };
+      const relatedObjects = { projectId, videoId, scriptId, type: "视频", prompt, negativePrompt };
       const aiVideo = u.Ai.Video(model);
       aiVideo
         .run(
           {
             prompt,
+            negativePrompt,
+            negativePromptSource,
             referenceList: base64.filter(Boolean) as ReferenceList[],
             mode: modeData.length > 0 ? modeData : mode,
             duration,
-            aspectRatio: (ratio?.videoRatio as "16:9" | "9:16") || "16:9",
+            aspectRatio: (project?.videoRatio as "16:9" | "9:16") || "16:9",
             resolution,
             audio,
           },

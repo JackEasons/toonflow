@@ -53,6 +53,7 @@
 
 - **视觉风格**：风格相关描述参考 Assistant 中的「视觉风格约束」部分内容，不在本 Skill 内自行定义风格
 - **仅输出视频提示词**：不附加任何解释、注释、分析过程、推理步骤、分隔线（`---`）或额外说明
+- **负面约束必填**：在提示词正文末尾加入 `[Negative constraints]`，至少包含 `low quality, blurry, flicker, jitter, morphing body, identity drift, temporal inconsistency, deformed anatomy, bad hands, duplicated subjects, subtitles, watermark, logo, UI text, title overlay`。若目标模型使用中文提示词，可输出对应中文负面约束；不要把该段写成解释说明
 - **严格遵循 videoDesc**：提示词内容严格基于 videoDesc 中的12个字段生成，不编造额外内容
 - **台词不可缺失**：videoDesc 中有台词的分镜，必须在提示词中完整体现台词内容，不得遗漏
 - **台词保持原始输入**：台词内容严禁翻译，必须保持 videoDesc 中的原始语言原样输出

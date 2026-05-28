@@ -1314,6 +1314,8 @@
         "relatedObjects": "Đối tượng liên quan",
         "model": "Mô hình",
         "describe": "Mô tả",
+        "prompt": "Prompt tạo",
+        "negativePrompt": "Prompt phủ định",
         "state": "Trạng thái",
         "startTime": "Thời gian",
         "reason": "Lý do thất bại"

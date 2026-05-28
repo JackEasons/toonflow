@@ -1477,6 +1477,8 @@
         "relatedObjects": "Related Objects",
         "model": "Model",
         "describe": "Description",
+        "prompt": "Generation Prompt",
+        "negativePrompt": "Negative Prompt",
         "state": "Status",
         "startTime": "Time",
         "reason": "Reason for failure"

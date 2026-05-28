@@ -4,6 +4,7 @@ import { z } from "zod";
 import { v4 as uuidv4 } from "uuid";
 import { error, success } from "@/lib/responseFormat";
 import { validateFields } from "@/middleware/middleware";
+import { resolveNegativePrompt } from "@/utils/negativePrompt";
 
 const router = express.Router();
 
@@ -15,6 +16,7 @@ interface AssetTypeConfig {
   dir: string;
   promptTitle: string;
   promptEnd: string;
+  visualPromptKey: string;
 }
 
 const assetTypeConfig: Record<AssetType, AssetTypeConfig> = {
@@ -24,6 +26,7 @@ const assetTypeConfig: Record<AssetType, AssetTypeConfig> = {
     dir: "role",
     promptTitle: "角色标准四视图",
     promptEnd: "人物角色四视图",
+    visualPromptKey: "art_character",
   },
   scene: {
     label: "场景",
@@ -31,6 +34,7 @@ const assetTypeConfig: Record<AssetType, AssetTypeConfig> = {
     dir: "scene",
     promptTitle: "标准场景图",
     promptEnd: "标准场景图",
+    visualPromptKey: "art_scene",
   },
   tool: {
     label: "道具",
@@ -38,6 +42,7 @@ const assetTypeConfig: Record<AssetType, AssetTypeConfig> = {
     dir: "props",
     promptTitle: "标准道具图",
     promptEnd: "标准道具图",
+    visualPromptKey: "art_prop",
   },
 };
 
@@ -81,6 +86,10 @@ export default router.post("/", validateFields(requestSchema), async (req, res) 
   const cfg = assetTypeConfig[type as AssetType];
   if (!cfg) return res.status(400).send(error("不支持的类型"));
 
+  const userPrompt = buildPrompt(cfg, project.artStyle!, name, prompt);
+  const negativePromptSource = u.getArtPrompt(project.artStyle ?? "", "art_skills", cfg.visualPromptKey);
+  const negativePrompt = resolveNegativePrompt({ prompt: userPrompt, negativePromptSource }, { mediaType: "image", modelKey: model });
+
   // 2. 创建图片占位记录
   const [imageId] = await u.db("o_image").insert({
     type,
@@ -88,20 +97,23 @@ export default router.post("/", validateFields(requestSchema), async (req, res) 
     assetsId: id,
     model: model.split(/:(.+)/)[1],
     resolution,
+    prompt: userPrompt,
+    negativePrompt,
   });
   await u.db("o_assets").where("id", id).update({ imageId });
 
   // 3. 准备生成参数
   const imagePath = `/${projectId}/${cfg.dir}/${uuidv4()}.jpg`;
-  const userPrompt = buildPrompt(cfg, project.artStyle!, name, prompt);
   const describe = `生成${cfg.label}图，名称：${name}，提示词：${prompt}`;
-  const relatedObjects = { id, projectId, type: cfg.label };
+  const relatedObjects = { id, projectId, type: cfg.label, prompt: userPrompt, negativePrompt };
 
   try {
     const aiImage = u.Ai.Image(model);
     await aiImage.run(
       {
         prompt: userPrompt,
+        negativePrompt,
+        negativePromptSource,
         referenceList: base64 ? [{ type: "image", base64 }] : [],
         size: resolution,
         aspectRatio: "16:9",
@@ -127,6 +139,8 @@ export default router.post("/", validateFields(requestSchema), async (req, res) 
         type,
         model: model.split(/:(.+)/)[1],
         resolution,
+        prompt: userPrompt,
+        negativePrompt,
       });
 
     const path = await u.oss.getSmallImageUrl(imagePath);

@@ -14,19 +14,24 @@
     </div>
     <div class="list">
       <div class="search f">
-        <t-select :label="$t('workbench.task.project')" v-model="projectId" :options="projectData" @change="onFilterChange" />
         <t-select
+          class="filterSelect projectFilter"
+          :label="$t('workbench.task.project')"
+          v-model="projectId"
+          :options="projectData"
+          @change="onFilterChange" />
+        <t-select
+          class="filterSelect categoryFilter"
           :label="$t('workbench.task.categoryLabel')"
           v-model="taskClass"
           :options="categoryOptions"
-          @change="onFilterChange"
-          style="margin-left: 20px" />
+          @change="onFilterChange" />
         <t-select
+          class="filterSelect stateFilter"
           :label="$t('workbench.task.stateLabel')"
           v-model="taskState"
           :options="stateOptions"
-          @change="onFilterChange"
-          style="margin-left: 20px" />
+          @change="onFilterChange" />
       </div>
       <div class="content">
         <t-table :data="taskList" :columns="columns" row-key="id" :loading="pagination.loading" hover stripe>
@@ -72,6 +77,8 @@ interface TaskItem {
   state: string;
   startTime: number;
   describe?: string;
+  prompt?: string;
+  negativePrompt?: string;
   reason?: string;
 }
 
@@ -80,6 +87,8 @@ const columns = [
   { colKey: "relatedObjects", title: $t("workbench.task.col.relatedObjects"), width: 120, ellipsis: true },
   { colKey: "model", title: $t("workbench.task.col.model"), width: 280, ellipsis: true },
   { colKey: "describe", title: $t("workbench.task.col.describe"), ellipsis: true },
+  { colKey: "prompt", title: $t("workbench.task.col.prompt"), width: 260, ellipsis: true },
+  { colKey: "negativePrompt", title: $t("workbench.task.col.negativePrompt"), width: 260, ellipsis: true },
   { colKey: "reason", title: $t("workbench.task.col.reason"), ellipsis: true },
   { colKey: "state", title: $t("workbench.task.col.state"), width: 100, cell: "state" },
   { colKey: "startTime", title: $t("workbench.task.col.startTime"), width: 200, cell: "startTime" },
@@ -173,9 +182,27 @@ async function getTaskList() {
       gap: 14px;
       margin-bottom: 16px;
       flex-wrap: wrap;
+      align-items: center;
 
       :deep(.t-select) {
-        min-width: 220px;
+        width: 100%;
+        min-width: 0;
+      }
+
+      .filterSelect {
+        flex: 0 1 260px;
+        max-width: 320px;
+        min-width: 200px;
+      }
+
+      .projectFilter {
+        flex-basis: 320px;
+        max-width: 380px;
+      }
+
+      .stateFilter {
+        flex-basis: 220px;
+        max-width: 240px;
       }
     }
   }
@@ -194,6 +221,27 @@ async function getTaskList() {
   }
   .paginationWrap {
     margin-top: 14px;
+  }
+}
+
+@media (max-width: 760px) {
+  .task {
+    .header {
+      align-items: flex-start;
+      gap: 16px;
+      flex-direction: column;
+    }
+
+    .list {
+      .search {
+        .filterSelect,
+        .projectFilter,
+        .stateFilter {
+          flex-basis: 100%;
+          max-width: none;
+        }
+      }
+    }
   }
 }
 </style>

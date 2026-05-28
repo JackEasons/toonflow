@@ -5,6 +5,7 @@ import sharp from "sharp";
 import { success } from "@/lib/responseFormat";
 import { validateFields } from "@/middleware/middleware";
 import { Output } from "ai";
+import { resolveNegativePrompt } from "@/utils/negativePrompt";
 const router = express.Router();
 
 export default router.post(
@@ -82,18 +83,28 @@ export default router.post(
           },
         ],
       });
-        await u.db("o_assets").where("id", item.id).update({ prompt: text });
+      await u.db("o_assets").where("id", item.id).update({ prompt: text });
 
       const imageBase64 = imageUrlRecord[item.assetsId!] ? await u.oss.getImageBase64(imageUrlRecord[item.assetsId!]) : null;
       try {
+        const negativePrompt = resolveNegativePrompt(
+          { prompt: text, negativePromptSource: typeConfig.prompt },
+          { mediaType: "image", modelKey: projectSettingData?.imageModel as `${string}:${string}` },
+        );
         const repeloadObj = {
           prompt: text,
+          negativePrompt,
           size: projectSettingData?.imageQuality as "1K" | "2K" | "4K",
           aspectRatio: "16:9" as `${number}:${number}`,
         };
+        await u.db("o_image").where({ id: imageId }).update({
+          prompt: text,
+          negativePrompt,
+        });
         const imageCls = await u.Ai.Image(projectSettingData?.imageModel as `${string}:${string}`).run(
           {
             referenceList: imageBase64 ? [{ type: "image", base64: imageBase64 }] : [],
+            negativePromptSource: typeConfig.prompt,
             ...repeloadObj,
           },
           {

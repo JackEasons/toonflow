@@ -5,6 +5,7 @@ import { z } from "zod";
 import { v4 as uuidv4 } from "uuid";
 import { error, success } from "@/lib/responseFormat";
 import { validateFields } from "@/middleware/middleware";
+import { resolveNegativePrompt } from "@/utils/negativePrompt";
 
 const router = express.Router();
 
@@ -16,6 +17,7 @@ interface AssetTypeConfig {
   dir: string;
   promptTitle: string;
   promptEnd: string;
+  visualPromptKey: string;
 }
 
 const assetTypeConfig: Record<AssetType, AssetTypeConfig> = {
@@ -25,6 +27,7 @@ const assetTypeConfig: Record<AssetType, AssetTypeConfig> = {
     dir: "role",
     promptTitle: "角色标准四视图",
     promptEnd: "人物角色四视图",
+    visualPromptKey: "art_character",
   },
   scene: {
     label: "场景",
@@ -32,6 +35,7 @@ const assetTypeConfig: Record<AssetType, AssetTypeConfig> = {
     dir: "scene",
     promptTitle: "标准场景图",
     promptEnd: "标准场景图",
+    visualPromptKey: "art_scene",
   },
   tool: {
     label: "道具",
@@ -39,6 +43,7 @@ const assetTypeConfig: Record<AssetType, AssetTypeConfig> = {
     dir: "props",
     promptTitle: "标准道具图",
     promptEnd: "标准道具图",
+    visualPromptKey: "art_prop",
   },
 };
 
@@ -109,13 +114,23 @@ export default router.post("/", validateFields(requestSchema), async (req, res) 
 
       const imagePath = `/${projectId}/${cfg.dir}/${uuidv4()}.jpg`;
       const userPrompt = buildPrompt(cfg, project.artStyle ?? "", item.name, item.prompt);
+      const negativePromptSource = u.getArtPrompt(project.artStyle ?? "", "art_skills", cfg.visualPromptKey);
+      const negativePrompt = resolveNegativePrompt({ prompt: userPrompt, negativePromptSource }, { mediaType: "image", modelKey: model });
       const describe = `生成${cfg.label}图，名称：${item.name}，提示词：${item.prompt}`;
-      const relatedObjects = { id: item.id, projectId, type: cfg.label };
+      const relatedObjects = { id: item.id, projectId, type: cfg.label, prompt: userPrompt, negativePrompt };
       try {
+        await u.db("o_image").where("id", imageId).update({
+          prompt: userPrompt,
+          negativePrompt,
+          model: model.split(/:(.+)/)[1],
+          resolution,
+        });
         const aiImage = u.Ai.Image(model);
         await aiImage.run(
           {
             prompt: userPrompt,
+            negativePrompt,
+            negativePromptSource,
             referenceList: item.base64 ? [{ base64: item.base64, type: "image" }] : [],
             size: resolution,
             aspectRatio: "16:9",
@@ -142,6 +157,8 @@ export default router.post("/", validateFields(requestSchema), async (req, res) 
             type: item.type,
             model: model.split(/:(.+)/)[1],
             resolution,
+            prompt: userPrompt,
+            negativePrompt,
           });
 
         await u.db("o_assets").where("id", item.id).update({ imageId });

@@ -1323,6 +1323,8 @@
         "relatedObjects": "Связанные объекты",
         "model": "Модель",
         "describe": "Описание",
+        "prompt": "Промпт генерации",
+        "negativePrompt": "Негативный промпт",
         "state": "Статус",
         "startTime": "Время",
         "reason": "Причина неудачи"

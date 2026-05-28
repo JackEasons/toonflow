@@ -1545,6 +1545,8 @@
         "relatedObjects": "关联对象",
         "model": "模型",
         "describe": "描述",
+        "prompt": "生成提示词",
+        "negativePrompt": "负面提示词",
         "state": "状态",
         "startTime": "时间",
         "reason": "失败原因"

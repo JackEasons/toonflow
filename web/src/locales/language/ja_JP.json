@@ -1323,6 +1323,8 @@
         "relatedObjects": "関連オブジェクト",
         "model": "モデル",
         "describe": "説明",
+        "prompt": "生成プロンプト",
+        "negativePrompt": "ネガティブプロンプト",
         "state": "ステータス",
         "startTime": "時間",
         "reason": "失敗の理由"

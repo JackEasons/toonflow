@@ -317,6 +317,8 @@ export default async (knex: Knex, forceInit: boolean = false): Promise<void> => 
         table.text("relatedObjects");
         table.string("model");
         table.text("describe");
+        table.text("prompt");
+        table.text("negativePrompt");
         table.string("state");
         table.bigInteger("startTime");
         table.text("reason");
@@ -450,6 +452,8 @@ export default async (knex: Knex, forceInit: boolean = false): Promise<void> => 
         table.bigInteger("assetsId");
         table.text("model");
         table.text("resolution");
+        table.text("prompt");
+        table.text("negativePrompt");
         table.text("state");
         table.text("errorReason");
       },
@@ -461,6 +465,7 @@ export default async (knex: Knex, forceInit: boolean = false): Promise<void> => 
         table.bigIncrements("id");
         table.bigInteger("scriptId");
         table.text("prompt");
+        table.text("negativePrompt");
         table.text("filePath");
         table.text("duration");
         table.text("state");
@@ -496,6 +501,8 @@ export default async (knex: Knex, forceInit: boolean = false): Promise<void> => 
         table.text("filePath");
         table.text("errorReason");
         table.bigInteger("time");
+        table.text("prompt");
+        table.text("negativePrompt");
         table.text("state");
         table.bigInteger("scriptId");
         table.bigInteger("projectId");
@@ -513,6 +520,7 @@ export default async (knex: Knex, forceInit: boolean = false): Promise<void> => 
         table.text("state");
         table.text("reason");
         table.text("prompt");
+        table.text("negativePrompt");
         table.bigInteger("selectVideoId");
         table.integer("duration");
       },
