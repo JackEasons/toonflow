@@ -1537,7 +1537,7 @@ defineExpose({
   height: 100%;
   display: flex;
   flex-direction: column;
-  background: var(--td-bg-color-secondarycontainer);
+  background: rgba(3, 8, 8, 0.92);
   overflow: hidden;
 
   .previewScreen {
@@ -1547,6 +1547,16 @@ defineExpose({
     @extend %flexCenter;
     position: relative;
     overflow: hidden;
+    background:
+      radial-gradient(circle at 50% 48%, rgba(116, 223, 210, 0.06), transparent 30%),
+      linear-gradient(90deg, rgba(118, 218, 204, 0.035) 1px, transparent 1px),
+      linear-gradient(rgba(118, 218, 204, 0.035) 1px, transparent 1px),
+      #020606;
+    background-size:
+      auto,
+      48px 48px,
+      48px 48px,
+      auto;
 
     .previewScreenPlaceholder {
       @extend %flexCenter;
@@ -1558,6 +1568,8 @@ defineExpose({
 
       .placeholderIcon {
         @extend %flexCenter;
+        color: var(--wb-accent, var(--td-text-color-placeholder));
+        filter: drop-shadow(0 0 14px rgba(116, 223, 210, 0.16));
       }
 
       .placeholderText {
@@ -1568,7 +1580,7 @@ defineExpose({
 
       .placeholderTime {
         font-size: 24px;
-        color: var(--td-text-color-primary);
+        color: var(--wb-text, var(--td-text-color-primary));
         font-family: "Courier New", monospace;
         font-weight: 700;
         font-variant-numeric: tabular-nums;
@@ -1592,30 +1604,31 @@ defineExpose({
   .previewProgress {
     flex-shrink: 0;
     padding: 10px 16px 12px;
-    background: var(--td-bg-color-container);
-    border-top: 1px solid var(--td-border-level-1-color);
+    background: rgba(5, 13, 12, 0.92);
+    border-top: 1px solid var(--wb-border, var(--td-border-level-1-color));
 
     .progressSlider {
       width: 100%;
       height: 6px;
       -webkit-appearance: none;
       appearance: none;
-      background: var(--td-bg-color-component);
+      background: rgba(230, 255, 251, 0.08);
       border-radius: 3px;
       outline: none;
       cursor: pointer;
+      accent-color: var(--wb-accent, #74dfd2);
 
       &::-webkit-slider-thumb {
         -webkit-appearance: none;
         appearance: none;
         width: 14px;
         height: 14px;
-        background: var(--td-bg-color-container);
-        border: 2px solid var(--td-text-color-primary);
+        background: #061311;
+        border: 2px solid var(--wb-accent, var(--td-text-color-primary));
         border-radius: 50%;
         cursor: pointer;
         transition: transform 0.15s;
-        box-shadow: var(--td-shadow-1);
+        box-shadow: 0 0 0 4px rgba(116, 223, 210, 0.12), var(--td-shadow-1);
 
         &:hover {
           transform: scale(1.2);
@@ -1625,12 +1638,12 @@ defineExpose({
       &::-moz-range-thumb {
         width: 14px;
         height: 14px;
-        background: var(--td-bg-color-container);
-        border: 2px solid var(--td-text-color-primary);
+        background: #061311;
+        border: 2px solid var(--wb-accent, var(--td-text-color-primary));
         border-radius: 50%;
         cursor: pointer;
         transition: transform 0.15s;
-        box-shadow: var(--td-shadow-1);
+        box-shadow: 0 0 0 4px rgba(116, 223, 210, 0.12), var(--td-shadow-1);
 
         &:hover {
           transform: scale(1.2);

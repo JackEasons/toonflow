@@ -460,6 +460,7 @@ function getFileExtension(path: string) {
   flex-direction: column;
   height: calc(100vh - 120px);
   gap: 16px;
+  color: var(--wb-text, var(--td-text-color-primary));
 
   .mainContent {
     display: flex;
@@ -473,16 +474,23 @@ function getFileExtension(path: string) {
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      background: var(--td-bg-color-secondarycontainer);
+      background: var(--wb-panel, var(--td-bg-color-secondarycontainer));
       border-radius: 12px;
       overflow: hidden;
-      border: 1px solid var(--td-border-level-1-color);
+      border: 1px solid var(--wb-border-strong, var(--td-border-level-1-color));
+      box-shadow: var(--wb-shadow, none);
+      backdrop-filter: blur(10px) saturate(118%);
 
       .videoWrapper {
         width: 100%;
         flex: 1;
         @extend %flex-center;
         min-height: 0;
+        background:
+          linear-gradient(90deg, rgba(118, 218, 204, 0.035) 1px, transparent 1px),
+          linear-gradient(rgba(118, 218, 204, 0.035) 1px, transparent 1px),
+          rgba(2, 7, 7, 0.32);
+        background-size: 42px 42px;
 
         .previewImage {
           max-width: 100%;
@@ -503,13 +511,18 @@ function getFileExtension(path: string) {
         width: 100%;
         flex-shrink: 0;
         padding: 10px 16px 12px;
-        background: var(--td-bg-color-container);
-        border-top: 1px solid var(--td-border-level-1-color);
+        background: rgba(5, 13, 12, 0.84);
+        border-top: 1px solid var(--wb-border, var(--td-border-level-1-color));
 
         .controlButtons {
           @extend %flex-center;
           gap: 8px;
           margin-bottom: 8px;
+
+          :deep(.t-button) {
+            border-color: rgba(118, 218, 204, 0.18);
+            background: rgba(230, 255, 251, 0.045);
+          }
         }
 
         .progressArea {
@@ -536,9 +549,10 @@ function getFileExtension(path: string) {
             .progressTrack {
               width: 100%;
               height: 6px;
-              background: var(--td-bg-color-component);
+              background: rgba(230, 255, 251, 0.08);
               border-radius: 3px;
               position: relative;
+              box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.2);
 
               .progressSegment {
                 position: absolute;
@@ -548,13 +562,13 @@ function getFileExtension(path: string) {
                 transition: background 0.2s;
                 z-index: 1;
                 &.completed {
-                  background: var(--td-brand-color-light);
+                  background: rgba(116, 223, 210, 0.3);
                 }
                 &.active {
-                  background: var(--td-brand-color-10-5) !important;
+                  background: rgba(155, 188, 255, 0.46) !important;
                 }
                 &:hover {
-                  background: var(--td-brand-color-10-3);
+                  background: rgba(116, 223, 210, 0.42);
                 }
               }
 
@@ -574,7 +588,7 @@ function getFileExtension(path: string) {
                 top: 0;
                 left: 0;
                 height: 100%;
-                background: var(--td-brand-color-10);
+                background: linear-gradient(90deg, var(--wb-accent, #74dfd2), var(--wb-accent-2, #9bbcff));
                 border-radius: 3px;
                 z-index: 2;
                 transition: width 0.05s linear;
@@ -586,12 +600,12 @@ function getFileExtension(path: string) {
                 top: 50%;
                 width: 14px;
                 height: 14px;
-                background: var(--td-bg-color-container);
-                border: 2px solid var(--td-brand-color-10-10);
+                background: #061311;
+                border: 2px solid var(--wb-accent, #74dfd2);
                 border-radius: 50%;
                 transform: translate(-50%, -50%);
                 z-index: 4;
-                box-shadow: var(--td-shadow-1);
+                box-shadow: 0 0 0 4px rgba(116, 223, 210, 0.12), var(--td-shadow-1);
                 transition:
                   left 0.05s linear,
                   transform 0.15s;
@@ -610,7 +624,7 @@ function getFileExtension(path: string) {
       width: 380px;
       flex-shrink: 0;
       overflow-y: auto;
-      padding-right: 8px;
+      padding: 8px 8px 8px 0;
 
       &::-webkit-scrollbar {
         width: 4px;
@@ -623,7 +637,7 @@ function getFileExtension(path: string) {
       .infoSection {
         margin-bottom: 20px;
         padding-bottom: 16px;
-        border-bottom: 1px solid var(--td-border-level-1-color);
+        border-bottom: 1px solid var(--wb-border, var(--td-border-level-1-color));
         &:last-child {
           border-bottom: none;
         }
@@ -640,8 +654,9 @@ function getFileExtension(path: string) {
           .titleIndicator {
             width: 3px;
             height: 14px;
-            background: var(--td-brand-color-10);
+            background: linear-gradient(180deg, var(--wb-accent, #74dfd2), var(--wb-accent-2, #9bbcff));
             border-radius: 2px;
+            box-shadow: 0 0 12px rgba(116, 223, 210, 0.34);
           }
         }
 
@@ -663,7 +678,8 @@ function getFileExtension(path: string) {
             gap: 8px;
 
             .characterAvatar {
-              border: 2px solid var(--td-border-level-1-color);
+              border: 2px solid var(--wb-border-strong, var(--td-border-level-1-color));
+              box-shadow: 0 8px 18px rgba(0, 0, 0, 0.22);
             }
           }
 
@@ -700,7 +716,7 @@ function getFileExtension(path: string) {
 
   .shotListArea {
     flex-shrink: 0;
-    border-top: 1px solid var(--td-border-level-1-color);
+    border-top: 1px solid var(--wb-border, var(--td-border-level-1-color));
     padding-top: 12px;
 
     .shotListHeader {
@@ -717,7 +733,7 @@ function getFileExtension(path: string) {
       }
 
       .exportBtn {
-        color: var(--td-brand-color-10-10);
+        color: var(--wb-accent, var(--td-brand-color-10-10));
       }
     }
 
@@ -741,13 +757,23 @@ function getFileExtension(path: string) {
           cursor: pointer;
           border-radius: 12px;
           overflow: hidden;
-          border: 2px solid transparent;
-          background: var(--td-bg-color-container);
+          border: 1px solid var(--wb-border, transparent);
+          background: rgba(8, 20, 18, 0.72);
           position: relative;
+          box-shadow: 0 8px 18px rgba(0, 0, 0, 0.24);
+          transition:
+            border-color 0.18s ease,
+            transform 0.18s ease,
+            box-shadow 0.18s ease;
 
           &:hover,
           &.active {
-            border-color: var(--td-brand-color-10-10);
+            border-color: var(--wb-accent, var(--td-brand-color-10-10));
+            box-shadow: 0 12px 26px rgba(0, 0, 0, 0.34), 0 0 0 1px rgba(116, 223, 210, 0.12);
+          }
+
+          &:hover {
+            transform: translateY(-1px);
           }
 
           .shotCheckbox {
@@ -761,7 +787,7 @@ function getFileExtension(path: string) {
             position: relative;
             width: 100%;
             height: 100px;
-            background: var(--td-bg-color-secondarycontainer);
+            background: rgba(4, 10, 10, 0.76);
 
             .shotImage {
               width: 100%;
@@ -798,7 +824,7 @@ function getFileExtension(path: string) {
 
 .shotDrag {
   opacity: 0.9;
-  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+  box-shadow: 0 12px 26px rgba(0, 0, 0, 0.34), 0 0 0 1px rgba(116, 223, 210, 0.22);
   transform: scale(1.02);
 }
 

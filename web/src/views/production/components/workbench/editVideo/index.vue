@@ -194,28 +194,28 @@ const trackTypes = ref<TrackTypeConfig>({
 
 const clipConfigs = ref({
   video: {
-    backgroundColor: "linear-gradient(45deg, #667eea 0%, #764ba2 100%)",
-    borderColor: "#000000",
+    backgroundColor: "linear-gradient(45deg, #1b8f86 0%, #426fd6 100%)",
+    borderColor: "rgba(116, 223, 210, 0.42)",
     height: 60,
     selected: {
-      borderColor: "#ff6b6b",
-      boxShadow: "0 0 0 3px rgba(255, 107, 107, 0.3)",
+      borderColor: "#74dfd2",
+      boxShadow: "0 0 0 3px rgba(116, 223, 210, 0.22)",
     },
   },
   audio: {
-    backgroundColor: "linear-gradient(45deg, #f093fb 0%, #f5576c 100%)",
+    backgroundColor: "linear-gradient(45deg, #42b9a9 0%, #76a7ff 100%)",
     height: 36,
     selected: {
-      borderColor: "#4ecdc4",
+      borderColor: "#9bbcff",
     },
   },
   image: {
-    backgroundColor: "linear-gradient(45deg, #43e97b 0%, #38f9d7 100%)",
-    borderColor: "#43e97b",
+    backgroundColor: "linear-gradient(45deg, #53c592 0%, #38d5c7 100%)",
+    borderColor: "#74dfd2",
     height: 60,
     selected: {
-      borderColor: "#ff6b6b",
-      boxShadow: "0 0 0 3px rgba(255, 107, 107, 0.3)",
+      borderColor: "#f07182",
+      boxShadow: "0 0 0 3px rgba(240, 113, 130, 0.22)",
     },
   },
 });
@@ -465,6 +465,7 @@ onUnmounted(() => {
 .editVideo {
   .content {
     height: calc(100vh - var(--td-comp-paddingTB-xl) * 2 - 50px - 16px);
+    gap: 10px;
   }
 
   .previewWrapper {
@@ -474,14 +475,19 @@ onUnmounted(() => {
     align-items: center;
     justify-content: center;
     overflow: hidden;
-    background: var(--td-bg-color-secondarycontainer);
-    border: 1px solid var(--td-border-level-1-color);
+    background: var(--wb-panel, var(--td-bg-color-secondarycontainer));
+    border: 1px solid var(--wb-border-strong, var(--td-border-level-1-color));
     border-radius: 10px;
+    box-shadow: var(--wb-shadow, none);
+    backdrop-filter: blur(10px) saturate(118%);
   }
   .videoTrack {
     height: 100%;
-    border: 1px solid var(--td-border-level-1-color);
+    border: 1px solid var(--wb-border-strong, var(--td-border-level-1-color));
     border-radius: 10px;
+    overflow: hidden;
+    background: var(--wb-panel, var(--td-bg-color-secondarycontainer));
+    box-shadow: var(--wb-shadow, none);
   }
 }
 :deep(.ruler__cursor-handle) {
@@ -500,35 +506,129 @@ onUnmounted(() => {
   display: none !important;
 }
 :deep(.video-track) {
-  --color-primary: var(--td-text-color-primary);
-  --color-bg-dark: var(--td-bg-color-component);
-  --color-bg-medium: var(--td-bg-color-secondarycontainer);
-  --color-text-primary: var(--td-text-color-primary);
+  --theme-hue: 174;
+  --theme-saturation: 64%;
+  --theme-lightness: 66%;
+  --color-primary: var(--wb-accent, #74dfd2);
+  --color-primary-hover: #91f2e8;
+  --color-primary-active: #42b9a9;
+  --color-bg-dark: rgba(4, 12, 11, 0.92);
+  --color-bg-medium: rgba(8, 20, 18, 0.9);
+  --color-bg-light: rgba(22, 45, 41, 0.72);
+  --color-bg-lighter: rgba(34, 67, 61, 0.82);
+  --color-bg-elevated: rgba(7, 18, 16, 0.88);
+  --color-border: var(--wb-border, rgba(118, 218, 204, 0.16));
+  --color-border-light: rgba(118, 218, 204, 0.24);
+  --color-border-strong: var(--wb-border-strong, rgba(118, 218, 204, 0.32));
+  --color-text-primary: var(--wb-text, var(--td-text-color-primary));
+  --color-text-secondary: var(--wb-text-secondary, var(--td-text-color-secondary));
+  --color-text-tertiary: var(--wb-text-muted, var(--td-text-color-placeholder));
+  --shadow-sm: 0 6px 16px rgba(0, 0, 0, 0.22);
+  --shadow-md: 0 10px 24px rgba(0, 0, 0, 0.28);
+  --shadow-lg: 0 16px 34px rgba(0, 0, 0, 0.36);
+  background: transparent;
+
   .ruler {
-    background-color: var(--td-bg-color-container);
+    background: rgba(5, 13, 12, 0.92);
+    border-bottom-color: var(--wb-border, rgba(118, 218, 204, 0.16));
+
     .ruler__placeholder {
-      background-color: var(--td-bg-color-secondarycontainer);
+      background: rgba(5, 13, 12, 0.92);
+      border-right: 1px solid var(--wb-border, rgba(118, 218, 204, 0.16));
+    }
+
+    .ruler__mark {
+      background: rgba(118, 218, 204, 0.16);
+    }
+
+    .ruler__mark--major {
+      background: rgba(118, 218, 204, 0.28);
+    }
+
+    .ruler__cursor-line {
+      background: var(--wb-accent, #74dfd2);
+      box-shadow: 0 0 12px rgba(116, 223, 210, 0.32);
     }
   }
   .track-control {
-    background-color: var(--td-bg-color-container);
+    background: rgba(6, 17, 15, 0.94);
+    border-right-color: var(--wb-border, rgba(118, 218, 204, 0.16));
+
+    .track-control__badge {
+      color: #051311;
+      background: linear-gradient(135deg, var(--wb-accent, #74dfd2), var(--wb-accent-2, #9bbcff));
+    }
+
+    .track-control__btn:hover {
+      background: rgba(118, 218, 204, 0.12);
+    }
   }
   .tools-bar {
-    background-color: var(--td-bg-color-container);
+    background: rgba(6, 17, 15, 0.94);
+    border-bottom-color: var(--wb-border, rgba(118, 218, 204, 0.16));
   }
   .tools-bar__time {
-    background-color: var(--td-bg-color-secondarycontainer);
+    background: rgba(230, 255, 251, 0.055);
+    border-color: var(--wb-border, rgba(118, 218, 204, 0.16));
   }
   .tools-bar__btn {
-    background-color: var(--td-brand-color-active);
+    background: rgba(230, 255, 251, 0.045);
+    border-color: rgba(118, 218, 204, 0.12);
     &:hover {
-      background-color: var(--td-bg-color-container-hover);
+      background: rgba(118, 218, 204, 0.12);
       box-shadow: none;
     }
   }
 
+  .tools-bar__btn--play,
+  .tools-bar__btn--active {
+    color: #051311;
+    background: linear-gradient(135deg, var(--wb-hot, #f07182), #f39ba8);
+    border-color: rgba(255, 255, 255, 0.12);
+  }
+
+  .video-track__body,
+  .tracks,
+  .tracks__table,
+  .tracks__scroll-container {
+    background: rgba(5, 13, 12, 0.72);
+  }
+
+  .tracks__track {
+    background: rgba(12, 28, 25, 0.54);
+    border-bottom-color: rgba(118, 218, 204, 0.1);
+  }
+
+  .tracks__track:nth-child(even) {
+    background: rgba(18, 39, 35, 0.5);
+  }
+
+  .tracks__track-control-cell,
+  .tracks__track-area-cell {
+    border-color: rgba(118, 218, 204, 0.1);
+  }
+
+  .track-area__content {
+    background-image:
+      linear-gradient(90deg, rgba(118, 218, 204, 0.045) 1px, transparent 1px),
+      linear-gradient(rgba(118, 218, 204, 0.03) 1px, transparent 1px);
+    background-size:
+      54px 100%,
+      100% 44px;
+  }
+
+  .clip {
+    border-color: rgba(255, 255, 255, 0.1);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.24);
+  }
+
+  .clip--selected {
+    box-shadow: 0 0 0 2px rgba(116, 223, 210, 0.28), 0 12px 24px rgba(0, 0, 0, 0.3);
+  }
+
   .tracks__scrollbar {
-    background-color: var(--td-bg-color-container);
+    background: rgba(5, 13, 12, 0.92);
+    border-top: 1px solid var(--wb-border, rgba(118, 218, 204, 0.16));
   }
 }
 </style>

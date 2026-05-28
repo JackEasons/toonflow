@@ -409,16 +409,18 @@ onMounted(() => {
   display: flex;
   flex-direction: column;
   height: 100%;
-  background: var(--td-bg-color-secondarycontainer);
-  border: 1px solid var(--td-border-level-1-color);
+  background: var(--wb-panel, var(--td-bg-color-secondarycontainer));
+  border: 1px solid var(--wb-border-strong, var(--td-border-level-1-color));
   border-radius: 10px;
   overflow: hidden;
+  box-shadow: var(--wb-shadow, none);
+  backdrop-filter: blur(10px) saturate(118%);
 
   .mediaLibraryHeader {
     flex-shrink: 0;
     padding: 16px 12px 12px;
-    border-bottom: 1px solid var(--td-border-level-1-color);
-    background: var(--td-bg-color-container);
+    border-bottom: 1px solid var(--wb-border, var(--td-border-level-1-color));
+    background: rgba(6, 17, 15, 0.88);
 
     .headerTitle {
       display: flex;
@@ -431,7 +433,12 @@ onMounted(() => {
         font-size: 14px;
         font-weight: 600;
         color: var(--td-text-color-primary);
-        letter-spacing: -0.01em;
+        letter-spacing: 0;
+      }
+
+      span {
+        color: var(--wb-text-muted, var(--td-text-color-placeholder));
+        line-height: 1.5;
       }
     }
 
@@ -439,6 +446,17 @@ onMounted(() => {
       display: flex;
       gap: 4px;
       flex-wrap: wrap;
+
+      :deep(.t-button) {
+        border-color: rgba(118, 218, 204, 0.18);
+        background: rgba(230, 255, 251, 0.04);
+      }
+
+      :deep(.t-button--theme-primary) {
+        color: #051311 !important;
+        background: linear-gradient(135deg, var(--wb-accent, #74dfd2), var(--wb-accent-2, #9bbcff)) !important;
+        border-color: rgba(255, 255, 255, 0.16) !important;
+      }
     }
   }
 
@@ -446,6 +464,11 @@ onMounted(() => {
     flex: 1;
     overflow-y: auto;
     padding: 12px 8px;
+    background:
+      linear-gradient(90deg, rgba(118, 218, 204, 0.025) 1px, transparent 1px),
+      linear-gradient(rgba(118, 218, 204, 0.025) 1px, transparent 1px),
+      rgba(4, 12, 11, 0.68);
+    background-size: 42px 42px;
 
     &::-webkit-scrollbar {
       width: 4px;
@@ -466,16 +489,16 @@ onMounted(() => {
         align-items: center;
         gap: 10px;
         padding: 12px;
-        background: var(--td-bg-color-container);
-        border: 2px solid transparent;
+        background: rgba(230, 255, 251, 0.045);
+        border: 1px solid rgba(118, 218, 204, 0.12);
         border-radius: 12px;
         cursor: grab;
         transition: all 0.2s;
         position: relative;
         &:hover {
-          border-color: var(--td-brand-color-10);
+          border-color: var(--wb-accent, var(--td-brand-color-10));
           transform: translateY(-2px);
-          box-shadow: 0 4px 12px rgba(102, 126, 234, 0.15);
+          box-shadow: 0 10px 22px rgba(0, 0, 0, 0.28), 0 0 0 1px rgba(116, 223, 210, 0.1);
         }
 
         &.dragging {
@@ -488,7 +511,9 @@ onMounted(() => {
           width: 36px;
           height: 36px;
           @extend %flex-center;
-          background: rgba(102, 126, 234, 0.1);
+          color: var(--wb-accent, var(--td-text-color-primary));
+          background: rgba(116, 223, 210, 0.1);
+          border: 1px solid rgba(118, 218, 204, 0.16);
           border-radius: 8px;
           flex-shrink: 0;
           position: relative;
@@ -548,16 +573,16 @@ onMounted(() => {
         align-items: center;
         gap: 10px;
         padding: 12px;
-        background: var(--td-bg-color-container);
-        border: 2px solid transparent;
+        background: rgba(230, 255, 251, 0.045);
+        border: 1px solid rgba(118, 218, 204, 0.12);
         border-radius: 12px;
         cursor: grab;
         transition: all 0.2s;
 
         &:hover {
-          border-color: var(--td-brand-color-10);
+          border-color: var(--wb-accent, var(--td-brand-color-10));
           transform: translateY(-2px);
-          box-shadow: 0 4px 12px rgba(102, 126, 234, 0.15);
+          box-shadow: 0 10px 22px rgba(0, 0, 0, 0.28), 0 0 0 1px rgba(116, 223, 210, 0.1);
         }
 
         &.dragging {
@@ -570,7 +595,9 @@ onMounted(() => {
           width: 36px;
           height: 36px;
           @extend %flex-center;
-          background: rgba(102, 126, 234, 0.1);
+          color: var(--wb-accent, var(--td-text-color-primary));
+          background: rgba(116, 223, 210, 0.1);
+          border: 1px solid rgba(118, 218, 204, 0.16);
           border-radius: 8px;
           font-size: 18px;
           flex-shrink: 0;
@@ -596,16 +623,16 @@ onMounted(() => {
         align-items: center;
         gap: 10px;
         padding: 12px;
-        background: var(--td-bg-color-container);
-        border: 2px solid transparent;
+        background: rgba(230, 255, 251, 0.045);
+        border: 1px solid rgba(118, 218, 204, 0.12);
         border-radius: 12px;
         cursor: grab;
         transition: all 0.2s;
 
         &:hover {
-          border-color: var(--td-brand-color-10);
+          border-color: var(--wb-accent, var(--td-brand-color-10));
           transform: translateY(-2px);
-          box-shadow: 0 4px 12px rgba(102, 126, 234, 0.15);
+          box-shadow: 0 10px 22px rgba(0, 0, 0, 0.28), 0 0 0 1px rgba(116, 223, 210, 0.1);
         }
 
         &.dragging {
@@ -618,7 +645,9 @@ onMounted(() => {
           width: 36px;
           height: 36px;
           @extend %flex-center;
-          background: rgba(102, 126, 234, 0.1);
+          color: var(--wb-accent, var(--td-text-color-primary));
+          background: rgba(116, 223, 210, 0.1);
+          border: 1px solid rgba(118, 218, 204, 0.16);
           border-radius: 8px;
           flex-shrink: 0;
         }
@@ -643,16 +672,16 @@ onMounted(() => {
         align-items: center;
         gap: 10px;
         padding: 12px;
-        background: var(--td-bg-color-container);
-        border: 2px solid transparent;
+        background: rgba(230, 255, 251, 0.045);
+        border: 1px solid rgba(118, 218, 204, 0.12);
         border-radius: 12px;
         cursor: grab;
         transition: all 0.2s;
 
         &:hover {
-          border-color: var(--td-brand-color-10);
+          border-color: var(--wb-accent, var(--td-brand-color-10));
           transform: translateY(-2px);
-          box-shadow: 0 4px 12px rgba(102, 126, 234, 0.15);
+          box-shadow: 0 10px 22px rgba(0, 0, 0, 0.28), 0 0 0 1px rgba(116, 223, 210, 0.1);
         }
 
         &.dragging {
@@ -665,7 +694,9 @@ onMounted(() => {
           width: 36px;
           height: 36px;
           @extend %flex-center;
-          background: rgba(102, 126, 234, 0.1);
+          color: var(--wb-accent, var(--td-text-color-primary));
+          background: rgba(116, 223, 210, 0.1);
+          border: 1px solid rgba(118, 218, 204, 0.16);
           border-radius: 8px;
           flex-shrink: 0;
         }
@@ -690,16 +721,16 @@ onMounted(() => {
         align-items: center;
         gap: 10px;
         padding: 12px;
-        background: var(--td-bg-color-container);
-        border: 2px solid transparent;
+        background: rgba(230, 255, 251, 0.045);
+        border: 1px solid rgba(118, 218, 204, 0.12);
         border-radius: 12px;
         cursor: grab;
         transition: all 0.2s;
 
         &:hover {
-          border-color: var(--td-brand-color-10);
+          border-color: var(--wb-accent, var(--td-brand-color-10));
           transform: translateY(-2px);
-          box-shadow: 0 4px 12px rgba(102, 126, 234, 0.15);
+          box-shadow: 0 10px 22px rgba(0, 0, 0, 0.28), 0 0 0 1px rgba(116, 223, 210, 0.1);
         }
 
         &.dragging {
@@ -712,7 +743,9 @@ onMounted(() => {
           width: 36px;
           height: 36px;
           @extend %flex-center;
-          background: rgba(102, 126, 234, 0.1);
+          color: var(--wb-accent, var(--td-text-color-primary));
+          background: rgba(116, 223, 210, 0.1);
+          border: 1px solid rgba(118, 218, 204, 0.16);
           border-radius: 8px;
           flex-shrink: 0;
           position: relative;
@@ -753,16 +786,16 @@ onMounted(() => {
         align-items: center;
         gap: 10px;
         padding: 12px;
-        background: var(--td-bg-color-container);
-        border: 2px solid transparent;
+        background: rgba(230, 255, 251, 0.045);
+        border: 1px solid rgba(118, 218, 204, 0.12);
         border-radius: 12px;
         cursor: grab;
         transition: all 0.2s;
 
         &:hover {
-          border-color: var(--td-brand-color-10);
+          border-color: var(--wb-accent, var(--td-brand-color-10));
           transform: translateY(-2px);
-          box-shadow: 0 4px 12px rgba(102, 126, 234, 0.15);
+          box-shadow: 0 10px 22px rgba(0, 0, 0, 0.28), 0 0 0 1px rgba(116, 223, 210, 0.1);
         }
 
         &.dragging {
@@ -775,14 +808,16 @@ onMounted(() => {
           width: 36px;
           height: 36px;
           @extend %flex-center;
-          background: rgba(102, 126, 234, 0.1);
+          color: var(--wb-accent, var(--td-text-color-primary));
+          background: rgba(116, 223, 210, 0.1);
+          border: 1px solid rgba(118, 218, 204, 0.16);
           border-radius: 8px;
           flex-shrink: 0;
 
           .textItemContent {
             font-size: 14px;
             font-weight: 600;
-            color: var(--td-brand-color-10);
+            color: var(--wb-accent, var(--td-brand-color-10));
           }
         }
 

@@ -393,16 +393,18 @@ function handleDuplicateClip() {
   display: flex;
   flex-direction: column;
   height: 100%;
-  background: var(--td-bg-color-secondarycontainer);
-  border: 1px solid var(--td-border-level-1-color);
+  background: var(--wb-panel, var(--td-bg-color-secondarycontainer));
+  border: 1px solid var(--wb-border-strong, var(--td-border-level-1-color));
   border-radius: 10px;
   overflow: hidden;
+  box-shadow: var(--wb-shadow, none);
+  backdrop-filter: blur(10px) saturate(118%);
 
   .panelHeader {
     flex-shrink: 0;
     padding: 14px 12px;
-    border-bottom: 1px solid var(--td-border-level-1-color);
-    background: var(--td-bg-color-container);
+    border-bottom: 1px solid var(--wb-border, var(--td-border-level-1-color));
+    background: rgba(6, 17, 15, 0.88);
 
     .panelTitle {
       margin: 0;
@@ -416,6 +418,11 @@ function handleDuplicateClip() {
     flex: 1;
     overflow-y: auto;
     padding: 10px;
+    background:
+      linear-gradient(90deg, rgba(118, 218, 204, 0.025) 1px, transparent 1px),
+      linear-gradient(rgba(118, 218, 204, 0.025) 1px, transparent 1px),
+      rgba(4, 12, 11, 0.72);
+    background-size: 42px 42px;
 
     &::-webkit-scrollbar {
       width: 4px;
@@ -435,9 +442,10 @@ function handleDuplicateClip() {
         width: 64px;
         height: 64px;
         @extend %flex-center;
-        background: var(--td-bg-color-container);
+        background: rgba(230, 255, 251, 0.05);
         border-radius: 16px;
-        border: 1px solid var(--td-border-level-1-color);
+        border: 1px solid var(--wb-border, var(--td-border-level-1-color));
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
       }
 
       .emptyText {
@@ -452,15 +460,15 @@ function handleDuplicateClip() {
       gap: 10px;
 
       .sectionCard {
-        background: var(--td-bg-color-container);
-        border: 1px solid transparent;
+        background: rgba(230, 255, 251, 0.045);
+        border: 1px solid rgba(118, 218, 204, 0.12);
         border-radius: 12px;
         overflow: hidden;
         transition: all 0.2s;
 
         &:hover {
-          border-color: var(--td-text-color-primary);
-          box-shadow: 0 4px 12px var(--td-shadow-1);
+          border-color: var(--wb-accent, var(--td-text-color-primary));
+          box-shadow: 0 10px 22px rgba(0, 0, 0, 0.28), 0 0 0 1px rgba(116, 223, 210, 0.1);
         }
 
         .sectionHeader {
@@ -468,16 +476,18 @@ function handleDuplicateClip() {
           align-items: center;
           gap: 8px;
           padding: 10px 12px;
-          border-bottom: 1px solid var(--td-bg-color-secondarycontainer);
+          border-bottom: 1px solid rgba(118, 218, 204, 0.1);
+          background: rgba(5, 13, 12, 0.28);
 
           .sectionIconBadge {
             width: 28px;
             height: 28px;
             @extend %flex-center;
-            background: var(--td-brand-color-light);
+            background: rgba(116, 223, 210, 0.1);
+            border: 1px solid rgba(118, 218, 204, 0.16);
             border-radius: 8px;
             flex-shrink: 0;
-            color: var(--td-text-color-primary);
+            color: var(--wb-accent, var(--td-text-color-primary));
           }
 
           .sectionLabel {
@@ -539,7 +549,7 @@ function handleDuplicateClip() {
         justify-content: space-between;
         align-items: center;
         padding-top: 4px;
-        border-top: 1px dashed var(--td-border-level-1-color);
+        border-top: 1px dashed var(--wb-border, var(--td-border-level-1-color));
 
         .durationLabel {
           font-size: 12px;

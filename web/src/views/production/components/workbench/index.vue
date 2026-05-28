@@ -8,45 +8,47 @@
     attach="body"
     placement="center"
     mode="full-screen"
-    dialogClassName="noFooter"
-    class="fullscreenDialog">
-    <div class="closure">
-      <i-close-small theme="outline" size="24" fill="#4a4a4a" @click="visible = false" />
-    </div>
-    <div class="topMenu f ac">
-      <t-tooltip :content="$t('workbench.production.wb.quickPreview')" placement="bottom" theme="light" destroyOnClose :showArrow="false">
-        <div class="item fc c" :class="{ active: activeMenu === 'preview' }" @click="changeMenu('preview')">
-          <i-blackboard class="icon" />
+    dialogClassName="noFooter workbenchDialog"
+    class="workbenchDialogHost">
+    <div class="workbenchShell">
+      <div class="closure">
+        <i-close-small theme="outline" size="24" fill="currentColor" @click="visible = false" />
+      </div>
+      <div class="topMenu f ac">
+        <t-tooltip :content="$t('workbench.production.wb.quickPreview')" placement="bottom" theme="primary" destroyOnClose :showArrow="false">
+          <div class="item fc c" :class="{ active: activeMenu === 'preview' }" @click="changeMenu('preview')">
+            <i-blackboard class="icon" />
+          </div>
+        </t-tooltip>
+        <t-tooltip :content="$t('workbench.production.wb.videoGeneration')" placement="bottom" theme="primary" destroyOnClose :showArrow="false">
+          <div class="item fc c" :class="{ active: activeMenu === 'generate' }" @click="changeMenu('generate')">
+            <i-playback-progress class="icon" />
+          </div>
+        </t-tooltip>
+        <t-tooltip :content="$t('workbench.production.wb.videoEditing')" placement="bottom" theme="primary" destroyOnClose :showArrow="false">
+          <div class="item fc c" :class="{ active: activeMenu === 'editVideo' }" @click="changeMenu('editVideo')">
+            <i-editing class="icon" />
+          </div>
+        </t-tooltip>
+      </div>
+      <div class="content">
+        <preview v-if="activeMenu === 'preview'" />
+        <generate v-if="activeMenu === 'generate'" @importVideo="handleBatchDownload" v-model="extractLines" />
+        <editVideo
+          v-if="activeMenu === 'editVideo'"
+          :initial-tracks="mockTracks"
+          :initial-video-items="initialVideoItems"
+          :initial-media-items="mockMediaItems"
+          :initial-audio-items="mockAudioItems"
+          :initial-image-items="mockImageItems"
+          :canvas-width="canvasWidth"
+          :canvas-height="canvasHeight"
+          ref="editVideoRef" />
+      </div>
+      <div v-if="importLoading" class="importLoadingMask">
+        <div class="importLoadingContent">
+          <t-loading size="large" :text="$t('workbench.production.wb.importingLoading')" />
         </div>
-      </t-tooltip>
-      <t-tooltip :content="$t('workbench.production.wb.videoGeneration')" placement="bottom" theme="light" destroyOnClose :showArrow="false">
-        <div class="item fc c" :class="{ active: activeMenu === 'generate' }" @click="changeMenu('generate')">
-          <i-playback-progress class="icon" />
-        </div>
-      </t-tooltip>
-      <t-tooltip :content="$t('workbench.production.wb.videoEditing')" placement="bottom" theme="light" destroyOnClose :showArrow="false">
-        <div class="item fc c" :class="{ active: activeMenu === 'editVideo' }" @click="changeMenu('editVideo')">
-          <i-editing class="icon" />
-        </div>
-      </t-tooltip>
-    </div>
-    <div class="content">
-      <preview v-if="activeMenu === 'preview'" />
-      <generate v-if="activeMenu === 'generate'" @importVideo="handleBatchDownload" v-model="extractLines" />
-      <editVideo
-        v-if="activeMenu === 'editVideo'"
-        :initial-tracks="mockTracks"
-        :initial-video-items="initialVideoItems"
-        :initial-media-items="mockMediaItems"
-        :initial-audio-items="mockAudioItems"
-        :initial-image-items="mockImageItems"
-        :canvas-width="canvasWidth"
-        :canvas-height="canvasHeight"
-        ref="editVideoRef" />
-    </div>
-    <div v-if="importLoading" class="importLoadingMask">
-      <div class="importLoadingContent">
-        <t-loading size="large" :text="$t('workbench.production.wb.importingLoading')" />
       </div>
     </div>
   </t-dialog>
@@ -148,7 +150,7 @@ function editFootage() {
             name: "#" + $t("workbench.production.wb.storyboardVideoName", { storyboard: index + 1, id: subIndex + 1 }),
             duration: subItem.duration || 0,
             icon: "🎬",
-            color: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+            color: "linear-gradient(135deg, #1b8f86 0%, #426fd6 100%)",
             url: subItem.filePath,
             selected: item.videoId == subItem.id ? true : false,
           }));
@@ -160,7 +162,7 @@ function editFootage() {
         name: item.name,
         duration: item.duration || 0,
         icon: "🎥",
-        color: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+        color: "linear-gradient(135deg, #1b8f86 0%, #426fd6 100%)",
         url: item.filePath,
         loading: true,
       }));
@@ -218,7 +220,49 @@ function handleBatchDownload(value: ImportVideoItem[]) {}
   overflow: hidden;
   position: relative;
 }
-.fullscreenDialog {
+.workbenchShell {
+  --wb-bg: #061311;
+  --wb-panel: linear-gradient(180deg, rgba(8, 23, 20, 0.96), rgba(4, 12, 11, 0.98));
+  --wb-panel-strong: linear-gradient(180deg, rgba(10, 28, 25, 0.98), rgba(5, 15, 13, 0.98));
+  --wb-panel-soft: rgba(10, 34, 30, 0.64);
+  --wb-panel-flat: rgba(6, 18, 16, 0.92);
+  --wb-control: rgba(230, 255, 251, 0.06);
+  --wb-control-hover: rgba(112, 224, 210, 0.12);
+  --wb-border: rgba(118, 218, 204, 0.18);
+  --wb-border-strong: rgba(118, 218, 204, 0.32);
+  --wb-text: rgba(245, 252, 249, 0.94);
+  --wb-text-secondary: rgba(219, 238, 232, 0.68);
+  --wb-text-muted: rgba(219, 238, 232, 0.42);
+  --wb-accent: #74dfd2;
+  --wb-accent-2: #9bbcff;
+  --wb-hot: #f07182;
+  --wb-shadow: 0 18px 46px rgba(0, 0, 0, 0.34), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  --td-bg-color-container: var(--wb-panel-flat);
+  --td-bg-color-container-hover: var(--wb-control-hover);
+  --td-bg-color-secondarycontainer: rgba(5, 15, 13, 0.94);
+  --td-bg-color-component: rgba(22, 45, 41, 0.72);
+  --td-border-level-1-color: var(--wb-border);
+  --td-border-level-2-color: var(--wb-border-strong);
+  --td-text-color-primary: var(--wb-text);
+  --td-text-color-secondary: var(--wb-text-secondary);
+  --td-text-color-placeholder: var(--wb-text-muted);
+  --td-brand-color: var(--wb-accent);
+  --td-brand-color-hover: #91f2e8;
+  --td-brand-color-active: #42b9a9;
+  --td-brand-color-light: rgba(116, 223, 210, 0.12);
+  --td-scrollbar-color: rgba(118, 218, 204, 0.34);
+  --td-mask-active: rgba(1, 6, 6, 0.72);
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+  position: relative;
+  color: var(--wb-text);
+  background:
+    radial-gradient(circle at 16% 8%, rgba(116, 223, 210, 0.1), transparent 28%),
+    radial-gradient(circle at 82% 22%, rgba(155, 188, 255, 0.08), transparent 28%),
+    linear-gradient(180deg, rgba(6, 19, 17, 0.98), rgba(4, 11, 10, 0.98));
+
   .importLoadingMask {
     position: absolute;
     inset: 0;
@@ -242,6 +286,12 @@ function handleBatchDownload(value: ImportVideoItem[]) {}
     z-index: 9999;
     cursor: pointer;
     margin-top: 20px;
+    color: var(--wb-text-muted);
+    transition: color 0.18s ease;
+
+    &:hover {
+      color: var(--wb-text);
+    }
   }
   .topMenu {
     padding-bottom: 16px;
@@ -252,6 +302,14 @@ function handleBatchDownload(value: ImportVideoItem[]) {}
       cursor: pointer;
       width: 50px;
       height: 50px;
+      color: var(--wb-text-muted);
+      border: 1px solid transparent;
+      border-radius: 16px;
+      transition:
+        color 0.18s ease,
+        background 0.18s ease,
+        border-color 0.18s ease,
+        box-shadow 0.18s ease;
       .icon {
         font-size: 24px;
       }
@@ -260,23 +318,53 @@ function handleBatchDownload(value: ImportVideoItem[]) {}
         white-space: nowrap;
       }
       &:hover {
-        background-color: var(--td-bg-color-container-hover);
-        border-radius: 16px;
+        color: var(--wb-text);
+        background: var(--wb-control-hover);
+        border-color: var(--wb-border);
       }
     }
     .active {
-      background-color: var(--td-brand-color) !important;
+      background: linear-gradient(135deg, var(--wb-hot), #f39ba8) !important;
       border-radius: 16px;
-      color: #fff;
+      color: #ffffff;
+      border-color: rgba(255, 255, 255, 0.16);
+      box-shadow: 0 12px 26px rgba(240, 113, 130, 0.24), inset 0 1px 0 rgba(255, 255, 255, 0.28);
     }
   }
   .content {
     flex: 1;
     overflow: hidden;
+    position: relative;
+    padding: 0 8px 8px;
+    background:
+      radial-gradient(circle at 16% 8%, rgba(116, 223, 210, 0.1), transparent 28%),
+      radial-gradient(circle at 82% 22%, rgba(155, 188, 255, 0.08), transparent 28%),
+      linear-gradient(180deg, rgba(6, 19, 17, 0.78), rgba(4, 11, 10, 0.92));
   }
   .editImage {
     width: 100%;
     height: 75vh;
+  }
+}
+</style>
+
+<style lang="scss">
+.workbenchDialog {
+  color: rgba(245, 252, 249, 0.94);
+  background:
+    radial-gradient(circle at 16% 8%, rgba(116, 223, 210, 0.1), transparent 28%),
+    radial-gradient(circle at 82% 22%, rgba(155, 188, 255, 0.08), transparent 28%),
+    linear-gradient(180deg, rgba(6, 19, 17, 0.98), rgba(4, 11, 10, 0.98)) !important;
+
+  .t-dialog__body,
+  .t-dialog__body--fullscreen--without-footer {
+    padding: 0 !important;
+    background: transparent !important;
+  }
+
+  .t-dialog__wrap {
+    padding: 0 !important;
+    overflow: hidden !important;
   }
 }
 </style>
