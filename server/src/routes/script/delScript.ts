@@ -27,7 +27,7 @@ export default router.post(
           } catch (e) {}
         }),
       );
-      const storyboardIds = storyboardData.map((item) => item.id);
+      const storyboardIds = storyboardData.map((item) => item.id).filter((id): id is number => typeof id === "number");
       await u.db("o_assets2Storyboard").whereIn("storyboardId", storyboardIds).delete();
     }
     await u.db("o_scriptAssets").whereIn("scriptId", ids).delete();

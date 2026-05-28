@@ -1,44 +1,120 @@
+import "@/env";
 import { readFile, writeFile } from "fs/promises";
-import getPath from "@/utils/getPath";
-import fs from "fs";
-import path from "path";
 import knex from "knex";
+import type { Knex } from "knex";
 import initDB from "@/lib/initDB";
 // import fixDB from "@/lib/fixDB";
 import type { DB } from "@/types/database";
 import crypto from "crypto";
 import fixDB from "@/lib/fixDB";
+import { isMysql, normalizeRawRows } from "@/utils/dbDialect";
 
 type TableName = keyof DB & string;
 type RowType<TName extends TableName> = DB[TName];
 
-const dbPath = getPath("db2.sqlite");
-console.log("数据库目录:", dbPath);
-const dbDir = path.dirname(dbPath);
+type MysqlConnection = {
+  host?: string;
+  port?: number;
+  socketPath?: string;
+  user: string;
+  password: string;
+  database: string;
+  charset: string;
+  timezone: string;
+  supportBigNumbers: boolean;
+  bigNumberStrings: boolean;
+};
 
-// 确保数据库目录存在
-if (!fs.existsSync(dbDir)) {
-  fs.mkdirSync(dbDir, { recursive: true });
+function readEnv(name: string, fallback = ""): string {
+  return process.env[name] ?? process.env[name.toLowerCase()] ?? fallback;
 }
 
-// 创建空数据库文件
-if (!fs.existsSync(dbPath)) {
-  fs.writeFileSync(dbPath, "");
+function readNumber(name: string, fallback: number): number {
+  const value = Number.parseInt(readEnv(name), 10);
+  return Number.isFinite(value) ? value : fallback;
 }
 
-const db = knex({
-  client: "better-sqlite3",
-  connection: {
-    filename: dbPath,
-  },
-  useNullAsDefault: true,
-});
+function readBoolean(name: string, fallback = false): boolean {
+  const value = readEnv(name);
+  if (!value) return fallback;
+  return ["1", "true", "yes", "on"].includes(value.toLowerCase());
+}
 
-(async () => {
+function resolveDbClient(): "mysql2" {
+  const rawClient = readEnv("DB_CLIENT", readEnv("DATABASE_CLIENT", "mysql2")).toLowerCase();
+  if (rawClient === "mysql" || rawClient === "mysql2") return "mysql2";
+  throw new Error(`当前服务仅支持 MySQL 数据库客户端: ${rawClient}`);
+}
+
+function getMysqlConnection(): MysqlConnection {
+  const socketPath = readEnv("MYSQL_SOCKET_PATH", readEnv("DB_SOCKET_PATH"));
+  return {
+    ...(socketPath
+      ? { socketPath }
+      : {
+          host: readEnv("MYSQL_HOST", readEnv("DB_HOST", "127.0.0.1")),
+          port: readNumber("MYSQL_PORT", readNumber("DB_PORT", 3306)),
+        }),
+    user: readEnv("MYSQL_USER", readEnv("DB_USER", "root")),
+    password: readEnv("MYSQL_PASSWORD", readEnv("DB_PASSWORD")),
+    database: readEnv("MYSQL_DATABASE", readEnv("MYSQL_DB", readEnv("DB_DATABASE", readEnv("DB_NAME", "toonflow")))),
+    charset: readEnv("MYSQL_CHARSET", "utf8mb4"),
+    timezone: readEnv("MYSQL_TIMEZONE", "Z"),
+    supportBigNumbers: true,
+    bigNumberStrings: false,
+  };
+}
+
+function createDbConfig(): Knex.Config {
+  const client = resolveDbClient();
+  const connection = getMysqlConnection();
+  const location = connection.socketPath ? `${connection.socketPath}/${connection.database}` : `${connection.host}:${connection.port}/${connection.database}`;
+  console.log("数据库:", `mysql://${location}`);
+  return {
+    client,
+    connection,
+    pool: {
+      min: 0,
+      max: readNumber("MYSQL_CONNECTION_LIMIT", readNumber("DB_CONNECTION_LIMIT", 10)),
+    },
+  };
+}
+
+async function ensureMysqlDatabase(config: Knex.Config): Promise<void> {
+  const connection = config.connection as MysqlConnection;
+  if (!connection?.database) return;
+
+  const { database, ...serverConnection } = connection;
+  const serverDb = knex({
+    client: "mysql2",
+    connection: serverConnection,
+    pool: { min: 0, max: 1 },
+  });
+
+  try {
+    const rows = normalizeRawRows<{ SCHEMA_NAME: string }>(
+      await serverDb.raw("SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = ?", [database]),
+    );
+    if (!rows.length) {
+      await serverDb.raw("CREATE DATABASE ?? CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci", [database]);
+    }
+  } finally {
+    await serverDb.destroy();
+  }
+}
+
+const dbConfig = createDbConfig();
+const db = knex(dbConfig);
+
+export const dbReady = (async () => {
+  if (isMysql(db) && readBoolean("MYSQL_AUTO_CREATE_DATABASE")) await ensureMysqlDatabase(dbConfig);
   await initDB(db);
   await fixDB(db);
   if (process.env.NODE_ENV == "dev") initKnexType(db);
-})();
+})().catch((err) => {
+  console.error("[数据库初始化失败]", err);
+  throw err;
+});
 
 const dbClient = Object.assign(<TName extends TableName>(table: TName) => db<RowType<TName>, RowType<TName>[]>(table), db);
 dbClient.schema = db.schema;

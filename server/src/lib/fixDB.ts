@@ -3,8 +3,8 @@ import path from "path";
 import fs from "fs";
 import { Knex } from "knex";
 import db from "@/utils/db";
-import { transform } from "sucrase";
 import rawVendorData from "./vendor.json";
+import { isMysql } from "@/utils/dbDialect";
 
 const vendorData = rawVendorData as Record<string, string>;
 
@@ -66,25 +66,25 @@ export default async (knex: Knex): Promise<void> => {
   // 添加新字段
   await addColumn("o_agentDeploy", "maxOutputTokens", "integer");
   await addColumn("o_assets", "audioBindState", "integer");
+  await addColumn("o_assets2Storyboard", "sort", "integer");
   await addColumn("o_modelPrompt", "fileName", "string");
   await addColumn("o_modelPrompt", "path", "string");
-  const vendorDataSelect = await u.db("o_vendorConfig").whereIn("id", ["deepseek", "atlascloud"]).select("*");
-  if (!vendorDataSelect.find((i) => i.id == "deepseek")) {
-    await u.db("o_vendorConfig").insert({
-      id: "deepseek",
-      inputValues: "{}",
-      models: "[]",
-      enable: 0,
-    });
+  if (isMysql(knex)) await alterColumnType("memories", "role", "text");
+  if (isMysql(knex)) await alterColumnType("o_tasks", "relatedObjects", "text");
+
+  const storyboardAssetRowsQuery = knex("o_assets2Storyboard").select("storyboardId", "assetId", "sort");
+  const storyboardAssetRows = await storyboardAssetRowsQuery.orderBy("storyboardId").orderBy("assetId");
+  const sortCounters = new Map<number, number>();
+  for (const row of storyboardAssetRows as Array<{ storyboardId: number; assetId: number; sort?: number | null }>) {
+    const current = sortCounters.get(row.storyboardId) ?? 0;
+    if (row.sort === null || row.sort === undefined) {
+      await knex("o_assets2Storyboard").where({ storyboardId: row.storyboardId, assetId: row.assetId }).update({ sort: current });
+      sortCounters.set(row.storyboardId, current + 1);
+    } else {
+      sortCounters.set(row.storyboardId, Math.max(current, Number(row.sort) + 1));
+    }
   }
-  if (!vendorDataSelect.find((i) => i.id == "atlascloud")) {
-    await u.db("o_vendorConfig").insert({
-      id: "atlascloud",
-      inputValues: "{}",
-      models: "[]",
-      enable: 0,
-    });
-  }
+
   //检测是否包含新增音色绑定提示词
   const existAudioPrompt = await db("o_prompt").where("type", "audioBindPrompt").first();
   if (!existAudioPrompt)
@@ -162,15 +162,6 @@ export default async (knex: Knex): Promise<void> => {
       fs.writeFileSync(path.join(rootDir, filename), code);
     }
   }
-  const defList = Object.keys(vendorData).map((filename) => filename.replace(/\.ts$/, ""));
-  const existingIds = data.map((i: any) => i.id);
-  for (const id of defList) {
-    if (!existingIds.includes(id)) {
-      const tsCode = vendorData[`${id}.ts`];
-      if (tsCode) await tempOnsert(tsCode);
-    }
-  }
-
   await dropColumn("o_vendorConfig", "author");
   await dropColumn("o_vendorConfig", "description");
   await dropColumn("o_vendorConfig", "name");
@@ -187,18 +178,3 @@ export default async (knex: Knex): Promise<void> => {
     u.vendor.writeCode("minimax", vendorData["minimax.ts"]);
   }
 };
-
-async function tempOnsert(tsCode: string) {
-  const jsCode = transform(tsCode, { transforms: ["typescript"] }).code;
-  const exports = u.vm(jsCode);
-  const vendor = exports.vendor;
-  const data = await u.db("o_vendorConfig").where("id", vendor.id).first();
-  if (data) return;
-  await u.db("o_vendorConfig").insert({
-    id: vendor.id,
-    inputValues: JSON.stringify(vendor.inputValues ?? {}),
-    models: JSON.stringify([]),
-    enable: vendor.id == "toonflow" ? 1 : 0,
-  });
-  u.vendor.writeCode(vendor.id, tsCode);
-}

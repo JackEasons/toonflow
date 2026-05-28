@@ -96,7 +96,6 @@
       "otherConfig": "其他配置",
       "requestConfig": "请求地址",
       "devConfig": "开发者选项",
-      "about": "检查更新",
       "logoutConfig": "退出登录",
       "skillsSkillsManagement": "Skills技能管理"
     },
@@ -512,36 +511,6 @@
       },
       "refresh": "刷新"
     },
-    "about": {
-      "slogan": "开源的AI驱动漫画 / 分镜创作工具",
-      "latestVersion": "当前为最新版本",
-      "checkUpdate": "检查更新",
-      "codeRepository": "代码仓库",
-      "githubRepo": "GitHub 仓库",
-      "giteeRepo": "Gitee 仓库",
-      "versionUpdate": "版本更新",
-      "checkUpdateGithub": "检查更新(GitHub)",
-      "getFromGithub": "从GitHub Release 获取最新版本",
-      "checkUpdateGitee": "检查更新(Gitee)",
-      "getFromGitee": "从Gitee Release获取最新版本",
-      "license": "许可证",
-      "licenseDesc": "开源许可协议·点击查看详情",
-      "updateAvailable": "发现新版本",
-      "currentVersion": "当前版本",
-      "latestVersionLabel": "最新版本",
-      "selectUpdateSource": "选择更新源",
-      "github": "GitHub",
-      "gitee": "Gitee",
-      "confirmUpdate": "确认更新",
-      "cancel": "取消",
-      "updating": "正在更新...",
-      "updateSuccess": "更新成功，请重启应用",
-      "updateFailed": "更新失败，请重试",
-      "noUpdate": "当前已是最新版本",
-      "upToDate": "检测到新版本",
-      "reinstallRequired": "将自动打开浏览器并下载，如未打开请手动打开",
-      "confirmReinstall": "复制链接"
-    },
     "logout": {
       "warning": "退出登录后，您需要重新登录才能继续使用系统。",
       "confirmLogout": "确定要退出登录吗？",
@@ -644,9 +613,7 @@
       "cornerScape": "塑角造景",
       "production": "视频生产",
       "assetCenter": "资产中心",
-      "settings": "设置",
-      "jumpGithub": "跳转Github",
-      "feedbackQuestions": "反馈问题"
+      "settings": "设置"
     },
     "project": {
       "title": "我的项目",

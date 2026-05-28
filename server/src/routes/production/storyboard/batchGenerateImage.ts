@@ -38,7 +38,7 @@ export default router.post(
     // shouldGenerateImage === 0 的分镜标记为「未生成」，其余标记为「生成中」
     const storyboardData = await u.db("o_storyboard").where("scriptId", scriptId).where("projectId", projectId).whereIn("id", finalStoryboardIds);
     if (!storyboardData.length) return res.status(500).send(error("未查到分镜数据"));
-    const storyIds = storyboardData.map((i) => i.id);
+    const storyIds = storyboardData.map((i) => i.id).filter((id): id is number => typeof id === "number");
     if (compulsory) {
       await u.db("o_storyboard").whereIn("id", storyIds).where("scriptId", scriptId).update({ state: "生成中", shouldGenerateImage: 1 });
     } else {
@@ -48,11 +48,11 @@ export default router.post(
 
     const projectSettingData = await u.db("o_project").where("id", projectId).select("imageModel", "imageQuality", "artStyle", "videoRatio").first();
 
-    // 按 rowid 顺序查出每个 storyboard 关联的 assetId 有序列表
+    // 按 sort 顺序查出每个 storyboard 关联的 assetId 有序列表
     const assets2StoryboardRows = await u
       .db("o_assets2Storyboard")
       .whereIn("storyboardId", storyIds)
-      .orderBy("rowid")
+      .orderBy("sort", "asc").orderBy("assetId", "asc")
       .select("storyboardId", "assetId");
 
     // 收集所有 assetId，批量查对应的 imageId
@@ -65,7 +65,7 @@ export default router.post(
       });
     }
 
-    // 按 rowid 顺序重建 assetRecord，值为有序的 imageId 列表
+    // 按 sort 顺序重建 assetRecord，值为有序的 imageId 列表
     const assetRecord: Record<number, number[]> = {};
     assets2StoryboardRows.forEach((item: any) => {
       if (!assetRecord[item.storyboardId]) {

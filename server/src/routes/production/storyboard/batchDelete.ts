@@ -16,12 +16,12 @@ export default router.post(
     if (!ids.length) return res.status(400).send(error("请先选择分镜"));
     const storyboardDataList = await u.db("o_storyboard").whereIn("id", ids).where("projectId", projectId).select("id", "track", "trackId", "flowId");
     if (!storyboardDataList.length) return res.status(400).send(error("当前选择分镜不存在"));
-    const flowIds = storyboardDataList.map((i) => i.flowId);
-    const storyBoardIds = storyboardDataList.map((i) => i.id);
+    const flowIds = storyboardDataList.map((i) => i.flowId).filter((id): id is number => typeof id === "number");
+    const storyBoardIds = storyboardDataList.map((i) => i.id).filter((id): id is number => typeof id === "number");
     if (flowIds.length)
       await u
         .db("o_imageFlow")
-        .whereIn("id", flowIds as number[])
+        .whereIn("id", flowIds)
         .delete();
 
     await u.db("o_storyboard").whereIn("id", storyBoardIds).delete();

@@ -1,25 +1,5 @@
 <template>
   <div class="aiConfog" v-loading="loading">
-    <div class="banner">
-      <div class="content f ac jb">
-        <div class="textContent ac">
-          <i-good-two class="icon" theme="filled" size="24" fill="currentColor" />
-          <span>{{ $t("settings.agent.bannerDesc") }}</span>
-        </div>
-        <div class="btnList f w">
-          <t-button @click="jumpToWebsite">
-            {{ $t("settings.agent.visitWebsite") }}
-            <template #suffix>
-              <i-share theme="outline" />
-            </template>
-          </t-button>
-          <div class="rightBtnList f nw">
-            <t-button @click="oneClickToFillIn">{{ $t("settings.agent.oneClickFill") }}</t-button>
-          </div>
-        </div>
-      </div>
-    </div>
-
     <div class="modeRadioGroup">
       <t-radio-group v-model="agentUseModeVal" variant="default-filled" @change="(val: string) => updateUseMode(val)">
         <t-radio value="0">{{ $t('settings.agent.ordinary') }}</t-radio>
@@ -215,14 +195,7 @@ function confirmConfig() {
       modelDataShow.value = false;
     });
 }
-//跳转官方网站
-async function jumpToWebsite() {
-  if (isElectron.value) {
-    await fetch(`toonflow://openurlwithbrowser?url=https://api.toonflow.net`);
-  } else {
-    window.open("https://api.toonflow.net", "_blank");
-  }
-}
+
 const loading = ref(false);
 
 //查询Agent配置列表
@@ -241,67 +214,23 @@ function getAgentDeploy() {
 onMounted(() => {
   getAgentDeploy();
 });
-//一键填入
-async function oneClickToFillIn() {
-  loading.value = true;
-  await getVendorList();
-  const toonflow = vendorList.value.find((item) => item.id === "toonflow");
-  if (!toonflow) {
-    window.$message.error($t("settings.agent.msg.toonflowNotFound"));
-    loading.value = false;
-    return;
-  }
-  if (!toonflow.inputValues.apiKey) {
-    // key 不存在，弹窗让用户填入
-    loading.value = false;
-    const inputKey = ref("");
-    const dialogInstance = DialogPlugin({
-      theme: "warning",
-      header: $t("settings.agent.fillKeyHeader"),
-      body: () =>
-        h("div", { style: "padding: 8px 0" }, [
-          h(resolveComponent("t-input") as any, {
-            modelValue: inputKey.value,
-            "onUpdate:modelValue": (val: string) => (inputKey.value = val),
-            placeholder: $t("settings.agent.keyPlaceholder"),
-            type: "password",
-          }),
-        ]),
-      confirmBtn: $t("settings.agent.confirm"),
-      cancelBtn: $t("settings.agent.cancel"),
-      onConfirm: () => {
-        if (!inputKey.value) {
-          window.$message.warning($t("settings.agent.msg.enterKey"));
-          return;
-        }
-        dialogInstance.hide();
-        submitAgentSetKey(inputKey.value);
-      },
-      onClose: () => {
-        dialogInstance.hide();
-      },
-    });
-    return;
-  }
-  submitAgentSetKey(toonflow.inputValues.apiKey);
-}
 
-function submitAgentSetKey(key: string) {
-  loading.value = true;
-  axios
-    .post("/setting/agentDeploy/agentSetKey", { key })
-    .then(() => {
-      window.$message.success($t("settings.agent.msg.configSuccess"));
-      getAgentDeploy();
-    })
-    .catch((err: { message?: string }) => {
-      window.$message.error(`${$t("settings.agent.msg.updateConfigFailed")}${err.message}`);
-    })
-    .finally(() => {
-      modelDataShow.value = false;
-      loading.value = false;
-    });
-}
+// function submitAgentSetKey(key: string) {
+//   loading.value = true;
+//   axios
+//     .post("/setting/agentDeploy/agentSetKey", { key })
+//     .then(() => {
+//       window.$message.success($t("settings.agent.msg.configSuccess"));
+//       getAgentDeploy();
+//     })
+//     .catch((err: { message?: string }) => {
+//       window.$message.error(`${$t("settings.agent.msg.updateConfigFailed")}${err.message}`);
+//     })
+//     .finally(() => {
+//       modelDataShow.value = false;
+//       loading.value = false;
+//     });
+// }
 
 // ── 供应商列表 ──
 interface VendorItem {

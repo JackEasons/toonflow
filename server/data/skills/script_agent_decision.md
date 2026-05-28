@@ -117,8 +117,8 @@
 ```
 输入：事件表（get_novel_events） + planData.storySkeleton + planData.adaptationStrategy
 处理：逐集编写，每次调用执行层处理一集
-输出：SQLite 中的剧本记录
-工具：get_novel_events + get_planData + get_novel_text → insert_script_to_sqlite
+输出：数据库中的剧本记录
+工具：get_novel_events + get_planData + get_novel_text → 写入剧本数据
 前置条件：阶段2（改编策略）通过审核
 ```
 

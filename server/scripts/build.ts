@@ -10,11 +10,11 @@ if (!process.env.NODE_ENV) {
 const pkg = JSON.parse(fs.readFileSync(path.resolve("package.json"), "utf8"));
 
 const external = [
+  "@rmp135/sql-ts",
   "@huggingface/transformers",
   "onnxruntime-node",
   "vm2",
-  "sqlite3",
-  "better-sqlite3",
+  "knex",
   "sharp",
   "mysql",
   "mysql2",

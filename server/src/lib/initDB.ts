@@ -14,11 +14,9 @@ export default async (knex: Knex, forceInit: boolean = false): Promise<void> => 
     {
       name: "o_user",
       builder: (table) => {
-        table.integer("id").notNullable();
+        table.bigIncrements("id");
         table.text("name");
         table.text("password");
-        table.primary(["id"]);
-        table.unique(["id"]);
       },
       initData: async (knex) => {
         await knex("o_user").insert([{ id: 1, name: "admin", password: "admin123" }]);
@@ -28,7 +26,7 @@ export default async (knex: Knex, forceInit: boolean = false): Promise<void> => 
     {
       name: "o_project",
       builder: (table) => {
-        table.integer("id");
+        table.bigIncrements("id");
         table.string("projectType");
         table.string("imageModel");
         table.string("imageQuality");
@@ -40,23 +38,19 @@ export default async (knex: Knex, forceInit: boolean = false): Promise<void> => 
         table.text("directorManual");
         table.text("mode");
         table.text("videoRatio");
-        table.integer("createTime");
-        table.integer("userId");
-        table.primary(["id"]);
-        table.unique(["id"]);
+        table.bigInteger("createTime");
+        table.bigInteger("userId");
       },
     },
     //风格表
     {
       name: "o_artStyle",
       builder: (table) => {
-        table.integer("id").notNullable();
+        table.bigIncrements("id");
         table.string("name");
         table.text("fileUrl");
         table.text("label");
         table.text("prompt");
-        table.primary(["id"]);
-        table.unique(["id"]);
       },
       initData: async (knex) => {},
     },
@@ -64,7 +58,7 @@ export default async (knex: Knex, forceInit: boolean = false): Promise<void> => 
     {
       name: "o_agentDeploy",
       builder: (table) => {
-        table.integer("id").notNullable();
+        table.bigIncrements("id");
         table.string("model");
         table.string("key");
         table.string("modelName");
@@ -74,8 +68,6 @@ export default async (knex: Knex, forceInit: boolean = false): Promise<void> => 
         table.integer("temperature");
         table.integer("maxOutputTokens");
         table.boolean("disabled").defaultTo(false);
-        table.primary(["id"]);
-        table.unique(["id"]);
       },
       initData: async (knex) => {
         await knex("o_agentDeploy").insert([
@@ -265,10 +257,9 @@ export default async (knex: Knex, forceInit: boolean = false): Promise<void> => 
     {
       name: "o_setting",
       builder: (table) => {
-        table.text("key");
+        table.string("key", 191).notNullable();
         table.text("value");
         table.primary(["key"]);
-        table.unique(["key"]);
       },
       initData: async (knex) => {
         await knex("o_setting").insert([
@@ -319,17 +310,15 @@ export default async (knex: Knex, forceInit: boolean = false): Promise<void> => 
     {
       name: "o_tasks",
       builder: (table) => {
-        table.integer("id").notNullable();
-        table.integer("projectId");
+        table.bigIncrements("id");
+        table.bigInteger("projectId");
         table.string("taskClass");
-        table.string("relatedObjects");
+        table.text("relatedObjects");
         table.string("model");
         table.text("describe");
         table.string("state");
-        table.integer("startTime");
+        table.bigInteger("startTime");
         table.text("reason");
-        table.primary(["id"]);
-        table.unique(["id"]);
       },
       initData: async (knex) => {},
     },
@@ -337,13 +326,11 @@ export default async (knex: Knex, forceInit: boolean = false): Promise<void> => 
     {
       name: "o_prompt",
       builder: (table) => {
-        table.integer("id").notNullable();
+        table.bigIncrements("id");
         table.string("name");
         table.string("type");
         table.text("data");
         table.text("useData");
-        table.primary(["id"]);
-        table.unique(["id"]);
       },
       initData: async (knex) => {
         await knex("o_prompt").insert([
@@ -374,13 +361,11 @@ export default async (knex: Knex, forceInit: boolean = false): Promise<void> => 
     {
       name: "o_modelPrompt",
       builder: (table) => {
-        table.integer("id").notNullable();
+        table.bigIncrements("id");
         table.string("vendorId");
         table.string("model");
         table.text("fileName");
         table.text("path");
-        table.primary(["id"]);
-        table.unique(["id"]);
       },
       initData: async (knex) => {},
     },
@@ -388,79 +373,69 @@ export default async (knex: Knex, forceInit: boolean = false): Promise<void> => 
     {
       name: "o_novel",
       builder: (table) => {
-        table.integer("id").notNullable();
+        table.bigIncrements("id");
         table.integer("chapterIndex");
         table.text("reel");
         table.text("chapter");
         table.text("chapterData");
-        table.integer("projectId");
+        table.bigInteger("projectId");
         table.integer("eventState");
         table.text("event");
         table.text("errorReason");
-        table.integer("createTime");
-        table.primary(["id"]);
-        table.unique(["id"]);
+        table.bigInteger("createTime");
       },
     },
     //小说事件表
     {
       name: "o_event",
       builder: (table) => {
-        table.integer("id").notNullable();
+        table.bigIncrements("id");
         table.string("name");
         table.string("detail");
-        table.integer("createTime");
-        table.primary(["id"]);
-        table.unique(["id"]);
+        table.bigInteger("createTime");
       },
     },
     //事件-章节表
     {
       name: "o_eventChapter",
       builder: (table) => {
-        table.integer("id").notNullable();
-        table.integer("eventId").unsigned().references("id").inTable("o_event");
-        table.integer("novelId").unsigned().references("id").inTable("o_novel");
-        table.primary(["id"]);
-        table.unique(["id"]);
+        table.bigIncrements("id");
+        table.bigInteger("eventId").unsigned().references("id").inTable("o_event");
+        table.bigInteger("novelId").unsigned().references("id").inTable("o_novel");
       },
     },
     //剧本
     {
       name: "o_script",
       builder: (table) => {
-        table.integer("id").notNullable();
+        table.bigIncrements("id");
         table.text("name");
         table.text("content");
-        table.integer("projectId");
+        table.bigInteger("projectId");
         table.integer("extractState");
-        table.integer("createTime");
+        table.bigInteger("createTime");
         table.text("errorReason");
-        table.primary(["id"]);
-        table.unique(["id"]);
       },
     },
     //资产表
     {
       name: "o_assets",
       builder: (table) => {
-        table.integer("id").notNullable();
+        table.bigIncrements("id");
         table.text("name");
         table.text("prompt");
         table.text("remark");
         table.text("type");
         table.text("describe");
-        table.integer("scriptId"); //剧本id
-        table.integer("imageId").unsigned().references("id").inTable("o_image");
-        table.integer("assetsId");
-        table.integer("projectId");
-        table.integer("flowId"); //工作流id
-        table.integer("startTime");
+        table.bigInteger("scriptId"); //剧本id
+        table.bigInteger("imageId").unsigned();
+        table.bigInteger("assetsId");
+        table.bigInteger("projectId");
+        table.bigInteger("flowId"); //工作流id
+        table.bigInteger("startTime");
         table.string("promptState");
         table.integer("audioBindState");
         table.text("promptErrorReason");
-        table.primary(["id"]);
-        table.unique(["id"]);
       },
       initData: async (knex) => {},
     },
@@ -468,99 +443,88 @@ export default async (knex: Knex, forceInit: boolean = false): Promise<void> => 
     {
       name: "o_image",
       builder: (table) => {
-        table.integer("id").notNullable();
+        table.bigIncrements("id");
         table.text("filePath");
         table.text("type");
-        table.integer("assetsId");
+        table.bigInteger("assetsId");
         table.text("model");
         table.text("resolution");
         table.text("state");
         table.text("errorReason");
-        table.primary(["id"]);
-        table.unique(["id"]);
       },
     },
     //分镜
     {
       name: "o_storyboard",
       builder: (table) => {
-        table.integer("id").notNullable();
-        table.integer("scriptId");
+        table.bigIncrements("id");
+        table.bigInteger("scriptId");
         table.text("prompt");
         table.text("filePath");
         table.text("duration");
         table.text("state");
-        table.integer("trackId");
+        table.bigInteger("trackId");
         table.text("reason");
         table.text("track");
         table.text("videoDesc");
         table.integer("shouldGenerateImage"); // 0 否  1 是
-        table.integer("projectId");
-        table.integer("flowId"); //工作流id
+        table.bigInteger("projectId");
+        table.bigInteger("flowId"); //工作流id
         table.integer("index");
-        table.integer("createTime");
-        table.primary(["id"]);
-        table.unique(["id"]);
+        table.bigInteger("createTime");
       },
     },
     //flowData-剧本
     {
       name: "o_agentWorkData",
       builder: (table) => {
-        table.integer("id").notNullable();
-        table.integer("projectId");
-        table.integer("episodesId");
+        table.bigIncrements("id");
+        table.bigInteger("projectId");
+        table.bigInteger("episodesId");
         table.string("key"); //用户其他方式索引
-        table.string("data");
-        table.integer("createTime");
-        table.integer("updateTime");
-        table.primary(["id"]);
-        table.unique(["id"]);
+        table.text("data", "longtext");
+        table.bigInteger("createTime");
+        table.bigInteger("updateTime");
       },
     },
     //视频
     {
       name: "o_video",
       builder: (table) => {
-        table.integer("id").notNullable();
+        table.bigIncrements("id");
         table.text("filePath");
         table.text("errorReason");
-        table.integer("time");
+        table.bigInteger("time");
         table.text("state");
-        table.integer("scriptId");
-        table.integer("projectId");
-        table.integer("videoTrackId");
-        table.primary(["id"]);
-        table.unique(["id"]);
+        table.bigInteger("scriptId");
+        table.bigInteger("projectId");
+        table.bigInteger("videoTrackId");
       },
     },
     // 视频轨道
     {
       name: "o_videoTrack",
       builder: (table) => {
-        table.integer("id").notNullable();
-        table.integer("videoId");
-        table.integer("projectId");
-        table.integer("scriptId");
+        table.bigIncrements("id");
+        table.bigInteger("videoId");
+        table.bigInteger("projectId");
+        table.bigInteger("scriptId");
         table.text("state");
         table.text("reason");
         table.text("prompt");
-        table.integer("selectVideoId");
+        table.bigInteger("selectVideoId");
         table.integer("duration");
-        table.primary(["id"]);
-        table.unique(["id"]);
       },
     },
     //供应商配置表
     {
       name: "o_vendorConfig",
       builder: (table) => {
-        table.string("id").notNullable();
+        table.string("id", 191).notNullable();
         table.text("inputValues"); // 输入项值 JSON
         table.text("models"); // 模型配置 JSON
         table.integer("enable"); //是否启用供应商
         table.primary(["id"]);
-        table.unique(["id"]);
       },
       initData: async (knex) => {
         await knex("o_vendorConfig").insert([
@@ -619,17 +583,16 @@ export default async (knex: Knex, forceInit: boolean = false): Promise<void> => 
     {
       name: "o_imageFlow",
       builder: (table) => {
-        table.integer("id").notNullable();
+        table.bigIncrements("id");
         table.text("flowData").notNullable();
-        table.primary(["id"]);
-        table.unique(["id"]);
       },
     },
     {
       name: "o_assets2Storyboard",
       builder: (table) => {
-        table.integer("storyboardId").notNullable();
-        table.integer("assetId").notNullable();
+        table.bigInteger("storyboardId").notNullable();
+        table.bigInteger("assetId").notNullable();
+        table.integer("sort").notNullable().defaultTo(0);
         table.primary(["storyboardId", "assetId"]);
         table.unique(["storyboardId", "assetId"]);
       },
@@ -637,8 +600,8 @@ export default async (knex: Knex, forceInit: boolean = false): Promise<void> => 
     {
       name: "o_scriptAssets",
       builder: (table) => {
-        table.integer("scriptId").notNullable();
-        table.integer("assetId").notNullable();
+        table.bigInteger("scriptId").notNullable();
+        table.bigInteger("assetId").notNullable();
         table.primary(["scriptId", "assetId"]);
         table.unique(["scriptId", "assetId"]);
       },
@@ -646,15 +609,15 @@ export default async (knex: Knex, forceInit: boolean = false): Promise<void> => 
     {
       name: "o_skillList",
       builder: (table) => {
-        table.text("id").notNullable();
-        table.text("md5").notNullable();
+        table.string("id", 191).notNullable();
+        table.string("md5", 191).notNullable();
         table.text("path").notNullable();
         table.text("name").notNullable(); //文件名
         table.text("description").notNullable(); //描述
         table.text("embedding"); // 向量嵌入 JSON
-        table.text("type").notNullable(); // "main" | "references"
-        table.integer("createTime").notNullable();
-        table.integer("updateTime").notNullable();
+        table.string("type", 32).notNullable(); // "main" | "references"
+        table.bigInteger("createTime").notNullable();
+        table.bigInteger("updateTime").notNullable();
         table.integer("state").notNullable(); // 1正常，0正在生成description，-1description为空。-2归属为空,-3md5变动，-4文件不存在
         table.primary(["id"]);
       },
@@ -939,8 +902,8 @@ export default async (knex: Knex, forceInit: boolean = false): Promise<void> => 
     {
       name: "o_skillAttribution",
       builder: (table) => {
-        table.text("skillId").notNullable().references("id").inTable("o_skillList").onDelete("CASCADE");
-        table.text("attribution").notNullable(); // "production_agent_decision.md" | "production_agent_execution.md" | "production_agent_supervision.md" | "script_agent_decision.md" | "script_agent_execution.md" | "script_agent_supervision.md" | "universal_agent.md"
+        table.string("skillId", 191).notNullable().references("id").inTable("o_skillList").onDelete("CASCADE");
+        table.string("attribution", 191).notNullable(); // "production_agent_decision.md" | "production_agent_execution.md" | "production_agent_supervision.md" | "script_agent_decision.md" | "script_agent_execution.md" | "script_agent_supervision.md" | "universal_agent.md"
         table.primary(["skillId", "attribution"]);
         table.index(["attribution"]);
       },
@@ -1009,16 +972,16 @@ export default async (knex: Knex, forceInit: boolean = false): Promise<void> => 
     {
       name: "memories",
       builder: (table) => {
-        table.text("id").notNullable();
-        table.text("isolationKey").notNullable(); // 记忆隔离键
-        table.text("type").notNullable(); // 'message' | 'summary'
-        table.text("role"); // 'user' | 'assistant'
-        table.text("name");
+        table.string("id", 191).notNullable();
+        table.string("isolationKey", 191).notNullable(); // 记忆隔离键
+        table.string("type", 32).notNullable(); // 'message' | 'summary'
+        table.text("role");
+        table.string("name", 191);
         table.text("content").notNullable();
         table.text("embedding"); // 向量嵌入 JSON
         table.text("relatedMessageIds"); // summary关联的message id列表 JSON
         table.integer("summarized").defaultTo(0); // message是否已被总结 0/1
-        table.integer("createTime").notNullable();
+        table.bigInteger("createTime").notNullable();
         table.primary(["id"]);
         table.index(["isolationKey", "type"]);
         table.index(["isolationKey", "summarized"]);
@@ -1027,8 +990,8 @@ export default async (knex: Knex, forceInit: boolean = false): Promise<void> => 
     {
       name: "o_assetsRole2Audio",
       builder: (table) => {
-        table.integer("assetsRoleId").notNullable();
-        table.integer("assetsAudioId").notNullable();
+        table.bigInteger("assetsRoleId").notNullable();
+        table.bigInteger("assetsAudioId").notNullable();
         table.primary(["assetsAudioId", "assetsRoleId"]);
         table.unique(["assetsAudioId", "assetsRoleId"]);
       },

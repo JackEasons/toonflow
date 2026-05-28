@@ -100,8 +100,8 @@ export default router.post(
             }
           }),
         );
-        const storyboardIds = storyboardData.map((i) => i.id);
-        const assetsIds = await u.db("o_assets2Storyboard").whereIn("storyboardId", storyboardIds).orderBy("rowid");
+        const storyboardIds = storyboardData.map((i) => i.id).filter((id): id is number => typeof id === "number");
+        const assetsIds = await u.db("o_assets2Storyboard").whereIn("storyboardId", storyboardIds).orderBy("sort", "asc").orderBy("assetId", "asc");
 
         const assets2StoryboardMap: Record<number, number[]> = {};
         assetsIds.forEach((i) => {

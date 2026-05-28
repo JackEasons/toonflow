@@ -12,6 +12,7 @@ import fs from "fs";
 import u from "@/utils";
 import jwt from "jsonwebtoken";
 import socketInit from "@/socket/index";
+import { dbReady } from "@/utils/db";
 
 const app = express();
 const server = http.createServer(app);
@@ -23,6 +24,7 @@ function resolvePort(randomPort: boolean): number {
 }
 
 export default async function startServe(randomPort: boolean = false) {
+  await dbReady;
   await u.writeVersion();
   const io = new Server(server, { cors: { origin: "*" } });
   socketInit(io);

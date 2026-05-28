@@ -23,7 +23,6 @@
           <promptManage v-if="activeMenu === 'promptManage'" />
           <otherConfig v-if="activeMenu === 'otherConfig'" />
           <dbConfig v-if="activeMenu === 'dbConfig'" />
-          <about v-if="activeMenu === 'about'" />
           <logoutConfig v-if="activeMenu === 'logoutConfig'" />
           <memoryConfig v-if="activeMenu === 'memoryConfig'" />
           <fileManagement v-if="activeMenu === 'fileManagement'" />
@@ -47,7 +46,6 @@ import loginConfig from "./components/loginConfig.vue";
 import agentConfog from "./components/agentConfog.vue";
 import dbConfig from "./components/dbConfig.vue";
 import otherConfig from "./components/otherConfig.vue";
-import about from "./components/about.vue";
 import logoutConfig from "./components/logoutConfig.vue";
 import vendorConfig from "./components/vendorConfig.vue";
 import memoryConfig from "./components/memoryConfig.vue";
@@ -72,7 +70,6 @@ const menuItems = [
   { key: "otherConfig", label: "settings.menu.otherConfig", icon: "i-application-menu" },
   { key: "requestConfig", label: "settings.menu.requestConfig", icon: "i-api" },
   { key: "devConfig", label: "settings.menu.devConfig", icon: "i-flask" },
-  { key: "about", label: "settings.menu.about", icon: "i-info" },
   { key: "logoutConfig", label: "settings.menu.logoutConfig", icon: "i-logout" },
 ];
 
