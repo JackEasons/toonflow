@@ -4,7 +4,7 @@
       <!-- 欢迎首页 -->
       <template v-if="currentStep === 0">
         <div class="welcomePage">
-          <img src="@/assets/logo.png" alt="ToonFlow Logo" class="welcomeLogo" />
+          <img src="@/assets/logo.png" alt="DramaStudio Logo" class="welcomeLogo" />
           <h1 class="welcomeTitle">{{ $t("hello.welcomeTitle") }}</h1>
           <p class="welcomeDesc">{{ $t("hello.welcomeDesc") }}</p>
           <t-button theme="primary" size="large" @click="currentStep = 1">{{ $t("hello.startConfig") }}</t-button>
@@ -142,9 +142,9 @@ function handleFinish() {
 
 async function jumpGithub() {
   if (isElectron.value) {
-    await fetch("toonflow://openurlwithbrowser?url=https://github.com/HBAI-Ltd/Toonflow-app");
+    await fetch("dramastudio://openurlwithbrowser?url=https://github.com/HBAI-Ltd/DramaStudio-app");
   } else {
-    window.open("https://github.com/HBAI-Ltd/Toonflow-app");
+    window.open("https://github.com/HBAI-Ltd/DramaStudio-app");
   }
 }
 </script>
@@ -171,12 +171,14 @@ async function jumpGithub() {
       height: 120px;
       object-fit: contain;
       margin-bottom: 24px;
+      filter: invert(1) drop-shadow(0 0 22px rgba(32, 233, 212, 0.36));
     }
 
     .welcomeTitle {
       font-size: 28px;
       font-weight: 700;
       margin: 0 0 12px;
+      color: var(--td-text-color-primary);
     }
 
     .welcomeDesc {

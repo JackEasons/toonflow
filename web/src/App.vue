@@ -1,32 +1,19 @@
 <template>
-  <titleBar v-if="isElectron" />
-  <t-config-provider :global-config="globalConfig">
-    <router-view></router-view>
-  </t-config-provider>
+  <div class="tf-app-content">
+    <t-config-provider :global-config="globalConfig">
+      <router-view></router-view>
+    </t-config-provider>
+  </div>
 </template>
 
 <script setup lang="ts">
-import settingStore from "@/stores/setting";
 import { merge } from "lodash-es";
 import zhConfig from "tdesign-vue-next/es/locale/zh_CN";
 import enConfig from "tdesign-vue-next/es/locale/en_US";
 import { cachedLocale } from "@/locales";
 import { initTheme } from "@/utils/theme";
 import { type GlobalConfigProvider } from "tdesign-vue-next";
-const { baseUrl, isElectron } = storeToRefs(settingStore());
 import { config } from "md-editor-v3";
-
-watch(
-  () => isElectron.value,
-  (newVal) => {
-    if (newVal) {
-      document.body.classList.add("is-electron");
-    } else {
-      document.body.classList.remove("is-electron");
-    }
-  },
-  { immediate: true },
-);
 
 onBeforeMount(() => {
   document.addEventListener("keydown", function (event) {
@@ -49,12 +36,7 @@ async function handleLinkClick(event: MouseEvent) {
   const target = event.currentTarget as HTMLAnchorElement | null;
   const url = target?.getAttribute("data-link") || target?.getAttribute("href");
   if (!url) return false;
-
-  if (isElectron.value) {
-    await fetch(`toonflow://openurlwithbrowser?url=${encodeURIComponent(url)}`);
-  } else {
-    window.open(url, "_blank", "noopener,noreferrer");
-  }
+  window.open(url, "_blank", "noopener,noreferrer");
 
   return false;
 }
@@ -68,14 +50,6 @@ async function getPort() {
   await nextTick();
   await nextTick();
   await nextTick();
-  try {
-    const res = await fetch("toonflow://getAppUrl");
-    const data = await res.json();
-    if (data?.url) {
-      baseUrl.value = data.url;
-      isElectron.value = true;
-    }
-  } catch (error) {}
 
   config({
     markdownItConfig(md) {

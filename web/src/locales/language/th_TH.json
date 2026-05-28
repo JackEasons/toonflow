@@ -43,7 +43,7 @@
     }
   },
   "settings": {
-    "title": "การตั้งค่า ToonFlow",
+    "title": "การตั้งค่า DramaStudio",
     "menu": {
       "language": "ตั้งค่าภาษา",
       "vendorConfig": "บริการโมเดล",
@@ -180,7 +180,7 @@
       "linkAdd": "ยืนยัน"
     },
     "agent": {
-      "bannerDesc": "ใช้เซิร์ฟเวอร์ตัวกลางอย่างเป็นทางการของ Toonflow รองรับการกรอกการตั้งค่าในคลิกเดียว พร้อมใช้งานทันทีโดยไม่ต้องตั้งค่าด้วยตนเอง",
+      "bannerDesc": "ใช้เซิร์ฟเวอร์ตัวกลางอย่างเป็นทางการของ DramaStudio รองรับการกรอกการตั้งค่าในคลิกเดียว พร้อมใช้งานทันทีโดยไม่ต้องตั้งค่าด้วยตนเอง",
       "visitWebsite": "เข้าสู่เว็บไซต์",
       "fillKey": "กรอก KEY",
       "oneClickFill": "กรอกในคลิกเดียว",
@@ -190,19 +190,19 @@
       "confirm": "ยืนยัน",
       "cancel": "ยกเลิก",
       "selectModel": "เลือกโมเดล",
-      "fillKeyHeader": "กรอก KEY อย่างเป็นทางการจากแพลตฟอร์ม Toonflow",
+      "fillKeyHeader": "กรอก KEY อย่างเป็นทางการจากแพลตฟอร์ม DramaStudio",
       "keyPlaceholder": "โปรดกรอก KEY",
       "save": "บันทึก",
       "msg": {
         "notAvailable": "ฟีเจอร์นี้ยังไม่เปิดให้บริการ โปรดติดตามเร็วๆ นี้",
         "configSuccess": "ตั้งค่าสำเร็จ",
         "updateConfigFailed": "อัปเดตการตั้งค่าล้มเหลว:",
-        "keyValid": "KEY ถูกต้อง เชื่อมต่อกับแพลตฟอร์ม Toonflow สำเร็จแล้ว",
+        "keyValid": "KEY ถูกต้อง เชื่อมต่อกับแพลตฟอร์ม DramaStudio สำเร็จแล้ว",
         "keyInvalid": "KEY ไม่ถูกต้อง โปรดตรวจสอบและกรอกใหม่อีกครั้ง:",
         "enterKey": "โปรดกรอก KEY",
         "saveFailed": "บันทึกล้มเหลว:",
         "getAgentListFailed": "ดึงรายการการตั้งค่า Agent ล้มเหลว:",
-        "toonflowNotFound": "ไม่มีสถานีรับส่งอย่างเป็นทางการของ Toonflow"
+        "dramastudioNotFound": "ไม่มีสถานีรับส่งอย่างเป็นทางการของ DramaStudio"
       },
       "temperature": "อุณหภูมิ"
     },
@@ -256,7 +256,7 @@
       "username": "ชื่อผู้ใช้",
       "usernamePlaceholder": "โปรดกรอกชื่อผู้ใช้",
       "password": "รหัสผ่าน",
-      "passwordPlaceholder": "โปรดกรอกรหัสผ่าน",
+      "passwordPlaceholder": "เว้นว่างไว้เพื่อใช้รหัสผ่านเดิม",
       "modify": "แก้ไข",
       "msg": {
         "enterUsername": "โปรดกรอกชื่อผู้ใช้",
@@ -409,9 +409,9 @@
       "warning": "ต่อไปนี้เป็นเครื่องมือสำหรับนักพัฒนาซอฟต์แวร์ โปรดดำเนินการด้วยความระมัดระวัง!",
       "openDevtool": "เปิด",
       "devtoolsDoc": "ที่อยู่เอกสาร",
-      "devtoolsDesc": "หลังจากเปิดใช้งานแล้ว โฟลเดอร์ .devtools จะถูกสร้างขึ้นในไดเร็กทอรีการติดตั้ง Toonflow โปรดตรวจสอบให้แน่ใจว่า Toonflow มีสิทธิ์ในการเขียน (ทำงานในฐานะผู้ดูแลระบบ)",
+      "devtoolsDesc": "หลังจากเปิดใช้งานแล้ว โฟลเดอร์ .devtools จะถูกสร้างขึ้นในไดเร็กทอรีการติดตั้ง DramaStudio โปรดตรวจสอบให้แน่ใจว่า DramaStudio มีสิทธิ์ในการเขียน (ทำงานในฐานะผู้ดูแลระบบ)",
       "devtoolsDesc2": "เรียกใช้ npx {'@'}ai-sdk/devtools ในไดเรกทอรีนี้เพื่อเปิดใช้งานการแก้ไขจุดบกพร่องการวัดและส่งข้อมูลทางไกล",
-      "openDevtoolFailed": "ไม่สามารถเปิดเครื่องมือสำหรับนักพัฒนาซอฟต์แวร์ได้ โปรดตรวจสอบให้แน่ใจว่าได้ติดตั้ง Toonflow desktop แล้ว",
+      "openDevtoolFailed": "ไม่สามารถเปิดเครื่องมือสำหรับนักพัฒนาซอฟต์แวร์ได้ โปรดตรวจสอบให้แน่ใจว่าได้ติดตั้ง DramaStudio desktop แล้ว",
       "notInElectron": "สำหรับสภาพแวดล้อมแบบเว็บ โปรดเปิดคอนโซลเบราว์เซอร์ด้วยตนเอง"
     }
   },
@@ -672,7 +672,7 @@
       "selectAssets": "เลือกสินทรัพย์",
       "noAssets": "ยังไม่ได้เชื่อมโยงสินทรัพย์",
       "selectAssetsTitle": "เลือกสินทรัพย์ที่เกี่ยวข้อง",
-      "welcomeMsg": "สวัสดี! ฉันคือผู้ช่วยอัจฉริยะ Toonflow ต้องการให้ฉันเริ่มสร้างบทภาพยนตร์ให้คุณเลยไหม?",
+      "welcomeMsg": "สวัสดี! ฉันคือผู้ช่วยอัจฉริยะ DramaStudio ต้องการให้ฉันเริ่มสร้างบทภาพยนตร์ให้คุณเลยไหม?",
       "start": "เริ่มต้น",
       "memoryType": {
         "message": "หน่วยความจำข้อความ",
@@ -1395,7 +1395,28 @@
     "passwordRequired": "โปรดกรอกรหัสผ่าน",
     "enterUsernameAndPassword": "โปรดกรอกชื่อผู้ใช้หรือรหัสผ่าน",
     "loginSuccess": "เข้าสู่ระบบสำเร็จ",
-    "settingsSaved": "บันทึกการตั้งค่าแล้ว"
+    "settingsSaved": "บันทึกการตั้งค่าแล้ว",
+    "loginTab": "เข้าสู่ระบบ",
+    "registerTab": "สมัครสมาชิก",
+    "welcomeBack": "ยินดีต้อนรับกลับ",
+    "loginTo": "เข้าสู่คอนโซลสร้างสรรค์ DramaStudio",
+    "createAccount": "สร้างบัญชี",
+    "joinPlatform": "เข้าร่วมแพลตฟอร์มหลังตรวจสอบรหัสเชิญ",
+    "passwordMinPlaceholder": "กรอกรหัสผ่านอย่างน้อย 6 ตัวอักษร",
+    "confirmPassword": "ยืนยันรหัสผ่าน",
+    "inviteCode": "รหัสเชิญ",
+    "confirmPasswordRequired": "โปรดยืนยันรหัสผ่าน",
+    "inviteCodeRequired": "โปรดกรอกรหัสเชิญ",
+    "passwordTooShort": "รหัสผ่านต้องมีอย่างน้อย 6 ตัวอักษร",
+    "passwordMismatch": "รหัสผ่านไม่ตรงกัน",
+    "registerSuccess": "สมัครสำเร็จ โปรดเข้าสู่ระบบ",
+    "registerFailed": "สมัครสมาชิกไม่สำเร็จ",
+    "loginFailed": "เข้าสู่ระบบไม่สำเร็จ",
+    "register": "สมัครสมาชิก",
+    "registering": "กำลังสมัคร",
+    "loggingIn": "กำลังเข้าสู่ระบบ",
+    "switchToRegister": "ยังไม่มีบัญชี? สมัครเลย",
+    "switchToLogin": "มีบัญชีแล้ว? กลับไปเข้าสู่ระบบ"
   },
   "components.storyboardImageCheck.camera": "กล้อง",
   "components.storyboardImageCheck.dialogTitle": "เลือกรูปสตอรี่บอร์ด",
@@ -1410,7 +1431,7 @@
     "prompt": "คำพูดที่รวดเร็ว"
   },
   "hello": {
-    "welcomeTitle": "ยินดีต้อนรับสู่ ToonFlow",
+    "welcomeTitle": "ยินดีต้อนรับสู่ DramaStudio",
     "welcomeDesc": "แพลตฟอร์มเวิร์กโฟลว์การสร้างการ์ตูนที่ขับเคลื่อนด้วย AI ให้เราใช้เวลาสักครู่เพื่อกำหนดค่าเริ่มต้นให้เสร็จสิ้น",
     "startConfig": "เริ่มการกำหนดค่า",
     "skip": "ข้ามการบูต",

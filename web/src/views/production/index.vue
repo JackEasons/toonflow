@@ -500,6 +500,14 @@ watch(openShowVisible, (val) => {
 <style lang="scss" scoped>
 .flowMain {
   height: 100%;
+  overflow: hidden;
+  border: 1px solid rgba(104, 255, 226, 0.12);
+  border-radius: 14px;
+  background:
+    linear-gradient(rgba(104, 255, 226, 0.055) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(104, 255, 226, 0.045) 1px, transparent 1px),
+    linear-gradient(180deg, rgba(5, 9, 9, 0.42), rgba(2, 4, 4, 0.56));
+  background-size: 42px 42px, 42px 42px, auto;
   &.space-dragging {
     cursor: grab !important;
     :deep(*) {
@@ -513,10 +521,17 @@ watch(openShowVisible, (val) => {
     overflow: hidden;
     .episodesSelect {
       position: absolute;
-      top: 10px;
-      left: 0px;
+      top: 12px;
+      left: 12px;
       z-index: 9999;
       cursor: pointer;
+      gap: 8px;
+      padding: 8px;
+      border: 1px solid rgba(104, 255, 226, 0.16);
+      border-radius: 10px;
+      background: rgba(7, 12, 12, 0.5);
+      box-shadow: var(--tf-shadow-tight);
+      backdrop-filter: blur(16px);
 
       .item {
         width: 50px;
@@ -531,14 +546,16 @@ watch(openShowVisible, (val) => {
     }
     .openRightChatBoxBtn {
       position: absolute;
-      top: 10px;
-      right: 0;
+      top: 12px;
+      right: 12px;
       width: 40px;
       height: 40px;
-      background-color: var(--td-bg-color-secondarycontainer);
+      background: rgba(7, 12, 12, 0.5);
+      border: 1px solid rgba(104, 255, 226, 0.18);
       border-radius: 10px;
       z-index: 10;
       cursor: pointer;
+      box-shadow: var(--tf-shadow-tight);
     }
   }
   :deep(.slide-enter-active),
@@ -585,18 +602,18 @@ $handelSize: 12px;
   width: $handelSize;
 }
 :deep(.dragHandle) {
-  padding: 4px;
-  border-radius: 4px;
+  padding: 6px;
+  border-radius: 8px;
   transition: backdrop-filter 0.3s ease-out;
   &:hover {
     cursor: move;
-    backdrop-filter: brightness(0.95);
+    backdrop-filter: brightness(1.16);
   }
 }
 .fps {
   position: absolute;
-  bottom: 10px;
-  right: 0px;
+  bottom: 12px;
+  right: 12px;
   padding: 2px 6px;
   font-size: 12px;
   border-radius: 4px;

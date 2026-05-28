@@ -53,7 +53,7 @@
     }
   },
   "settings": {
-    "title": "ToonFlow设置",
+    "title": "DramaStudio设置",
     "modelMap": {
       "imageModel": "图像模型",
       "videoModel": "视频模型",
@@ -261,7 +261,7 @@
       "linkAdd": "确认"
     },
     "agent": {
-      "bannerDesc": "使用 Toonflow 官方中转站点，支持一键填入配置，开箱即用，无需手动配置。",
+      "bannerDesc": "使用 DramaStudio 官方中转站点，支持一键填入配置，开箱即用，无需手动配置。",
       "visitWebsite": "进入网站",
       "fillKey": "填入KEY",
       "oneClickFill": "一键填入",
@@ -271,19 +271,19 @@
       "confirm": "确认",
       "cancel": "取消",
       "selectModel": "选择模型",
-      "fillKeyHeader": "填入Toonflow平台的官方KEY",
+      "fillKeyHeader": "填入DramaStudio平台的官方KEY",
       "keyPlaceholder": "请输入 KEY",
       "save": "保存",
       "msg": {
         "notAvailable": "该功能暂未开放，敬请期待",
         "configSuccess": "配置成功",
         "updateConfigFailed": "更新配置失败：",
-        "keyValid": "KEY有效，已成功连接Toonflow平台",
+        "keyValid": "KEY有效，已成功连接DramaStudio平台",
         "keyInvalid": "KEY无效，请检查后重新输入：",
         "enterKey": "请输入 KEY",
         "saveFailed": "保存失败：",
         "getAgentListFailed": "获取Agent配置列表失败：",
-        "toonflowNotFound": "Toonflow官方中转站不存在"
+        "dramastudioNotFound": "DramaStudio官方中转站不存在"
       },
       "temperature": "温度"
     },
@@ -348,7 +348,7 @@
       "username": "用户名",
       "usernamePlaceholder": "请输入用户名",
       "password": "密码",
-      "passwordPlaceholder": "请输入密码",
+      "passwordPlaceholder": "留空则不修改密码",
       "modify": "修改",
       "msg": {
         "enterUsername": "请输入用户名",
@@ -409,7 +409,7 @@
     "skill": {
       "scanSkills": "扫描Skills",
       "addSkill": "新增 Skill",
-      "importFromHub": "Toonflow-Hub 导入",
+      "importFromHub": "DramaStudio-Hub 导入",
       "filterType": "类型",
       "filterAttribution": "归属",
       "searchPlaceholder": "按名称搜索 skill",
@@ -429,7 +429,7 @@
       "embedding": "向量化",
       "edit": "编辑",
       "delete": "删除",
-      "importFromHubDialog": "从 Toonflow-Hub 导入",
+      "importFromHubDialog": "从 DramaStudio-Hub 导入",
       "shareLink": "分享链接",
       "editSkillTitle": "编辑 Skill-",
       "addSkillTitle": "新增 Skill",
@@ -573,9 +573,9 @@
       "warning": "以下为开发者工具，谨慎操作！",
       "openDevtool": "打开",
       "devtoolsDoc": "文档地址",
-      "devtoolsDesc": "开启后会在Toonflow安装目录创建.devtools文件夹，请确保Toonflow有写入权限（管理员身份运行）。",
+      "devtoolsDesc": "开启后会在DramaStudio安装目录创建.devtools文件夹，请确保DramaStudio有写入权限（管理员身份运行）。",
       "devtoolsDesc2": "在该目录运行 npx {'@'}ai-sdk/devtools 开启遥测调试",
-      "openDevtoolFailed": "打开开发者工具失败，请确保已安装Toonflow桌面端",
+      "openDevtoolFailed": "打开开发者工具失败，请确保已安装DramaStudio桌面端",
       "notInElectron": "WEB环境请手动打开浏览器控制台",
       "msg": {
         "localStorageKeyRequired": "请输入 localStorage 的 key",
@@ -860,7 +860,7 @@
       "selectAssets": "选择资产",
       "noAssets": "暂未关联资产",
       "selectAssetsTitle": "选择关联资产",
-      "welcomeMsg": "你好！我是 Toonflow 智能助手，需要我开始为您生成剧本吗？",
+      "welcomeMsg": "你好！我是 DramaStudio 智能助手，需要我开始为您生成剧本吗？",
       "start": "开始",
       "memoryType": {
         "message": "消息记忆",
@@ -1620,7 +1620,28 @@
     "passwordRequired": "请输入密码",
     "enterUsernameAndPassword": "请输入用户名或密码",
     "loginSuccess": "登录成功",
-    "settingsSaved": "设置已保存"
+    "settingsSaved": "设置已保存",
+    "loginTab": "登录",
+    "registerTab": "注册",
+    "welcomeBack": "欢迎回来",
+    "loginTo": "登录 DramaStudio 创作控制台",
+    "createAccount": "创建账号",
+    "joinPlatform": "邀请码验证后即可加入创作平台",
+    "passwordMinPlaceholder": "请输入至少 6 位密码",
+    "confirmPassword": "确认密码",
+    "inviteCode": "邀请码",
+    "confirmPasswordRequired": "请再次输入密码",
+    "inviteCodeRequired": "请输入邀请码",
+    "passwordTooShort": "密码长度至少 6 位",
+    "passwordMismatch": "两次输入的密码不一致",
+    "registerSuccess": "注册成功，请登录",
+    "registerFailed": "注册失败",
+    "loginFailed": "登录失败",
+    "register": "注册",
+    "registering": "注册中",
+    "loggingIn": "登录中",
+    "switchToRegister": "没有账号？立即注册",
+    "switchToLogin": "已有账号？返回登录"
   },
   "common": {
     "cancel": "取消",
@@ -1648,7 +1669,7 @@
   "workbench.production.node.storyboard.deleteNode": "删除",
   "workbench.production.node.storyboard.confirmDeleteBody": "确认是否删除该分镜",
   "hello": {
-    "welcomeTitle": "欢迎使用 ToonFlow",
+    "welcomeTitle": "欢迎使用 DramaStudio",
     "welcomeDesc": "AI 驱动的漫画创作工作流平台，让我们花一分钟完成初始配置。",
     "startConfig": "开始配置",
     "skip": "跳过引导",

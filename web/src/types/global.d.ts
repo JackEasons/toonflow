@@ -7,6 +7,7 @@ declare const $t: (key: string, ...args: any[]) => string;
  * Vite 环境变量类型定义
  */
 interface ImportMetaEnv {
+  readonly VITE_API_BASE_URL?: string;
   readonly BASE_URL: string;
   readonly MODE: string;
   readonly DEV: boolean;

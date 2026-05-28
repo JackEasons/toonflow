@@ -17,7 +17,6 @@
           <uiConfig v-if="activeMenu === 'ui'" />
           <languageConfig v-if="activeMenu === 'language'" />
           <vendorConfig v-if="activeMenu === 'vendorConfig'" />
-          <requestConfig v-if="activeMenu === 'requestConfig'" />
           <loginConfig v-if="activeMenu === 'loginConfig'" />
           <agentConfog v-if="activeMenu === 'agentConfog'" />
           <promptManage v-if="activeMenu === 'promptManage'" />
@@ -41,7 +40,6 @@ const { showSetting, activeMenu, needUpdate } = storeToRefs(settingStore());
 
 import uiConfig from "./components/uiConfig.vue";
 import languageConfig from "./components/languageConfig.vue";
-import requestConfig from "./components/requestConfig.vue";
 import loginConfig from "./components/loginConfig.vue";
 import agentConfog from "./components/agentConfog.vue";
 import dbConfig from "./components/dbConfig.vue";
@@ -68,7 +66,6 @@ const menuItems = [
   { key: "dbConfig", label: "settings.menu.dbConfig", icon: "i-data" },
   { key: "fileManagement", label: "settings.menu.fileManagement", icon: "i-hard-disk" },
   { key: "otherConfig", label: "settings.menu.otherConfig", icon: "i-application-menu" },
-  { key: "requestConfig", label: "settings.menu.requestConfig", icon: "i-api" },
   { key: "devConfig", label: "settings.menu.devConfig", icon: "i-flask" },
   { key: "logoutConfig", label: "settings.menu.logoutConfig", icon: "i-logout" },
 ];
@@ -81,11 +78,15 @@ const currentMenuItem = computed(() => menuItems.find((item) => item.key === act
   display: flex;
   height: 70vh;
   overflow: hidden;
+  gap: 16px;
 
   .settingMenu {
-    width: 200px;
-    min-width: 200px;
-    border-right: 1px solid var(--td-component-border);
+    width: 220px;
+    min-width: 220px;
+    padding: 8px;
+    border: 1px solid rgba(104, 255, 226, 0.12);
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.025);
     flex-shrink: 0;
     .icon {
       font-size: 20px;
@@ -95,29 +96,29 @@ const currentMenuItem = computed(() => menuItems.find((item) => item.key === act
 
   .settingRight {
     flex: 1;
-    padding-left: 16px;
-    padding-right: 16px;
+    padding: 4px 8px 4px 0;
     height: 70vh;
     overflow-y: auto;
 
     .sectionTitle {
-      font-size: 16px;
-      font-weight: 600;
-      padding-bottom: 12px;
-      border-bottom: 1px solid var(--td-component-border);
-      margin-bottom: 1vh;
-      height: 4vh;
+      font-size: 18px;
+      font-weight: 800;
+      padding-bottom: 14px;
+      border-bottom: 1px solid rgba(104, 255, 226, 0.14);
+      margin-bottom: 14px;
+      height: auto;
+      color: var(--td-text-color-primary);
     }
 
     .settingContent {
       width: 100%;
-      height: calc(70vh - 5vh - 4px);
+      height: calc(70vh - 56px);
     }
   }
 }
 :deep(.t-menu) {
   padding: 0;
-  padding-right: 8px;
+  padding-right: 0;
 }
 :deep(.t-is-active) {
   .t-badge {

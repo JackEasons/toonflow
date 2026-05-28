@@ -276,7 +276,7 @@
         </t-radio-group>
         <div class="linkAdd" v-if="addMode == 'linkAdd'">
           <t-alert theme="warning" style="margin-bottom: 20px">
-            请填写 TypeScript 代码文件的链接（.ts 文件），不要填 API 地址或其他无关链接。 确认后 Toonflow 会自动加载该代码，请确保链接来源可信。
+            请填写 TypeScript 代码文件的链接（.ts 文件），不要填 API 地址或其他无关链接。 确认后 DramaStudio 会自动加载该代码，请确保链接来源可信。
           </t-alert>
           <t-input v-model="link" :placeholder="$t('settings.vendor.linkAddPlaceholder')"></t-input>
           <div style="margin-top: 10px; text-align: right; width: 100%">
@@ -1375,7 +1375,7 @@ function handleFileChange(e: Event) {
   .editorWrapper {
     border-radius: 8px;
     overflow: hidden;
-    border: 1px solid #e5e5e5;
+    border: 1px solid var(--td-border-level-1-color);
   }
 
   .testResult {
@@ -1385,7 +1385,7 @@ function handleFileChange(e: Event) {
       justify-content: center;
       align-items: center;
       min-height: 300px;
-      background: #f5f5f5;
+      background: rgba(255, 255, 255, 0.05);
       border-radius: 8px;
       padding: 20px;
 

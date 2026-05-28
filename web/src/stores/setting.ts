@@ -1,12 +1,14 @@
 export default defineStore(
   "setting",
   () => {
+    const defaultApiBaseUrl = "http://localhost:10588/api";
+    const configuredApiBaseUrl = import.meta.env.VITE_API_BASE_URL?.trim();
     const showSetting = ref(false);
     const isElectron = ref(false);
     const canvasWheelEvent = ref("zoom");
     const activeMenu = ref("ui");
 
-    const baseUrl = ref<string>("http://localhost:10588/api");
+    const baseUrl = ref<string>((configuredApiBaseUrl || defaultApiBaseUrl).replace(/\/+$/, ""));
 
     const needUpdate = ref(false);
 
@@ -23,8 +25,8 @@ export default defineStore(
       primaryColor: string;
       fontSize: number;
     }>({
-      mode: "auto",
-      primaryColor: "#0052D9",
+      mode: "dark",
+      primaryColor: "#20e9d4",
       fontSize: 16,
     });
 
@@ -32,5 +34,5 @@ export default defineStore(
 
     return { showSetting, baseUrl, otherSetting, themeSetting, language, activeMenu, isElectron, canvasWheelEvent, needUpdate };
   },
-  { persist: { pick: ["baseUrl", "otherSetting", "themeSetting", "language"] } },
+  { persist: { pick: ["otherSetting", "themeSetting", "language"] } },
 );

@@ -57,7 +57,7 @@ function getMysqlConnection(): MysqlConnection {
         }),
     user: readEnv("MYSQL_USER", readEnv("DB_USER", "root")),
     password: readEnv("MYSQL_PASSWORD", readEnv("DB_PASSWORD")),
-    database: readEnv("MYSQL_DATABASE", readEnv("MYSQL_DB", readEnv("DB_DATABASE", readEnv("DB_NAME", "toonflow")))),
+    database: readEnv("MYSQL_DATABASE", readEnv("MYSQL_DB", readEnv("DB_DATABASE", readEnv("DB_NAME", "dramastudio")))),
     charset: readEnv("MYSQL_CHARSET", "utf8mb4"),
     timezone: readEnv("MYSQL_TIMEZONE", "Z"),
     supportBigNumbers: true,

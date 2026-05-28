@@ -43,7 +43,7 @@
     }
   },
   "settings": {
-    "title": "ToonFlow Settings",
+    "title": "DramaStudio Settings",
     "menu": {
       "language": "Language",
       "vendorConfig": "Model Providers",
@@ -181,7 +181,7 @@
       "linkAdd": "confirm"
     },
     "agent": {
-      "bannerDesc": "Use the official Toonflow relay site for one-click configuration. Ready out-of-the-box, no manual setup needed.",
+      "bannerDesc": "Use the official DramaStudio relay site for one-click configuration. Ready out-of-the-box, no manual setup needed.",
       "visitWebsite": "Visit Website",
       "fillKey": "Enter KEY",
       "oneClickFill": "One-Click Fill",
@@ -191,19 +191,19 @@
       "confirm": "Confirm",
       "cancel": "Cancel",
       "selectModel": "Select Model",
-      "fillKeyHeader": "Enter official KEY from Toonflow platform",
+      "fillKeyHeader": "Enter official KEY from DramaStudio platform",
       "keyPlaceholder": "Please enter KEY",
       "save": "Save",
       "msg": {
         "notAvailable": "This feature is not yet available. Stay tuned!",
         "configSuccess": "Configured successfully",
         "updateConfigFailed": "Failed to update config: ",
-        "keyValid": "KEY is valid. Successfully connected to the Toonflow platform",
+        "keyValid": "KEY is valid. Successfully connected to the DramaStudio platform",
         "keyInvalid": "KEY is invalid. Please check and re-enter: ",
         "enterKey": "Please enter KEY",
         "saveFailed": "Save failed: ",
         "getAgentListFailed": "Failed to fetch Agent config list: ",
-        "toonflowNotFound": "Toonflow official transfer station does not exist"
+        "dramastudioNotFound": "DramaStudio official transfer station does not exist"
       },
       "temperature": "temperature"
     },
@@ -257,7 +257,7 @@
       "username": "Username",
       "usernamePlaceholder": "Please enter username",
       "password": "Password",
-      "passwordPlaceholder": "Please enter password",
+      "passwordPlaceholder": "Leave blank to keep current password",
       "modify": "Modify",
       "msg": {
         "enterUsername": "Please enter username",
@@ -318,7 +318,7 @@
     "skill": {
       "scanSkills": "Scan Skills",
       "addSkill": "Add Skill",
-      "importFromHub": "Import from Toonflow-Hub",
+      "importFromHub": "Import from DramaStudio-Hub",
       "filterType": "Type",
       "filterAttribution": "Attribution",
       "searchPlaceholder": "Search skill by name",
@@ -338,7 +338,7 @@
       "embedding": "Embed",
       "edit": "Edit",
       "delete": "Delete",
-      "importFromHubDialog": "Import from Toonflow-Hub",
+      "importFromHubDialog": "Import from DramaStudio-Hub",
       "shareLink": "Share Link",
       "editSkillTitle": "Edit Skill - ",
       "addSkillTitle": "Add Skill",
@@ -512,9 +512,9 @@
       "warning": "The following are developer tools, please operate with caution!",
       "openDevtool": "Open",
       "devtoolsDoc": "Document address",
-      "devtoolsDesc": "After being turned on, a .devtools folder will be created in the Toonflow installation directory. Please ensure that Toonflow has write permissions (run as administrator).",
+      "devtoolsDesc": "After being turned on, a .devtools folder will be created in the DramaStudio installation directory. Please ensure that DramaStudio has write permissions (run as administrator).",
       "devtoolsDesc2": "Run npx {'@'}ai-sdk/devtools in this directory to enable telemetry debugging",
-      "openDevtoolFailed": "Failed to open developer tools, please make sure Toonflow desktop is installed",
+      "openDevtoolFailed": "Failed to open developer tools, please make sure DramaStudio desktop is installed",
       "notInElectron": "For WEB environment, please open the browser console manually",
       "msg": {
         "localStorageKeyRequired": "Please enter a localStorage key",
@@ -796,7 +796,7 @@
       "selectAssets": "Select Assets",
       "noAssets": "No related assets",
       "selectAssetsTitle": "Select Related Assets",
-      "welcomeMsg": "Hello! I am the Toonflow AI Assistant. Would you like me to start generating a script?",
+      "welcomeMsg": "Hello! I am the DramaStudio AI Assistant. Would you like me to start generating a script?",
       "start": "Start",
       "memoryType": {
         "message": "Message Memory",
@@ -1547,7 +1547,28 @@
     "passwordRequired": "Please enter password",
     "enterUsernameAndPassword": "Please enter username or password",
     "loginSuccess": "Login successful",
-    "settingsSaved": "Settings saved"
+    "settingsSaved": "Settings saved",
+    "loginTab": "Login",
+    "registerTab": "Register",
+    "welcomeBack": "Welcome Back",
+    "loginTo": "Log in to the DramaStudio creation console",
+    "createAccount": "Create Account",
+    "joinPlatform": "Join the creation platform after invite verification",
+    "passwordMinPlaceholder": "Enter at least 6 characters",
+    "confirmPassword": "Confirm Password",
+    "inviteCode": "Invite Code",
+    "confirmPasswordRequired": "Please confirm your password",
+    "inviteCodeRequired": "Please enter invite code",
+    "passwordTooShort": "Password must be at least 6 characters",
+    "passwordMismatch": "Passwords do not match",
+    "registerSuccess": "Registered successfully. Please log in",
+    "registerFailed": "Registration failed",
+    "loginFailed": "Login failed",
+    "register": "Register",
+    "registering": "Registering",
+    "loggingIn": "Logging in",
+    "switchToRegister": "No account? Register now",
+    "switchToLogin": "Already have an account? Back to login"
   },
   "components.storyboardImageCheck.camera": "Camera",
   "components.storyboardImageCheck.dialogTitle": "Select Storyboard Image",
@@ -1562,7 +1583,7 @@
     "prompt": "prompt word"
   },
   "hello": {
-    "welcomeTitle": "Welcome to ToonFlow",
+    "welcomeTitle": "Welcome to DramaStudio",
     "welcomeDesc": "AI-driven comic creation workflow platform, let us spend a minute to complete the initial configuration.",
     "startConfig": "Start configuration",
     "skip": "Skip boot",

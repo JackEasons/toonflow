@@ -42,7 +42,7 @@
     }
   },
   "settings": {
-    "title": "Cài đặt ToonFlow",
+    "title": "Cài đặt DramaStudio",
     "menu": {
       "language": "Cài đặt ngôn ngữ",
       "vendorConfig": "Dịch vụ mô hình",
@@ -179,7 +179,7 @@
       "linkAdd": "xác nhận"
     },
     "agent": {
-      "bannerDesc": "Sử dụng máy chủ trung gian chính thức của Toonflow, hỗ trợ điền cấu hình bằng 1 cú nhấp chuột, sẵn sàng sử dụng ngay mà không cần thiết lập thủ công.",
+      "bannerDesc": "Sử dụng máy chủ trung gian chính thức của DramaStudio, hỗ trợ điền cấu hình bằng 1 cú nhấp chuột, sẵn sàng sử dụng ngay mà không cần thiết lập thủ công.",
       "visitWebsite": "Truy cập trang web",
       "fillKey": "Điền KEY",
       "oneClickFill": "Điền bằng 1 cú nhấp chuột",
@@ -189,19 +189,19 @@
       "confirm": "Xác nhận",
       "cancel": "Hủy",
       "selectModel": "Chọn mô hình",
-      "fillKeyHeader": "Điền KEY chính thức của nền tảng Toonflow",
+      "fillKeyHeader": "Điền KEY chính thức của nền tảng DramaStudio",
       "keyPlaceholder": "Vui lòng nhập KEY",
       "save": "Lưu",
       "msg": {
         "notAvailable": "Tính năng này hiện chưa khả dụng, vui lòng chờ",
         "configSuccess": "Cấu hình thành công",
         "updateConfigFailed": "Cập nhật cấu hình thất bại:",
-        "keyValid": "KEY hợp lệ, kết nối với nền tảng Toonflow thành công",
+        "keyValid": "KEY hợp lệ, kết nối với nền tảng DramaStudio thành công",
         "keyInvalid": "KEY không hợp lệ, vui lòng kiểm tra và nhập lại:",
         "enterKey": "Vui lòng nhập KEY",
         "saveFailed": "Lưu thất bại:",
         "getAgentListFailed": "Lấy danh sách cấu hình Agent thất bại:",
-        "toonflowNotFound": "Trạm trung chuyển chính thức của Toonflow không tồn tại"
+        "dramastudioNotFound": "Trạm trung chuyển chính thức của DramaStudio không tồn tại"
       },
       "temperature": "nhiệt độ"
     },
@@ -255,7 +255,7 @@
       "username": "Tên người dùng",
       "usernamePlaceholder": "Vui lòng nhập tên người dùng",
       "password": "Mật khẩu",
-      "passwordPlaceholder": "Vui lòng nhập mật khẩu",
+      "passwordPlaceholder": "Để trống để giữ mật khẩu hiện tại",
       "modify": "Sửa đổi",
       "msg": {
         "enterUsername": "Vui lòng nhập tên người dùng",
@@ -399,9 +399,9 @@
       "warning": "Sau đây là các công cụ dành cho nhà phát triển, vui lòng sử dụng thận trọng!",
       "openDevtool": "Mở",
       "devtoolsDoc": "Địa chỉ tài liệu",
-      "devtoolsDesc": "Sau khi bật lên sẽ tạo một thư mục .devtools trong thư mục cài đặt Toonflow. Hãy đảm bảo rằng Toonflow có quyền ghi (chạy với tư cách quản trị viên).",
+      "devtoolsDesc": "Sau khi bật lên sẽ tạo một thư mục .devtools trong thư mục cài đặt DramaStudio. Hãy đảm bảo rằng DramaStudio có quyền ghi (chạy với tư cách quản trị viên).",
       "devtoolsDesc2": "Chạy npx {'@'}ai-sdk/devtools trong thư mục này để bật gỡ lỗi đo từ xa",
-      "openDevtoolFailed": "Không mở được công cụ dành cho nhà phát triển, vui lòng đảm bảo đã cài đặt Toonflow desktop",
+      "openDevtoolFailed": "Không mở được công cụ dành cho nhà phát triển, vui lòng đảm bảo đã cài đặt DramaStudio desktop",
       "notInElectron": "Đối với môi trường WEB, vui lòng mở bảng điều khiển trình duyệt theo cách thủ công"
     }
   },
@@ -662,7 +662,7 @@
       "selectAssets": "Chọn tài nguyên",
       "noAssets": "Chưa liên kết tài nguyên",
       "selectAssetsTitle": "Chọn tài nguyên liên kết",
-      "welcomeMsg": "Xin chào! Tôi là trợ lý thông minh Toonflow, bạn có muốn tôi bắt đầu tạo kịch bản cho bạn không?",
+      "welcomeMsg": "Xin chào! Tôi là trợ lý thông minh DramaStudio, bạn có muốn tôi bắt đầu tạo kịch bản cho bạn không?",
       "start": "Bắt đầu",
       "memoryType": {
         "message": "Bộ nhớ tin nhắn",
@@ -1385,7 +1385,28 @@
     "passwordRequired": "Vui lòng nhập mật khẩu",
     "enterUsernameAndPassword": "Vui lòng nhập tên người dùng hoặc mật khẩu",
     "loginSuccess": "Đăng nhập thành công",
-    "settingsSaved": "Đã lưu cài đặt"
+    "settingsSaved": "Đã lưu cài đặt",
+    "loginTab": "Đăng nhập",
+    "registerTab": "Đăng ký",
+    "welcomeBack": "Chào mừng trở lại",
+    "loginTo": "Đăng nhập vào bảng điều khiển DramaStudio",
+    "createAccount": "Tạo tài khoản",
+    "joinPlatform": "Tham gia nền tảng sau khi xác minh mã mời",
+    "passwordMinPlaceholder": "Nhập tối thiểu 6 ký tự",
+    "confirmPassword": "Xác nhận mật khẩu",
+    "inviteCode": "Mã mời",
+    "confirmPasswordRequired": "Vui lòng xác nhận mật khẩu",
+    "inviteCodeRequired": "Vui lòng nhập mã mời",
+    "passwordTooShort": "Mật khẩu phải có ít nhất 6 ký tự",
+    "passwordMismatch": "Mật khẩu không khớp",
+    "registerSuccess": "Đăng ký thành công. Vui lòng đăng nhập",
+    "registerFailed": "Đăng ký thất bại",
+    "loginFailed": "Đăng nhập thất bại",
+    "register": "Đăng ký",
+    "registering": "Đang đăng ký",
+    "loggingIn": "Đang đăng nhập",
+    "switchToRegister": "Chưa có tài khoản? Đăng ký ngay",
+    "switchToLogin": "Đã có tài khoản? Quay lại đăng nhập"
   },
   "common": {
     "cancel": "Hủy",
@@ -1414,7 +1435,7 @@
     "prompt": "lời nhắc"
   },
   "hello": {
-    "welcomeTitle": "Chào mừng đến với ToonFlow",
+    "welcomeTitle": "Chào mừng đến với DramaStudio",
     "welcomeDesc": "Nền tảng quy trình tạo truyện tranh do AI điều khiển, chúng ta hãy dành một phút để hoàn thành cấu hình ban đầu.",
     "startConfig": "Bắt đầu cấu hình",
     "skip": "Bỏ qua khởi động",

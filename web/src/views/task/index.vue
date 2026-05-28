@@ -146,35 +146,54 @@ async function getTaskList() {
 
 <style lang="scss" scoped>
 .task {
+  min-height: 100%;
   .header {
-    padding-top: 32px;
-    margin-bottom: 32px;
+    padding-top: 30px;
+    margin-bottom: 26px;
     display: flex;
     align-items: center;
     justify-content: space-between;
     .title {
-      font-size: 32px;
-      font-weight: 600;
+      font-size: 34px;
+      font-weight: 800;
     }
     .sub {
-      opacity: 0.5;
+      color: var(--td-text-color-secondary);
+      margin-top: 8px;
+    }
+  }
+  .list {
+    padding: 18px;
+    border: 1px solid rgba(104, 255, 226, 0.12);
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.025);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.035);
+
+    .search {
+      gap: 14px;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+
+      :deep(.t-select) {
+        min-width: 220px;
+      }
     }
   }
   .stateText {
     font-weight: bold;
   }
   .stateFail {
-    color: #ff4d4f;
+    color: var(--tf-danger);
     cursor: pointer;
   }
   .stateRunning {
-    color: #1890ff;
+    color: var(--tf-accent-2);
   }
   .stateSuccess {
-    color: #52c41a;
+    color: var(--tf-success);
   }
   .paginationWrap {
-    margin-top: 10px;
+    margin-top: 14px;
   }
 }
 </style>

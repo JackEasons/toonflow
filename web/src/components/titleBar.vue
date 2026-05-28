@@ -1,7 +1,7 @@
 <template>
   <div class="titleBar">
     <div class="titleBar-title">
-      <span class="titleBar-text">ToonFlow</span>
+      <span class="titleBar-text">DramaStudio</span>
     </div>
     <div class="titleBar-controls">
       <div class="titleBar-btn" @click="handleMinimize">
@@ -22,7 +22,7 @@ const isMaximized = ref(false);
 
 async function electronAction(action: string) {
   try {
-    const res = await fetch(`toonflow://${action}`);
+    const res = await fetch(`dramastudio://${action}`);
     return await res.json();
   } catch {
     // 非 Electron 环境或请求失败
@@ -44,7 +44,7 @@ function handleClose() {
 
 async function syncMaximizedState() {
   try {
-    const res = await fetch("toonflow://windowIsMaximized");
+    const res = await fetch("dramastudio://windowIsMaximized");
     const data = await res.json();
     if (data && typeof data.maximized === "boolean") {
       isMaximized.value = data.maximized;

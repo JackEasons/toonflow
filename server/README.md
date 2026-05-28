@@ -1,10 +1,10 @@
-# Toonflow Server
+# DramaStudio Server
 
 ## 环境变量配置
 
 服务启动时会自动加载环境变量文件。默认优先级如下：
 
-1. `TOONFLOW_ENV_FILE` 或 `ENV_FILE` 指定的文件
+1. `DRAMASTUDIO_ENV_FILE` 或 `ENV_FILE` 指定的文件
 2. 当前工作目录下的 `.env`
 3. `server/.env`
 
@@ -19,7 +19,7 @@ MYSQL_HOST=127.0.0.1
 MYSQL_PORT=3306
 MYSQL_USER=root
 MYSQL_PASSWORD=
-MYSQL_DATABASE=toonflow
+MYSQL_DATABASE=dramastudio
 MYSQL_CONNECTION_LIMIT=10
 MYSQL_CHARSET=utf8mb4
 MYSQL_TIMEZONE=Z

@@ -134,7 +134,7 @@ const filteredLocalStorageRows = computed(() => {
 function openDevTool() {
   if (isElectron.value) {
     try {
-      fetch("toonflow://openDevTool");
+      fetch("dramastudio://openDevTool");
     } catch (error) {
       window.$message?.warning($t("settings.dev.openDevtoolFailed"));
     }

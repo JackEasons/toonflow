@@ -1,5 +1,5 @@
--- Toonflow MySQL initialization script
--- Source SQLite: /Users/steven/WorkStations/toonflow/server/data/db2.sqlite
+-- DramaStudio MySQL initialization script
+-- Source SQLite: /Users/steven/WorkStations/dramastudio/server/data/db2.sqlite
 -- Generated at: 2026-05-28T12:54:15.785Z
 -- Create/select your MySQL database first, then import this file.
 
@@ -433,7 +433,7 @@ INSERT INTO `o_agentDeploy` (`id`, `model`, `key`, `modelName`, `vendorId`, `des
 (2, 'DeepSeek V4 Pro', 'productionAgent', 'deepseek:deepseek-v4-pro', 'deepseek', '对工作流进行调度和管理，建议使用具备较强的逻辑推理和任务管理能力的模型', '生产Agent', 1, 0, 0, NULL),
 (3, 'DeepSeek V4 Pro', 'universalAi', 'deepseek:deepseek-v4-pro', 'deepseek', '用于小说事件提取、资产提示词生成、台词提取等边缘功能，建议使用具备较强文本处理能力的模型', '通用AI', 1, 0, 0, NULL),
 (4, '', 'ttsDubbing', '', NULL, '根据剧本内容生成角色配音，支持多种声音风格和情绪', 'TTS配音', NULL, NULL, 1, NULL),
-(5, 'gpt-5.4', 'scriptAgent:decisionAgent', 'toonflow:gpt-5.4', 'toonflow', '决策层', '剧本Agent:决策层', 1, 0, 0, NULL),
+(5, 'gpt-5.4', 'scriptAgent:decisionAgent', 'dramastudio:gpt-5.4', 'dramastudio', '决策层', '剧本Agent:决策层', 1, 0, 0, NULL),
 (6, '', 'scriptAgent:supervisionAgent', '', NULL, '监督层', '剧本Agent:监督层', 1, 0, 0, NULL),
 (7, '', 'scriptAgent:storySkeletonAgent', '', NULL, '故事骨架生成', '剧本Agent:故事骨架', 1, 0, 0, NULL),
 (8, '', 'scriptAgent:adaptationStrategyAgent', '', NULL, '改编策略生成', '剧本Agent:改编策略', 1, 0, 0, NULL),
@@ -884,7 +884,7 @@ ALTER TABLE `o_user` AUTO_INCREMENT = 2;
 
 -- Data: o_vendorConfig (10 rows)
 INSERT INTO `o_vendorConfig` (`id`, `inputValues`, `models`, `enable`) VALUES
-('toonflow', '{\"apiKey\":\"\"}', '[]', 0),
+('dramastudio', '{\"apiKey\":\"\"}', '[]', 0),
 ('deepseek', '{\"apiKey\":\"sk-ac7d47d466a1480cb008f94a8f7381b8\",\"baseUrl\":\"https://api.deepseek.com\"}', '[{\"name\":\"DeepSeek V4 Pro\",\"modelName\":\"deepseek-v4-pro\",\"type\":\"text\",\"think\":true},{\"name\":\"DeepSeek V4 Pro\",\"modelName\":\"deepseek-v4-pro\",\"type\":\"text\",\"think\":false}]', 1),
 ('atlascloud', '{}', '[]', 0),
 ('volcengine', '{\"apiKey\":\"7c56d848-9a83-46b8-9668-cbafb7d411c5\",\"baseUrl\":\"https://ark.cn-beijing.volces.com/api/v3\"}', '[]', 1),

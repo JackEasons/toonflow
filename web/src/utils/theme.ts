@@ -79,7 +79,8 @@ export const applyThemeMode = (mode: string) => {
 // 应用主题色
 export const applyThemeColor = (color: string) => {
   const root = document.documentElement;
-  const palette = generateColorPalette(color);
+  const visualColor = !color || color.toLowerCase() === "#0052d9" ? "#20e9d4" : color;
+  const palette = generateColorPalette(visualColor);
   const isDark = root.getAttribute("theme-mode") === "dark";
   const colors = isDark ? [...palette].reverse() : palette;
 

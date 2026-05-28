@@ -5,7 +5,7 @@
         <t-input v-model="formData.name" :placeholder="$t('settings.login.usernamePlaceholder')" clearable width="100%" />
       </t-form-item>
       <t-form-item :label="$t('settings.login.password')" name="password">
-        <t-input v-model="formData.password" type="password" :placeholder="$t('settings.login.passwordPlaceholder')" />
+        <t-input v-model="formData.password" type="password" :placeholder="$t('settings.login.passwordPlaceholder')" clearable />
       </t-form-item>
       <t-form-item :status-icon="false">
         <t-space size="small">
@@ -41,7 +41,6 @@ const formRules: FormRules<UserForm> = {
     { min: 2, max: 20, message: $t("settings.login.msg.usernameLength"), trigger: "blur" },
   ],
   password: [
-    { required: true, message: $t("settings.login.msg.enterPassword"), trigger: "blur" },
     { min: 6, max: 20, message: $t("settings.login.msg.passwordLength"), trigger: "blur" },
   ],
 };
@@ -60,6 +59,10 @@ async function fetchUserInfo() {
 }
 
 async function saveUserInfo() {
+  if (formData.value.password && (formData.value.password.length < 6 || formData.value.password.length > 20)) {
+    window.$message.warning($t("settings.login.msg.passwordLength"));
+    return;
+  }
   loading.value = true;
   try {
     await axios.post("/setting/loginConfig/updateUserPwd", formData.value);

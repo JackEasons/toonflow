@@ -1,5 +1,5 @@
 {
-  "name": "toonflow_web",
+  "name": "dramastudio_web",
   "version": "0.0.0",
   "type": "module",
   "scripts": {
@@ -8,7 +8,6 @@
     "build": "vue-tsc --build --force && vite build",
     "build-only": "vite build",
     "type-check": "vue-tsc --build --force",
-    "license": "node scripts/license.ts",
     "i18n:check": "node scripts/findUnusedI18n.ts"
   },
   "dependencies": {
@@ -48,13 +47,11 @@
   "devDependencies": {
     "@tdesign-vue-next/auto-import-resolver": "^0.1.6",
     "@tsconfig/node22": "^22.0.0",
-    "@types/license-checker": "^25.0.6",
     "@types/node": "^22.9.0",
     "@types/splitpanes": "^2.2.6",
     "@types/uuid": "^11.0.0",
     "@vitejs/plugin-vue": "^6.0.5",
     "@vue/tsconfig": "^0.5.1",
-    "license-checker": "^25.0.1",
     "postcss-px-to-viewport": "^1.1.1",
     "prettier": "^3.3.3",
     "typescript": "~5.6.3",

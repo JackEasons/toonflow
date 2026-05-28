@@ -1,6 +1,7 @@
 import { Knex } from "knex";
 import { v4 as uuid } from "uuid";
 import { getEmbedding } from "@/utils/agent/embedding";
+import { hashPassword } from "@/lib/password";
 
 interface TableSchema {
   name: string;
@@ -19,7 +20,7 @@ export default async (knex: Knex, forceInit: boolean = false): Promise<void> => 
         table.text("password");
       },
       initData: async (knex) => {
-        await knex("o_user").insert([{ id: 1, name: "admin", password: "admin123" }]);
+        await knex("o_user").insert([{ id: 1, name: "admin", password: await hashPassword("admin123") }]);
       },
     },
     //项目表
@@ -529,7 +530,7 @@ export default async (knex: Knex, forceInit: boolean = false): Promise<void> => 
       initData: async (knex) => {
         await knex("o_vendorConfig").insert([
           {
-            id: "toonflow",
+            id: "dramastudio",
             inputValues: "{}",
             models: "[]",
             enable: 0,

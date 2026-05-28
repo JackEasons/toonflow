@@ -55,19 +55,19 @@ function selectLang(val: string) {
     align-items: center;
     gap: 12px;
     padding: 14px 16px;
-    border: 1.5px solid #b7b9bb;
+    border: 1.5px solid var(--td-border-level-1-color);
     border-radius: 8px;
     cursor: pointer;
     position: relative;
     transition: all 0.2s;
 
     &:hover {
-      border-color: #dadcdd;
-      background: #e0e1e2;
+      border-color: var(--td-border-level-2-color);
+      background: rgba(255, 255, 255, 0.06);
     }
 
     &.active {
-      border-color: #b7b9bb;
+      border-color: var(--td-brand-color);
     }
 
     .langInfo {

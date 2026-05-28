@@ -9,7 +9,7 @@ function resolveConfiguredEnvPath(value: string | undefined): string | null {
 
 function resolveEnvPath(): string | null {
   const candidates = [
-    resolveConfiguredEnvPath(process.env.TOONFLOW_ENV_FILE),
+    resolveConfiguredEnvPath(process.env.DRAMASTUDIO_ENV_FILE),
     resolveConfiguredEnvPath(process.env.ENV_FILE),
     path.resolve(process.cwd(), ".env"),
     path.resolve(process.cwd(), "server", ".env"),

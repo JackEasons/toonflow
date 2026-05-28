@@ -5,6 +5,7 @@ import { Knex } from "knex";
 import db from "@/utils/db";
 import rawVendorData from "./vendor.json";
 import { isMysql } from "@/utils/dbDialect";
+import { hashPassword, isPasswordHash } from "@/lib/password";
 
 const vendorData = rawVendorData as Record<string, string>;
 
@@ -71,6 +72,57 @@ export default async (knex: Knex): Promise<void> => {
   await addColumn("o_modelPrompt", "path", "string");
   if (isMysql(knex)) await alterColumnType("memories", "role", "text");
   if (isMysql(knex)) await alterColumnType("o_tasks", "relatedObjects", "text");
+
+  if (await knex.schema.hasTable("o_user")) {
+    const users = (await knex("o_user").select("id", "password")) as Array<{ id: number | string; password?: string | null }>;
+    for (const user of users) {
+      if (user.password && !isPasswordHash(user.password)) {
+        await knex("o_user").where("id", user.id).update({ password: await hashPassword(user.password) });
+      }
+    }
+  }
+
+  const legacyBrandId = String.fromCharCode(116, 111, 111, 110, 102, 108, 111, 119);
+  const dramaStudioBrandId = "dramastudio";
+
+  if (await knex.schema.hasTable("o_vendorConfig")) {
+    const legacyVendor = await knex("o_vendorConfig").where("id", legacyBrandId).first();
+    const dramaStudioVendor = await knex("o_vendorConfig").where("id", dramaStudioBrandId).first();
+    if (legacyVendor && !dramaStudioVendor) {
+      await knex("o_vendorConfig").where("id", legacyBrandId).update({ id: dramaStudioBrandId });
+    } else if (legacyVendor && dramaStudioVendor) {
+      await knex("o_vendorConfig")
+        .where("id", dramaStudioBrandId)
+        .update({
+          inputValues: dramaStudioVendor.inputValues === "{}" ? legacyVendor.inputValues : dramaStudioVendor.inputValues,
+          models: dramaStudioVendor.models === "[]" ? legacyVendor.models : dramaStudioVendor.models,
+          enable: Number(dramaStudioVendor.enable || 0) || Number(legacyVendor.enable || 0),
+        });
+      await knex("o_vendorConfig").where("id", legacyBrandId).del();
+    }
+  }
+
+  if (await knex.schema.hasTable("o_agentDeploy")) {
+    await knex("o_agentDeploy").where("vendorId", legacyBrandId).update({ vendorId: dramaStudioBrandId });
+    const legacyDeployRows = (await knex("o_agentDeploy").select("id", "modelName").where("modelName", "like", `${legacyBrandId}:%`)) as Array<{
+      id: number | string;
+      modelName?: string | null;
+    }>;
+    for (const row of legacyDeployRows) {
+      if (row.modelName) {
+        await knex("o_agentDeploy")
+          .where("id", row.id)
+          .update({ modelName: row.modelName.replace(new RegExp(`^${legacyBrandId}:`), `${dramaStudioBrandId}:`) });
+      }
+    }
+  }
+
+  const vendorDir = u.getPath("vendor");
+  const legacyVendorFile = path.join(vendorDir, `${legacyBrandId}.ts`);
+  const dramaStudioVendorFile = path.join(vendorDir, `${dramaStudioBrandId}.ts`);
+  if (fs.existsSync(legacyVendorFile) && !fs.existsSync(dramaStudioVendorFile)) {
+    fs.renameSync(legacyVendorFile, dramaStudioVendorFile);
+  }
 
   const storyboardAssetRowsQuery = knex("o_assets2Storyboard").select("storyboardId", "assetId", "sort");
   const storyboardAssetRows = await storyboardAssetRowsQuery.orderBy("storyboardId").orderBy("assetId");
