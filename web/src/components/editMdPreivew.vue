@@ -5,6 +5,7 @@
     :width="'90vw'"
     :confirm-btn="$t('components.editMdPreivew.confirm')"
     :cancel-btn="$t('components.editMdPreivew.cancel')"
+    dialogClassName="markdownEditDialog"
     @confirm="onConfirm"
     @cancel="onCancel"
     @close="onCancel"
@@ -16,7 +17,7 @@
       :theme="themeSetting.mode"
       :toolbars="toolbars"
       :footers="[]"
-      style="height: 72vh"
+      style="height: min(68vh, 760px)"
       @onUploadImg="() => {}"
       @drop.prevent
       @paste="onPaste" />

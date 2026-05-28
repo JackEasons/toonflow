@@ -831,7 +831,7 @@ export default async (knex: Knex, forceInit: boolean = false): Promise<void> => 
             path: "references/skeleton_format.md",
             name: "skeleton_format",
             description:
-              "本文档定义了故事骨架文件（skeleton.md）的标准化输出格式，涵盖故事核、人物成长隐线、三幕结构、分集决策模板、全局删减记录、付费卡点设计及自查清单，用于指导编剧将章节事件列表转化为结构完整的剧集改编方案。",
+              "本文档定义了故事骨架文件（skeleton.md）的标准化输出格式，涵盖故事核、人物成长隐线、三幕结构、分集决策模板、全局删减记录、追看卡点设计及自查清单，用于指导编剧将章节事件列表转化为结构完整的剧集改编方案。",
             embedding: "",
             type: "references",
             createTime: 1774452010535,

@@ -105,9 +105,9 @@ function handleClick(menu: any) {
 <style lang="scss" scoped>
 .main {
   width: 100vw;
-  padding: 18px;
+  padding: 14px;
   display: flex;
-  gap: 18px;
+  gap: 16px;
   position: relative;
   color: var(--td-text-color-primary);
 
@@ -116,16 +116,14 @@ function handleClick(menu: any) {
     height: 100%;
     overflow-x: hidden;
     overflow-y: auto;
-    background:
-      linear-gradient(180deg, rgba(24, 38, 36, 0.42), rgba(7, 12, 12, 0.28)),
-      var(--page);
-    border: 1px solid rgba(104, 255, 226, 0.16);
+    background: #101011;
+    border: 1px solid #252527;
     border-radius: 18px;
-    padding-top: 18px;
-    padding-bottom: 18px;
+    padding-top: 16px;
+    padding-bottom: 16px;
     color: var(--td-text-color-primary);
-    box-shadow: var(--tf-shadow-tight);
-    backdrop-filter: blur(20px) saturate(130%);
+    box-shadow: none;
+    backdrop-filter: none;
     position: relative;
     isolation: isolate;
     &::before {
@@ -133,7 +131,7 @@ function handleClick(menu: any) {
       inset: 14px 10px auto;
       height: 1px;
       content: "";
-      background: linear-gradient(90deg, transparent, rgba(123, 200, 255, 0.54), rgba(247, 201, 93, 0.24), transparent);
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.16), transparent);
       opacity: 0.7;
     }
     &::after {
@@ -141,8 +139,8 @@ function handleClick(menu: any) {
       inset: 0;
       z-index: -1;
       content: "";
-      background: linear-gradient(90deg, rgba(32, 233, 212, 0.1), transparent 42%);
-      opacity: 0.72;
+      background: transparent;
+      opacity: 1;
     }
     .logoBox {
       width: 100%;
@@ -150,12 +148,12 @@ function handleClick(menu: any) {
       .logo {
         width: 58%;
         aspect-ratio: 1/1;
-        background: linear-gradient(135deg, var(--tf-accent), var(--tf-accent-warm));
+        background: linear-gradient(135deg, var(--tf-accent), var(--tf-accent-2));
         mask: url("@/assets/logo.svg") no-repeat center;
         mask-size: contain;
         -webkit-mask: url("@/assets/logo.svg") no-repeat center;
         -webkit-mask-size: contain;
-        filter: drop-shadow(0 0 14px rgba(32, 233, 212, 0.36));
+        filter: drop-shadow(0 0 10px rgba(98, 216, 202, 0.24));
       }
     }
     .itemBox {
@@ -178,14 +176,14 @@ function handleClick(menu: any) {
           font-size: 24px;
         }
         &:hover {
-          background-color: var(--tf-control-hover);
-          border-color: rgba(104, 255, 226, 0.18);
+            background-color: #202022;
+            border-color: #303033;
           border-radius: 12px;
         }
       }
       .active {
-        background: linear-gradient(135deg, rgba(32, 233, 212, 0.28), rgba(247, 201, 93, 0.16)) !important;
-        border-color: rgba(104, 255, 226, 0.32);
+        background: #242426 !important;
+        border-color: #3a3a3c;
         border-radius: 12px;
       }
     }
@@ -194,10 +192,10 @@ function handleClick(menu: any) {
     width: 4px;
   }
   .menu::-webkit-scrollbar-thumb {
-    background-color: rgba(32, 233, 212, 0.34);
+    background-color: rgba(98, 216, 202, 0.32);
     border-radius: 4px;
     &:hover {
-      background-color: rgba(32, 233, 212, 0.56);
+      background-color: rgba(98, 216, 202, 0.5);
     }
   }
   .menu::-webkit-scrollbar-track {
@@ -206,19 +204,17 @@ function handleClick(menu: any) {
   .view {
     flex: 1;
     margin-left: 0;
-    background:
-      linear-gradient(180deg, rgba(21, 33, 31, 0.34), rgba(8, 13, 13, 0.24)),
-      var(--page);
-    border: 1px solid rgba(104, 255, 226, 0.14);
+    background: #0b0b0c;
+    border: 1px solid #252527;
     border-radius: 20px;
     width: 100%;
     overflow-x: hidden;
     overflow-y: auto;
     scrollbar-gutter: stable;
-    padding-left: 30px;
-    padding-right: 30px;
-    box-shadow: var(--tf-shadow);
-    backdrop-filter: blur(20px) saturate(130%);
+    padding-left: 24px;
+    padding-right: 24px;
+    box-shadow: none;
+    backdrop-filter: none;
     position: relative;
     isolation: isolate;
     &::before {
@@ -231,24 +227,20 @@ function handleClick(menu: any) {
       z-index: 0;
       pointer-events: none;
       content: "";
-      background:
-        linear-gradient(90deg, rgba(123, 200, 255, 0.34) 0 74px, transparent 74px) left top / 128px 1px no-repeat,
-        linear-gradient(180deg, rgba(123, 200, 255, 0.34) 0 74px, transparent 74px) left top / 1px 128px no-repeat,
-        linear-gradient(270deg, rgba(247, 201, 93, 0.28) 0 74px, transparent 74px) right bottom / 128px 1px no-repeat,
-        linear-gradient(0deg, rgba(247, 201, 93, 0.28) 0 74px, transparent 74px) right bottom / 1px 128px no-repeat;
-      opacity: 0.46;
+      background: transparent;
+      opacity: 1;
     }
     > * {
       position: relative;
       z-index: 1;
     }
     .topMenu {
-      min-height: 68px;
-      height: 68px;
-      border-bottom: 1px solid rgba(104, 255, 226, 0.1);
+      min-height: 64px;
+      height: 64px;
+      border-bottom: 1px solid #242426;
       .title h2 {
         margin: 0;
-        font-size: 24px;
+        font-size: 23px;
         font-weight: 700;
         color: var(--td-text-color-primary);
       }
@@ -262,14 +254,14 @@ function handleClick(menu: any) {
         .divider {
           width: 1px;
           height: 24px;
-          background: linear-gradient(180deg, transparent, var(--tf-line-strong), transparent);
+          background: linear-gradient(180deg, transparent, rgba(255, 255, 255, 0.16), transparent);
           margin: 0 4px;
         }
       }
     }
     .viewBox {
       width: 100%;
-      height: calc(100% - 68px);
+      height: calc(100% - 64px);
       min-height: 0;
     }
   }
@@ -300,23 +292,23 @@ function handleClick(menu: any) {
   }
   &:hover {
     color: var(--td-text-color-primary);
-    background-color: var(--tf-control-hover);
-    border-color: rgba(104, 255, 226, 0.18);
-    box-shadow: 0 0 22px rgba(32, 233, 212, 0.12);
+    background-color: #202022;
+    border-color: #303033;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.22);
     transform: translateY(-1px);
   }
 }
 .active {
-  background: linear-gradient(135deg, var(--tf-accent), var(--tf-accent-2)) !important;
-  color: #03100f;
-  border-color: rgba(255, 255, 255, 0.18);
+  background: #242426 !important;
+  color: #f5f5f5;
+  border-color: #3a3a3c;
   border-radius: 12px;
-  box-shadow: 0 12px 30px rgba(32, 233, 212, 0.22);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
 }
 .divider {
   width: 48px;
   height: 1px;
-  background: linear-gradient(90deg, transparent, var(--tf-line-strong), transparent);
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.16), transparent);
   margin: 8px 0;
 }
 
