@@ -1,16 +1,18 @@
-# DramaStudio Monorepo
+# Super Monorepo
 
-本仓库按 Vben Admin 的 pnpm workspace + Turborepo 大仓方式组织。`web` 前端与 `server` 后端已经作为 workspace 应用接入根工程，同时保留原目录位置，避免影响现有 Docker、静态资源同步与本地开发路径。
+本仓库按 Vben Admin 的 pnpm workspace + Turborepo 大仓方式组织。DramaStudio 前端、后端和后续后台管理系统都统一放在 `apps/` 下，通过根目录 catalog 维护依赖版本，通过 `@super/*` 统一包名。
 
 ## 目录
 
 ```text
-apps/                 Vben 示例应用与 mock 服务
+apps/                 应用入口
+  admin/              @super/admin 后台管理系统基础应用
+  web/                @super/web 创作端前端应用，默认端口 50188
+  server/             @super/server 后端服务，默认 API 端口 10588
+  backend-mock/       @super/backend-mock Vben mock 服务
 internal/             Vben 工程工具、lint、tsconfig、vite 配置
 packages/             可复用前端基础包
 scripts/              turbo-run、vsh、部署脚本
-web/                  @dramastudio/web 前端应用，默认端口 50188
-server/               @dramastudio/server 后端服务，默认 API 端口 10588
 pnpm-workspace.yaml   workspace 与 catalog 配置
 turbo.json            Turborepo task 配置
 ```
@@ -27,20 +29,22 @@ pnpm dev
 pnpm dev:web
 pnpm dev:server
 pnpm dev:app
+pnpm dev:admin
 
 # 构建与检查
 pnpm build:web
 pnpm build:server
+pnpm build:admin
 pnpm build:app
 pnpm typecheck:web
 pnpm typecheck:server
+pnpm typecheck:admin
 pnpm check:type
 ```
 
 ## Workspace 应用
 
-- `@dramastudio/web` 位于 `web/`，保留原 Vite/Vue/TDesign 业务代码。
-- `@dramastudio/server` 位于 `server/`，保留 Express/MySQL/AI SDK 后端服务。
-- `@super/web-tdesign` 与 `@super/backend-mock` 仍位于 `apps/`，作为 Vben 模板侧的应用参考。
-
-后续新增前端、后端或移动端应用时优先放入 `apps/`；现有 `web`、`server` 当前以 workspace 根级应用保留，等部署路径和静态资源拷贝脚本统一后再做物理搬迁。
+- `@super/web` 位于 `apps/web`，保留原 Vite/Vue/TDesign 创作端业务代码。
+- `@super/server` 位于 `apps/server`，保留 Express/MySQL/AI SDK 后端服务。
+- `@super/admin` 位于 `apps/admin`，由 Vben TDesign 模板重命名而来，后续作为后台管理系统基础。
+- `@super/backend-mock` 位于 `apps/backend-mock`，作为 Vben mock 服务。

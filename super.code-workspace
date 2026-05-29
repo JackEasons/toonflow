@@ -1,12 +1,16 @@
 {
   "folders": [
     {
-      "name": "@super/backend-mock",
-      "path": "apps/backend-mock"
+      "name": "@super/admin",
+      "path": "apps/admin"
     },
     {
-      "name": "@super/web-tdesign",
-      "path": "apps/web-tdesign"
+      "name": "@super/web",
+      "path": "apps/web"
+    },
+    {
+      "name": "@super/server",
+      "path": "apps/server"
     },
     {
       "name": "@super/commitlint-config",

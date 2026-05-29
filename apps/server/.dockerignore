@@ -1,0 +1,15 @@
+node_modules
+build
+dist
+logs
+uploads
+.git
+.gitignore
+*.md
+LICENSE
+NOTICES.txt
+backup
+env
+docs
+*.log
+.env*

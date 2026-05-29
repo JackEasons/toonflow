@@ -32,11 +32,7 @@
       "dependsOn": ["^build"],
       "outputs": ["dist/**"]
     },
-    "@super/backend-mock#build": {
-      "dependsOn": ["^build"],
-      "outputs": [".nitro/**", ".output/**"]
-    },
-    "@dramastudio/server#build": {
+    "@super/server#build": {
       "dependsOn": ["^build"],
       "outputs": ["data/serve/**"]
     },

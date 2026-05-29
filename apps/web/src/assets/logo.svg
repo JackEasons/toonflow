@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="1000" height="1000" preserveAspectRatio="xMidYMid meet" display="block" role="img" aria-labelledby="title">
+  <title id="title">DramaStudio logo</title>
+  <path fill="#000000" fill-rule="evenodd" d="M69 25h66c59.65 0 103 42.42 103 103s-43.35 103-103 103H69c-28.72 0-52-23.28-52-52V77c0-28.72 23.28-52 52-52Zm24 46v114h42c34.73 0 59-23.14 59-57s-24.27-57-59-57H93Zm24 31h17c15.98 0 27 10.67 27 26s-11.02 26-27 26h-17v-52ZM42 82h20v19H42V82Zm0 38h20v19H42v-19Zm0 38h20v19H42v-19Z"/>
+  <path fill="#000000" d="m122 86 72 42-72 42V86Z"/>
+</svg>

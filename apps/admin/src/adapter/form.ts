@@ -1,0 +1,49 @@
+import type {
+  SuperFormProps as FormProps,
+  SuperFormSchema as FormSchema,
+} from '@super/common-ui';
+
+import type { ComponentPropsMap, ComponentType } from './component';
+
+import { setupSuperForm, useSuperForm as useForm, z } from '@super/common-ui';
+import { $t } from '@super/locales';
+
+async function initSetupSuperForm() {
+  setupSuperForm<ComponentType>({
+    config: {
+      // tdesign组件库默认都是 v-model:value
+      baseModelPropName: 'value',
+
+      // 一些组件是 v-model:checked 或者 v-model:fileList
+      modelPropNameMap: {
+        Checkbox: 'checked',
+        Radio: 'checked',
+        Switch: 'checked',
+        Upload: 'fileList',
+      },
+    },
+    defineRules: {
+      // 输入项目必填国际化适配
+      required: (value, _params, ctx) => {
+        if (value === undefined || value === null || value.length === 0) {
+          return $t('ui.formRules.required', [ctx.label]);
+        }
+        return true;
+      },
+      // 选择项目必填国际化适配
+      selectRequired: (value, _params, ctx) => {
+        if (value === undefined || value === null) {
+          return $t('ui.formRules.selectRequired', [ctx.label]);
+        }
+        return true;
+      },
+    },
+  });
+}
+
+const useSuperForm = useForm<ComponentType, ComponentPropsMap>;
+
+export { initSetupSuperForm, useSuperForm, z };
+
+export type SuperFormSchema = FormSchema<ComponentType, ComponentPropsMap>;
+export type SuperFormProps = FormProps<ComponentType, ComponentPropsMap>;
