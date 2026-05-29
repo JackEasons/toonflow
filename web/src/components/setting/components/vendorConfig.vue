@@ -41,7 +41,7 @@
             :message="$t('settings.vendor.msg.vendorNeedsUpdate')"
             style="margin-bottom: 12px" />
           <t-form-item>
-            <MdPreview v-model="currentVendor.description" :theme="themeSetting.mode" />
+            <MdPreview v-model="currentVendor.description" :theme="themeSetting.mode === 'auto' ? undefined : themeSetting.mode" />
           </t-form-item>
           <t-form-item v-for="input in requiredInputs" :key="input.key" :name="input.key">
             <template #label>
@@ -338,15 +338,17 @@
 </template>
 
 <script setup lang="ts">
+import { computed, nextTick, onMounted, ref, watch } from "vue";
+import { storeToRefs } from "pinia";
 import { MdPreview } from "md-editor-v3";
 import { CodeEditor } from "monaco-editor-vue3";
 import { DialogPlugin } from "tdesign-vue-next";
-import axios from "@/utils/axios";
-import VENDOR_CODE_TEMPLATE from "@/lib/vendorTemplate.ts?raw";
-import { providersLogo, modelProviderRules } from "@/utils/providersLogo";
+import axios from "#/utils/axios";
+import VENDOR_CODE_TEMPLATE from "#/lib/vendorTemplate.ts?raw";
+import { providersLogo, modelProviderRules } from "#/utils/providersLogo";
 import type { UploadFile } from "tdesign-vue-next";
 import { LoadingPlugin } from "tdesign-vue-next";
-import settingStore from "@/stores/setting";
+import settingStore from "#/stores/setting";
 import TextModelTest from "./vendorTest/TextModelTest.vue";
 import ImageModelTest from "./vendorTest/ImageModelTest.vue";
 import VideoModelTest from "./vendorTest/VideoModelTest.vue";

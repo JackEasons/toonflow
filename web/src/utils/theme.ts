@@ -1,4 +1,6 @@
-import settingStore from "@/stores/setting";
+import { storeToRefs } from "pinia";
+
+import settingStore from "#/stores/setting";
 
 // HEX 转 HSL
 const hexToHsl = (hex: string) => {

@@ -33,8 +33,10 @@
 </template>
 
 <script setup lang="ts">
-import axios from "@/utils/axios";
-import projectStore from "@/stores/project";
+import { ref } from "vue";
+import { storeToRefs } from "pinia";
+import axios from "#/utils/axios";
+import projectStore from "#/stores/project";
 const { project } = storeToRefs(projectStore());
 const props = defineProps<{
   type: "role" | "tool" | "scene" | "clip" | "audio";

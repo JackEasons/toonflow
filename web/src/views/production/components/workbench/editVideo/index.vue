@@ -104,6 +104,7 @@
 </template>
 
 <script setup lang="ts">
+import { computed, onMounted, onUnmounted, reactive, ref } from "vue";
 import mediaLibrary from "./mediaLibrary.vue";
 import videoPreview from "./videoPreview.vue";
 import propertyPanel from "./propertyPanel.vue";

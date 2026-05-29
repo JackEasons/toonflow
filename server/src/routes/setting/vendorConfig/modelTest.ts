@@ -3,7 +3,7 @@ import { success, error } from "@/lib/responseFormat";
 import { validateFields } from "@/middleware/middleware";
 import u from "@/utils";
 import { z } from "zod";
-import { tool, jsonSchema } from "ai";
+import { tool, zodSchema } from "ai";
 const router = express.Router();
 
 // 检查语言模型
@@ -57,12 +57,11 @@ export default router.post(
 
       const getWeatherTool = tool({
         description: "Get the weather in a location",
-        inputSchema: jsonSchema<{ location: string }>(
+        inputSchema: zodSchema<{ location: string }>(
           z
             .object({
               location: z.string().describe("The location to get the weather for"),
-            })
-            .toJSONSchema(),
+            }),
         ),
         execute: async ({ location }) => {
           return {

@@ -76,17 +76,19 @@
 </template>
 
 <script setup lang="ts">
+import { computed, inject, onMounted, ref } from "vue";
+import { storeToRefs } from "pinia";
 import { Handle, useVueFlow, Position } from "@vue-flow/core";
 import type { Ref } from "vue";
-import modelSelect from "@/components/modelSelect.vue";
-import PromptEditor from "@/components/promptEditor.vue";
-import axios from "@/utils/axios";
+import modelSelect from "#/components/modelSelect.vue";
+import PromptEditor from "#/components/promptEditor.vue";
+import axios from "#/utils/axios";
 import { type GeneratedNodeData } from "../../utils/editImageType";
 import type { DropdownOption } from "tdesign-vue-next/es/dropdown";
 import type { Storyboard } from "../../utils/flowBuilder";
-import openAssetsSelector from "@/utils/assetsCheck";
+import openAssetsSelector from "#/utils/assetsCheck";
 import { useFileDialog } from "@vueuse/core";
-import projectStore from "@/stores/project";
+import projectStore from "#/stores/project";
 const { project } = storeToRefs(projectStore());
 const openStoryboardCheck = inject<() => Promise<Storyboard[]>>("openStoryboardCheck")!;
 const { open, onChange, onCancel } = useFileDialog({ multiple: false, reset: true, accept: ".png,.jpg,.jpeg" });

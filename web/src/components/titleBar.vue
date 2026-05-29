@@ -18,6 +18,7 @@
 </template>
 
 <script setup lang="ts">
+import { onMounted, onUnmounted, ref } from "vue";
 const isMaximized = ref(false);
 
 async function electronAction(action: string) {

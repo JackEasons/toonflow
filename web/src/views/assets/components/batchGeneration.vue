@@ -87,11 +87,12 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from "vue";
-import settingStore from "@/stores/setting";
+import { storeToRefs } from "pinia";
+import { computed, ref, watch } from "vue";
+import settingStore from "#/stores/setting";
 const { otherSetting } = storeToRefs(settingStore());
-import axios from "@/utils/axios";
-import projectStore from "@/stores/project";
+import axios from "#/utils/axios";
+import projectStore from "#/stores/project";
 import type { TableProps } from "tdesign-vue-next";
 
 const { project } = storeToRefs(projectStore());

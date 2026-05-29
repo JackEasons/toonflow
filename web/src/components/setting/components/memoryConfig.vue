@@ -54,7 +54,7 @@
 <script setup lang="ts">
 import { onMounted, ref } from "vue";
 import { DialogPlugin } from "tdesign-vue-next";
-import axios from "@/utils/axios";
+import axios from "#/utils/axios";
 
 interface MemoryConfigForm {
   messagesPerSummary: number;

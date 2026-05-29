@@ -1,4 +1,4 @@
-import axios from "@/utils/axios";
+import axios from "#/utils/axios";
 
 /** 轮询返回的单条视频记录 */
 export interface PollingVideoRecord {

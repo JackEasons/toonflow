@@ -3,7 +3,6 @@ import { success, error } from "@/lib/responseFormat";
 import { validateFields } from "@/middleware/middleware";
 import u from "@/utils";
 import { z } from "zod";
-import { tool, jsonSchema } from "ai";
 const router = express.Router();
 
 // 检查语言模型

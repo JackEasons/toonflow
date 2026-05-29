@@ -1,8 +1,8 @@
-import axios from "@/utils/axios";
+import axios from "#/utils/axios";
 import { NotifyPlugin, Progress } from "tdesign-vue-next";
 import { h, ref } from "vue";
 import { storeToRefs } from "pinia";
-import settingStore from "@/stores/setting";
+import settingStore from "#/stores/setting";
 
 // 延迟函数
 function delay(ms: number) {
@@ -52,7 +52,7 @@ export default async () => {
     });
     // 警告通知
     if (data.noDescriptionSkillCount > 0 || data.noAttributionSkillCount > 0) {
-      const warnings = [];
+      const warnings: string[] = [];
       if (data.noDescriptionSkillCount > 0) {
         warnings.push($t("skillScan.noDescription", { count: data.noDescriptionSkillCount }));
       }

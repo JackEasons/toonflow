@@ -47,16 +47,19 @@
 </template>
 
 <script setup lang="ts">
+import { computed, inject, onMounted, onUnmounted, ref, watch } from "vue";
+import { DialogPlugin } from "tdesign-vue-next";
+import { storeToRefs } from "pinia";
 import type { Ref } from "vue";
 import newTrack from "./components/track.vue";
 import imageSelect from "./components/imageSelect.vue";
 import modeMenu from "./components/modeMenu.vue";
 import videoCard from "./components/video.vue";
-import "@/views/production/components/workbench/type/type";
-import axios from "@/utils/axios";
-import projectStore from "@/stores/project";
-import promptEditor from "@/components/promptEditor.vue";
-import imageListCacheStore from "@/stores/imageListCache";
+import "#/views/production/components/workbench/type/type";
+import axios from "#/utils/axios";
+import projectStore from "#/stores/project";
+import promptEditor from "#/components/promptEditor.vue";
+import imageListCacheStore from "#/stores/imageListCache";
 
 const { project } = storeToRefs(projectStore());
 const episodesId = inject<Ref<number>>("episodesId")!;
@@ -75,6 +78,11 @@ const modeOptions = ref<VideoModel>({
 }); // 当前模型配置
 
 const trackList = ref<TrackItem[]>([]); // 轨道列表
+
+type PromptSourceInfo = Array<{
+  id: number | null | undefined;
+  sources: string | undefined;
+}>;
 
 const modelParmas = ref<ModelSetting>({
   mode: "",
@@ -305,7 +313,7 @@ const genTextLoadingMap = ref<Record<number, boolean>>({}); // trackId -> 是否
 /** 单个轨道生成提示词 */
 async function genText() {
   if (currentTrack.value.id == null || genTextLoadingMap.value[currentTrack.value.id]) return;
-  let info = [];
+  let info: PromptSourceInfo = [];
   const currentTrackId = currentTrack.value.id;
   const changeTrack = currentTrack.value;
   if (modelParmas.value.mode == "text") {

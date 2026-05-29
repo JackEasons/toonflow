@@ -1,5 +1,9 @@
-import "@/views/production/components/workbench/type/type";
-import axios from "@/utils/axios";
+import "#/views/production/components/workbench/type/type";
+
+import { defineStore } from "pinia";
+import { ref } from "vue";
+
+import axios from "#/utils/axios";
 
 /**
  * 图片列表缓存 Pinia Store

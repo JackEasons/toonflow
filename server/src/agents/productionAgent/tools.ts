@@ -1,4 +1,4 @@
-import { tool, jsonSchema, Tool } from "ai";
+import { tool, zodSchema, Tool } from "ai";
 import { z } from "zod";
 import _ from "lodash";
 import ResTool from "@/socket/resTool";
@@ -69,12 +69,11 @@ export default (toolCpnfig: ToolConfig) => {
   const tools: Record<string, Tool> = {
     get_flowData: tool({
       description: "获取工作区数据",
-      inputSchema: jsonSchema<{ key: keyof FlowData }>(
+      inputSchema: zodSchema<{ key: keyof FlowData }>(
         z
           .object({
             key: keySchema.describe("数据key"),
-          })
-          .toJSONSchema(),
+          }),
       ),
       execute: async ({ key }) => {
         const thinking = msg.thinking(`正在获取${flowDataKeyLabels[key]}工作区数据...`);
@@ -88,15 +87,14 @@ export default (toolCpnfig: ToolConfig) => {
     }),
     add_deriveAsset: tool({
       description: "新增或更新衍生资产",
-      inputSchema: jsonSchema<{ assetsId: number; id: number | null; name: string; desc: string }>(
+      inputSchema: zodSchema<{ assetsId: number; id: number | null; name: string; desc: string }>(
         z
           .object({
             assetsId: z.number().describe("关联的资产ID"),
             id: z.number().nullable().describe("衍生资产ID,如果新增则为空"),
             name: z.string().describe("衍生资产名称"),
             desc: z.string().describe("衍生资产描述"),
-          })
-          .toJSONSchema(),
+          }),
       ),
       execute: async (raw) => {
         // 容错：LLM 偶尔传 "null" 字符串或空串，统一规范为 null
@@ -136,13 +134,12 @@ export default (toolCpnfig: ToolConfig) => {
     }),
     del_deriveAsset: tool({
       description: "删除衍生资产",
-      inputSchema: jsonSchema<{ assetsId: number; id: number }>(
+      inputSchema: zodSchema<{ assetsId: number; id: number }>(
         z
           .object({
             assetsId: z.number().describe("关联的资产ID"),
             id: z.number().describe("衍生资产ID"),
-          })
-          .toJSONSchema(),
+          }),
       ),
       execute: async ({ assetsId, id }) => {
         const thinking = msg.thinking("正在操作资产...");
@@ -158,12 +155,11 @@ export default (toolCpnfig: ToolConfig) => {
     }),
     generate_deriveAsset: tool({
       description: "生成衍生资产图片",
-      inputSchema: jsonSchema<{ ids: number[] }>(
+      inputSchema: zodSchema<{ ids: number[] }>(
         z
           .object({
             ids: z.array(z.number()).describe("需要生成的 衍生资产ID"),
-          })
-          .toJSONSchema(),
+          }),
       ),
       execute: async ({ ids }) => {
         const thinking = msg.thinking("正在生成衍生资产...");
@@ -184,12 +180,11 @@ export default (toolCpnfig: ToolConfig) => {
     }),
     generate_storyboard: tool({
       description: "生成分镜图片",
-      inputSchema: jsonSchema<{ ids: number[] }>(
+      inputSchema: zodSchema<{ ids: number[] }>(
         z
           .object({
             ids: z.array(z.number()).describe("必须获取真实的分镜ID，支持批量生成"),
-          })
-          .toJSONSchema(),
+          }),
       ),
       execute: async ({ ids }) => {
         const thinking = msg.thinking("正在生成分镜...");

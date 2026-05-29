@@ -116,14 +116,16 @@
 </template>
 
 <script setup lang="ts">
+import { computed, h, reactive, ref, resolveComponent } from "vue";
+import { storeToRefs } from "pinia";
 import { useLocalStorage } from "@vueuse/core";
 import editImage from "../components/editImage/index.vue";
-import { LoadingPlugin } from "tdesign-vue-next";
+import { DialogPlugin, LoadingPlugin } from "tdesign-vue-next";
 import { Handle, Position, type Edge } from "@vue-flow/core";
-import axios from "@/utils/axios";
+import axios from "#/utils/axios";
 import type { AssetItem, Storyboard } from "../utils/flowBuilder";
-import projectStore from "@/stores/project";
-import productionAgentStore from "@/stores/productionAgent";
+import projectStore from "#/stores/project";
+import productionAgentStore from "#/stores/productionAgent";
 const { project } = storeToRefs(projectStore());
 const { episodesId } = storeToRefs(productionAgentStore());
 

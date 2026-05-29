@@ -116,9 +116,9 @@
 
 <script setup lang="ts">
 import { ref, computed } from "vue";
-import axios from "@/utils/axios";
+import axios from "#/utils/axios";
 import { LoadingPlugin, DialogPlugin } from "tdesign-vue-next";
-import router from "@/router";
+import router from "#/router";
 
 const firstConfirmVisible = ref(false);
 const secondConfirmVisible = ref(false);

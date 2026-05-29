@@ -21,10 +21,11 @@
 </template>
 
 <script setup lang="ts">
-import settingStore from "@/stores/setting";
+import { storeToRefs } from "pinia";
+import settingStore from "#/stores/setting";
 const { isElectron } = storeToRefs(settingStore());
 
-import axios from "@/utils/axios";
+import axios from "#/utils/axios";
 type QuickPathItem = {
   label: string;
   path: string;

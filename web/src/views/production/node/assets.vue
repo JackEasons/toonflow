@@ -76,11 +76,14 @@
 </template>
 
 <script setup lang="ts">
+import { ref } from "vue";
+import { DialogPlugin } from "tdesign-vue-next";
+import { storeToRefs } from "pinia";
 import { Handle, Position, type Edge } from "@vue-flow/core";
 import editImage from "../components/editImage/index.vue";
 import { type AssetItem, type DeriveAsset } from "../utils/flowBuilder";
-import axios from "@/utils/axios";
-import useProjectStore from "@/stores/project";
+import axios from "#/utils/axios";
+import useProjectStore from "#/stores/project";
 const { project } = storeToRefs(useProjectStore());
 const props = defineProps<{
   id: string;

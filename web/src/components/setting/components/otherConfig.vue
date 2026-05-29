@@ -52,7 +52,8 @@
 </template>
 
 <script setup lang="ts">
-import settingStore from "@/stores/setting";
+import { storeToRefs } from "pinia";
+import settingStore from "#/stores/setting";
 const { otherSetting, canvasWheelEvent } = storeToRefs(settingStore());
 
 import { computed } from "vue";

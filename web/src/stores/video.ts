@@ -1,4 +1,5 @@
-import axios from "@/utils/axios";
+import axios from "#/utils/axios";
+import { defineStore } from "pinia";
 import { ref, computed, watch, nextTick } from "vue";
 
 // 图片项

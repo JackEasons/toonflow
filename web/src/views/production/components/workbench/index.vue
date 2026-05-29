@@ -55,14 +55,16 @@
 </template>
 
 <script setup lang="ts">
+import { inject, onMounted, ref } from "vue";
+import { storeToRefs } from "pinia";
 import type { Ref } from "vue";
-import axios from "@/utils/axios";
+import axios from "#/utils/axios";
 import preview from "./preview.vue";
 import generate from "./generate/index.vue";
 import editVideo from "./editVideo/index.vue";
 import { generateId, type Track } from "vue-clip-track";
 import type { MediaItem, AudioItem } from "./editVideo/utils/mediaData";
-import projectStore from "@/stores/project";
+import projectStore from "#/stores/project";
 const { project } = storeToRefs(projectStore());
 
 const visible = defineModel("visible", {

@@ -207,18 +207,21 @@
 </template>
 
 <script setup lang="ts">
+import { computed, onMounted, ref, watch } from "vue";
+import { DialogPlugin } from "tdesign-vue-next";
+import { storeToRefs } from "pinia";
 import { MdEditor } from "md-editor-v3";
 import type { ToolbarNames } from "md-editor-v3";
 import { MdPreview } from "md-editor-v3";
-import settingStore from "@/stores/setting";
+import settingStore from "#/stores/setting";
 const { themeSetting } = storeToRefs(settingStore());
 import { Splitpanes, Pane } from "splitpanes";
-import axios from "@/utils/axios";
+import axios from "#/utils/axios";
 import type { ChatMessagesData } from "@tdesign-vue-next/chat";
-import projectStore from "@/stores/project";
+import projectStore from "#/stores/project";
 const { project } = storeToRefs(projectStore());
-import editMdPreivew from "@/components/editMdPreivew.vue";
-import scriptAgentStore from "@/stores/scriptAgent";
+import editMdPreivew from "#/components/editMdPreivew.vue";
+import scriptAgentStore from "#/stores/scriptAgent";
 const { connected, messages, status, planData, thinkLevel } = storeToRefs(scriptAgentStore());
 const thinkLevelOptions = [
   { label: $t("workbench.scriptAgent.thinkLevel.off"), value: 0 },
@@ -226,7 +229,7 @@ const thinkLevelOptions = [
   { label: $t("workbench.scriptAgent.thinkLevel.deep"), value: 2 },
   { label: $t("workbench.scriptAgent.thinkLevel.extreme"), value: 3 },
 ];
-import productionAgentStore from "@/stores/productionAgent";
+import productionAgentStore from "#/stores/productionAgent";
 const currentTable = ref(1);
 const inputValue = ref("");
 const toolbars: ToolbarNames[] = [

@@ -1,272 +1,91 @@
-# 🌟 技术栈
+# DramaStudio Web
 
-- **框架**：Vue 3.5+ (组合式 API)
-- **构建工具**：Vite 5.4+
-- **语言**：TypeScript 5.6+
-- **状态管理**：Pinia 2.2+ (支持持久化)
-- **路由**：Vue Router 4.4+
-- **UI 组件库**：
-  - Ant Design Vue 4.2+
-  - Element Plus 2.13+
-  - VXE Table 4.17+
-- **工具库**：
-  - Axios - HTTP 请求
-  - VueUse - Vue 组合式工具集
-  - Day.js - 日期处理
-  - Mammoth - Word 文档解析
+`@dramastudio/web` 是 DramaStudio 的前端应用，已接入 monorepo 的 pnpm、Turbo、catalog 依赖、`@super/vite-config` 和 `@super/tsconfig` 工程封装。项目结构参考 `apps/web-tdesign`，同时保留现有短剧创作业务界面。
 
----
+## 技术栈
 
-# 🎨 主要功能模块
-
-Toonflow Web 提供了完整的短剧创作前端界面，包含以下核心模块：
-
-- ✅ **项目管理**  
-   创建、编辑和管理短剧项目，支持项目状态追踪和多项目并行开发。
-
-- ✅ **原始文本编辑**  
-   导入和编辑小说原文，支持 Word 文档解析，智能文本清洗和章节分割。
-
-- ✅ **角色素材库**  
-   管理角色设定、角色图片等素材，支持批量生成、手动上传和在线编辑。
-
-- ✅ **大纲管理**  
-   可视化编辑故事大纲和事件线，支持拖拽排序和智能生成。
-
-- ✅ **剧本编辑器**  
-   结构化剧本编辑界面,支持对话、场景、情绪等多维度标注。
-
-- ✅ **分镜设计**  
-   可视化分镜画布，支持拖拽布局、图像检测和 AI 对话式分镜生成。
-
-- ✅ **视频配置**  
-   配置视频生成参数，支持多家 AI 视频服务商切换和视频下载。
-
-- ✅ **任务监控**  
-   实时查看 AI 生成任务进度，支持任务队列管理和历史记录查询。
-
-- ✅ **系统设置**  
-   配置 AI 服务商、提示词模板、用户权限等系统级参数。
-
----
-
-# 📦 应用场景
-
-- 短剧内容创作的前端操作界面
-- AI 辅助编剧工具的可视化平台
-- 分镜设计与视频生成的工作台
-- 多人协作的剧本管理系统
-
----
-
-# 🚀 快速开始
-
-## 💡 您是哪类用户？
-
-| 用户类型                                       | 推荐方案       | GitHub                                                   | Gitee                                                   |
-| ---------------------------------------------- | -------------- | -------------------------------------------------------- | ------------------------------------------------------- |
-| 🎬 **普通用户** - 想直接使用 Toonflow 创作短剧 | 下载完整客户端 | [Toonflow-app](https://github.com/HBAI-Ltd/Toonflow-app) | [Toonflow-app](https://gitee.com/HBAI-Ltd/Toonflow-app) |
-| 👨‍💻 **开发者** - 想修改前端代码或二次开发       | 继续阅读本文档 | 本仓库                                                   | 本仓库                                                  |
-
----
-
-## 前置条件
-
-在开发和运行本项目之前，请确保已安装：
-
-- ✅ **Node.js**：22.18.0 或 24.0.0 以上版本
-- ✅ **pnpm**：11.4.0 或更高版本（大仓统一包管理器）
-- ✅ **后端服务**：确保 Toonflow 后端服务已启动并可访问（可从 [GitHub](https://github.com/HBAI-Ltd/Toonflow-app) 或 [Gitee](https://gitee.com/HBAI-Ltd/Toonflow-app) 获取）
+- Vue 3.5+
+- Vite 8，通过 `@super/vite-config` 统一封装
+- TypeScript 6，通过 `@super/tsconfig/web-app.json` 和 `@super/tsconfig/node.json` 统一配置
+- Pinia
+- Vue Router
+- TDesign Vue Next
+- pnpm workspace catalog 依赖管理
 
 ## 本地开发
 
-### 1. 安装依赖
+从仓库根目录执行：
 
 ```bash
-pnpm install
-```
-
-### 2. 启动开发服务器
-
-```bash
+pnpm install --ignore-scripts
 pnpm dev:web
 ```
 
-开发服务器默认运行在 `http://localhost:50188`，支持热模块替换（HMR）。
+默认前端端口为 `50188`，后端 API 默认为 `http://localhost:10588/api`。
 
-### 3. 构建生产版本
-
-```bash
-pnpm build:web
-```
-
-构建产物将输出到 `dist` 目录。
-
-### 4. 预览生产构建
+常用命令：
 
 ```bash
-pnpm -F @dramastudio/web run preview
-```
-
----
-
-## 生产部署
-
-### 静态文件部署
-
-1. **构建项目**
-
-```bash
-pnpm build:web
-```
-
-2. **部署到 Web 服务器**
-
-将 `dist` 目录下的所有文件上传到 Nginx、Apache 或其他 Web 服务器的根目录。
-
-**Nginx 配置示例：**
-
-```nginx
-server {
-    listen 80;
-    server_name your-domain.com;
-    root /var/www/toonflow-web/dist;
-    index index.html;
-
-    location / {
-        try_files $uri $uri/ /index.html;
-    }
-
-    # API 代理（可选）
-    location /api/ {
-        proxy_pass http://localhost:10588/;
-        proxy_set_header Host $host;
-        proxy_set_header X-Real-IP $remote_addr;
-    }
-}
-```
-
-# 🔧 开发指南
-
-## 开发环境准备
-
-- **Node.js**：版本要求 22.18.0 或 24.0.0 及以上
-- **pnpm**：大仓统一包管理器
-
-## 常用命令
-
-```bash
-# 安装依赖
-pnpm install
-
-# 启动开发服务器（支持热更新）
-pnpm dev:web
-
-# 类型检查
 pnpm typecheck:web
-
-# 代码检查和自动修复
-pnpm lint:web
-
-# 代码格式化
-pnpm format
-
-# 构建开发版本
 pnpm build:web
-
-# 预览生产构建
+pnpm build:app
+pnpm lint:web
 pnpm -F @dramastudio/web run preview
-
-## 项目结构
-
-```
-📂 web/
-├─ 📂 public/                # 静态资源
-├─ 📂 scripts/               # 构建脚本
-│  └─ 📄 license.ts          # 许可证生成脚本
-├─ 📂 src/
-│  ├─ 📂 assets/             # 静态资源（样式、图片等）
-│  │  └─ 📄 main.css         # 全局样式
-│  ├─ 📂 components/         # 公共组件
-│  │  ├─ 📄 sider.vue        # 侧边栏组件
-│  │  ├─ 📂 chat/            # 聊天组件
-│  │  ├─ 📂 storyboardEditor/ # 分镜编辑器
-│  │  └─ 📂 videoConfig/     # 视频配置组件
-│  ├─ 📂 config/             # 配置文件
-│  │  └─ 📄 manufacturerConfig.ts # 厂商配置
-│  ├─ 📂 pages/              # 页面组件
-│  │  ├─ 📂 error/           # 错误页面
-│  │  ├─ 📂 login/           # 登录页面
-│  │  └─ 📂 workbench/       # 工作台
-│  ├─ 📂 router/             # 路由配置
-│  │  └─ 📄 index.ts         # 路由定义
-│  ├─ 📂 stores/             # Pinia 状态管理
-│  │  ├─ 📄 index.ts         # Store 入口
-│  │  ├─ 📄 loadingStore.ts  # 加载状态
-│  │  ├─ 📄 user.ts          # 用户状态
-│  │  └─ 📄 video.ts         # 视频状态
-│  ├─ 📂 types/              # TypeScript 类型定义
-│  │  ├─ 📄 auto-imports.d.ts # 自动导入类型
-│  │  ├─ 📄 components.d.ts   # 组件类型
-│  │  ├─ 📄 global.d.ts       # 全局类型
-│  │  ├─ 📄 manufacturer.ts   # 厂商类型
-│  │  └─ 📄 shims-vue.d.ts    # Vue 模块声明
-│  ├─ 📂 utils/              # 工具函数
-│  │  ├─ 📄 axios.ts         # HTTP 请求封装
-│  │  ├─ 📄 combineImages.ts # 图片合成
-│  │  ├─ 📄 error.ts         # 错误处理
-│  │  ├─ 📄 parseNovel.ts    # 小说解析
-│  │  ├─ 📄 splitGraph.ts    # 图像分割
-│  │  ├─ 📄 throttle.ts      # 节流防抖
-│  │  └─ 📄 wsClient.ts      # WebSocket 客户端
-│  ├─ 📂 views/              # 视图页面
-│  │  ├─ 📂 project/         # 项目管理
-│  │  ├─ 📂 projectDetail/   # 项目详情
-│  │  │  ├─ 📂 components/
-│  │  │  │  ├─ 📂 assetsManager/    # 素材管理
-│  │  │  │  ├─ 📂 originalText/     # 原始文本
-│  │  │  │  ├─ 📂 outlineManager/   # 大纲管理
-│  │  │  │  ├─ 📂 overview/         # 项目概览
-│  │  │  │  └─ 📂 scriptManager/    # 剧本管理
-│  │  ├─ 📂 setting/         # 系统设置
-│  │  └─ 📂 taskList/        # 任务列表
-│  ├─ 📄 App.vue             # 根组件
-│  └─ 📄 main.ts             # 应用入口
-├─ 📄 components.d.ts        # 全局组件类型
-├─ 📄 eslint.config.js       # ESLint 配置
-├─ 📄 index.html             # HTML 模板
-├─ 📄 package.json           # 项目配置
-├─ 📄 tsconfig.json          # TypeScript 配置
-├─ 📄 tsconfig.app.json      # 应用 TS 配置
-├─ 📄 tsconfig.node.json     # Node TS 配置
-├─ 📄 vite.config.ts         # Vite 配置
-├─ 📄 LICENSE                # 许可证
-├─ 📄 NOTICES.txt            # 第三方依赖声明
-└─ 📄 README.md              # 项目说明
 ```
 
----
+## 环境变量
 
-# 🐛 常见问题
-
-### Q: 启动开发服务器时端口被占用？
-
-**A:** 修改 `vite.config.ts` 中的端口配置：
-
-```typescript
-export default defineConfig({
-  server: {
-    port: 3000, // 修改为其他端口
-  },
-});
-```
-
-### Q: 如何配置后端 API 地址？
-
-**A:** 在 `.env.dev` 中配置后端地址：
+`web/.env.example` 提供本地默认值：
 
 ```bash
-VITE_TYPE=dev
-VITE_BASE_URL=http://127.0.0.1:10588
-VITE_WS_URL=ws://127.0.0.1:10588
+VITE_APP_TITLE=DramaStudio
+VITE_APP_NAMESPACE=dramastudio-web
+VITE_BASE=./
+VITE_PORT=50188
+VITE_ROUTER_HISTORY=hash
+VITE_API_BASE_URL=http://localhost:10588/api
 ```
+
+`VITE_BASE`、`VITE_PORT`、`VITE_APP_TITLE` 由 `@super/vite-config` 读取；`VITE_ROUTER_HISTORY` 控制 hash/history 路由模式；`VITE_API_BASE_URL` 供业务请求封装读取。
+
+## 工程结构
+
+```text
+web/
+├─ index.html
+├─ package.json
+├─ vite.config.ts
+├─ tsconfig.json
+├─ tsconfig.node.json
+├─ src/
+│  ├─ app/                  # 应用根组件，承载 ConfigProvider 等应用级配置
+│  ├─ bootstrap.ts          # 应用启动、插件安装、全局标题等运行时入口
+│  ├─ main.ts               # 仅调用 bootstrap
+│  ├─ router/
+│  │  ├─ index.ts           # router 实例
+│  │  ├─ guard.ts           # 路由守卫
+│  │  └─ routes/            # 静态路由拆分
+│  ├─ assets/
+│  ├─ components/
+│  ├─ locales/
+│  ├─ pages/
+│  ├─ stores/
+│  ├─ types/                # 非 .d.ts 的兼容类型模块
+│  ├─ utils/
+│  └─ views/
+└─ public/
+```
+
+`vite.config.ts` 是唯一的 Vite 配置源；`vite.config.js`、`vite.config.d.ts` 属于 TypeScript 可能生成的临时产物，不再纳入源码维护。
+应用内不维护 `.d.ts` 声明文件；Vue、Pinia、Router、TDesign API 由源码显式导入，TDesign 组件在 `src/bootstrap.ts` 安装，不再通过 Vite 自动导入或组件扫描插件注入。必要的历史业务全局类型集中在 `src/types/global.ts`。
+
+## 验证要求
+
+工程配置或运行时入口变更后，至少执行：
+
+```bash
+pnpm typecheck:web
+pnpm build:web
+```
+
+涉及登录、路由、API 地址或 shell 行为时，还需要打开本地页面验证 `#/login`、登录跳转和 `#/project` 等主路由。

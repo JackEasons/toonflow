@@ -66,7 +66,10 @@
               </template>
             </t-popup>
             <t-popup trigger="click" placement="top" v-if="showThink">
-              <t-button size="small" variant="outline" :theme="['default', 'success', 'warning', 'danger'][thinkLevel] || 'default'">
+              <t-button
+                size="small"
+                variant="outline"
+                :theme="(['default', 'success', 'warning', 'danger'] as const)[thinkLevel] || 'default'">
                 <template #icon>
                   <i-tips size="16" />
                 </template>
@@ -93,11 +96,14 @@
 </template>
 
 <script setup lang="ts">
+import { onMounted, ref, watch, watchEffect } from "vue";
+import { DialogPlugin } from "tdesign-vue-next";
+import { storeToRefs } from "pinia";
 import { useMousePressed, useMouse } from "@vueuse/core";
 import _ from "lodash";
-import axios from "@/utils/axios";
-import productionAgentStore from "@/stores/productionAgent";
-import projectStore from "@/stores/project";
+import axios from "#/utils/axios";
+import productionAgentStore from "#/stores/productionAgent";
+import projectStore from "#/stores/project";
 const { project } = storeToRefs(projectStore());
 const { connected, messages, status, episodesId, loadingHistory, thinkLevel } = storeToRefs(productionAgentStore());
 const thinkLevelOptions = [

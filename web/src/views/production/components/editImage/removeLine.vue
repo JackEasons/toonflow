@@ -14,6 +14,7 @@
   </EdgeLabelRenderer>
 </template>
 <script setup>
+import { computed } from "vue";
 import { BaseEdge, EdgeLabelRenderer, getBezierPath, useVueFlow } from "@vue-flow/core";
 const { removeEdges } = useVueFlow({ id: "editImage" });
 

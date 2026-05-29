@@ -35,7 +35,9 @@
 </template>
 
 <script setup lang="ts">
-import settingStore from "@/stores/setting";
+import { computed } from "vue";
+import { storeToRefs } from "pinia";
+import settingStore from "#/stores/setting";
 const { showSetting, activeMenu, needUpdate } = storeToRefs(settingStore());
 
 import uiConfig from "./components/uiConfig.vue";

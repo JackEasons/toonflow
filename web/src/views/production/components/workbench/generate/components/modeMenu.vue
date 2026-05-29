@@ -76,8 +76,8 @@
 </template>
 
 <script setup lang="ts">
-import "@/views/production/components/workbench/type/type";
-import axios from "@/utils/axios";
+import "#/views/production/components/workbench/type/type";
+import axios from "#/utils/axios";
 
 const props = defineProps<{
   modeOptions: VideoModel;
@@ -94,8 +94,8 @@ const modelParmas = defineModel<ModelSetting>({
   },
 });
 const emit = defineEmits(["modeChange"]);
-function handleBeforeChange(newVal: string) {
-  emit("modeChange", newVal);
+function handleBeforeChange(newVal: unknown) {
+  emit("modeChange", String(newVal));
 }
 function updateDuration(newDuration: number) {
   modelParmas.value.duration = newDuration;

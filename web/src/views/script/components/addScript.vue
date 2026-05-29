@@ -71,13 +71,15 @@
 </template>
 
 <script setup lang="ts">
+import { ref } from "vue";
+import { storeToRefs } from "pinia";
 import { LoadingPlugin } from "tdesign-vue-next";
 import mammoth from "mammoth";
 import type { UploadFile } from "tdesign-vue-next";
-import axios from "@/utils/axios";
-import projectStore from "@/stores/project";
-import openAssetsSelector from "@/utils/assetsCheck";
-import settingStore from "@/stores/setting";
+import axios from "#/utils/axios";
+import projectStore from "#/stores/project";
+import openAssetsSelector from "#/utils/assetsCheck";
+import settingStore from "#/stores/setting";
 const { otherSetting } = storeToRefs(settingStore());
 const { project } = storeToRefs(projectStore());
 

@@ -97,11 +97,13 @@
 </template>
 
 <script setup lang="ts">
+import { ref } from "vue";
+import { storeToRefs } from "pinia";
 import { useLocalStorage } from "@vueuse/core";
 import { useI18n } from "vue-i18n";
 import JSConfetti from "js-confetti";
-import settingStore from "@/stores/setting";
-import { languageList, cachedLocale } from "@/locales";
+import settingStore from "#/stores/setting";
+import { languageList, cachedLocale } from "#/locales";
 const { showSetting, activeMenu, isElectron } = storeToRefs(settingStore());
 
 const { locale } = useI18n();

@@ -78,9 +78,12 @@
 </template>
 
 <script setup lang="ts">
+import { inject, ref } from "vue";
+import { DialogPlugin } from "tdesign-vue-next";
+import { storeToRefs } from "pinia";
 import type { Ref } from "vue";
-import axios from "@/utils/axios";
-import projectStore from "@/stores/project";
+import axios from "#/utils/axios";
+import projectStore from "#/stores/project";
 
 const props = defineProps<{
   activeTrackIndex: number;

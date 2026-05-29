@@ -61,9 +61,11 @@
 </template>
 
 <script setup lang="ts">
+import { onMounted, ref } from "vue";
+import { storeToRefs } from "pinia";
 import dayjs from "dayjs";
-import axios from "@/utils/axios";
-import projectStore from "@/stores/project";
+import axios from "#/utils/axios";
+import projectStore from "#/stores/project";
 
 const { project } = storeToRefs(projectStore());
 

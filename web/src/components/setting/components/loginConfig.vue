@@ -17,8 +17,9 @@
 </template>
 
 <script setup lang="ts">
+import { onMounted, ref } from "vue";
 import type { FormInstanceFunctions, SubmitContext, FormRules } from "tdesign-vue-next";
-import axios from "@/utils/axios";
+import axios from "#/utils/axios";
 
 interface UserForm {
   id: number | null;

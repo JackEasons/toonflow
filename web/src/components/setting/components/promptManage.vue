@@ -26,12 +26,13 @@
 </template>
 
 <script setup lang="ts">
-import axios from "@/utils/axios";
+import { storeToRefs } from "pinia";
+import axios from "#/utils/axios";
 import { MdEditor } from "md-editor-v3";
 import type { ToolbarNames } from "md-editor-v3";
-import settingStore from "@/stores/setting";
+import settingStore from "#/stores/setting";
 const { themeSetting } = storeToRefs(settingStore());
-import { ref } from "vue";
+import { onMounted, ref } from "vue";
 onMounted(() => {
   getPrompt();
 });

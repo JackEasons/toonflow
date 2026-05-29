@@ -3,7 +3,7 @@ import u from "@/utils";
 import { z } from "zod";
 import { error, success } from "@/lib/responseFormat";
 import { validateFields } from "@/middleware/middleware";
-import { tool, jsonSchema } from "ai";
+import { tool, zodSchema } from "ai";
 const router = express.Router();
 
 // 获取资产
@@ -33,12 +33,11 @@ export default router.post(
       try {
         const resultTool = tool({
           description: "匹配完成后必须调用此工具提交结果",
-          inputSchema: jsonSchema<{ id: number; audioId: number }>(
+          inputSchema: zodSchema<{ audioId?: number | null }>(
             z
               .object({
                 audioId: z.number().nullable().optional().describe("与该资产匹配的音频ID列表，若无合适匹配则返回空数组"),
-              })
-              .toJSONSchema(),
+              }),
           ),
           execute: async (result) => {
             await u.db("o_assetsRole2Audio").where("assetsRoleId", asset.id).delete();

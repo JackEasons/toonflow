@@ -29,9 +29,10 @@
 </template>
 
 <script setup lang="ts">
-import axios from "@/utils/axios";
+import { storeToRefs } from "pinia";
+import axios from "#/utils/axios";
 import { ref } from "vue";
-import projectStore from "@/stores/project";
+import projectStore from "#/stores/project";
 const { project } = storeToRefs(projectStore());
 
 const eventDatas = ref([]);

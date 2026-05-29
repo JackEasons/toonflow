@@ -1,4 +1,7 @@
-import axios from "@/utils/axios";
+import { defineStore } from "pinia";
+import { computed, ref } from "vue";
+
+import axios from "#/utils/axios";
 
 export default defineStore(
   "index",

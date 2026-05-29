@@ -1,16 +1,19 @@
 {
-  "files": [],
-  "references": [
-    {
-      "path": "./tsconfig.node.json"
-    },
-    {
-      "path": "./tsconfig.app.json"
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "extends": "@super/tsconfig/web-app.json",
+  "compilerOptions": {
+    "noImplicitAny": false,
+    "noUncheckedIndexedAccess": false,
+    "noUnusedLocals": false,
+    "noUnusedParameters": false,
+    "paths": {
+      "#/*": ["./src/*"]
     }
-  ],
-  "exclude": [
-    "node_modules",
-    "**/node_modules/*",
-    "dist"
-  ]
+  },
+  "references": [{ "path": "./tsconfig.node.json" }],
+  "vueCompilerOptions": {
+    "strictTemplates": false
+  },
+  "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.vue"],
+  "exclude": ["node_modules", "**/node_modules/*", "dist", "coverage", "**/*.test.ts", "src/**/__tests__/*"]
 }

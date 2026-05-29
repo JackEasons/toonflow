@@ -1,6 +1,6 @@
 import { h, ref, render, nextTick } from "vue";
 import { Dialog as TDialog } from "tdesign-vue-next";
-import AssetsView from "@/views/assets/index.vue";
+import AssetsView from "#/views/assets/index.vue";
 
 interface Asset {
   id: number;

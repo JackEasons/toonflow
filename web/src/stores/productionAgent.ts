@@ -1,8 +1,11 @@
-import axios from "@/utils/axios";
-import projectStore from "@/stores/project";
-import settingStore from "@/stores/setting";
-import { useChat } from "@/utils/useChat";
-import type { FlowData, Storyboard } from "@/views/production/utils/flowBuilder";
+import { defineStore } from "pinia";
+import { computed, onMounted, ref, watch } from "vue";
+
+import axios from "#/utils/axios";
+import projectStore from "#/stores/project";
+import settingStore from "#/stores/setting";
+import { useChat } from "#/utils/useChat";
+import type { FlowData, Storyboard } from "#/views/production/utils/flowBuilder";
 import type { ChatMessagesData } from "@tdesign-vue-next/chat";
 import { useThrottleFn } from "@vueuse/core";
 

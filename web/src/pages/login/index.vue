@@ -128,12 +128,13 @@
 </template>
 
 <script setup>
+import { ref } from "vue";
 import { useI18n } from "vue-i18n";
-import Router from "@/router/index.ts";
-import axios from "@/utils/axios";
-import settingStore from "@/stores/setting";
+import Router from "#/router/index.ts";
+import axios from "#/utils/axios";
+import settingStore from "#/stores/setting";
 import { storeToRefs } from "pinia";
-import { languageList, cachedLocale } from "@/locales";
+import { languageList, cachedLocale } from "#/locales";
 
 const { locale, t } = useI18n();
 const langOptions = languageList.map((item) => ({

@@ -74,12 +74,14 @@
 </template>
 
 <script setup lang="ts">
+import { computed, ref, watch } from "vue";
+import { storeToRefs } from "pinia";
 import { LoadingPlugin } from "tdesign-vue-next";
-import axios from "@/utils/axios";
-import parseNovel from "@/utils/parseNovel";
+import axios from "#/utils/axios";
+import parseNovel from "#/utils/parseNovel";
 import mammoth from "mammoth";
 import type { UploadFile, PrimaryTableCol, TableRowData } from "tdesign-vue-next";
-import projectStore from "@/stores/project";
+import projectStore from "#/stores/project";
 const { project } = storeToRefs(projectStore());
 interface ChapterItem {
   index: number;

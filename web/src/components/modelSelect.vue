@@ -33,10 +33,11 @@
 </template>
 
 <script setup lang="ts">
-import { providersLogo, modelProviderRules } from "@/utils/providersLogo";
-import settingStore from "@/stores/setting";
+import { onMounted, ref } from "vue";
+import { providersLogo, modelProviderRules } from "#/utils/providersLogo";
+import settingStore from "#/stores/setting";
 
-import axios from "@/utils/axios";
+import axios from "#/utils/axios";
 interface VendorChild {
   id: number;
   label: string;

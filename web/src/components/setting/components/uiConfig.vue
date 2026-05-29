@@ -37,8 +37,10 @@
 </template>
 
 <script setup lang="ts">
-import settingStore from "@/stores/setting";
-import { applyThemeMode, applyThemeColor, toggleThemeWithTransition } from "@/utils/theme";
+import { watch } from "vue";
+import { storeToRefs } from "pinia";
+import settingStore from "#/stores/setting";
+import { applyThemeMode, applyThemeColor, toggleThemeWithTransition } from "#/utils/theme";
 const { themeSetting } = storeToRefs(settingStore());
 
 const presetColors = ["#000000", "#0052D9", "#2BA471", "#ED7B2F", "#E34D59", "#7B61FF", "#111111"];

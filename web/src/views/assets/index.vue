@@ -432,16 +432,19 @@
 </template>
 
 <script setup lang="ts">
+import { computed, nextTick, onMounted, onUnmounted, ref, watch } from "vue";
+import { DialogPlugin } from "tdesign-vue-next";
+import { storeToRefs } from "pinia";
 import dayjs from "dayjs";
-import modelSelect from "@/components/modelSelect.vue";
+import modelSelect from "#/components/modelSelect.vue";
 import { useFileDialog } from "@vueuse/core";
-import axios from "@/utils/axios";
+import axios from "#/utils/axios";
 import type { TabValue, TableProps } from "tdesign-vue-next";
 import addAssets from "./components/addAssets.vue";
 import addAudioAssets from "./components/addAudioAssets.vue";
 import generateImage from "./components/generateImage.vue";
-import projectStore from "@/stores/project";
-import settingStore from "@/stores/setting";
+import projectStore from "#/stores/project";
+import settingStore from "#/stores/setting";
 const { otherSetting } = storeToRefs(settingStore());
 
 const props = withDefaults(

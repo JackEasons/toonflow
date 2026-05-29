@@ -34,7 +34,7 @@
 </template>
 
 <script setup lang="ts">
-import { h, render } from "vue";
+import { h, nextTick, onMounted, ref, render, watch } from "vue";
 import { Popup } from "tdesign-vue-next";
 import { Video, VolumeMute } from "@icon-park/vue-next";
 

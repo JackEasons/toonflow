@@ -1,6 +1,6 @@
 import { MessagePlugin } from "tdesign-vue-next";
 
-import i18n from "@/locales";
+import i18n from "#/locales";
 const { t } = i18n.global;
 
 declare global {

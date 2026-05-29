@@ -92,14 +92,16 @@
 </template>
 
 <script setup lang="ts">
-import settingStore from "@/stores/setting";
+import { computed, ref, watch } from "vue";
+import { storeToRefs } from "pinia";
+import settingStore from "#/stores/setting";
 const { otherSetting } = storeToRefs(settingStore());
 import { LoadingPlugin } from "tdesign-vue-next";
-import axios from "@/utils/axios";
-import parseScript from "@/utils/parseScript";
+import axios from "#/utils/axios";
+import parseScript from "#/utils/parseScript";
 import mammoth from "mammoth";
 import type { UploadFile, PrimaryTableCol, TableRowData } from "tdesign-vue-next";
-import projectStore from "@/stores/project";
+import projectStore from "#/stores/project";
 const { project } = storeToRefs(projectStore());
 interface ChapterItem {
   index: number;

@@ -74,13 +74,16 @@
 </template>
 
 <script setup lang="ts">
-import axios from "@/utils/axios";
+import { computed, onMounted, onUnmounted, ref, watch } from "vue";
+import { DialogPlugin } from "tdesign-vue-next";
+import { storeToRefs } from "pinia";
+import axios from "#/utils/axios";
 import editScript from "./components/editScript.vue";
 import addScript from "./components/addScript.vue";
 import batchAddScript from "./components/batchAddScript.vue";
-import projectStore from "@/stores/project";
-import settingStore from "@/stores/setting";
-import imageListCacheStore from "@/stores/imageListCache";
+import projectStore from "#/stores/project";
+import settingStore from "#/stores/setting";
+import imageListCacheStore from "#/stores/imageListCache";
 
 const { clearScriptCache } = imageListCacheStore();
 

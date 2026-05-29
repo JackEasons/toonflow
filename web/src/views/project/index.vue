@@ -51,11 +51,15 @@
 </template>
 
 <script setup lang="ts">
+import { onMounted, ref } from "vue";
+import { DialogPlugin } from "tdesign-vue-next";
+import { useRouter } from "vue-router";
+import { storeToRefs } from "pinia";
 import projectDialog from "./components/projectDialog.vue";
 import dayjs from "dayjs";
-import axios from "@/utils/axios";
-import projectStore from "@/stores/project";
-import imageListCacheStore from "@/stores/imageListCache";
+import axios from "#/utils/axios";
+import projectStore from "#/stores/project";
+import imageListCacheStore from "#/stores/imageListCache";
 
 const { clearProjectCache } = imageListCacheStore();
 const { allProject, project } = storeToRefs(projectStore());

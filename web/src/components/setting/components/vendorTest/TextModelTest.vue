@@ -55,7 +55,8 @@
 </template>
 
 <script setup lang="ts">
-import axios from "@/utils/axios";
+import { nextTick, ref } from "vue";
+import axios from "#/utils/axios";
 
 const props = defineProps<{
   vendorId: string;

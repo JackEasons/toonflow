@@ -1,7 +1,10 @@
-import axios from "@/utils/axios";
-import projectStore from "@/stores/project";
-import settingStore from "@/stores/setting";
-import { useChat } from "@/utils/useChat";
+import { defineStore } from "pinia";
+import { ref, watch } from "vue";
+
+import axios from "#/utils/axios";
+import projectStore from "#/stores/project";
+import settingStore from "#/stores/setting";
+import { useChat } from "#/utils/useChat";
 
 interface PlanData {
   storySkeleton: string;

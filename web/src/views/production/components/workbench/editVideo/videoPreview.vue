@@ -22,6 +22,7 @@
 </template>
 
 <script setup lang="ts">
+import { computed, onMounted, onUnmounted, provide, reactive, ref, watch } from "vue";
 import { AVCanvas } from "@webav/av-canvas";
 import { MP4Clip, AudioClip, ImgClip, VisibleSprite, renderTxt2ImgBitmap } from "@webav/av-cliper";
 import { usePlaybackStore, useTracksStore } from "vue-clip-track";

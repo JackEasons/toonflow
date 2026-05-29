@@ -60,22 +60,25 @@
 </template>
 
 <script setup lang="ts">
+import { inject, nextTick, onMounted, provide, ref } from "vue";
+import { DialogPlugin } from "tdesign-vue-next";
+import { storeToRefs } from "pinia";
 import type { Ref } from "vue";
 import { VueFlow, useVueFlow, Panel, type Edge } from "@vue-flow/core";
 import { Background } from "@vue-flow/background";
 import { Controls } from "@vue-flow/controls";
 import uploadNode from "./uploadNode.vue";
 import generatedNode from "./generatedNode.vue";
-import storyboardImageCheck from "@/components/storyboardImageCheck.vue";
+import storyboardImageCheck from "#/components/storyboardImageCheck.vue";
 import type { Storyboard } from "../../utils/flowBuilder";
 
 import "@vue-flow/core/dist/style.css";
 import "@vue-flow/core/dist/theme-default.css";
 import "@vue-flow/controls/dist/style.css";
 import removeLine from "./removeLine.vue";
-import projectStore from "@/stores/project";
+import projectStore from "#/stores/project";
 
-import axios from "@/utils/axios";
+import axios from "#/utils/axios";
 import type { NodeType, UploadNodeData, GeneratedNodeData } from "../../utils/editImageType";
 import { DEFAULT_EDGE_OPTIONS, createGeneratedData, cleanNodes, cleanEdges } from "../../utils/editImageType";
 import { useLayout } from "../../utils/dagre";

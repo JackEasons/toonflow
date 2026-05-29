@@ -1,8 +1,8 @@
 import axios from "axios";
-import router from "@/router/index";
+import router from "#/router/index";
 import { storeToRefs } from "pinia";
 import { MessagePlugin } from "tdesign-vue-next";
-import settingStore from "@/stores/setting";
+import settingStore from "#/stores/setting";
 
 const instance = axios.create();
 

@@ -166,7 +166,8 @@
 </template>
 
 <script setup lang="ts">
-import axios from "@/utils/axios";
+import { computed, ref, watch } from "vue";
+import axios from "#/utils/axios";
 import ImageUploadBox from "./ImageUploadBox.vue";
 import VideoUploadBox from "./VideoUploadBox.vue";
 import AudioUploadBox from "./AudioUploadBox.vue";

@@ -67,10 +67,11 @@
 </template>
 
 <script setup lang="ts">
+import { onMounted, ref, watch } from "vue";
 import dayjs from "dayjs";
-import axios from "@/utils/axios";
+import axios from "#/utils/axios";
 import type { TableProps } from "tdesign-vue-next";
-import type { Storyboard } from "@/views/production/utils/flowBuilder";
+import type { Storyboard } from "#/views/production/utils/flowBuilder";
 const props = withDefaults(
   defineProps<{
     /** 限制显示的资产类型 */

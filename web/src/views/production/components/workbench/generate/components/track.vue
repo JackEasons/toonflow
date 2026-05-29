@@ -68,11 +68,14 @@
 </template>
 
 <script setup lang="ts">
+import { inject, ref, watch } from "vue";
+import { DialogPlugin } from "tdesign-vue-next";
+import { storeToRefs } from "pinia";
 import type { Ref } from "vue";
-import "@/views/production/components/workbench/type/type";
-import axios from "@/utils/axios";
-import projectStore from "@/stores/project";
-import imageListCacheStore from "@/stores/imageListCache";
+import "#/views/production/components/workbench/type/type";
+import axios from "#/utils/axios";
+import projectStore from "#/stores/project";
+import imageListCacheStore from "#/stores/imageListCache";
 import JSZip from "jszip";
 
 const { project } = storeToRefs(projectStore());
@@ -99,6 +102,11 @@ const emit = defineEmits<{
   saveImageList: [trackId: number];
 }>();
 const checkAll = ref(false); // 全选状态
+
+type PromptSourceInfo = Array<{
+  id: number | null | undefined;
+  sources: string | undefined;
+}>;
 
 /** 视频封面缓存 src -> dataURL */
 const videoCoverMap = ref<Record<string, string>>({});
@@ -247,7 +255,7 @@ function batchGenText() {
   trackList.value.forEach((track, index) => {
     if (!checkedTrackIds.value.includes(track.id)) return;
     const trackId = track.id;
-    let info = [];
+    let info: PromptSourceInfo = [];
     if (props.modelParmas.mode == "text") {
       info = track?.medias.map(({ id, sources }) => ({ id, sources }));
     } else {
@@ -285,7 +293,7 @@ function batchGenText() {
  * 其他轨道 → uploadBoxCache（含切换前的编辑）→ 降级 track.medias
  * @param filterEmpty 是否过滤掉没有 src 的项（生成视频时需要过滤，生成提示词时不需要）
  */
-function getTrackUploadInfo(track: TrackItem, filterEmpty = false) {
+function getTrackUploadInfo(track: TrackItem, filterEmpty = false): PromptSourceInfo {
   const activeTrackId = trackList.value[activeTrackIndex.value]?.id;
 
   if (track.id === activeTrackId) {

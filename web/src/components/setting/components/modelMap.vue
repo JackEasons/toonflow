@@ -118,12 +118,13 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import { storeToRefs } from "pinia";
+import { onMounted, ref } from "vue";
 import type { TableProps } from "tdesign-vue-next";
-import axios from "@/utils/axios";
+import axios from "#/utils/axios";
 import { MdEditor, MdPreview } from "md-editor-v3";
 import type { ToolbarNames } from "md-editor-v3";
-import settingStore from "@/stores/setting";
+import settingStore from "#/stores/setting";
 const { themeSetting } = storeToRefs(settingStore());
 
 const promptToolbars: ToolbarNames[] = [

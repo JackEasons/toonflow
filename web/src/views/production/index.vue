@@ -86,6 +86,9 @@
 </template>
 
 <script setup lang="ts">
+import { computed, nextTick, onMounted, provide, ref, watch } from "vue";
+import { DialogPlugin } from "tdesign-vue-next";
+import { storeToRefs } from "pinia";
 import { useLocalStorage, useEventListener } from "@vueuse/core";
 import { VueFlow, useVueFlow } from "@vue-flow/core";
 import { Background } from "@vue-flow/background";
@@ -104,11 +107,11 @@ import poster from "./node/poster.vue";
 import rightChatBox from "./components/rightChatBox/index.vue";
 import { useLayout } from "./utils/dagre";
 import { useFlowBuilder } from "./utils/flowBuilder";
-import axios from "@/utils/axios";
-import projectStore from "@/stores/project";
+import axios from "#/utils/axios";
+import projectStore from "#/stores/project";
 
 const { project } = storeToRefs(projectStore());
-import settingStore from "@/stores/setting";
+import settingStore from "#/stores/setting";
 const { canvasWheelEvent, otherSetting } = storeToRefs(settingStore());
 const openShowVisible = ref(true);
 const {
@@ -177,7 +180,7 @@ onMoveStart(() => startInteracting());
 onMoveEnd(() => stopInteracting());
 const { layout } = useLayout("mainFlowBox");
 
-import productionAgentStore from "@/stores/productionAgent";
+import productionAgentStore from "#/stores/productionAgent";
 const { episodesId, flowData, status } = storeToRefs(productionAgentStore());
 provide("episodesId", episodesId);
 

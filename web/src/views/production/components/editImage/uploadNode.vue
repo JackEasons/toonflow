@@ -51,8 +51,8 @@
 
 <script setup lang="ts">
 import { Handle, Position, useVueFlow } from "@vue-flow/core";
-import { onBeforeUnmount, ref, watch } from "vue";
-import openAssetsSelector from "@/utils/assetsCheck";
+import { inject, onBeforeUnmount, ref, watch } from "vue";
+import openAssetsSelector from "#/utils/assetsCheck";
 import type { Storyboard } from "../../utils/flowBuilder";
 import type { DropdownOption } from "tdesign-vue-next/es/dropdown";
 const props = defineProps<{

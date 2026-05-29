@@ -70,6 +70,7 @@
     "zod": "^4.3.5"
   },
   "devDependencies": {
+    "@super/tsconfig": "workspace:*",
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.6",
     "@types/express-ws": "^3.0.6",
@@ -77,7 +78,7 @@
     "@types/jsonwebtoken": "^9.0.10",
     "@types/lodash": "^4.17.24",
     "@types/morgan": "^1.9.10",
-    "cross-env": "^10.1.0",
+    "cross-env": "catalog:",
     "esbuild": "^0.27.4",
     "nodemon": "^3.1.11",
     "tsx": "^4.21.0",

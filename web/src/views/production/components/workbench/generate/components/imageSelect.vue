@@ -103,10 +103,11 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
-import "@/views/production/components/workbench/type/type";
-import assetsCheck, { type AssetType, type ClipMediaType } from "@/utils/assetsCheck";
-import axios from "@/utils/axios";
+import { DialogPlugin } from "tdesign-vue-next";
+import { computed, ref } from "vue";
+import "#/views/production/components/workbench/type/type";
+import assetsCheck, { type AssetType, type ClipMediaType } from "#/utils/assetsCheck";
+import axios from "#/utils/axios";
 
 const props = defineProps<{
   mode: VideoMode;

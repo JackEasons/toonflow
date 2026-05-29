@@ -62,11 +62,14 @@
 </template>
 
 <script setup lang="ts">
-import setting from "@/components/setting/index.vue";
-import hello from "@/components/hello.vue";
-import projectStore from "@/stores/project";
+import { ref, watch } from "vue";
+import { useRoute, useRouter } from "vue-router";
+import { storeToRefs } from "pinia";
+import setting from "#/components/setting/index.vue";
+import hello from "#/components/hello.vue";
+import projectStore from "#/stores/project";
 const { project } = storeToRefs(projectStore());
-import settingStore from "@/stores/setting";
+import settingStore from "#/stores/setting";
 const { showSetting, isElectron } = storeToRefs(settingStore());
 const menuList = ref([
   { type: "btn", path: "/project", labelKey: "workbench.menu.myProject", icon: "i-folder-close" },

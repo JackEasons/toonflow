@@ -109,12 +109,15 @@
 </template>
 
 <script setup lang="ts">
+import { computed, onMounted, onUnmounted, ref, watch } from "vue";
+import { DialogPlugin } from "tdesign-vue-next";
+import { storeToRefs } from "pinia";
 import dayjs from "dayjs";
-import axios from "@/utils/axios";
+import axios from "#/utils/axios";
 import importNovel from "./components/importNovel.vue";
 import editNodel from "./components/editNodel.vue";
-import projectStore from "@/stores/project";
-import settingStore from "@/stores/setting";
+import projectStore from "#/stores/project";
+import settingStore from "#/stores/setting";
 const { otherSetting } = storeToRefs(settingStore());
 const { project } = storeToRefs(projectStore());
 

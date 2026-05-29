@@ -49,9 +49,11 @@
 </template>
 
 <script setup lang="ts">
-import axios from "@/utils/axios";
-import openAssetsSelector from "@/utils/assetsCheck";
-import settingStore from "@/stores/setting";
+import { ref, watch } from "vue";
+import { storeToRefs } from "pinia";
+import axios from "#/utils/axios";
+import openAssetsSelector from "#/utils/assetsCheck";
+import settingStore from "#/stores/setting";
 const { otherSetting } = storeToRefs(settingStore());
 interface ScriptAsset {
   id: number;

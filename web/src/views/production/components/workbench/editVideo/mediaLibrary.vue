@@ -214,6 +214,7 @@
 </template>
 
 <script setup lang="ts">
+import { onMounted, ref, watch } from "vue";
 import { extractVideoThumbnails, extractAudioWaveform } from "vue-clip-track";
 import {
   type MediaItem,

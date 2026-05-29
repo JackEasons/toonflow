@@ -74,10 +74,12 @@
 </template>
 
 <script setup lang="ts">
+import { computed, onMounted, ref } from "vue";
+import { storeToRefs } from "pinia";
 import { CodeEditor } from "monaco-editor-vue3";
-import axios from "@/utils/axios";
+import axios from "#/utils/axios";
 import { DialogPlugin } from "tdesign-vue-next";
-import settingStore from "@/stores/setting";
+import settingStore from "#/stores/setting";
 const { isElectron } = storeToRefs(settingStore());
 
 const switchAiDevTool = ref("0");

@@ -169,10 +169,10 @@
 
 <script setup lang="ts">
 import { useLocalStorage, useEventListener } from "@vueuse/core";
-import { ref, computed, watch, nextTick, onUnmounted, type Ref } from "vue";
+import { computed, inject, nextTick, onMounted, onUnmounted, ref, type Ref, watch } from "vue";
 import { VueDraggable } from "vue-draggable-plus";
 import { DialogPlugin } from "tdesign-vue-next";
-import axios from "@/utils/axios";
+import axios from "#/utils/axios";
 import JSZip from "jszip";
 
 interface ShotCharacter {

@@ -8,7 +8,8 @@
 </template>
 
 <script setup lang="ts">
-import axios from "@/utils/axios";
+import { ref } from "vue";
+import axios from "#/utils/axios";
 const log = ref<any>("");
 function test() {
   axios.get("/test/test").then((res) => {

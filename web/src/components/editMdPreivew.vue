@@ -14,7 +14,7 @@
     attach="body">
     <MdEditor
       v-model="editContent"
-      :theme="themeSetting.mode"
+      :theme="themeSetting.mode === 'auto' ? undefined : themeSetting.mode"
       :toolbars="toolbars"
       :footers="[]"
       style="height: min(68vh, 760px)"
@@ -25,9 +25,11 @@
 </template>
 
 <script setup lang="ts">
+import { ref, watch } from "vue";
+import { storeToRefs } from "pinia";
 import { MdEditor } from "md-editor-v3";
 import type { ToolbarNames } from "md-editor-v3";
-import settingStore from "@/stores/setting";
+import settingStore from "#/stores/setting";
 const { themeSetting } = storeToRefs(settingStore());
 
 const props = defineProps<{

@@ -63,8 +63,10 @@
 </template>
 
 <script setup lang="ts">
-import axios from "@/utils/axios";
-import projectStore from "@/stores/project";
+import { ref, watch } from "vue";
+import { storeToRefs } from "pinia";
+import axios from "#/utils/axios";
+import projectStore from "#/stores/project";
 const { project } = storeToRefs(projectStore());
 
 interface AudioItem {

@@ -25,7 +25,7 @@
 </template>
 
 <script setup lang="ts">
-import axios from "@/utils/axios";
+import axios from "#/utils/axios";
 const editNodelShow = defineModel<boolean>();
 const props = defineProps<{
   formData: {

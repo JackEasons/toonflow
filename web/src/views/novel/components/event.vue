@@ -71,9 +71,12 @@
 </template>
 
 <script setup lang="ts">
-import axios from "@/utils/axios";
+import { onMounted, ref } from "vue";
+import { DialogPlugin } from "tdesign-vue-next";
+import { storeToRefs } from "pinia";
+import axios from "#/utils/axios";
 import dayjs from "dayjs";
-import projectStore from "@/stores/project";
+import projectStore from "#/stores/project";
 const { project } = storeToRefs(projectStore());
 // 分页信息
 const pagination = ref({

@@ -1,5 +1,5 @@
 import { Socket } from "socket.io";
-import { tool, jsonSchema } from "ai";
+import { tool, zodSchema } from "ai";
 import { z } from "zod";
 import u from "@/utils";
 import Memory from "@/utils/agent/memory";
@@ -132,15 +132,13 @@ function createSubAgent(parentCtx: AgentContext) {
     return fullResponse;
   }
 
-  const promptInput = z
-    .object({
-      prompt: z.string().describe("交给子Agent的任务简约描述，100字以内"),
-    })
-    .toJSONSchema();
+  const promptInput = z.object({
+    prompt: z.string().describe("交给子Agent的任务简约描述，100字以内"),
+  });
 
   const run_sub_agent_storySkeleton = tool({
     description: "运行执行subAgent来完成故事骨架相关任务",
-    inputSchema: jsonSchema<{ prompt: string }>(promptInput),
+    inputSchema: zodSchema<{ prompt: string }>(promptInput),
     execute: async ({ prompt }) => {
       const skill = path.join(u.getPath("skills"), "script_execution_skeleton.md");
       const systemPrompt = await fs.promises.readFile(skill, "utf-8");
@@ -160,7 +158,7 @@ function createSubAgent(parentCtx: AgentContext) {
 
   const run_sub_agent_adaptationStrategy = tool({
     description: "运行执行subAgent来完成改编策略相关任务",
-    inputSchema: jsonSchema<{ prompt: string }>(promptInput),
+    inputSchema: zodSchema<{ prompt: string }>(promptInput),
     execute: async ({ prompt }) => {
       const skill = path.join(u.getPath("skills"), "script_execution_adaptation.md");
       const systemPrompt = await fs.promises.readFile(skill, "utf-8");
@@ -180,7 +178,7 @@ function createSubAgent(parentCtx: AgentContext) {
 
   const run_sub_agent_script = tool({
     description: "运行执行subAgent来完成剧本相关任务",
-    inputSchema: jsonSchema<{ prompt: string }>(promptInput),
+    inputSchema: zodSchema<{ prompt: string }>(promptInput),
     execute: async ({ prompt }) => {
       const skill = path.join(u.getPath("skills"), "script_execution_script.md");
       const systemPrompt = await fs.promises.readFile(skill, "utf-8");
@@ -210,7 +208,7 @@ function createSubAgent(parentCtx: AgentContext) {
 
   const run_supervision_agent = tool({
     description: "运行监督层subAgent执行独立任务，完成后返回结果",
-    inputSchema: jsonSchema<{ prompt: string }>(promptInput),
+    inputSchema: zodSchema<{ prompt: string }>(promptInput),
     execute: async ({ prompt }) => {
       const skill = path.join(u.getPath("skills"), "script_agent_supervision.md");
       const systemPrompt = await fs.promises.readFile(skill, "utf-8");

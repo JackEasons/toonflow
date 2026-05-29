@@ -243,11 +243,14 @@
 </template>
 
 <script setup lang="ts">
-import axios from "@/utils/axios";
-import projectStore from "@/stores/project";
-import modelSelect from "@/components/modelSelect.vue";
-import settingStore from "@/stores/setting";
-import openAssetsSelector from "@/utils/assetsCheck";
+import { computed, onMounted, onUnmounted, reactive, ref, watch } from "vue";
+import { DialogPlugin } from "tdesign-vue-next";
+import { storeToRefs } from "pinia";
+import axios from "#/utils/axios";
+import projectStore from "#/stores/project";
+import modelSelect from "#/components/modelSelect.vue";
+import settingStore from "#/stores/setting";
+import openAssetsSelector from "#/utils/assetsCheck";
 
 const { otherSetting } = storeToRefs(settingStore());
 interface Image {

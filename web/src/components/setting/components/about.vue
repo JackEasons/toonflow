@@ -75,11 +75,13 @@
 </template>
 
 <script setup lang="ts">
-import axios from "@/utils/axios";
-import store from "@/stores/index";
+import { onMounted } from "vue";
+import { storeToRefs } from "pinia";
+import axios from "#/utils/axios";
+import store from "#/stores/index";
 const { version } = storeToRefs(store());
 
-import settingStore from "@/stores/setting";
+import settingStore from "#/stores/setting";
 const { isElectron } = storeToRefs(settingStore());
 
 async function openLink(url: string) {
