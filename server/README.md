@@ -1,5 +1,23 @@
 # DramaStudio Server
 
+## Monorepo 使用
+
+后端已接入根目录 pnpm workspace，包名为 `@dramastudio/server`。推荐从仓库根目录运行：
+
+```bash
+pnpm install
+pnpm dev:server
+pnpm typecheck:server
+pnpm build:server
+```
+
+也可以只过滤当前包：
+
+```bash
+pnpm -F @dramastudio/server run dev
+pnpm -F @dramastudio/server run typecheck
+```
+
 ## 环境变量配置
 
 服务启动时会自动加载环境变量文件。默认优先级如下：
@@ -30,7 +48,7 @@ MYSQL_AUTO_CREATE_DATABASE=false
 
 | 类别       | 技术                                                                                      |
 | ---------- | ----------------------------------------------------------------------------------------- |
-| 运行时     | Node.js 23.11.1+                                                                          |
+| 运行时     | Node.js 22.18.0+ / 24.0.0+                                                                |
 | 语言       | TypeScript 5.x                                                                            |
 | 后端框架   | Express 5                                                                                 |
 | 数据库     | mysql                                                           |
@@ -89,7 +107,6 @@ MYSQL_AUTO_CREATE_DATABASE=false
 ├─ 📄 router.ts             # 路由注册
 └─ 📄 utils.ts              # 通用工具
 📄 Dockerfile                # Docker 构建文件
-📄 electron-builder.yml      # Electron 打包配置
 📄 skillList.json            # 技能清单
 📄 LICENSE                   # 许可证（Apache-2.0）
 📄 NOTICES.txt               # 第三方依赖声明

@@ -1,15 +1,22 @@
 {
-  "name": "dramastudio_web",
+  "name": "@dramastudio/web",
   "version": "0.0.0",
+  "private": true,
   "type": "module",
   "scripts": {
     "dev": "vite --host",
     "preview": "vite preview",
     "build": "vue-tsc --build --force && vite build",
     "build-only": "vite build",
+    "lint": "pnpm run typecheck",
+    "typecheck": "vue-tsc --build --force",
     "type-check": "vue-tsc --build --force",
     "i18n:check": "node scripts/findUnusedI18n.ts"
   },
+  "engines": {
+    "node": "^22.18.0 || ^24.0.0"
+  },
+  "packageManager": "pnpm@11.4.0",
   "dependencies": {
     "@dagrejs/dagre": "^3.0.0",
     "@devui-design/icons": "^1.4.0",

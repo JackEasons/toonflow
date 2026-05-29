@@ -18,6 +18,8 @@
       "outputs": [
         "dist/**",
         "dist.zip",
+        "build/**",
+        "data/serve/**",
         ".vitepress/dist.zip",
         ".vitepress/dist/**"
       ]
@@ -34,7 +36,14 @@
       "dependsOn": ["^build"],
       "outputs": [".nitro/**", ".output/**"]
     },
+    "@dramastudio/server#build": {
+      "dependsOn": ["^build"],
+      "outputs": ["data/serve/**"]
+    },
     "test:e2e": {},
+    "lint": {
+      "outputs": []
+    },
     "dev": {
       "dependsOn": [],
       "outputs": [],
