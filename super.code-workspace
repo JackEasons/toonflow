@@ -1,0 +1,164 @@
+{
+  "folders": [
+    {
+      "name": "@super/backend-mock",
+      "path": "apps/backend-mock"
+    },
+    {
+      "name": "@super/web-tdesign",
+      "path": "apps/web-tdesign"
+    },
+    {
+      "name": "@super/commitlint-config",
+      "path": "internal/lint-configs/commitlint-config"
+    },
+    {
+      "name": "@super/eslint-config",
+      "path": "internal/lint-configs/eslint-config"
+    },
+    {
+      "name": "@super/oxfmt-config",
+      "path": "internal/lint-configs/oxfmt-config"
+    },
+    {
+      "name": "@super/oxlint-config",
+      "path": "internal/lint-configs/oxlint-config"
+    },
+    {
+      "name": "@super/stylelint-config",
+      "path": "internal/lint-configs/stylelint-config"
+    },
+    {
+      "name": "@super/node-utils",
+      "path": "internal/node-utils"
+    },
+    {
+      "name": "@super/tailwind-config",
+      "path": "internal/tailwind-config"
+    },
+    {
+      "name": "@super/tsconfig",
+      "path": "internal/tsconfig"
+    },
+    {
+      "name": "@super/vite-config",
+      "path": "internal/vite-config"
+    },
+    {
+      "name": "@super-core/design",
+      "path": "packages/@core/base/design"
+    },
+    {
+      "name": "@super-core/icons",
+      "path": "packages/@core/base/icons"
+    },
+    {
+      "name": "@super-core/shared",
+      "path": "packages/@core/base/shared"
+    },
+    {
+      "name": "@super-core/typings",
+      "path": "packages/@core/base/typings"
+    },
+    {
+      "name": "@super-core/composables",
+      "path": "packages/@core/composables"
+    },
+    {
+      "name": "@super-core/preferences",
+      "path": "packages/@core/preferences"
+    },
+    {
+      "name": "@super-core/form-ui",
+      "path": "packages/@core/ui-kit/form-ui"
+    },
+    {
+      "name": "@super-core/layout-ui",
+      "path": "packages/@core/ui-kit/layout-ui"
+    },
+    {
+      "name": "@super-core/menu-ui",
+      "path": "packages/@core/ui-kit/menu-ui"
+    },
+    {
+      "name": "@super-core/popup-ui",
+      "path": "packages/@core/ui-kit/popup-ui"
+    },
+    {
+      "name": "@super-core/shadcn-ui",
+      "path": "packages/@core/ui-kit/shadcn-ui"
+    },
+    {
+      "name": "@super-core/tabs-ui",
+      "path": "packages/@core/ui-kit/tabs-ui"
+    },
+    {
+      "name": "@super/constants",
+      "path": "packages/constants"
+    },
+    {
+      "name": "@super/access",
+      "path": "packages/effects/access"
+    },
+    {
+      "name": "@super/common-ui",
+      "path": "packages/effects/common-ui"
+    },
+    {
+      "name": "@super/hooks",
+      "path": "packages/effects/hooks"
+    },
+    {
+      "name": "@super/layouts",
+      "path": "packages/effects/layouts"
+    },
+    {
+      "name": "@super/plugins",
+      "path": "packages/effects/plugins"
+    },
+    {
+      "name": "@super/request",
+      "path": "packages/effects/request"
+    },
+    {
+      "name": "@super/icons",
+      "path": "packages/icons"
+    },
+    {
+      "name": "@super/locales",
+      "path": "packages/locales"
+    },
+    {
+      "name": "@super/preferences",
+      "path": "packages/preferences"
+    },
+    {
+      "name": "@super/stores",
+      "path": "packages/stores"
+    },
+    {
+      "name": "@super/styles",
+      "path": "packages/styles"
+    },
+    {
+      "name": "@super/types",
+      "path": "packages/types"
+    },
+    {
+      "name": "@super/utils",
+      "path": "packages/utils"
+    },
+    {
+      "name": "@super/playground",
+      "path": "playground"
+    },
+    {
+      "name": "@super/turbo-run",
+      "path": "scripts/turbo-run"
+    },
+    {
+      "name": "@super/vsh",
+      "path": "scripts/vsh"
+    }
+  ]
+}

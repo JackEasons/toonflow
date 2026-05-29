@@ -104,11 +104,44 @@ function handleClick(menu: any) {
 
 <style lang="scss" scoped>
 .main {
+  --tf-line: rgba(255, 255, 255, 0.1);
+  --tf-line-strong: rgba(255, 255, 255, 0.18);
+  --tf-accent: #62d8ca;
+  --tf-accent-2: #9bbcff;
+  --tf-success: #71d99a;
+  --tf-danger: #f07182;
+  --td-bg-color-page: #090909;
+  --td-bg-color-container: rgba(21, 21, 22, 0.96);
+  --td-bg-color-container-hover: rgba(118, 218, 204, 0.1);
+  --td-bg-color-container-active: rgba(118, 218, 204, 0.16);
+  --td-bg-color-container-select: rgba(118, 218, 204, 0.18);
+  --td-bg-color-secondarycontainer: rgba(31, 31, 33, 0.94);
+  --td-bg-color-secondarycontainer-hover: rgba(42, 42, 44, 0.98);
+  --td-bg-color-secondarycontainer-active: rgba(118, 218, 204, 0.14);
+  --td-bg-color-component: rgba(42, 42, 44, 0.94);
+  --td-bg-color-component-hover: rgba(52, 52, 54, 0.98);
+  --td-bg-color-component-active: rgba(118, 218, 204, 0.16);
+  --td-bg-color-secondarycomponent: rgba(33, 51, 47, 0.94);
+  --td-bg-color-secondarycomponent-hover: rgba(47, 70, 64, 0.98);
+  --td-bg-color-specialcomponent: rgba(98, 216, 202, 0.12);
+  --td-text-color-primary: rgba(245, 252, 249, 0.94);
+  --td-text-color-secondary: rgba(219, 238, 232, 0.68);
+  --td-text-color-placeholder: rgba(219, 238, 232, 0.42);
+  --td-text-color-disabled: rgba(219, 238, 232, 0.28);
+  --td-text-color-anti: #03100f;
+  --td-text-color-brand: var(--tf-accent);
+  --td-text-color-link: var(--tf-accent-2);
+  --td-border-level-1-color: var(--tf-line);
+  --td-border-level-2-color: rgba(118, 218, 204, 0.26);
+  --td-component-border: var(--tf-line);
+  --td-component-stroke: rgba(118, 218, 204, 0.15);
+
   width: 100vw;
   padding: 14px;
   display: flex;
   gap: 16px;
   position: relative;
+  color-scheme: dark;
   color: var(--td-text-color-primary);
 
   .menu {
@@ -250,6 +283,22 @@ function handleClick(menu: any) {
           margin-top: 0px !important;
           margin-right: 4px;
           margin-left: 4px;
+          color: rgba(238, 249, 246, 0.82);
+          background: rgba(255, 255, 255, 0.03);
+          border-color: rgba(255, 255, 255, 0.08);
+
+          &:hover {
+            color: #f5fcf9;
+            background: rgba(110, 231, 223, 0.12);
+            border-color: rgba(110, 231, 223, 0.28);
+          }
+
+          &.active {
+            color: #6ee7df;
+            background: rgba(110, 231, 223, 0.16) !important;
+            border-color: rgba(110, 231, 223, 0.42);
+            box-shadow: 0 0 0 1px rgba(110, 231, 223, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+          }
         }
         .divider {
           width: 1px;
@@ -275,7 +324,7 @@ function handleClick(menu: any) {
   height: 48px;
   border: 1px solid transparent;
   border-radius: 12px;
-  color: var(--td-text-color-secondary);
+  color: rgba(238, 249, 246, 0.72);
   transition:
     background 0.18s ease,
     color 0.18s ease,
@@ -284,6 +333,16 @@ function handleClick(menu: any) {
     transform 0.18s ease;
   .icon {
     font-size: 24px;
+    color: currentColor;
+  }
+  :deep(svg) {
+    color: currentColor !important;
+  }
+  :deep(svg [stroke]) {
+    stroke: currentColor !important;
+  }
+  :deep(svg [fill]:not([fill="none"])) {
+    fill: currentColor !important;
   }
   .title {
     font-size: 10px;
@@ -291,7 +350,7 @@ function handleClick(menu: any) {
     color: var(--td-text-color-primary);
   }
   &:hover {
-    color: var(--td-text-color-primary);
+    color: rgba(245, 252, 249, 0.94);
     background-color: #202022;
     border-color: #303033;
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.22);
@@ -300,7 +359,7 @@ function handleClick(menu: any) {
 }
 .active {
   background: #242426 !important;
-  color: #f5f5f5;
+  color: #6ee7df;
   border-color: #3a3a3c;
   border-radius: 12px;
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);

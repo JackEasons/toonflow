@@ -91,37 +91,35 @@
             <template #error>
               <t-empty type="fail" :title="$t('workbench.cornerScape.imageError')" />
             </template>
-            <template #overlayContent>
-              <div class="imageToolsWrap">
-                <ImageTools :src="item.filePath!" position="br" />
-              </div>
-            </template>
           </t-image>
         </div>
         <div class="infoBox">
           <div class="title ac jb">
-            {{ item.name }}
-            <t-tag size="small" variant="outline" theme="success" v-if="item.prompt">已生成提示词</t-tag>
-            <t-tag size="small" variant="outline" theme="danger" v-else>未生成提示词</t-tag>
+            <span class="assetName" :title="item.name">{{ item.name }}</span>
+            <t-tag class="promptTag" size="small" variant="outline" theme="success" v-if="item.prompt">已生成提示词</t-tag>
+            <t-tag class="promptTag" size="small" variant="outline" theme="danger" v-else>未生成提示词</t-tag>
           </div>
-          <div class="meta">
-            <t-tag size="small" variant="light-outline" theme="warning" class="typeTag">
-              {{
-                item.type === "role"
-                  ? $t("workbench.cornerScape.typeRole")
-                  : item.type === "scene"
-                    ? $t("workbench.cornerScape.typeScene")
-                    : item.type === "tool"
-                      ? $t("workbench.cornerScape.typeTool")
-                      : $t("workbench.cornerScape.typeUnknown")
-              }}
-            </t-tag>
-            <t-tag size="small" variant="outline" class="stateTag" v-if="item.model">
-              {{ item.model }}
-            </t-tag>
-            <t-tag size="small" variant="outline" v-if="item.resolution">
-              {{ item.resolution }}
-            </t-tag>
+          <div class="cardMetaRow">
+            <div class="meta">
+              <t-tag size="small" variant="light-outline" theme="warning" class="typeTag">
+                {{
+                  item.type === "role"
+                    ? $t("workbench.cornerScape.typeRole")
+                    : item.type === "scene"
+                      ? $t("workbench.cornerScape.typeScene")
+                      : item.type === "tool"
+                        ? $t("workbench.cornerScape.typeTool")
+                        : $t("workbench.cornerScape.typeUnknown")
+                }}
+              </t-tag>
+              <t-tag size="small" variant="outline" class="stateTag" v-if="item.model">
+                {{ item.model }}
+              </t-tag>
+              <t-tag size="small" variant="outline" v-if="item.resolution">
+                {{ item.resolution }}
+              </t-tag>
+            </div>
+            <ImageTools v-if="item.filePath" class="cardTools" :src="item.filePath" position="none" margin="0" />
           </div>
           <div class="prompt" v-if="item.describe">
             {{
@@ -134,7 +132,7 @@
                     : $t("workbench.cornerScape.typeUnknown")
             }}{{ $t("workbench.cornerScape.descriptionSuffix") }}{{ item.describe }}
           </div>
-          <div v-if="item.relepedAudio.length" style="margin-top: 6px">
+          <div v-if="item.relepedAudio.length" class="relatedAudio">
             <t-tag v-for="audio in item.relepedAudio" :key="audio.id" size="small" variant="outline" theme="primary">{{ audio.name }}</t-tag>
           </div>
         </div>
@@ -1043,7 +1041,7 @@ async function selectAudio() {
     .card {
       cursor: pointer;
       width: 100%;
-      height: 100%;
+      height: 320px;
       display: flex;
       flex-direction: column;
       :deep(.t-card__body) {
@@ -1123,22 +1121,52 @@ async function selectAudio() {
       }
       .infoBox {
         flex: 1;
-        padding: 8px 0;
+        padding: 8px 0 0;
         overflow: hidden;
         cursor: pointer;
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
         .title {
+          display: flex;
+          align-items: flex-start;
+          justify-content: space-between;
+          gap: 8px;
           font-size: 14px;
           font-weight: 600;
           line-height: 1.5;
-          overflow: hidden;
-          text-overflow: ellipsis;
-          white-space: nowrap;
+          min-height: 32px;
+          overflow: visible;
+          white-space: normal;
+          .assetName {
+            flex: 1 1 auto;
+            min-width: 0;
+            overflow: hidden;
+            display: -webkit-box;
+            -webkit-box-orient: vertical;
+            -webkit-line-clamp: 2;
+            line-clamp: 2;
+            word-break: break-word;
+          }
+          .promptTag {
+            flex: 0 0 auto;
+            margin-top: 1px;
+          }
+        }
+        .cardMetaRow {
+          min-height: 26px;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 8px;
         }
         .meta {
           display: flex;
-          flex-wrap: wrap;
+          flex: 1 1 auto;
+          flex-wrap: nowrap;
           gap: 6px;
-          margin-top: 4px;
+          min-width: 0;
+          overflow: hidden;
           .typeTag {
             flex-shrink: 0;
           }
@@ -1156,8 +1184,14 @@ async function selectAudio() {
             }
           }
         }
+        .cardTools {
+          flex: 0 0 auto;
+          :deep(.t-button) {
+            width: 26px;
+            height: 26px;
+          }
+        }
         .prompt {
-          margin-top: 4px;
           font-size: 12px;
           color: var(--td-text-color-secondary);
           line-height: 1.5;
@@ -1166,6 +1200,13 @@ async function selectAudio() {
           -webkit-line-clamp: 2;
           line-clamp: 2;
           -webkit-box-orient: vertical;
+        }
+        .relatedAudio {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 4px;
+          min-height: 0;
+          overflow: hidden;
         }
       }
     }

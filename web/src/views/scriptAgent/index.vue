@@ -500,6 +500,15 @@ function toggleAllCards() {
 
 <style lang="scss" scoped>
 .scriptAgent {
+  --td-bg-color-container: #1d1d1f;
+  --td-bg-color-container-hover: #242426;
+  --td-bg-color-secondarycontainer: #151516;
+  --td-bg-color-component: #2a2a2c;
+  --td-border-level-1-color: #303033;
+  --td-border-level-2-color: #3a3a3c;
+  --td-text-color-primary: rgba(245, 252, 249, 0.94);
+  --td-text-color-secondary: rgba(220, 235, 231, 0.76);
+  --td-text-color-placeholder: rgba(220, 235, 231, 0.42);
   height: calc(100% - 8px);
   min-height: 0;
   display: flex;
@@ -776,6 +785,24 @@ function toggleAllCards() {
     padding: 0 18px;
     font-weight: 650;
     letter-spacing: 0;
+    color: rgba(220, 235, 231, 0.56) !important;
+  }
+
+  :deep(.t-tabs__nav-item:hover) {
+    color: rgba(245, 252, 249, 0.88) !important;
+  }
+
+  :deep(.t-tabs__nav-item.t-is-active) {
+    color: #6ee7df !important;
+  }
+
+  :deep(.t-tabs__nav-item-text-wrapper),
+  :deep(.t-tabs__nav-item-text) {
+    color: inherit !important;
+  }
+
+  :deep(.t-tabs__bar) {
+    background: linear-gradient(90deg, #6ee7df, #8fb6ff) !important;
   }
 
   :deep(.t-tabs__operations) {
@@ -819,6 +846,13 @@ function toggleAllCards() {
   }
 
   :deep(.md-editor) {
+    --md-color: rgba(243, 250, 248, 0.92);
+    --md-hover-color: rgba(245, 252, 249, 0.98);
+    --md-bk-color: transparent;
+    --md-bk-color-outstand: #1f1f21;
+    --md-border-color: #303033;
+    --md-border-hover-color: #3a3a3c;
+    --md-theme-color: #6ee7df;
     background: transparent !important;
   }
 
@@ -831,9 +865,10 @@ function toggleAllCards() {
   :deep(.md-editor-preview) {
     box-sizing: border-box;
     padding: 24px 24px 44px;
-    color: rgba(243, 250, 248, 0.92);
+    color: rgba(243, 250, 248, 0.92) !important;
     font-size: 15px;
     line-height: 1.78;
+    background: transparent !important;
   }
 
   :deep(.md-editor-preview > *:first-child) {
@@ -842,22 +877,30 @@ function toggleAllCards() {
 
   :deep(.md-editor-preview h1),
   :deep(.md-editor-preview h2),
-  :deep(.md-editor-preview h3) {
+  :deep(.md-editor-preview h3),
+  :deep(.md-editor-preview h4),
+  :deep(.md-editor-preview h5),
+  :deep(.md-editor-preview h6) {
+    color: rgba(245, 252, 249, 0.96) !important;
     letter-spacing: 0;
+    line-height: 1.36;
   }
 
   :deep(.md-editor-preview h1) {
     padding-bottom: 14px;
     margin: 0 0 20px;
     border-bottom: 1px solid #2a2a2c;
+    font-weight: 750;
   }
 
   :deep(.md-editor-preview h2) {
     margin: 34px 0 14px;
+    font-weight: 700;
   }
 
   :deep(.md-editor-preview h3) {
     margin: 28px 0 12px;
+    font-weight: 680;
   }
 
   :deep(.md-editor-preview hr) {
@@ -867,6 +910,21 @@ function toggleAllCards() {
 
   :deep(.md-editor-preview p) {
     margin: 0 0 14px;
+    color: rgba(235, 246, 243, 0.9) !important;
+  }
+
+  :deep(.md-editor-preview li),
+  :deep(.md-editor-preview td),
+  :deep(.md-editor-preview th),
+  :deep(.md-editor-preview span),
+  :deep(.md-editor-preview strong),
+  :deep(.md-editor-preview em) {
+    color: inherit;
+  }
+
+  :deep(.md-editor-preview strong) {
+    color: rgba(245, 252, 249, 0.96) !important;
+    font-weight: 700;
   }
 
   :deep(.md-editor-preview p + h2),
@@ -886,7 +944,7 @@ function toggleAllCards() {
   :deep(.md-editor-preview blockquote) {
     margin: 12px 0 20px;
     padding: 14px 18px;
-    color: rgba(235, 235, 235, 0.72);
+    color: rgba(235, 246, 243, 0.82) !important;
     border-left: 3px solid #6ee7df;
     border-radius: 0 10px 10px 0;
     background: #1f1f21;
@@ -903,6 +961,12 @@ function toggleAllCards() {
 
   :deep(.md-editor-preview li) {
     margin: 6px 0;
+    color: rgba(235, 246, 243, 0.9) !important;
+  }
+
+  :deep(.md-editor-preview code:not(pre code)) {
+    color: #f2a0aa !important;
+    background: rgba(240, 113, 130, 0.12) !important;
   }
 
   :deep(.md-editor-preview table) {

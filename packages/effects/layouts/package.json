@@ -1,0 +1,36 @@
+{
+  "name": "@super/layouts",
+  "version": "1.0.0",
+  "type": "module",
+  "sideEffects": [
+    "**/*.css"
+  ],
+  "exports": {
+    ".": {
+      "types": "./src/index.ts",
+      "default": "./src/index.ts"
+    }
+  },
+  "dependencies": {
+    "@super-core/composables": "workspace:*",
+    "@super-core/design": "workspace:*",
+    "@super-core/form-ui": "workspace:*",
+    "@super-core/layout-ui": "workspace:*",
+    "@super-core/menu-ui": "workspace:*",
+    "@super-core/popup-ui": "workspace:*",
+    "@super-core/shadcn-ui": "workspace:*",
+    "@super-core/shared": "workspace:*",
+    "@super-core/tabs-ui": "workspace:*",
+    "@super/constants": "workspace:*",
+    "@super/hooks": "workspace:*",
+    "@super/icons": "workspace:*",
+    "@super/locales": "workspace:*",
+    "@super/preferences": "workspace:*",
+    "@super/stores": "workspace:*",
+    "@super/types": "workspace:*",
+    "@super/utils": "workspace:*",
+    "@vueuse/core": "catalog:",
+    "vue": "catalog:",
+    "vue-router": "catalog:"
+  }
+}

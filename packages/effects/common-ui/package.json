@@ -1,0 +1,50 @@
+{
+  "name": "@super/common-ui",
+  "version": "1.0.0",
+  "type": "module",
+  "sideEffects": [
+    "**/*.css"
+  ],
+  "exports": {
+    ".": {
+      "types": "./src/index.ts",
+      "default": "./src/index.ts"
+    },
+    "./es/tippy": {
+      "types": "./src/components/tippy/index.ts",
+      "default": "./src/components/tippy/index.ts"
+    },
+    "./es/loading": {
+      "types": "./src/components/loading/index.ts",
+      "default": "./src/components/loading/index.ts"
+    }
+  },
+  "dependencies": {
+    "@super-core/design": "workspace:*",
+    "@super-core/form-ui": "workspace:*",
+    "@super-core/popup-ui": "workspace:*",
+    "@super-core/preferences": "workspace:*",
+    "@super-core/shadcn-ui": "workspace:*",
+    "@super-core/shared": "workspace:*",
+    "@super/constants": "workspace:*",
+    "@super/hooks": "workspace:*",
+    "@super/icons": "workspace:*",
+    "@super/locales": "workspace:*",
+    "@super/tsconfig": "workspace:*",
+    "@super/types": "workspace:*",
+    "@vueuse/core": "catalog:",
+    "@vueuse/integrations": "catalog:",
+    "json-bigint": "catalog:",
+    "qrcode": "catalog:",
+    "tippy.js": "catalog:",
+    "vue": "catalog:",
+    "vue-json-pretty": "catalog:",
+    "vue-router": "catalog:",
+    "vue-tippy": "catalog:"
+  },
+  "devDependencies": {
+    "@types/json-bigint": "catalog:",
+    "@types/qrcode": "catalog:",
+    "@vue/test-utils": "catalog:"
+  }
+}

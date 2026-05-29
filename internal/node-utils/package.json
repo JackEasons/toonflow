@@ -1,0 +1,34 @@
+{
+  "name": "@super/node-utils",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "stub": "node ./scripts/build.mjs"
+  },
+  "files": [
+    "dist"
+  ],
+  "main": "./dist/index.mjs",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "default": "./dist/index.mjs"
+    }
+  },
+  "dependencies": {
+    "@changesets/git": "catalog:",
+    "@manypkg/get-packages": "catalog:",
+    "chalk": "catalog:",
+    "consola": "catalog:",
+    "dayjs": "catalog:",
+    "execa": "catalog:",
+    "find-up": "catalog:",
+    "ora": "catalog:",
+    "pkg-types": "catalog:",
+    "rimraf": "catalog:"
+  }
+}

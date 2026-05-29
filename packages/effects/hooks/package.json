@@ -1,0 +1,25 @@
+{
+  "name": "@super/hooks",
+  "version": "1.0.0",
+  "type": "module",
+  "sideEffects": [
+    "**/*.css"
+  ],
+  "exports": {
+    ".": {
+      "types": "./src/index.ts",
+      "default": "./src/index.ts"
+    }
+  },
+  "dependencies": {
+    "@super-core/composables": "workspace:*",
+    "@super/preferences": "workspace:*",
+    "@super/stores": "workspace:*",
+    "@super/types": "workspace:*",
+    "@super/utils": "workspace:*",
+    "@vueuse/core": "catalog:",
+    "vue": "catalog:",
+    "vue-router": "catalog:",
+    "watermark-js-plus": "catalog:"
+  }
+}

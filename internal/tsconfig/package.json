@@ -1,0 +1,17 @@
+{
+  "name": "@super/tsconfig",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "files": [
+    "base.json",
+    "library.json",
+    "node.json",
+    "web-app.json",
+    "web.json"
+  ],
+  "dependencies": {
+    "@super/types": "workspace:*",
+    "vite": "catalog:"
+  }
+}

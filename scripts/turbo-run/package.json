@@ -1,0 +1,28 @@
+{
+  "name": "@super/turbo-run",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "stub": "pnpm exec tsdown"
+  },
+  "files": [
+    "dist"
+  ],
+  "bin": {
+    "turbo-run": "./bin/turbo-run.mjs"
+  },
+  "main": "./dist/index.mjs",
+  "module": "./dist/index.mjs",
+  "exports": {
+    ".": {
+      "default": "./dist/index.mjs"
+    },
+    "./package.json": "./package.json"
+  },
+  "dependencies": {
+    "@clack/prompts": "catalog:",
+    "@super/node-utils": "workspace:*",
+    "cac": "catalog:"
+  }
+}
