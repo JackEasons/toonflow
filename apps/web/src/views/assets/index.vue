@@ -74,7 +74,7 @@
                 @select-change="handleSelectChange"
                 @expand-change="handleExpandChange"
                 @page-change="handlePageChange">
-                <template #expandedRow="{ row }">
+                <!-- <template #expandedRow="{ row }">
                   <div class="expandedContent">
                     <t-table
                       :columns="subColumns"
@@ -115,7 +115,7 @@
                         </div>
                       </template>
                       <template #operation="{ row: subRow }">
-                        <t-space :size="0">
+                        <t-space class="operationCell" :size="0">
                           <t-button theme="primary" variant="text" :disabled="isGenerating(subRow.id)" @click="generate(subRow)">
                             <template #icon>
                               <i-magic :size="18" />
@@ -138,7 +138,7 @@
                       </template>
                     </t-table>
                   </div>
-                </template>
+                </template> -->
                 <template #preview="{ row }">
                   <div class="previewCell">
                     <t-image-viewer :images="[row.src]" :closeOnEscKeydown="true" :closeOnOverlay="true">
@@ -189,7 +189,7 @@
                   <span>{{ dayjs(row.startTime).format("YYYY-MM-DD HH:mm:ss") }}</span>
                 </template>
                 <template #operation="{ row }">
-                  <t-space :size="0">
+                  <t-space class="operationCell" :size="0">
                     <t-button theme="primary" variant="text" :disabled="isGenerating(row.id)" @click="generate(row)">
                       <template #icon>
                         <i-magic :size="18" />
@@ -264,7 +264,7 @@
                   <span>{{ dayjs(row.startTime).format("YYYY-MM-DD HH:mm:ss") }}</span>
                 </template>
                 <template #operation="{ row }">
-                  <t-space :size="0">
+                  <t-space class="operationCell" :size="0">
                     <t-button theme="primary" variant="text" @click="handleEdit(row)">
                       <template #icon>
                         <t-icon name="edit" />
@@ -327,7 +327,7 @@
                         </div>
                       </template>
                       <template #operation="{ row: subRow }">
-                        <t-space :size="0">
+                        <t-space class="operationCell" :size="0">
                           <t-button theme="danger" variant="text" :disabled="isGenerating(subRow.id)" @click="handleDelete(subRow)">
                             <template #icon>
                               <t-icon name="delete" />
@@ -354,7 +354,7 @@
                   <span>{{ dayjs(row.startTime).format("YYYY-MM-DD HH:mm:ss") }}</span>
                 </template>
                 <template #operation="{ row }">
-                  <t-space :size="0">
+                  <t-space class="operationCell" :size="0">
                     <t-button theme="primary" variant="text" @click="handleEdit(row)">
                       <template #icon>
                         <t-icon name="edit" />
@@ -884,7 +884,7 @@ const columns: TableProps["columns"] = [
   {
     colKey: "operation",
     title: $t("workbench.assets.colOperation"),
-    width: 280,
+    width: 320,
     align: "center",
     fixed: "right",
     cell: "operation",
@@ -939,7 +939,7 @@ const subColumns: TableProps["columns"] = [
   {
     colKey: "operation",
     title: $t("workbench.assets.colOperation"),
-    width: 280,
+    width: 320,
     align: "center",
     fixed: "right",
     cell: "operation",
@@ -1390,6 +1390,42 @@ async function getBigImageUrl(row: Asset, fn: Function) {
         flex: 1;
         overflow-y: auto;
         min-height: 0;
+
+        :deep(.t-table--column-fixed .t-table__header .t-table__cell--fixed-left),
+        :deep(.t-table--column-fixed .t-table__header .t-table__cell--fixed-right) {
+          background: rgba(22, 34, 32, 0.98) !important;
+        }
+
+        :deep(.t-table--column-fixed .t-table__body .t-table__cell--fixed-left),
+        :deep(.t-table--column-fixed .t-table__body .t-table__cell--fixed-right) {
+          background: rgba(13, 18, 18, 0.98) !important;
+        }
+
+        :deep(.t-table--column-fixed .t-table__body tr:nth-child(even) .t-table__cell--fixed-left),
+        :deep(.t-table--column-fixed .t-table__body tr:nth-child(even) .t-table__cell--fixed-right) {
+          background: rgba(15, 24, 23, 0.98) !important;
+        }
+
+        :deep(.t-table--column-fixed .t-table__body tr:hover .t-table__cell--fixed-left),
+        :deep(.t-table--column-fixed .t-table__body tr:hover .t-table__cell--fixed-right) {
+          background: rgba(24, 42, 39, 0.98) !important;
+        }
+
+        :deep(.t-table--column-fixed .t-table__cell--fixed-right-first) {
+          box-shadow: -12px 0 20px -16px rgba(118, 218, 204, 0.72);
+        }
+
+        .operationCell {
+          width: 100%;
+          display: inline-flex;
+          flex-wrap: nowrap;
+          justify-content: center;
+          white-space: nowrap;
+
+          :deep(.t-button) {
+            flex: 0 0 auto;
+          }
+        }
 
         .expandedContent {
           padding: 16px 24px;
