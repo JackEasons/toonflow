@@ -15,8 +15,10 @@ export default router.post(
   }),
   async (req, res) => {
     const { id, url, flowId } = req.body;
+    const storageProvider = url ? u.oss.getStorageProviderFromUrl(url) ?? u.oss.getStorageProvider() : null;
     const [imageId] = await u.db("o_image").insert({
       filePath: u.replaceUrl(url),
+      storageProvider,
       state: "已完成",
       assetsId: id,
     });

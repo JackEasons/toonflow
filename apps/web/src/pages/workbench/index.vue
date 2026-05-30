@@ -19,8 +19,9 @@
         </t-tooltip>
       </div>
       <div class="footItem fc ac">
+        <UserMembershipCenter />
         <t-tooltip :content="$t('workbench.menu.settings')" placement="right" destroyOnClose :showArrow="false">
-          <div class="item c" @click="showSetting = true">
+          <div class="item settingsItem c" @click="showSetting = true">
             <i-setting-one class="icon" />
           </div>
         </t-tooltip>
@@ -67,6 +68,7 @@ import { useRoute, useRouter } from "vue-router";
 import { storeToRefs } from "pinia";
 import setting from "#/components/setting/index.vue";
 import hello from "#/components/hello.vue";
+import UserMembershipCenter from "#/components/membership/UserMembershipCenter.vue";
 import projectStore from "#/stores/project";
 const { project } = storeToRefs(projectStore());
 import settingStore from "#/stores/setting";
@@ -74,6 +76,7 @@ const { showSetting, isElectron } = storeToRefs(settingStore());
 const menuList = ref([
   { type: "btn", path: "/project", labelKey: "workbench.menu.myProject", icon: "i-folder-close" },
   { type: "btn", path: "/task", labelKey: "workbench.menu.taskCenter", icon: "i-view-list" },
+  { type: "btn", path: "/service-status", labelKey: "workbench.menu.serviceStatus", icon: "i-data" },
   // { type: "divider" },
 ]);
 
@@ -140,49 +143,41 @@ function handleClick(menu: any) {
   --td-component-stroke: rgba(118, 218, 204, 0.15);
 
   width: 100vw;
-  padding: 14px;
+  padding: 0 14px 14px 0;
   display: flex;
-  gap: 16px;
+  gap: 14px;
   position: relative;
   color-scheme: dark;
   color: var(--td-text-color-primary);
 
   .menu {
-    width: 70px;
+    flex-shrink: 0;
+    width: 88px;
     height: 100%;
-    overflow-x: hidden;
-    overflow-y: auto;
-    background: #101011;
-    border: 1px solid #252527;
-    border-radius: 18px;
-    padding-top: 16px;
-    padding-bottom: 16px;
+    overflow: visible;
+    background: transparent;
+    border: 0;
+    border-radius: 0;
+    padding: 20px 12px 22px;
     color: var(--td-text-color-primary);
     box-shadow: none;
-    backdrop-filter: none;
+    backdrop-filter: blur(24px) saturate(1.2);
     position: relative;
+    z-index: 20;
     isolation: isolate;
     &::before {
-      position: absolute;
-      inset: 14px 10px auto;
-      height: 1px;
-      content: "";
-      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.16), transparent);
-      opacity: 0.7;
+      display: none;
     }
     &::after {
-      position: absolute;
-      inset: 0;
-      z-index: -1;
-      content: "";
-      background: transparent;
-      opacity: 1;
+      display: none;
     }
     .logoBox {
       width: 100%;
-      height: fit-content;
+      height: 96px;
+      flex-shrink: 0;
+      align-items: flex-start;
       .logo {
-        width: 58%;
+        width: 36px;
         aspect-ratio: 1/1;
         background: linear-gradient(135deg, var(--tf-accent), var(--tf-accent-2));
         mask: url("@/assets/logo.svg") no-repeat center;
@@ -193,28 +188,41 @@ function handleClick(menu: any) {
       }
     }
     .itemBox {
-      flex: 1;
-      margin-top: 16px;
-      margin-bottom: 16px;
-      padding-bottom: 16px;
-      width: 100%;
-      height: 100%;
+      flex: 0 0 auto;
+      width: 64px;
+      height: auto;
+      margin: 0;
+      padding: 8px;
+      align-self: center;
+      justify-content: center;
+      gap: 2px;
+      border: 1px solid rgba(118, 218, 204, 0.16);
+      border-radius: 34px;
+      background: rgba(10, 21, 31, 0.62);
+      box-shadow: 0 18px 44px rgba(0, 0, 0, 0.34);
+      backdrop-filter: blur(22px) saturate(120%);
     }
     .footItem {
+      gap: 12px;
       width: 100%;
-      height: fit-content;
+      min-height: 190px;
+      flex-shrink: 0;
+      justify-content: flex-end;
       .item {
         cursor: pointer;
-        width: 48px;
-        height: 48px;
-        border: 1px solid transparent;
+        width: 44px;
+        height: 44px;
+        border: 1px solid rgba(118, 218, 204, 0.16);
+        border-radius: 999px;
+        background: rgba(14, 25, 23, 0.78);
+        color: rgba(219, 238, 232, 0.68);
         .icon {
-          font-size: 24px;
+          font-size: 22px;
         }
         &:hover {
-            background-color: #202022;
-            border-color: #303033;
-          border-radius: 12px;
+          color: rgba(245, 252, 249, 0.94);
+          background-color: rgba(118, 218, 204, 0.1);
+          border-color: rgba(118, 218, 204, 0.32);
         }
       }
       .active {
@@ -239,6 +247,7 @@ function handleClick(menu: any) {
   }
   .view {
     flex: 1;
+    margin-top: 14px;
     margin-left: 0;
     background: #0b0b0c;
     border: 1px solid #252527;

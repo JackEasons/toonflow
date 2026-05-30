@@ -122,9 +122,11 @@ export default router.post(
           },
         );
         const savePath = `/${projectId}/assets/${scriptId}/${u.uuid()}.jpg`;
-        await imageCls.save(savePath);
+        const storageProvider = u.oss.getStorageProvider();
+        await imageCls.save(savePath, storageProvider);
         await u.db("o_storyboard").where("id", item.id).update({
           filePath: savePath,
+          storageProvider,
           state: "已完成",
         });
       } catch (e) {
@@ -132,6 +134,7 @@ export default router.post(
           .where("id", item.id)
           .update({
             filePath: "",
+            storageProvider: null,
             reason: u.error(e).message,
             state: "生成失败",
           });

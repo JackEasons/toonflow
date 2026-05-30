@@ -112,7 +112,8 @@ export default router.post("/", validateFields(requestSchema), async (req, res) 
 
       await u.db("o_assets").where("id", item.id).update({ imageId });
 
-      const imagePath = `/${projectId}/${cfg.dir}/${uuidv4()}.jpg`;
+        const imagePath = `/${projectId}/${cfg.dir}/${uuidv4()}.jpg`;
+        const storageProvider = u.oss.getStorageProvider();
       const userPrompt = buildPrompt(cfg, project.artStyle ?? "", item.name, item.prompt);
       const negativePromptSource = u.getArtPrompt(project.artStyle ?? "", "art_skills", cfg.visualPromptKey);
       const negativePrompt = resolveNegativePrompt({ prompt: userPrompt, negativePromptSource }, { mediaType: "image", modelKey: model });
@@ -142,7 +143,7 @@ export default router.post("/", validateFields(requestSchema), async (req, res) 
             relatedObjects: JSON.stringify(relatedObjects),
           },
         );
-        aiImage.save(imagePath);
+        aiImage.save(imagePath, storageProvider);
 
         const imageData = await u.db("o_image").where("id", imageId).select("*").first();
         if (!imageData) return res.status(500).send("资产已被删除");
@@ -154,6 +155,7 @@ export default router.post("/", validateFields(requestSchema), async (req, res) 
           .update({
             state: "已完成",
             filePath: imagePath,
+            storageProvider,
             type: item.type,
             model: model.split(/:(.+)/)[1],
             resolution,

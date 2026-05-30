@@ -24,7 +24,7 @@ export default router.post(
   async (req, res) => {
     const { name, describe, projectId, assetsItem } = req.body;
     await Promise.all(
-      assetsItem.map(async (i: { src?: string; base64: string; prompt: string }) => {
+      assetsItem.map(async (i: { src?: string; storageProvider?: string; base64: string; prompt: string }) => {
         if (i.base64) {
           const mimeMatch = i.base64.match(/^data:audio\/([^;]+);base64,/);
           const mimeExt = mimeMatch ? mimeMatch[1] : "mp3";
@@ -38,7 +38,7 @@ export default router.post(
           const ext = mimeToExt[mimeExt] ?? mimeExt;
           const savePath = `/${projectId}/assets/audio/${u.uuid()}.${ext}`;
           const base64Data = i.base64.replace(/^data:[^;]+;base64,/, "");
-          await u.oss.writeFile(savePath, base64Data);
+          i.storageProvider = await u.oss.writeFile(savePath, base64Data);
           i.src = savePath;
         }
       }),
@@ -63,6 +63,7 @@ export default router.post(
       });
       const [imageId] = await u.db("o_image").insert({
         filePath: item.src,
+        storageProvider: item.storageProvider ?? u.oss.getStorageProvider(),
         type: "audio",
         assetsId,
         state: "已完成",

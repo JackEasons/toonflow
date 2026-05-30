@@ -545,6 +545,7 @@
     "menu": {
       "myProject": "My Projects",
       "taskCenter": "Task Center",
+      "serviceStatus": "Service Status",
       "novel": "Novel Text",
       "scriptAgent": "Script Agent",
       "scriptManage": "Script Management",

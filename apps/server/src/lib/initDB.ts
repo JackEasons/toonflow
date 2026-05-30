@@ -22,9 +22,10 @@ export default async (knex: Knex, forceInit: boolean = false): Promise<void> => 
         table.text("avatar");
         table.text("introduction");
         table.text("notificationSettings");
+        table.string("role").notNullable().defaultTo("member");
       },
       initData: async (knex) => {
-        await knex("o_user").insert([{ id: 1, name: "admin", password: await hashPassword("admin123") }]);
+        await knex("o_user").insert([{ id: 1, name: "admin", password: await hashPassword("admin123"), role: "admin" }]);
       },
     },
     //项目表
@@ -452,6 +453,7 @@ export default async (knex: Knex, forceInit: boolean = false): Promise<void> => 
       builder: (table) => {
         table.bigIncrements("id");
         table.text("filePath");
+        table.string("storageProvider");
         table.text("type");
         table.bigInteger("assetsId");
         table.text("model");
@@ -471,6 +473,7 @@ export default async (knex: Knex, forceInit: boolean = false): Promise<void> => 
         table.text("prompt");
         table.text("negativePrompt");
         table.text("filePath");
+        table.string("storageProvider");
         table.text("duration");
         table.text("state");
         table.bigInteger("trackId");
@@ -503,6 +506,7 @@ export default async (knex: Knex, forceInit: boolean = false): Promise<void> => 
       builder: (table) => {
         table.bigIncrements("id");
         table.text("filePath");
+        table.string("storageProvider");
         table.text("errorReason");
         table.bigInteger("time");
         table.text("prompt");
@@ -1008,6 +1012,252 @@ export default async (knex: Knex, forceInit: boolean = false): Promise<void> => 
         table.primary(["assetsAudioId", "assetsRoleId"]);
         table.unique(["assetsAudioId", "assetsRoleId"]);
       },
+    },
+    {
+      name: "membership_plans",
+      builder: (table) => {
+        table.string("id", 191).notNullable();
+        table.string("key", 64).notNullable();
+        table.string("name", 64).notNullable();
+        table.string("levelKey", 32).notNullable();
+        table.string("levelName", 64).notNullable();
+        table.string("billingPeriod", 32).notNullable();
+        table.decimal("priceCny", 18, 2).notNullable().defaultTo(0);
+        table.decimal("originalPriceCny", 18, 2).nullable();
+        table.string("yearlyDiscountLabel", 32).nullable();
+        table.integer("points").notNullable().defaultTo(0);
+        table.integer("pointValidityDays").notNullable().defaultTo(365);
+        table.integer("maxShots").nullable();
+        table.integer("maxSeries").nullable();
+        table.json("features").nullable();
+        table.boolean("enabled").notNullable().defaultTo(true);
+        table.boolean("popular").notNullable().defaultTo(false);
+        table.integer("sortOrder").notNullable().defaultTo(0);
+        table.timestamp("createdAt").notNullable().defaultTo(knex.fn.now());
+        table.timestamp("updatedAt").notNullable().defaultTo(knex.fn.now());
+        table.primary(["id"]);
+        table.unique(["key"]);
+        table.index(["enabled"]);
+        table.index(["billingPeriod"]);
+        table.index(["sortOrder"]);
+      },
+      initData: async (knex) => {
+        await knex("membership_plans").insert([
+          {
+            id: uuid(),
+            key: "free",
+            name: "免费会员",
+            levelKey: "free",
+            levelName: "免费会员",
+            billingPeriod: "free",
+            priceCny: 0,
+            points: 0,
+            pointValidityDays: 365,
+            maxShots: 30,
+            maxSeries: 1,
+            features: JSON.stringify(["每日登录赠送积分", "支持基础短剧项目创作", "保留基础项目资产"]),
+            enabled: true,
+            popular: false,
+            sortOrder: 0,
+          },
+          {
+            id: uuid(),
+            key: "standard_monthly",
+            name: "标准会员",
+            levelKey: "standard",
+            levelName: "标准会员",
+            billingPeriod: "monthly",
+            priceCny: 60,
+            points: 500,
+            pointValidityDays: 31,
+            maxShots: 50,
+            maxSeries: 10,
+            features: JSON.stringify(["每月 500 积分", "支持高清视频生成", "下载去水印", "基础队列优先级"]),
+            enabled: true,
+            popular: false,
+            sortOrder: 10,
+          },
+          {
+            id: uuid(),
+            key: "advanced_monthly",
+            name: "高级会员",
+            levelKey: "advanced",
+            levelName: "高级会员",
+            billingPeriod: "monthly",
+            priceCny: 300,
+            points: 3000,
+            pointValidityDays: 31,
+            maxShots: 80,
+            maxSeries: 50,
+            features: JSON.stringify(["每月 3000 积分", "高峰队列优先级", "批量任务额度提升", "下载去水印"]),
+            enabled: true,
+            popular: true,
+            sortOrder: 20,
+          },
+          {
+            id: uuid(),
+            key: "standard_yearly",
+            name: "标准年卡",
+            levelKey: "standard",
+            levelName: "标准会员",
+            billingPeriod: "yearly",
+            priceCny: 576,
+            originalPriceCny: 720,
+            yearlyDiscountLabel: "8折",
+            points: 6000,
+            pointValidityDays: 365,
+            maxShots: 50,
+            maxSeries: 10,
+            features: JSON.stringify(["每年 6000 积分", "含 2 个月折扣", "支持高清视频生成", "下载去水印"]),
+            enabled: true,
+            popular: false,
+            sortOrder: 10,
+          },
+          {
+            id: uuid(),
+            key: "advanced_yearly",
+            name: "高级年卡",
+            levelKey: "advanced",
+            levelName: "高级会员",
+            billingPeriod: "yearly",
+            priceCny: 2880,
+            originalPriceCny: 3600,
+            yearlyDiscountLabel: "8折",
+            points: 36000,
+            pointValidityDays: 365,
+            maxShots: 80,
+            maxSeries: 50,
+            features: JSON.stringify(["每年 36000 积分", "高峰队列优先级", "批量任务额度提升", "下载去水印"]),
+            enabled: true,
+            popular: true,
+            sortOrder: 20,
+          },
+        ]);
+      },
+    },
+    {
+      name: "points_packages",
+      builder: (table) => {
+        table.string("id", 191).notNullable();
+        table.string("key", 64).notNullable();
+        table.integer("points").notNullable();
+        table.decimal("priceCny", 18, 2).notNullable();
+        table.string("description", 128).nullable();
+        table.integer("validityDays").notNullable().defaultTo(730);
+        table.boolean("enabled").notNullable().defaultTo(true);
+        table.integer("sortOrder").notNullable().defaultTo(0);
+        table.timestamp("createdAt").notNullable().defaultTo(knex.fn.now());
+        table.timestamp("updatedAt").notNullable().defaultTo(knex.fn.now());
+        table.primary(["id"]);
+        table.unique(["key"]);
+        table.index(["enabled"]);
+        table.index(["sortOrder"]);
+      },
+      initData: async (knex) => {
+        await knex("points_packages").insert([
+          { id: uuid(), key: "points_500", points: 500, priceCny: 60, description: "约生成 50 个视频片段或 500 张图片", validityDays: 730, enabled: true, sortOrder: 10 },
+          { id: uuid(), key: "points_1000", points: 1000, priceCny: 120, description: "约生成 100 个视频片段或 1000 张图片", validityDays: 730, enabled: true, sortOrder: 20 },
+          { id: uuid(), key: "points_1500", points: 1500, priceCny: 180, description: "约生成 150 个视频片段或 1500 张图片", validityDays: 730, enabled: true, sortOrder: 30 },
+          { id: uuid(), key: "points_3000", points: 3000, priceCny: 360, description: "约生成 300 个视频片段或 3000 张图片", validityDays: 730, enabled: true, sortOrder: 40 },
+          { id: uuid(), key: "points_5000", points: 5000, priceCny: 600, description: "约生成 500 个视频片段或 5000 张图片", validityDays: 730, enabled: true, sortOrder: 50 },
+        ]);
+      },
+    },
+    {
+      name: "user_balances",
+      builder: (table) => {
+        table.string("id", 191).notNullable();
+        table.string("userId", 191).notNullable();
+        table.decimal("balance", 18, 6).notNullable().defaultTo(0);
+        table.decimal("frozenAmount", 18, 6).notNullable().defaultTo(0);
+        table.decimal("totalSpent", 18, 6).notNullable().defaultTo(0);
+        table.decimal("membershipPoints", 18, 6).notNullable().defaultTo(0);
+        table.decimal("rechargePoints", 18, 6).notNullable().defaultTo(0);
+        table.decimal("bonusPoints", 18, 6).notNullable().defaultTo(0);
+        table.timestamp("pointsExpireAt").nullable();
+        table.timestamp("createdAt").notNullable().defaultTo(knex.fn.now());
+        table.timestamp("updatedAt").notNullable().defaultTo(knex.fn.now());
+        table.primary(["id"]);
+        table.unique(["userId"]);
+        table.index(["userId"]);
+      },
+      initData: async () => {},
+    },
+    {
+      name: "user_memberships",
+      builder: (table) => {
+        table.string("id", 191).notNullable();
+        table.string("userId", 191).notNullable();
+        table.string("levelKey", 32).notNullable().defaultTo("free");
+        table.string("levelName", 64).notNullable().defaultTo("免费会员");
+        table.string("planKey", 64).nullable();
+        table.string("status", 32).notNullable().defaultTo("active");
+        table.boolean("autoRenew").notNullable().defaultTo(false);
+        table.timestamp("startedAt").notNullable().defaultTo(knex.fn.now());
+        table.timestamp("expiresAt").nullable();
+        table.string("sourceOrderId", 128).nullable();
+        table.timestamp("createdAt").notNullable().defaultTo(knex.fn.now());
+        table.timestamp("updatedAt").notNullable().defaultTo(knex.fn.now());
+        table.primary(["id"]);
+        table.unique(["userId"]);
+        table.index(["levelKey"]);
+        table.index(["status"]);
+        table.index(["expiresAt"]);
+      },
+      initData: async () => {},
+    },
+    {
+      name: "subscription_orders",
+      builder: (table) => {
+        table.string("id", 191).notNullable();
+        table.string("orderNo", 128).notNullable();
+        table.string("userId", 191).notNullable();
+        table.string("kind", 32).notNullable();
+        table.string("planKey", 64).nullable();
+        table.string("pointsPackageKey", 64).nullable();
+        table.decimal("amountCny", 18, 2).notNullable().defaultTo(0);
+        table.integer("points").notNullable().defaultTo(0);
+        table.string("status", 32).notNullable().defaultTo("paid");
+        table.string("paymentMethod", 64).nullable();
+        table.text("metadata").nullable();
+        table.timestamp("paidAt").nullable();
+        table.timestamp("createdAt").notNullable().defaultTo(knex.fn.now());
+        table.timestamp("updatedAt").notNullable().defaultTo(knex.fn.now());
+        table.primary(["id"]);
+        table.unique(["orderNo"]);
+        table.index(["userId"]);
+        table.index(["kind"]);
+        table.index(["status"]);
+        table.index(["createdAt"]);
+      },
+      initData: async () => {},
+    },
+    {
+      name: "balance_transactions",
+      builder: (table) => {
+        table.string("id", 191).notNullable();
+        table.string("userId", 191).notNullable();
+        table.string("type", 64).notNullable();
+        table.decimal("amount", 18, 6).notNullable();
+        table.decimal("balanceAfter", 18, 6).notNullable().defaultTo(0);
+        table.text("description").nullable();
+        table.string("relatedId", 191).nullable();
+        table.string("freezeId", 191).nullable();
+        table.string("operatorId", 191).nullable();
+        table.string("externalOrderId", 191).nullable();
+        table.string("idempotencyKey", 191).nullable();
+        table.string("projectId", 191).nullable();
+        table.string("episodeId", 191).nullable();
+        table.string("taskType", 191).nullable();
+        table.text("billingMeta").nullable();
+        table.timestamp("createdAt").notNullable().defaultTo(knex.fn.now());
+        table.primary(["id"]);
+        table.index(["userId"]);
+        table.index(["type"]);
+        table.index(["createdAt"]);
+        table.unique(["idempotencyKey"]);
+      },
+      initData: async () => {},
     },
   ];
 

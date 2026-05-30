@@ -115,8 +115,9 @@ export default router.post(
           },
         );
         const savePath = `/${projectId}/assets/${scriptId}/${item.type}/${u.uuid()}.jpg`;
-        await imageCls.save(savePath);
-        await u.db("o_image").where({ id: imageId }).update({ state: "已完成", filePath: savePath });
+        const storageProvider = u.oss.getStorageProvider();
+        await imageCls.save(savePath, storageProvider);
+        await u.db("o_image").where({ id: imageId }).update({ state: "已完成", filePath: savePath, storageProvider });
         return {
           id: item.id!,
           state: "已完成",

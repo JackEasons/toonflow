@@ -74,16 +74,31 @@ export default async (knex: Knex): Promise<void> => {
   await addColumn("o_tasks", "negativePrompt", "text");
   await addColumn("o_image", "prompt", "text");
   await addColumn("o_image", "negativePrompt", "text");
+  await addColumn("o_image", "storageProvider", "string");
   await addColumn("o_storyboard", "negativePrompt", "text");
+  await addColumn("o_storyboard", "storageProvider", "string");
   await addColumn("o_video", "prompt", "text");
   await addColumn("o_video", "negativePrompt", "text");
+  await addColumn("o_video", "storageProvider", "string");
   await addColumn("o_videoTrack", "negativePrompt", "text");
   await addColumn("o_user", "realName", "text");
   await addColumn("o_user", "avatar", "text");
   await addColumn("o_user", "introduction", "text");
   await addColumn("o_user", "notificationSettings", "text");
+  await addColumn("o_user", "role", "string");
   if (isMysql(knex)) await alterColumnType("memories", "role", "text");
   if (isMysql(knex)) await alterColumnType("o_tasks", "relatedObjects", "text");
+
+  const existingStorageProvider = u.oss.getStorageProvider();
+  for (const table of ["o_image", "o_storyboard", "o_video"]) {
+    if ((await knex.schema.hasTable(table)) && (await knex.schema.hasColumn(table, "storageProvider"))) {
+      await knex(table)
+        .whereNotNull("filePath")
+        .whereNot("filePath", "")
+        .where((builder) => builder.whereNull("storageProvider").orWhere("storageProvider", ""))
+        .update({ storageProvider: existingStorageProvider });
+    }
+  }
 
   if (await knex.schema.hasTable("o_user")) {
     const users = (await knex("o_user").select("id", "password")) as Array<{ id: number | string; password?: string | null }>;
@@ -91,6 +106,14 @@ export default async (knex: Knex): Promise<void> => {
       if (user.password && !isPasswordHash(user.password)) {
         await knex("o_user").where("id", user.id).update({ password: await hashPassword(user.password) });
       }
+    }
+    if (await knex.schema.hasColumn("o_user", "role")) {
+      await knex("o_user")
+        .where((builder) => builder.whereNull("role").orWhere("role", ""))
+        .update({ role: "member" });
+      await knex("o_user")
+        .where((builder) => builder.where("id", 1).orWhere("name", "admin"))
+        .update({ role: "admin" });
     }
   }
 

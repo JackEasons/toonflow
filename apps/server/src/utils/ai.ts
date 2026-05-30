@@ -292,8 +292,8 @@ class AiImage {
     await exec(modelName);
     return this;
   }
-  async save(path: string) {
-    await u.oss.writeFile(path, this.result);
+  async save(path: string, storageProvider = u.oss.getStorageProvider()) {
+    await u.oss.writeFile(path, this.result, storageProvider);
     return this;
   }
 }
@@ -349,8 +349,8 @@ class AiVideo {
       throw e;
     }
   }
-  async save(path: string) {
-    await u.oss.writeFile(path, this.result);
+  async save(path: string, storageProvider = u.oss.getStorageProvider()) {
+    await u.oss.writeFile(path, this.result, storageProvider);
     return this;
   }
 }
@@ -377,8 +377,8 @@ class AiAudio {
     }
     return await exec(modelName);
   }
-  async save(path: string) {
-    await u.oss.writeFile(path, this.result);
+  async save(path: string, storageProvider = u.oss.getStorageProvider()) {
+    await u.oss.writeFile(path, this.result, storageProvider);
     return this;
   }
 }

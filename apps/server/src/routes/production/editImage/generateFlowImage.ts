@@ -23,7 +23,7 @@ async function urlToBase64(imageUrl: string): Promise<string> {
   })();
 
   if (isOssUrl) {
-    return await u.oss.getImageBase64(u.replaceUrl(imageUrl));
+    return await u.oss.getImageBase64(u.replaceUrl(imageUrl), u.oss.getStorageProviderFromUrl(imageUrl));
   }
 
   const response = await axios.get(imageUrl, { responseType: 'arraybuffer' });
@@ -75,9 +75,10 @@ export default router.post(
         },
       );
       const savePath = `${projectId}/workFlow/${u.uuid()}.jpg`;
-      await imageClass.save(savePath);
+      const storageProvider = u.oss.getStorageProvider();
+      await imageClass.save(savePath, storageProvider);
 
-      const url = await u.oss.getSmallImageUrl(savePath);
+      const url = await u.oss.getSmallImageUrl(savePath, storageProvider);
       return res.status(200).send(success({ url }));
     } catch (e) {
       res.status(400).send(error(u.error(e).message));

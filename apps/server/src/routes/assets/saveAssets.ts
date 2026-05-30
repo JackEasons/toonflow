@@ -26,11 +26,12 @@ export default router.post(
       // 生成新的图片路径
       const savePath = `/${projectId}/${type}/${uuidv4()}.png`;
       // 写入文件
-      await u.oss.writeFile(savePath, Buffer.from(realBase64, "base64"));
+      const storageProvider = await u.oss.writeFile(savePath, Buffer.from(realBase64, "base64"));
       // 插入图片表
       const [idData] = await u.db("o_image").insert({
         assetsId: id,
         filePath: savePath,
+        storageProvider,
         type: type,
         state: "已完成",
       });

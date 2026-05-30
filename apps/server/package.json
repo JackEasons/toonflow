@@ -24,6 +24,7 @@
     "@huggingface/transformers": "catalog:",
     "@rmp135/sql-ts": "catalog:",
     "ai": "catalog:",
+    "ali-oss": "catalog:",
     "axios": "catalog:",
     "axios-retry": "catalog:",
     "bcryptjs": "catalog:",
@@ -43,6 +44,7 @@
     "morgan": "catalog:",
     "mysql2": "catalog:",
     "p-limit": "catalog:",
+    "proxy-agent": "catalog:",
     "qwen-ai-provider-v5": "catalog:",
     "serialize-error": "catalog:",
     "sharp": "catalog:",
@@ -56,6 +58,7 @@
   },
   "devDependencies": {
     "@super/tsconfig": "workspace:*",
+    "@types/ali-oss": "catalog:",
     "@types/cors": "catalog:",
     "@types/express": "catalog:",
     "@types/express-ws": "catalog:",

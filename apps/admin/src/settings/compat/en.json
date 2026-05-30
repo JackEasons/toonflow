@@ -51,6 +51,7 @@
       "promptManage": "Prompt Management",
       "skillManagement": "skillsSkillsManagement",
       "memoryConfig": "Agent Memory",
+      "ossConfig": "OSS Config",
       "loginConfig": "Login Config",
       "dbConfig": "Database",
       "fileManagement": "File Management",

@@ -4,6 +4,8 @@ import { success, error } from "@/lib/responseFormat";
 import { validateFields } from "@/middleware/middleware";
 import { z } from "zod";
 import { hashPassword } from "@/lib/password";
+import { ensureUserMembership } from "@/utils/membership";
+import { USER_ROLE_MEMBER } from "@/utils/admin";
 
 const router = express.Router();
 const DEFAULT_INVITE_CODE = "DRAMASTUDIO2026";
@@ -41,12 +43,15 @@ export default router.post(
     const inserted = await u.db("o_user").insert({
       name: username,
       password: hashedPassword,
-    });
+      role: USER_ROLE_MEMBER,
+    } as any);
+    const userId = String(Array.isArray(inserted) ? inserted[0] : inserted);
+    await ensureUserMembership(userId);
 
     return res.status(200).send(
       success(
         {
-          id: Array.isArray(inserted) ? inserted[0] : inserted,
+          id: userId,
           name: username,
         },
         "注册成功",

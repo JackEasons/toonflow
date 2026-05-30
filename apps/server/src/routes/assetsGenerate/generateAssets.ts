@@ -104,6 +104,7 @@ export default router.post("/", validateFields(requestSchema), async (req, res) 
 
   // 3. 准备生成参数
   const imagePath = `/${projectId}/${cfg.dir}/${uuidv4()}.jpg`;
+  const storageProvider = u.oss.getStorageProvider();
   const describe = `生成${cfg.label}图，名称：${name}，提示词：${prompt}`;
   const relatedObjects = { id, projectId, type: cfg.label, prompt: userPrompt, negativePrompt };
 
@@ -125,7 +126,7 @@ export default router.post("/", validateFields(requestSchema), async (req, res) 
         relatedObjects: JSON.stringify(relatedObjects),
       },
     );
-    aiImage.save(imagePath);
+    aiImage.save(imagePath, storageProvider);
     // 5. 更新记录 & 返回结果
     const imageData = await u.db("o_image").where("id", imageId).select("*").first();
     if (!imageData) return res.status(500).send("资产已被删除");
@@ -136,6 +137,7 @@ export default router.post("/", validateFields(requestSchema), async (req, res) 
       .update({
         state: "已完成",
         filePath: imagePath,
+        storageProvider,
         type,
         model: model.split(/:(.+)/)[1],
         resolution,

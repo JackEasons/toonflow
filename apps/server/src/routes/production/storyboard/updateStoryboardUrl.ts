@@ -15,11 +15,13 @@ export default router.post(
   }),
   async (req, res) => {
     const { id, url, flowId } = req.body;
+    const storageProvider = url ? u.oss.getStorageProviderFromUrl(url) ?? u.oss.getStorageProvider() : null;
     await u
       .db("o_storyboard")
       .where({ id })
       .update({
         filePath: u.replaceUrl(url),
+        storageProvider,
         flowId,
         state: "已完成",
         shouldGenerateImage:url ? 1 : 0

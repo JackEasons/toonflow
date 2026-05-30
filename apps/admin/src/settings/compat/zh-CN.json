@@ -90,6 +90,7 @@
       "promptManage": "提示词管理",
       "skillManagement": "Skills技能管理",
       "memoryConfig": "Agent记忆配置",
+      "ossConfig": "OSS配置",
       "loginConfig": "登录配置",
       "dbConfig": "数据库操作",
       "fileManagement": "文件管理",

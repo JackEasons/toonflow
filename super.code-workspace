@@ -13,6 +13,10 @@
       "path": "apps/server"
     },
     {
+      "name": "@super/playground",
+      "path": "playground"
+    },
+    {
       "name": "@super/public-assets",
       "path": "packages/public-assets"
     },

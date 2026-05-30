@@ -3,6 +3,7 @@
   "extends": "@super/tsconfig/node.json",
   "compilerOptions": {
     "module": "preserve",
+    "ignoreDeprecations": "6.0",
     "verbatimModuleSyntax": false,
     "isolatedModules": false,
     "noImplicitOverride": false,

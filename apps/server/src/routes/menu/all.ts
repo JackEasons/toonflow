@@ -107,6 +107,24 @@ const adminSettingsMenus = [
         path: "/settings/memory-config",
       },
       {
+        component: "/settings/components/ossConfig.vue",
+        meta: {
+          icon: "lucide:cloud",
+          title: "OSS配置",
+        },
+        name: "SettingsOssConfig",
+        path: "/settings/oss-config",
+      },
+      {
+        component: "/settings/components/paymentConfig.vue",
+        meta: {
+          icon: "lucide:credit-card",
+          title: "支付设置",
+        },
+        name: "SettingsPaymentConfig",
+        path: "/settings/payment-config",
+      },
+      {
         component: "/settings/components/dbConfig.vue",
         meta: {
           icon: "lucide:database",

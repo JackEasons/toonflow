@@ -27,6 +27,7 @@ export default router.post(
   async (req, res) => {
     const { prompt, duration, state, src, scriptId, projectId, videoDesc, shouldGenerateImage } = req.body;
     const trackId = Date.now()
+    const storageProvider = src ? u.oss.getStorageProviderFromUrl(src) ?? u.oss.getStorageProvider() : null;
     await u.db("o_videoTrack").insert({
       id: trackId,
       scriptId: scriptId,
@@ -37,6 +38,7 @@ export default router.post(
       duration,
       state,
       filePath: u.replaceUrl(src),
+      storageProvider,
       trackId,
       videoDesc,
       shouldGenerateImage: src ? 1 : 0,

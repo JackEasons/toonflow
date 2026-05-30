@@ -82,9 +82,11 @@ export default router.post(
         );
 
         const videoPath = `/${projectId}/video/${uuidv4()}.mp4`;
+        const storageProvider = u.oss.getStorageProvider();
         const negativePrompt = resolveNegativePrompt({ prompt, negativePromptSource }, { mediaType: "video", modelKey: model });
         const [videoId] = await u.db("o_video").insert({
           filePath: videoPath,
+          storageProvider,
           time: Date.now(),
           state: "生成中",
           prompt,
@@ -95,12 +97,12 @@ export default router.post(
         });
         await u.db("o_videoTrack").where("id", trackId).update({ negativePrompt });
 
-        return { videoId, videoPath, prompt, negativePrompt, duration, images, trackId };
+        return { videoId, videoPath, storageProvider, prompt, negativePrompt, duration, images, trackId };
       }),
     );
 
     res.status(200).send(success(tasks.map((t) => ({ videoId: t.videoId, trackId: t.trackId }))));
-    for (const { videoId, videoPath, prompt, negativePrompt, duration, images } of tasks) {
+    for (const { videoId, videoPath, storageProvider, prompt, negativePrompt, duration, images } of tasks) {
       // 所有任务全部并发后台执行，完全不阻塞任何进程
       const base64 = await Promise.all(
         images.map(async (item) => {
@@ -130,7 +132,7 @@ export default router.post(
             relatedObjects: JSON.stringify(relatedObjects),
           },
         )
-        .then(async () => await aiVideo.save(videoPath))
+        .then(async () => await aiVideo.save(videoPath, storageProvider))
         .then(async () => await u.db("o_video").where("id", videoId).update({ state: "生成成功" }))
         .catch(async (error: any) => {
           await u

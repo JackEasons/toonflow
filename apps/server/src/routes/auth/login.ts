@@ -4,6 +4,7 @@ import { success, error } from "@/lib/responseFormat";
 import { validateFields } from "@/middleware/middleware";
 import { verifyPassword, hashPassword } from "@/lib/password";
 import { setToken } from "@/routes/login/login";
+import { isAdminUser, normalizeUserRole } from "@/utils/admin";
 import { z } from "zod";
 
 const router = express.Router();
@@ -20,6 +21,7 @@ export default router.post(
 
     const user = await u.db("o_user").where("name", "=", username).first();
     if (!user) return res.status(400).send(error("登录失败"));
+    if (!isAdminUser(user)) return res.status(403).send(error("会员账号只能登录 Web 端"));
 
     const passwordResult = await verifyPassword(password, user.password);
     if (!passwordResult.valid) return res.status(400).send(error("用户名或密码错误"));
@@ -38,6 +40,7 @@ export default router.post(
       {
         id: user.id,
         name: user.name,
+        role: normalizeUserRole(user),
       },
       "180Days",
       tokenData.value as string,

@@ -4,6 +4,7 @@
 .promptManage,
 .skillManagement,
 .memoryConfig,
+.paymentConfig,
 .dbConfig,
 .fileManagement {
   --ds-settings-bg: hsl(var(--background-deep));
@@ -94,6 +95,7 @@
 .dark .promptManage,
 .dark .skillManagement,
 .dark .memoryConfig,
+.dark .paymentConfig,
 .dark .dbConfig,
 .dark .fileManagement,
 [theme-mode='dark'] .modelServe,
@@ -102,6 +104,7 @@
 [theme-mode='dark'] .promptManage,
 [theme-mode='dark'] .skillManagement,
 [theme-mode='dark'] .memoryConfig,
+[theme-mode='dark'] .paymentConfig,
 [theme-mode='dark'] .dbConfig,
 [theme-mode='dark'] .fileManagement {
   --ds-settings-bg: #101417;
@@ -151,6 +154,7 @@
 .promptManage,
 .skillManagement,
 .memoryConfig,
+.paymentConfig,
 .dbConfig,
 .fileManagement {
   padding: 16px;
@@ -163,6 +167,7 @@
 .aiConfog,
 .modelMap,
 .promptManage,
+.paymentConfig,
 .dbConfig,
 .fileManagement {
   overflow: auto;
@@ -174,6 +179,7 @@
 .promptManage .t-button--variant-outline,
 .skillManagement .t-button--variant-outline,
 .memoryConfig .t-button--variant-outline,
+.paymentConfig .t-button--variant-outline,
 .dbConfig .t-button--variant-outline,
 .fileManagement .t-button--variant-outline {
   border-color: var(--ds-settings-line-strong);
@@ -193,6 +199,7 @@
 .promptManage .t-button--variant-text,
 .skillManagement .t-button--variant-text,
 .memoryConfig .t-button--variant-text,
+.paymentConfig .t-button--variant-text,
 .dbConfig .t-button--variant-text,
 .fileManagement .t-button--variant-text {
   border-radius: 6px;
@@ -204,6 +211,7 @@
 .promptManage .t-tag,
 .skillManagement .t-tag,
 .memoryConfig .t-tag,
+.paymentConfig .t-tag,
 .dbConfig .t-tag,
 .fileManagement .t-tag {
   border-radius: 6px;

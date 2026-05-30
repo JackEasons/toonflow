@@ -68,6 +68,33 @@ const routes: RouteRecordRaw[] = [
         path: '/settings/memory-config',
       },
       {
+        component: () => import('#/views/settings/components/ossConfig.vue'),
+        meta: {
+          icon: 'lucide:cloud',
+          title: 'OSS配置',
+        },
+        name: 'SettingsOssConfig',
+        path: '/settings/oss-config',
+      },
+      {
+        component: () => import('#/views/settings/components/paymentConfig.vue'),
+        meta: {
+          icon: 'lucide:credit-card',
+          title: '支付设置',
+        },
+        name: 'SettingsPaymentConfig',
+        path: '/settings/payment-config',
+      },
+      {
+        component: () => import('#/views/settings/components/adminAccounts.vue'),
+        meta: {
+          icon: 'lucide:user-plus',
+          title: '管理员账号',
+        },
+        name: 'SettingsAdminAccounts',
+        path: '/settings/admin-accounts',
+      },
+      {
         component: () => import('#/views/settings/components/dbConfig.vue'),
         meta: {
           icon: 'lucide:database',

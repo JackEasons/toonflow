@@ -1,0 +1,61 @@
+{
+  "name": "@super/playground",
+  "version": "5.7.0",
+  "homepage": "https://super.pro",
+  "bugs": "https://github.com/superjs/vue-super-admin/issues",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/superjs/vue-super-admin.git",
+    "directory": "playground"
+  },
+  "license": "MIT",
+  "author": {
+    "name": "super",
+    "email": "ann.super@gmail.com",
+    "url": "https://github.com/anncwb"
+  },
+  "type": "module",
+  "scripts": {
+    "build": "pnpm vite build --mode production",
+    "build:analyze": "pnpm vite build --mode analyze",
+    "dev": "pnpm vite --mode development",
+    "preview": "vite preview",
+    "typecheck": "vue-tsc --noEmit --skipLibCheck",
+    "test:e2e": "playwright test",
+    "test:e2e-ui": "playwright test --ui",
+    "test:e2e-codegen": "playwright codegen"
+  },
+  "imports": {
+    "#/*": "./src/*"
+  },
+  "dependencies": {
+    "@tanstack/vue-query": "catalog:",
+    "@super-core/design": "workspace:*",
+    "@super-core/menu-ui": "workspace:*",
+    "@super/access": "workspace:*",
+    "@super/common-ui": "workspace:*",
+    "@super/constants": "workspace:*",
+    "@super/hooks": "workspace:*",
+    "@super/icons": "workspace:*",
+    "@super/layouts": "workspace:*",
+    "@super/locales": "workspace:*",
+    "@super/plugins": "workspace:*",
+    "@super/preferences": "workspace:*",
+    "@super/request": "workspace:*",
+    "@super/stores": "workspace:*",
+    "@super/styles": "workspace:*",
+    "@super/types": "workspace:*",
+    "@super/utils": "workspace:*",
+    "@vueuse/core": "catalog:",
+    "antdv-next": "catalog:",
+    "dayjs": "catalog:",
+    "json-bigint": "catalog:",
+    "pinia": "catalog:",
+    "vue": "catalog:",
+    "vue-router": "catalog:"
+  },
+  "devDependencies": {
+    "@playwright/test": "catalog:",
+    "@types/json-bigint": "catalog:"
+  }
+}

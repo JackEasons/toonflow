@@ -27,6 +27,7 @@ function resolvePort(randomPort: boolean): number {
 
 export default async function startServe(randomPort: boolean = false) {
   await dbReady;
+  await u.oss.reloadConfig();
   await u.writeVersion();
   const io = new Server(server, { cors: { origin: "*" } });
   socketInit(io);
@@ -37,7 +38,14 @@ export default async function startServe(randomPort: boolean = false) {
 
   app.use(logger("dev"));
   app.use(cors({ origin: "*" }));
-  app.use(express.json({ limit: "100mb" }));
+  app.use(
+    express.json({
+      limit: "100mb",
+      verify: (req, _res, buf) => {
+        (req as any).rawBody = buf.toString("utf8");
+      },
+    }),
+  );
   app.use(express.urlencoded({ extended: true, limit: "100mb" }));
 
   // oss 静态资源
@@ -46,27 +54,23 @@ export default async function startServe(randomPort: boolean = false) {
     fs.mkdirSync(ossDir, { recursive: true });
   }
   console.log("OSS 存储:", u.oss.getStorageDescription());
-  if (u.oss.isRemoteEnabled()) {
-    app.use("/oss", async (req, res, next) => {
-      const filePath = req.path.replace(/^\/+/, "");
-      try {
-        const buffer = await u.oss.getFile(filePath);
-        res.setHeader("Accept-Ranges", "none");
-        res.type(path.extname(filePath) || "application/octet-stream");
-        res.send(buffer);
-      } catch (error) {
-        const err = error as NodeJS.ErrnoException & { status?: number };
-        if (err.status === 404 || err.code === "ENOENT") {
-          res.status(404).end();
-          return;
-        }
-        next(error);
+  app.use("/oss", async (req, res, next) => {
+    const filePath = req.path.replace(/^\/+/, "");
+    try {
+      const provider = u.oss.getStorageProviderFromUrl(req.originalUrl);
+      const buffer = await u.oss.getFile(filePath, provider);
+      res.setHeader("Accept-Ranges", "none");
+      res.type(path.extname(filePath) || "application/octet-stream");
+      res.send(buffer);
+    } catch (error) {
+      const err = error as NodeJS.ErrnoException & { status?: number };
+      if (err.status === 404 || err.code === "ENOENT") {
+        res.status(404).end();
+        return;
       }
-    });
-  } else {
-    console.log("文件目录:", ossDir);
-    app.use("/oss", express.static(ossDir, { acceptRanges: false }));
-  }
+      next(error);
+    }
+  });
   // skills 静态资源
   const skillsDir = u.getPath("skills");
   if (!fs.existsSync(skillsDir)) {
@@ -107,7 +111,17 @@ export default async function startServe(randomPort: boolean = false) {
     const rawToken = req.headers.authorization || (req.query.token as string) || "";
     const token = rawToken.replace("Bearer ", "");
     // 白名单路径
-    if (["/api/auth/login", "/api/login/login", "/api/login/register"].includes(req.path)) return next();
+    if (
+      [
+        "/api/auth/login",
+        "/api/login/login",
+        "/api/login/register",
+        "/api/payment/alipay/notify",
+        "/api/payment/alipay/return",
+        "/api/payment/wechat/notify",
+      ].includes(req.path)
+    )
+      return next();
 
     if (!token) return res.status(401).send({ message: "未提供token" });
     try {
@@ -119,19 +133,23 @@ export default async function startServe(randomPort: boolean = false) {
     }
   });
 
-  const adminSettingPrefixes = [
+  const adminOnlyPrefixes = [
+    "/api/admin",
     "/api/setting/vendorConfig",
     "/api/setting/modelMap",
     "/api/setting/agentDeploy",
     "/api/setting/promptManage",
     "/api/setting/skillManagement",
     "/api/setting/memoryConfig",
+    "/api/setting/loginConfig",
+    "/api/setting/paymentConfig",
+    "/api/setting/ossConfig",
     "/api/setting/dbConfig",
     "/api/setting/fileManagement",
   ];
   app.use((req, res, next) => {
-    if (adminSettingPrefixes.some((prefix) => req.path.startsWith(prefix)) && !isAdminRequest(req)) {
-      return res.status(403).send({ message: "配置仅管理员可访问" });
+    if (adminOnlyPrefixes.some((prefix) => req.path.startsWith(prefix)) && !isAdminRequest(req)) {
+      return res.status(403).send({ message: "仅管理员可访问" });
     }
     next();
   });

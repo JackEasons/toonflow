@@ -5,6 +5,7 @@ import { success, error } from "@/lib/responseFormat";
 import { validateFields } from "@/middleware/middleware";
 import { z } from "zod";
 import { verifyPassword, hashPassword } from "@/lib/password";
+import { isAdminUser, normalizeUserRole } from "@/utils/admin";
 const router = express.Router();
 
 export function setToken(payload: string | object, expiresIn: string | number, secret: string): string {
@@ -26,6 +27,7 @@ export default router.post(
 
     const data = await u.db("o_user").where("name", "=", username).first();
     if (!data) return res.status(400).send(error("登录失败"));
+    if (isAdminUser(data)) return res.status(403).send(error("管理员账号只能登录 Admin 后台"));
 
     const passwordResult = await verifyPassword(password, data!.password);
 
@@ -43,6 +45,7 @@ export default router.post(
         {
           id: data!.id,
           name: data!.name,
+          role: normalizeUserRole(data),
         },
         "180Days",
         tokenData?.value as string,

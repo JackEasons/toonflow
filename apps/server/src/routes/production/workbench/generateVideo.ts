@@ -52,6 +52,7 @@ export default router.post(
     const negativePromptSource = u.getArtPrompt(project?.artStyle ?? "", "art_skills", "director_storyboard");
     const negativePrompt = resolveNegativePrompt({ prompt, negativePromptSource }, { mediaType: "video", modelKey: model });
     const videoPath = `/${projectId}/video/${uuidv4()}.mp4`; //视频保存路径
+    const storageProvider = u.oss.getStorageProvider();
     //查询出图片数据
     const images = await Promise.all(
       uploadData.map(async (item: UploadItem) => {
@@ -80,6 +81,7 @@ export default router.post(
     //新增
     const [videoId] = await u.db("o_video").insert({
       filePath: videoPath,
+      storageProvider,
       time: Date.now(),
       state: "生成中",
       prompt,
@@ -119,7 +121,7 @@ export default router.post(
           relatedObjects: JSON.stringify(relatedObjects),
         },
       )
-      .then(async () => await aiVideo.save(videoPath))
+      .then(async () => await aiVideo.save(videoPath, storageProvider))
       .then(async () => await u.db("o_video").where("id", videoId).update({ state: "生成成功" }))
       .catch(async (error: any) => {
         await u

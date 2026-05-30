@@ -16,11 +16,12 @@ import {
   VxeRadioGroup,
   VxeSelect,
   VxeTooltip,
-  VxeUI,
   VxeUpload,
 } from 'vxe-pc-ui';
+import { VxeUI as VxePcUI } from 'vxe-pc-ui/es/vxe-ui/index.js';
 import enUS from 'vxe-pc-ui/lib/language/en-US'; // 导入默认的语言
 import zhCN from 'vxe-pc-ui/lib/language/zh-CN';
+import { VxeUI as VxeTableUI } from 'vxe-table/es/vxe-ui/index.js';
 import {
   VxeColgroup,
   VxeColumn,
@@ -73,37 +74,37 @@ export function initVxeTable() {
     return;
   }
 
-  VxeUI.component(VxeTable);
-  VxeUI.component(VxeColumn);
-  VxeUI.component(VxeColgroup);
-  VxeUI.component(VxeGrid);
-  VxeUI.component(VxeToolbar);
+  VxeTableUI.component(VxeTable);
+  VxeTableUI.component(VxeColumn);
+  VxeTableUI.component(VxeColgroup);
+  VxeTableUI.component(VxeGrid);
+  VxeTableUI.component(VxeToolbar);
 
-  VxeUI.component(VxeButton);
+  VxeTableUI.component(VxeButton);
   // VxeUI.component(VxeButtonGroup);
-  VxeUI.component(VxeCheckbox);
+  VxeTableUI.component(VxeCheckbox);
   // VxeUI.component(VxeCheckboxGroup);
-  VxeUI.component(createVirtualComponent('VxeForm'));
+  VxeTableUI.component(createVirtualComponent('VxeForm'));
   // VxeUI.component(VxeFormGather);
   // VxeUI.component(VxeFormItem);
-  VxeUI.component(VxeIcon);
-  VxeUI.component(VxeInput);
+  VxeTableUI.component(VxeIcon);
+  VxeTableUI.component(VxeInput);
   // VxeUI.component(VxeList);
-  VxeUI.component(VxeLoading);
-  VxeUI.component(VxeModal);
-  VxeUI.component(VxeNumberInput);
+  VxeTableUI.component(VxeLoading);
+  VxeTableUI.component(VxeModal);
+  VxeTableUI.component(VxeNumberInput);
   // VxeUI.component(VxeOptgroup);
   // VxeUI.component(VxeOption);
-  VxeUI.component(VxePager);
+  VxeTableUI.component(VxePager);
   // VxeUI.component(VxePulldown);
   // VxeUI.component(VxeRadio);
   // VxeUI.component(VxeRadioButton);
-  VxeUI.component(VxeRadioGroup);
-  VxeUI.component(VxeSelect);
+  VxeTableUI.component(VxeRadioGroup);
+  VxeTableUI.component(VxeSelect);
   // VxeUI.component(VxeSwitch);
   // VxeUI.component(VxeTextarea);
-  VxeUI.component(VxeTooltip);
-  VxeUI.component(VxeUpload);
+  VxeTableUI.component(VxeTooltip);
+  VxeTableUI.component(VxeUpload);
 
   isInit = true;
 }
@@ -127,16 +128,20 @@ export function setupSuperVxeTable(setupOptions: SetupVxeTable) {
   watch(
     [() => isDark.value, () => locale.value],
     ([isDarkValue, localeValue]) => {
-      VxeUI.setTheme(isDarkValue ? 'dark' : 'light');
-      VxeUI.setI18n(localeValue, localMap[localeValue]);
-      VxeUI.setLanguage(localeValue);
+      const language = localMap[localeValue] ? localeValue : 'zh-CN';
+      const localeConfig = localMap[language];
+      [VxeTableUI, VxePcUI].forEach((vxeUI) => {
+        vxeUI.setTheme(isDarkValue ? 'dark' : 'light');
+        vxeUI.setI18n(language, localeConfig);
+        vxeUI.setLanguage(language);
+      });
     },
     {
       immediate: true,
     },
   );
 
-  extendsDefaultFormatter(VxeUI);
+  extendsDefaultFormatter(VxeTableUI);
 
-  configVxeTable(VxeUI);
+  configVxeTable(VxeTableUI);
 }
