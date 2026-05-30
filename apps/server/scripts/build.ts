@@ -1,6 +1,7 @@
 import esbuild from "esbuild";
 import fs from "fs";
 import path from "path";
+import generateRouter from "../src/core";
 
 // 打包默认使用 prod 环境变量
 if (!process.env.NODE_ENV) {
@@ -50,6 +51,7 @@ const appBuildConfig: esbuild.BuildOptions = {
   try {
     console.log("🔨 开始构建...\n");
 
+    await generateRouter();
     await esbuild.build(appBuildConfig);
 
     console.log("✅ 后端服务构建完成: data/serve/app.js");

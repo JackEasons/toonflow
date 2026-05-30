@@ -22,6 +22,7 @@
     "@super/locales": "workspace:*",
     "@super/plugins": "workspace:*",
     "@super/preferences": "workspace:*",
+    "@super/public-assets": "workspace:*",
     "@super/request": "workspace:*",
     "@super/stores": "workspace:*",
     "@super/styles": "workspace:*",

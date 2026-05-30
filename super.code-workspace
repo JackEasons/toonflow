@@ -13,6 +13,10 @@
       "path": "apps/server"
     },
     {
+      "name": "@super/public-assets",
+      "path": "packages/public-assets"
+    },
+    {
       "name": "@super/commitlint-config",
       "path": "internal/lint-configs/commitlint-config"
     },

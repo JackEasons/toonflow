@@ -3,11 +3,9 @@ import type { NotificationItem } from '@super/layouts';
 
 import { computed, ref, watch } from 'vue';
 import { useRouter } from 'vue-router';
-
+import { DefaultAvatar } from '@super/public-assets';
 import { AuthenticationLoginExpiredModal } from '@super/common-ui';
-import { SUPER_DOC_URL, SUPER_GITHUB_URL } from '@super/constants';
 import { useWatermark } from '@super/hooks';
-import { BookOpenText, CircleHelp, SvgGithubIcon } from '@super/icons';
 import {
   BasicLayout,
   LockScreen,
@@ -16,64 +14,12 @@ import {
 } from '@super/layouts';
 import { preferences, usePreferences } from '@super/preferences';
 import { useAccessStore, useUserStore } from '@super/stores';
-import { openWindow } from '@super/utils';
 
 import { $t } from '#/locales';
 import { useAuthStore } from '#/store';
 import LoginForm from '#/views/_core/authentication/login.vue';
 
-const notifications = ref<NotificationItem[]>([
-  {
-    id: 1,
-    avatar: 'https://avatar.vercel.sh/vercel.svg?text=VB',
-    date: '3小时前',
-    isRead: true,
-    message: '描述信息描述信息描述信息',
-    title: '收到了 14 份新周报',
-  },
-  {
-    id: 2,
-    avatar: 'https://avatar.vercel.sh/1',
-    date: '刚刚',
-    isRead: false,
-    message: '描述信息描述信息描述信息',
-    title: '朱偏右 回复了你',
-  },
-  {
-    id: 3,
-    avatar: 'https://avatar.vercel.sh/1',
-    date: '2024-01-01',
-    isRead: false,
-    message: '描述信息描述信息描述信息',
-    title: '曲丽丽 评论了你',
-  },
-  {
-    id: 4,
-    avatar: 'https://avatar.vercel.sh/satori',
-    date: '1天前',
-    isRead: false,
-    message: '描述信息描述信息描述信息',
-    title: '代办提醒',
-  },
-  {
-    id: 5,
-    avatar: 'https://avatar.vercel.sh/satori',
-    date: '1天前',
-    isRead: false,
-    message: '描述信息描述信息描述信息',
-    title: '跳转Workspace示例',
-    link: '/workspace',
-  },
-  {
-    id: 6,
-    avatar: 'https://avatar.vercel.sh/satori',
-    date: '1天前',
-    isRead: false,
-    message: '描述信息描述信息描述信息',
-    title: '跳转外部链接示例',
-    link: 'https://doc.super.pro',
-  },
-]);
+const notifications = ref<NotificationItem[]>([]);
 
 const router = useRouter();
 const userStore = useUserStore();
@@ -93,37 +39,10 @@ const menus = computed(() => [
     icon: 'lucide:user',
     text: $t('page.auth.profile'),
   },
-  {
-    handler: () => {
-      openWindow(SUPER_DOC_URL, {
-        target: '_blank',
-      });
-    },
-    icon: BookOpenText,
-    text: $t('ui.widgets.document'),
-  },
-  {
-    handler: () => {
-      openWindow(SUPER_GITHUB_URL, {
-        target: '_blank',
-      });
-    },
-    icon: SvgGithubIcon,
-    text: 'GitHub',
-  },
-  {
-    handler: () => {
-      openWindow(`${SUPER_GITHUB_URL}/issues`, {
-        target: '_blank',
-      });
-    },
-    icon: CircleHelp,
-    text: $t('ui.widgets.qa'),
-  },
 ]);
 
 const avatar = computed(() => {
-  return userStore.userInfo?.avatar ?? preferences.app.defaultAvatar;
+  return userStore.userInfo?.avatar ?? DefaultAvatar;
 });
 
 async function handleLogout() {
@@ -223,7 +142,7 @@ watch(
         :avatar
         :menus
         :text="userStore.userInfo?.realName"
-        description="ann.super@gmail.com"
+        description="yixiaowu2008@gmail.com"
         tag-text="Pro"
         @logout="handleLogout"
         @clear-preferences-and-logout="handleLogout"

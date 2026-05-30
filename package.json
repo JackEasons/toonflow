@@ -20,7 +20,7 @@
     "clean": "node ./scripts/clean.mjs",
     "commit": "czg",
     "dev": "turbo-run dev",
-    "dev:app": "turbo run dev --parallel --filter=@super/server --filter=@super/web",
+    "dev:app": "turbo run dev --parallel --filter=@super/server --filter=@super/web --filter=@super/admin",
     "dev:server": "pnpm -F @super/server run dev",
     "dev:web": "pnpm -F @super/web run dev",
     "dev:admin": "pnpm -F @super/admin run dev",

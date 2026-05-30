@@ -1,0 +1,16 @@
+{
+  "name": "@super/public-assets",
+  "version": "1.0.0",
+  "description": "Public assets for Super Admin",
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./src/index.ts",
+      "default": "./src/index.ts"
+    }
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "@super/tsconfig": "workspace:*"
+  }
+}

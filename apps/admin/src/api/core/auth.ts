@@ -1,3 +1,5 @@
+import { useAccessStore } from '@super/stores';
+
 import { baseRequestClient, requestClient } from '#/api/request';
 
 export namespace AuthApi {
@@ -7,13 +9,25 @@ export namespace AuthApi {
     username?: string;
   }
 
+  /** 注册接口参数 */
+  export interface RegisterParams {
+    confirmPassword?: string;
+    inviteCode?: string;
+    password?: string;
+    username?: string;
+  }
+
   /** 登录接口返回值 */
   export interface LoginResult {
     accessToken: string;
   }
 
-  export interface RefreshTokenResult {
-    data: string;
+  export interface RefreshTokenResponse {
+    data: {
+      code: number;
+      data: string;
+      message?: string;
+    };
     status: number;
   }
 }
@@ -26,19 +40,35 @@ export async function loginApi(data: AuthApi.LoginParams) {
 }
 
 /**
+ * 注册
+ */
+export async function registerApi(data: AuthApi.RegisterParams) {
+  return requestClient.post('/login/register', data);
+}
+
+/**
  * 刷新accessToken
  */
 export async function refreshTokenApi() {
-  return baseRequestClient.post<AuthApi.RefreshTokenResult>('/auth/refresh', {
-    withCredentials: true,
-  });
+  const accessStore = useAccessStore();
+  const resp = await baseRequestClient.post<AuthApi.RefreshTokenResponse>(
+    '/auth/refresh',
+    undefined,
+    {
+      headers: accessStore.accessToken
+        ? { Authorization: `Bearer ${accessStore.accessToken}` }
+        : {},
+      withCredentials: true,
+    },
+  );
+  return resp.data.data;
 }
 
 /**
  * 退出登录
  */
 export async function logoutApi() {
-  return baseRequestClient.post('/auth/logout', {
+  return requestClient.post('/auth/logout', {
     withCredentials: true,
   });
 }

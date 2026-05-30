@@ -20,9 +20,9 @@
   },
   "dependencies": {
     "@eslint/js": "catalog:",
+    "@super/oxlint-config": "workspace:*",
     "@typescript-eslint/eslint-plugin": "catalog:",
     "@typescript-eslint/parser": "catalog:",
-    "@super/oxlint-config": "workspace:*",
     "eslint": "catalog:",
     "eslint-plugin-jsonc": "catalog:",
     "eslint-plugin-n": "catalog:",

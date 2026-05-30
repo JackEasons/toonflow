@@ -45,4 +45,4 @@ pnpm check:type
 
 - `@super/web` 位于 `apps/web`，保留原 Vite/Vue/TDesign 创作端业务代码。
 - `@super/server` 位于 `apps/server`，保留 Express/MySQL/AI SDK 后端服务。
-- `@super/admin` 位于 `apps/admin`，由 Vben TDesign 模板重命名而来，后续作为后台管理系统基础。
+- `@super/admin` 位于 `apps/admin`，由 Vben TDesign 模板重命名而来，后台认证和基础菜单接口统一对接 `@super/server` 的 `/api` 服务。

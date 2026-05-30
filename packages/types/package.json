@@ -9,6 +9,12 @@
     },
     "./global": {
       "types": "./global.d.ts"
+    },
+    "./images": {
+      "types": "./images.d.ts"
+    },
+    "./media": {
+      "types": "./media.d.ts"
     }
   },
   "dependencies": {

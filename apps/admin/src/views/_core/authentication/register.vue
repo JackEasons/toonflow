@@ -3,13 +3,18 @@ import type { SuperFormSchema } from '@super/common-ui';
 import type { Recordable } from '@super/types';
 
 import { computed, h, ref } from 'vue';
+import { useRouter } from 'vue-router';
 
 import { AuthenticationRegister, z } from '@super/common-ui';
 import { $t } from '@super/locales';
 
+import { notification } from '#/adapter/tdesign';
+import { registerApi } from '#/api';
+
 defineOptions({ name: 'Register' });
 
 const loading = ref(false);
+const router = useRouter();
 
 const formSchema = computed((): SuperFormSchema[] => {
   return [
@@ -58,6 +63,15 @@ const formSchema = computed((): SuperFormSchema[] => {
       label: $t('authentication.confirmPassword'),
     },
     {
+      component: 'SuperInput',
+      componentProps: {
+        placeholder: 'DRAMASTUDIO2026',
+      },
+      fieldName: 'inviteCode',
+      label: '邀请码',
+      rules: z.string().min(1, { message: '请输入邀请码' }),
+    },
+    {
       component: 'SuperCheckbox',
       fieldName: 'agreePolicy',
       renderComponentContent: () => ({
@@ -82,7 +96,18 @@ const formSchema = computed((): SuperFormSchema[] => {
 });
 
 async function handleSubmit(value: Recordable<any>) {
-  void value;
+  try {
+    loading.value = true;
+    await registerApi(value);
+    notification.success({
+      title: $t('authentication.register'),
+      content: '注册成功，请登录',
+      duration: 3000,
+    });
+    await router.push('/auth/login');
+  } finally {
+    loading.value = false;
+  }
 }
 </script>
 

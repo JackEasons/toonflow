@@ -43,9 +43,7 @@ function defineApplicationConfig(userConfigPromise?: DefineApplicationOptions) {
       nitroMock: !isBuild,
       nitroMockOptions: {},
       print: !isBuild,
-      printInfoMap: {
-        'Super Admin Docs': 'https://doc.super.pro',
-      },
+      printInfoMap: {},
       pwa: true,
       pwaOptions: getDefaultPwaOptions(appTitle),
       vxeTableLazyImport: true,
