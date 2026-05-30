@@ -25,7 +25,7 @@
     <template #empty>
       <div class="emptyActionWrap">
         <t-button class="emptyActionButton" size="small" variant="text" theme="primary" @click.stop="goVendorConfig">
-          {{ $t("components.modelSelect.goSetting") }}
+          {{ $t("components.modelSelect.contactAdmin") }}
         </t-button>
       </div>
     </template>
@@ -35,8 +35,6 @@
 <script setup lang="ts">
 import { onMounted, ref } from "vue";
 import { providersLogo, modelProviderRules } from "#/utils/providersLogo";
-import settingStore from "#/stores/setting";
-
 import axios from "#/utils/axios";
 interface VendorChild {
   id: number;
@@ -157,9 +155,7 @@ function getFallbackText(label: string) {
 }
 
 function goVendorConfig() {
-  const store = settingStore();
-  store.activeMenu = "vendorConfig";
-  store.showSetting = true;
+  window.$message.info($t("components.modelSelect.contactAdminMessage"));
 }
 </script>
 

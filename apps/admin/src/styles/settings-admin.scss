@@ -1,0 +1,855 @@
+.modelServe,
+.aiConfog,
+.modelMap,
+.promptManage,
+.skillManagement,
+.memoryConfig,
+.dbConfig,
+.fileManagement {
+  --ds-settings-bg: hsl(var(--background-deep));
+  --ds-settings-panel: rgba(255, 255, 255, 0.94);
+  --ds-settings-panel-soft: rgba(248, 251, 253, 0.92);
+  --ds-settings-elevated: rgba(255, 255, 255, 0.98);
+  --ds-settings-field: rgba(255, 255, 255, 0.88);
+  --ds-settings-line: rgba(20, 116, 108, 0.16);
+  --ds-settings-line-soft: rgba(18, 35, 48, 0.08);
+  --ds-settings-line-strong: rgba(50, 96, 176, 0.22);
+  --ds-settings-text: rgba(18, 28, 38, 0.92);
+  --ds-settings-muted: rgba(74, 88, 99, 0.72);
+  --ds-settings-dim: rgba(96, 111, 124, 0.55);
+  --ds-settings-accent: #168f83;
+  --ds-settings-blue: #2f6eea;
+  --ds-settings-warning: #b7791f;
+  --ds-settings-page-glow-top: transparent;
+  --ds-settings-page-glow-side: transparent;
+  --ds-settings-panel-gloss: rgba(255, 255, 255, 0.68);
+  --ds-settings-panel-shadow: 0 14px 34px rgba(20, 35, 50, 0.08);
+  --ds-settings-panel-shadow-strong: 0 16px 40px rgba(20, 35, 50, 0.1);
+  --ds-settings-inset-highlight: inset 0 1px 0 rgba(255, 255, 255, 0.72);
+  --ds-settings-scrollbar-track: rgba(23, 37, 50, 0.045);
+  --ds-settings-scrollbar-thumb: rgba(22, 143, 131, 0.32);
+  --ds-settings-button-subtle-bg: rgba(255, 255, 255, 0.72);
+  --ds-settings-accent-soft: rgba(22, 143, 131, 0.1);
+  --ds-settings-accent-border: rgba(22, 143, 131, 0.34);
+  --ds-settings-accent-text: #14776f;
+  --ds-settings-accent-text-strong: #0f5f59;
+  --ds-settings-blue-soft: rgba(47, 110, 234, 0.1);
+  --ds-settings-blue-text: #245ec8;
+  --ds-settings-footer-bg: linear-gradient(180deg, rgba(245, 248, 251, 0.78), rgba(255, 255, 255, 0.96)), var(--ds-settings-panel);
+  --ds-settings-footer-shadow: 0 -12px 26px rgba(20, 35, 50, 0.08);
+  --ds-settings-editor-bg: rgba(248, 251, 253, 0.72);
+  --ds-settings-radio-bg: rgba(243, 247, 250, 0.86);
+  --ds-settings-folder-bg: rgba(255, 255, 255, 0.7);
+  --ds-settings-code-bg: rgba(241, 245, 249, 0.9);
+  --ds-settings-code-block-bg: rgba(236, 242, 247, 0.94);
+  --ds-settings-preview-bg: linear-gradient(90deg, rgba(22, 143, 131, 0.065), rgba(47, 110, 234, 0.04)), rgba(255, 255, 255, 0.7);
+  --ds-settings-primary-gradient: linear-gradient(135deg, #62d8ca, #5a8dff);
+  --ds-settings-primary-text: #061012;
+  --td-brand-color: var(--ds-settings-accent);
+  --td-brand-color-hover: #21a79a;
+  --td-brand-color-active: #0f756c;
+  --td-brand-color-focus: rgba(22, 143, 131, 0.16);
+  --td-brand-color-light: rgba(22, 143, 131, 0.12);
+  --td-bg-color-container: var(--ds-settings-panel);
+  --td-bg-color-container-hover: rgba(246, 250, 253, 0.98);
+  --td-bg-color-container-active: rgba(238, 246, 249, 0.98);
+  --td-bg-color-component: rgba(246, 249, 252, 0.88);
+  --td-bg-color-component-hover: rgba(238, 246, 249, 0.96);
+  --td-text-color-primary: var(--ds-settings-text);
+  --td-text-color-secondary: var(--ds-settings-muted);
+  --td-text-color-placeholder: var(--ds-settings-dim);
+  --td-component-stroke: var(--ds-settings-line);
+  --td-component-border: var(--ds-settings-line);
+  --td-border-level-1-color: var(--ds-settings-line);
+  --td-border-level-2-color: var(--ds-settings-line-strong);
+  --td-radius-default: 8px;
+
+  box-sizing: border-box;
+  width: 100%;
+  height: calc(100vh - 88px) !important;
+  min-height: 0;
+  max-height: calc(100vh - 88px);
+  color: var(--ds-settings-text);
+  overflow: hidden;
+  scrollbar-color: var(--ds-settings-scrollbar-thumb) var(--ds-settings-scrollbar-track);
+
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: var(--ds-settings-scrollbar-track);
+  }
+
+  ::-webkit-scrollbar-thumb {
+    border-radius: 8px;
+    background: var(--ds-settings-scrollbar-thumb);
+  }
+}
+
+.dark .modelServe,
+.dark .aiConfog,
+.dark .modelMap,
+.dark .promptManage,
+.dark .skillManagement,
+.dark .memoryConfig,
+.dark .dbConfig,
+.dark .fileManagement,
+[theme-mode='dark'] .modelServe,
+[theme-mode='dark'] .aiConfog,
+[theme-mode='dark'] .modelMap,
+[theme-mode='dark'] .promptManage,
+[theme-mode='dark'] .skillManagement,
+[theme-mode='dark'] .memoryConfig,
+[theme-mode='dark'] .dbConfig,
+[theme-mode='dark'] .fileManagement {
+  --ds-settings-bg: #101417;
+  --ds-settings-panel: rgba(24, 29, 32, 0.94);
+  --ds-settings-panel-soft: rgba(20, 25, 28, 0.86);
+  --ds-settings-elevated: rgba(30, 36, 39, 0.96);
+  --ds-settings-field: rgba(7, 11, 13, 0.72);
+  --ds-settings-line: rgba(115, 238, 219, 0.16);
+  --ds-settings-line-soft: rgba(255, 255, 255, 0.06);
+  --ds-settings-line-strong: rgba(154, 188, 255, 0.28);
+  --ds-settings-text: rgba(245, 252, 249, 0.94);
+  --ds-settings-muted: rgba(176, 190, 187, 0.68);
+  --ds-settings-dim: rgba(176, 190, 187, 0.48);
+  --ds-settings-accent: #62d8ca;
+  --ds-settings-blue: #6f9dff;
+  --ds-settings-warning: #d6a158;
+  --ds-settings-page-glow-top: rgba(98, 216, 202, 0.045);
+  --ds-settings-page-glow-side: rgba(111, 157, 255, 0.035);
+  --ds-settings-panel-gloss: rgba(255, 255, 255, 0.025);
+  --ds-settings-panel-shadow: 0 14px 36px rgba(0, 0, 0, 0.18);
+  --ds-settings-panel-shadow-strong: 0 14px 36px rgba(0, 0, 0, 0.2);
+  --ds-settings-inset-highlight: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+  --ds-settings-scrollbar-track: rgba(255, 255, 255, 0.04);
+  --ds-settings-scrollbar-thumb: rgba(98, 216, 202, 0.38);
+  --ds-settings-button-subtle-bg: rgba(255, 255, 255, 0.025);
+  --ds-settings-accent-soft: rgba(98, 216, 202, 0.09);
+  --ds-settings-accent-border: rgba(98, 216, 202, 0.48);
+  --ds-settings-accent-text: #62d8ca;
+  --ds-settings-accent-text-strong: #dffffb;
+  --ds-settings-blue-soft: rgba(111, 157, 255, 0.1);
+  --ds-settings-blue-text: #b7caff;
+  --ds-settings-footer-bg: linear-gradient(180deg, rgba(20, 25, 28, 0.72), rgba(20, 25, 28, 0.96)), var(--ds-settings-panel);
+  --ds-settings-footer-shadow: 0 -14px 28px rgba(0, 0, 0, 0.16);
+  --ds-settings-editor-bg: rgba(12, 15, 17, 0.62);
+  --ds-settings-radio-bg: rgba(7, 11, 13, 0.66);
+  --ds-settings-folder-bg: rgba(10, 13, 15, 0.42);
+  --ds-settings-code-bg: rgba(7, 11, 13, 0.7);
+  --ds-settings-code-block-bg: rgba(7, 11, 13, 0.78);
+  --ds-settings-preview-bg: linear-gradient(90deg, rgba(98, 216, 202, 0.07), rgba(111, 157, 255, 0.045)), rgba(7, 11, 13, 0.28);
+  --ds-settings-primary-gradient: linear-gradient(135deg, #62d8ca, #5a8dff);
+  --ds-settings-primary-text: #061012;
+}
+
+.modelServe,
+.aiConfog,
+.modelMap,
+.promptManage,
+.skillManagement,
+.memoryConfig,
+.dbConfig,
+.fileManagement {
+  padding: 16px;
+  background:
+    linear-gradient(180deg, var(--ds-settings-page-glow-top), transparent 240px),
+    linear-gradient(90deg, var(--ds-settings-page-glow-side), transparent 38%),
+    var(--ds-settings-bg);
+}
+
+.aiConfog,
+.modelMap,
+.promptManage,
+.dbConfig,
+.fileManagement {
+  overflow: auto;
+}
+
+.modelServe .t-button--variant-outline,
+.aiConfog .t-button--variant-outline,
+.modelMap .t-button--variant-outline,
+.promptManage .t-button--variant-outline,
+.skillManagement .t-button--variant-outline,
+.memoryConfig .t-button--variant-outline,
+.dbConfig .t-button--variant-outline,
+.fileManagement .t-button--variant-outline {
+  border-color: var(--ds-settings-line-strong);
+  background: var(--ds-settings-button-subtle-bg);
+  color: var(--ds-settings-text);
+
+  &:hover {
+    border-color: var(--ds-settings-accent-border);
+    background: var(--ds-settings-accent-soft);
+    color: var(--ds-settings-accent-text-strong);
+  }
+}
+
+.modelServe .t-button--variant-text,
+.aiConfog .t-button--variant-text,
+.modelMap .t-button--variant-text,
+.promptManage .t-button--variant-text,
+.skillManagement .t-button--variant-text,
+.memoryConfig .t-button--variant-text,
+.dbConfig .t-button--variant-text,
+.fileManagement .t-button--variant-text {
+  border-radius: 6px;
+}
+
+.modelServe .t-tag,
+.aiConfog .t-tag,
+.modelMap .t-tag,
+.promptManage .t-tag,
+.skillManagement .t-tag,
+.memoryConfig .t-tag,
+.dbConfig .t-tag,
+.fileManagement .t-tag {
+  border-radius: 6px;
+  font-weight: 650;
+}
+
+.modelServe {
+  gap: 16px;
+  height: calc(100vh - 88px) !important;
+  min-height: 0;
+  overflow: hidden;
+
+  .modelList {
+    box-sizing: border-box;
+    width: 320px !important;
+    min-width: 320px;
+    height: 100% !important;
+    padding: 12px;
+    border: 1px solid var(--ds-settings-line);
+    border-radius: 8px;
+    background:
+      linear-gradient(180deg, var(--ds-settings-panel-gloss), transparent 140px),
+      var(--ds-settings-panel-soft);
+    box-shadow:
+      var(--ds-settings-inset-highlight),
+      var(--ds-settings-panel-shadow);
+
+    .listFooter {
+      padding: 0 0 12px !important;
+      margin-right: 0 !important;
+    }
+
+    .listContent {
+      height: calc(100% - 48px) !important;
+      padding-right: 4px;
+    }
+  }
+
+  .modelParameter {
+    box-sizing: border-box;
+    min-width: 0;
+    height: 100% !important;
+    overflow: hidden;
+    padding: 18px;
+    border: 1px solid var(--ds-settings-line);
+    border-radius: 8px;
+    background:
+      linear-gradient(180deg, var(--ds-settings-panel-gloss), transparent 180px),
+      var(--ds-settings-panel);
+    box-shadow:
+      var(--ds-settings-inset-highlight),
+      var(--ds-settings-panel-shadow-strong);
+
+    .configuration {
+      height: calc(100% - 58px) !important;
+      padding-right: 8px !important;
+    }
+
+    .updateAction {
+      box-sizing: border-box;
+      min-height: 58px;
+      margin-top: 0 !important;
+      padding-top: 14px;
+      border-top: 1px solid rgba(154, 188, 255, 0.14);
+      background: var(--ds-settings-footer-bg);
+      box-shadow: var(--ds-settings-footer-shadow);
+
+      .t-button {
+        min-width: 96px;
+      }
+    }
+
+    .infoBox {
+      margin-bottom: 14px;
+      padding: 9px 12px;
+      border: 1px solid rgba(154, 188, 255, 0.12);
+      border-radius: 8px;
+      background:
+        linear-gradient(90deg, var(--ds-settings-blue-soft), var(--ds-settings-accent-soft)),
+        var(--ds-settings-button-subtle-bg);
+      color: var(--ds-settings-muted);
+      opacity: 1 !important;
+    }
+
+    .sectionTitle {
+      margin: 0;
+      color: var(--ds-settings-text);
+      font-size: 15px;
+      font-weight: 700;
+    }
+
+    .modelCard {
+      margin-top: 12px !important;
+      border: 1px solid rgba(154, 188, 255, 0.16);
+      background:
+        linear-gradient(180deg, var(--ds-settings-panel-gloss), transparent),
+        var(--ds-settings-elevated);
+      transition:
+        border-color 0.18s ease,
+        transform 0.18s ease,
+        background-color 0.18s ease;
+
+      &:hover {
+        border-color: rgba(98, 216, 202, 0.38);
+        transform: translateY(-1px);
+      }
+
+      .topInfo {
+        margin: 0 !important;
+      }
+
+      .modelCardName {
+        color: var(--ds-settings-text);
+        font-size: 15px !important;
+        font-weight: 700 !important;
+      }
+
+      .actionBtns {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 4px;
+
+        .t-button {
+          padding: 0 6px;
+        }
+      }
+
+      .tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-top: 14px !important;
+
+        & > * {
+          margin: 0 !important;
+        }
+      }
+    }
+
+    .inputHelp {
+      color: var(--ds-settings-dim) !important;
+    }
+  }
+
+  .editorWrapper,
+  .uploadArea {
+    border-color: var(--ds-settings-line) !important;
+    background: var(--ds-settings-editor-bg);
+  }
+}
+
+.modelServe .t-default-menu,
+.modelServe .t-menu {
+  width: 100% !important;
+  background: transparent !important;
+}
+
+.modelServe .t-menu__item {
+  height: 48px;
+  margin-bottom: 6px;
+  padding: 0 56px 0 16px;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  color: var(--ds-settings-muted);
+  transition:
+    color 0.18s ease,
+    background 0.18s ease,
+    border-color 0.18s ease;
+
+  &:hover {
+    border-color: var(--ds-settings-accent-border);
+    background: var(--ds-settings-accent-soft);
+    color: var(--ds-settings-text);
+  }
+}
+
+.modelServe .t-is-active {
+  border-color: var(--ds-settings-accent-border) !important;
+  background:
+    linear-gradient(90deg, var(--ds-settings-accent-soft), var(--ds-settings-blue-soft)) !important;
+  color: var(--ds-settings-accent-text) !important;
+  box-shadow: inset 3px 0 0 var(--ds-settings-accent);
+}
+
+.modelServe .t-switch.t-is-checked .t-switch__content {
+  background: var(--ds-settings-accent);
+}
+
+.modelServe .t-form__label,
+.memoryConfig .t-form__label,
+.aiConfog .t-form__label,
+.modelMap .t-form__label {
+  color: var(--ds-settings-text);
+  font-weight: 650;
+}
+
+.modelServe .t-input,
+.modelServe .t-textarea__inner,
+.modelServe .t-select__wrap,
+.modelMap .t-input,
+.modelMap .t-textarea__inner,
+.memoryConfig .t-input,
+.memoryConfig .t-select__wrap,
+.dbConfig .t-input,
+.dbConfig .t-select__wrap {
+  border-color: rgba(154, 188, 255, 0.2);
+  background: var(--ds-settings-field);
+}
+
+.modelServe .t-input:focus-within,
+.modelServe .t-textarea__inner:focus,
+.modelMap .t-input:focus-within,
+.memoryConfig .t-input:focus-within,
+.dbConfig .t-input:focus-within {
+  border-color: rgba(98, 216, 202, 0.58);
+  box-shadow: 0 0 0 1px rgba(98, 216, 202, 0.18);
+}
+
+.modelServe .t-card,
+.aiConfog .t-card,
+.modelMap .t-card,
+.promptManage .t-card,
+.skillManagement .t-card,
+.memoryConfig .t-card,
+.dbConfig .t-card,
+.fileManagement .t-card {
+  border: 1px solid var(--ds-settings-line);
+  border-radius: 8px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.022), transparent 120px),
+    var(--ds-settings-panel);
+  color: var(--ds-settings-text);
+}
+
+.modelServe .t-card__body,
+.aiConfog .t-card__body,
+.promptManage .t-card__body,
+.dbConfig .t-card__body,
+.fileManagement .t-card__body {
+  color: var(--ds-settings-text);
+}
+
+.modelServe .t-button--theme-primary,
+.memoryConfig .t-button--theme-primary,
+.fileManagement .t-button--theme-primary {
+  border-color: var(--ds-settings-accent-border);
+  background: var(--ds-settings-primary-gradient);
+  color: var(--ds-settings-primary-text);
+  font-weight: 700;
+  box-shadow:
+    0 10px 24px rgba(98, 216, 202, 0.13),
+    inset 0 1px 0 rgba(255, 255, 255, 0.34);
+}
+
+.modelServe .t-tag--theme-primary,
+.aiConfog .t-tag--theme-primary,
+.modelMap .t-tag--theme-primary {
+  border-color: rgba(98, 216, 202, 0.34);
+  background: var(--ds-settings-accent-soft);
+  color: var(--ds-settings-accent-text-strong);
+}
+
+.aiConfog {
+  gap: 14px;
+
+  .modeRadioGroup {
+    margin-bottom: 0 !important;
+  }
+
+  .cardGrid {
+    grid-template-columns: repeat(auto-fill, minmax(360px, 1fr)) !important;
+    gap: 14px !important;
+    margin-top: 0 !important;
+  }
+
+  .skillCard {
+    min-height: 126px;
+    padding: 8px !important;
+    border-color: rgba(154, 188, 255, 0.16);
+    background:
+      linear-gradient(135deg, var(--ds-settings-accent-soft), transparent 44%),
+      var(--ds-settings-elevated);
+    transition:
+      border-color 0.18s ease,
+      transform 0.18s ease;
+
+    &:hover {
+      border-color: rgba(98, 216, 202, 0.44);
+      transform: translateY(-1px);
+    }
+  }
+
+  .skillName {
+    color: var(--ds-settings-text);
+    font-weight: 750 !important;
+    letter-spacing: 0;
+  }
+
+  .skillCardBody {
+    margin-top: 12px;
+    color: var(--ds-settings-muted) !important;
+    line-height: 1.7 !important;
+  }
+
+  .fallbackAvatar {
+    background: var(--ds-settings-accent-soft) !important;
+    color: var(--ds-settings-accent-text-strong) !important;
+  }
+}
+
+.aiConfog .t-radio-group.t-radio-group__outline {
+  border: 1px solid var(--ds-settings-line);
+  background: var(--ds-settings-radio-bg);
+}
+
+.aiConfog .t-radio-group {
+  padding: 3px;
+  border: 1px solid var(--ds-settings-line);
+  border-radius: 999px;
+  background: var(--ds-settings-radio-bg);
+}
+
+.aiConfog .t-radio {
+  border-radius: 999px;
+}
+
+.modelMap,
+.promptManage {
+  padding: 16px;
+}
+
+.modelMap {
+  .t-collapse {
+    overflow: hidden;
+    border: 1px solid var(--ds-settings-line);
+    border-radius: 8px;
+    background: var(--ds-settings-panel);
+  }
+
+  .t-collapse-panel__header {
+    border-bottom-color: var(--ds-settings-line-soft);
+    background: linear-gradient(90deg, var(--ds-settings-accent-soft), var(--ds-settings-blue-soft));
+    color: var(--ds-settings-text);
+    font-weight: 750;
+  }
+
+  .t-table {
+    overflow: hidden;
+    border: 1px solid var(--ds-settings-line);
+    border-radius: 8px;
+    background: var(--ds-settings-panel);
+  }
+
+  .t-table__header th {
+    background: var(--ds-settings-accent-soft);
+    color: var(--ds-settings-text);
+  }
+
+  .t-table__body tr {
+    background: transparent;
+  }
+
+  .t-table__body tr:hover {
+    background: var(--ds-settings-accent-soft);
+  }
+
+  .type span {
+    display: inline-flex;
+    align-items: center;
+    height: 24px;
+    padding: 0 8px;
+    border: 1px solid var(--ds-settings-accent-border);
+    border-radius: 6px;
+    background: var(--ds-settings-accent-soft);
+    color: var(--ds-settings-accent-text-strong);
+    font-size: 12px;
+    font-weight: 700;
+  }
+
+  .prompt-select {
+    padding: 14px;
+    border: 1px solid var(--ds-settings-line);
+    border-radius: 8px;
+    background: var(--ds-settings-panel);
+  }
+}
+
+.promptManage {
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)) !important;
+  align-content: start;
+
+  .t-card {
+    position: relative;
+    min-height: 128px;
+    overflow: hidden;
+    transition:
+      border-color 0.18s ease,
+      transform 0.18s ease;
+
+    &::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 3px;
+      height: 100%;
+      background: linear-gradient(180deg, var(--ds-settings-accent), var(--ds-settings-blue));
+      opacity: 0.72;
+    }
+
+    &:hover {
+      border-color: rgba(98, 216, 202, 0.42);
+      transform: translateY(-1px);
+    }
+  }
+
+  .data {
+    .name {
+      color: var(--ds-settings-text);
+      font-weight: 750 !important;
+    }
+
+    .type {
+      display: inline-flex;
+      align-items: center;
+      height: 24px;
+      padding: 0 8px;
+      border: 1px solid var(--ds-settings-line-strong);
+      border-radius: 6px;
+      background: var(--ds-settings-blue-soft);
+      color: var(--ds-settings-blue-text) !important;
+      font-size: 12px !important;
+      font-weight: 750;
+    }
+
+    .data {
+      color: var(--ds-settings-muted) !important;
+      line-height: 1.6;
+    }
+  }
+}
+
+.skillManagement {
+  overflow: hidden;
+
+  .sidebarPanel,
+  .viewPanel {
+    min-height: 0;
+    border-color: var(--ds-settings-line) !important;
+    background:
+      linear-gradient(180deg, var(--ds-settings-panel-gloss), transparent 140px),
+      var(--ds-settings-panel);
+    box-shadow: var(--ds-settings-inset-highlight);
+  }
+
+  .viewHeader {
+    border-bottom-color: var(--ds-settings-line) !important;
+    background: var(--ds-settings-accent-soft);
+  }
+
+  .fileName {
+    color: var(--ds-settings-text);
+  }
+
+  .previewWrap {
+    background: var(--ds-settings-editor-bg);
+  }
+
+  .t-tree__item {
+    border-radius: 6px;
+    color: var(--ds-settings-muted);
+  }
+
+  .t-tree__item:hover {
+    background: var(--ds-settings-accent-soft);
+    color: var(--ds-settings-text);
+  }
+
+  .t-is-active {
+    background: var(--ds-settings-accent-soft) !important;
+    color: var(--ds-settings-accent-text-strong) !important;
+  }
+}
+
+.memoryConfig {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+
+  .topAlert {
+    flex: 0 0 auto;
+  }
+
+  .memoryForm {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow: auto;
+    padding-right: 4px;
+  }
+
+  .t-alert {
+    border-color: rgba(214, 161, 88, 0.32);
+    background: rgba(214, 161, 88, 0.11);
+  }
+
+  .t-card__header {
+    border-bottom: 1px solid var(--ds-settings-line);
+    color: var(--ds-settings-text);
+    font-weight: 750;
+  }
+
+  .actionRow {
+    padding: 14px 0 0;
+    gap: 10px;
+  }
+}
+
+.dbConfig {
+  .actionItem {
+    position: relative;
+    overflow: hidden;
+    border-color: rgba(154, 188, 255, 0.16);
+    background:
+      linear-gradient(90deg, var(--ds-settings-accent-soft), transparent 42%),
+      var(--ds-settings-panel);
+
+    &::before {
+      content: "";
+      position: absolute;
+      top: 18px;
+      bottom: 18px;
+      left: 0;
+      width: 3px;
+      border-radius: 0 4px 4px 0;
+      background: linear-gradient(180deg, var(--ds-settings-accent), var(--ds-settings-blue));
+    }
+
+    .actionInfo {
+      h4 {
+        color: var(--ds-settings-text);
+        font-size: 15px !important;
+        font-weight: 750 !important;
+      }
+
+      p {
+        color: var(--ds-settings-muted);
+        line-height: 1.6;
+      }
+    }
+  }
+}
+
+.fileManagement {
+  .folderList {
+    gap: 10px !important;
+  }
+
+  .folderItem {
+    border-color: var(--ds-settings-line) !important;
+    border-radius: 8px !important;
+    background: var(--ds-settings-folder-bg);
+    transition:
+      border-color 0.18s ease,
+      background 0.18s ease;
+
+    &:hover {
+      border-color: rgba(98, 216, 202, 0.38) !important;
+      background: var(--ds-settings-accent-soft);
+    }
+  }
+
+  .folderName {
+    color: var(--ds-settings-text) !important;
+  }
+
+  .folderDesc {
+    color: var(--ds-settings-muted) !important;
+  }
+
+  .t-empty {
+    padding-top: 12px;
+    color: var(--ds-settings-muted);
+  }
+
+  .t-empty__image {
+    color: rgba(227, 77, 89, 0.9);
+    filter: drop-shadow(0 0 12px rgba(227, 77, 89, 0.16));
+  }
+}
+
+.modelServe .md-editor,
+.modelServe .md-editor-dark,
+.modelMap .md-editor,
+.modelMap .md-editor-dark,
+.promptManage .md-editor,
+.promptManage .md-editor-dark,
+.skillManagement .md-editor,
+.skillManagement .md-editor-dark {
+  --md-theme-color: var(--ds-settings-text);
+  --md-theme-link-color: var(--ds-settings-blue-text);
+  --md-theme-bg-color: transparent;
+  --md-theme-border-color: var(--ds-settings-line);
+  --md-theme-code-bg-color: var(--ds-settings-code-bg);
+  --md-theme-code-block-bg-color: var(--ds-settings-code-block-bg);
+  --md-theme-table-border-color: var(--ds-settings-line);
+  --md-theme-table-thead-bg-color: var(--ds-settings-accent-soft);
+  border-color: var(--ds-settings-line) !important;
+  background: transparent !important;
+  color: var(--ds-settings-text);
+}
+
+.modelServe .md-editor-preview-wrapper,
+.modelMap .md-editor-preview-wrapper,
+.promptManage .md-editor-preview-wrapper,
+.skillManagement .md-editor-preview-wrapper {
+  background: transparent !important;
+}
+
+.modelServe .md-editor-preview,
+.modelMap .md-editor-preview,
+.promptManage .md-editor-preview,
+.skillManagement .md-editor-preview {
+  color: var(--ds-settings-muted);
+  line-height: 1.72;
+
+  a {
+    color: var(--ds-settings-blue-text);
+  }
+
+  p {
+    margin: 0 0 6px;
+  }
+}
+
+.modelServe .md-editor-preview {
+  padding: 12px 14px !important;
+  border: 1px solid rgba(154, 188, 255, 0.14);
+  border-radius: 8px;
+  background: var(--ds-settings-preview-bg);
+}
+
+@media (max-width: 1200px) {
+  .modelServe {
+    .modelList {
+      width: 280px !important;
+      min-width: 280px;
+    }
+  }
+}

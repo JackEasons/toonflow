@@ -1,5 +1,6 @@
 import { createApp, watchEffect } from 'vue';
 
+import { install as installIconPark } from '@icon-park/vue-next/es/all';
 import { registerAccessDirective } from '@super/access';
 import { registerLoadingDirective } from '@super/common-ui/es/loading';
 import { preferences } from '@super/preferences';
@@ -11,13 +12,17 @@ import '@super/styles';
 import { useTitle } from '@vueuse/core';
 
 import { $t, setupI18n } from '#/locales';
+import { setupSettingsCompat } from '#/settings/compat';
 
 import { initComponentAdapter } from './adapter/component';
 import { initSetupSuperForm } from './adapter/form';
 import App from './app.vue';
 import { router } from './router';
 
+import '@icon-park/vue-next/styles/index.css';
+import 'md-editor-v3/lib/style.css';
 import 'tdesign-vue-next/es/style/index.css';
+import '#/styles/settings-admin.scss';
 
 async function bootstrap(namespace: string) {
   // 初始化组件适配器
@@ -36,6 +41,9 @@ async function bootstrap(namespace: string) {
   // });
 
   const app = createApp(App);
+  const { default: TDesign } = await import('tdesign-vue-next');
+  app.use(TDesign);
+  installIconPark(app, 'i');
 
   // 注册v-loading指令
   registerLoadingDirective(app, {
@@ -45,6 +53,7 @@ async function bootstrap(namespace: string) {
 
   // 国际化 i18n 配置
   await setupI18n(app);
+  setupSettingsCompat(app);
 
   // 配置 pinia-tore
   await initStores(app, { namespace });

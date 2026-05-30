@@ -35,3 +35,4 @@ const resetRoutes = () => resetStaticRoutes(router, routes);
 createRouterGuard(router);
 
 export { resetRoutes, router };
+export default router;

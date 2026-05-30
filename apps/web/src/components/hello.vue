@@ -104,7 +104,7 @@ import { useI18n } from "vue-i18n";
 import JSConfetti from "js-confetti";
 import settingStore from "#/stores/setting";
 import { languageList, cachedLocale } from "#/locales";
-const { showSetting, activeMenu, isElectron } = storeToRefs(settingStore());
+const { isElectron } = storeToRefs(settingStore());
 
 const { locale } = useI18n();
 const langOptions = languageList.map((item) => ({
@@ -121,13 +121,11 @@ const show = ref(!guideDone.value);
 const currentStep = ref(0);
 
 function openVendorConfig() {
-  activeMenu.value = "vendorConfig";
-  showSetting.value = true;
+  window.$message.info($t("hello.adminManagedModel"));
 }
 
 function openAgentConfig() {
-  activeMenu.value = "agentConfog";
-  showSetting.value = true;
+  window.$message.info($t("hello.adminManagedAgent"));
 }
 
 function handleSkip() {

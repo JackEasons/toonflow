@@ -47,6 +47,12 @@ const formSchema = computed((): SuperFormSchema[] => {
 <template>
   <AuthenticationLogin
     :form-schema="formSchema"
+    :show-code-login="false"
+    :show-forget-password="false"
+    :show-qrcode-login="false"
+    :show-register="false"
+    :show-remember-me="true"
+    :show-third-party-login="false"
     :loading="authStore.loginLoading"
     @submit="authStore.authLogin"
   />

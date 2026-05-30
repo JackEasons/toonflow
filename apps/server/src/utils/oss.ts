@@ -107,6 +107,18 @@ type MinioRequestOptions = {
   query?: Record<string, string | undefined>;
 };
 
+export type OssEntry = {
+  key: string;
+  lastModified: string;
+  size: number | null;
+  type: 'directory' | 'file';
+};
+
+function parseXmlTag(source: string, tag: string): string | null {
+  const match = source.match(new RegExp(`<${tag}>([\\s\\S]*?)<\\/${tag}>`));
+  return match ? decodeXml(match[1]) : null;
+}
+
 class MinioStorage {
   private bucketReady?: Promise<void>;
 
@@ -332,6 +344,62 @@ class MinioStorage {
     return Buffer.from(await response.arrayBuffer());
   }
 
+  async listDirectory(userRelPath: string): Promise<OssEntry[]> {
+    await this.ensureBucket();
+    const directory = normalizeObjectKey(userRelPath);
+    const prefix = directory ? `${directory.replace(/\/+$/, '')}/` : '';
+    const entries = new Map<string, OssEntry>();
+
+    let continuationToken: string | undefined;
+    do {
+      const response = await this.request('GET', '', {
+        query: {
+          delimiter: '/',
+          'continuation-token': continuationToken,
+          'list-type': '2',
+          prefix,
+        },
+      });
+      const xml = await response.text();
+
+      for (const match of xml.matchAll(
+        /<CommonPrefixes>[\s\S]*?<Prefix>([\s\S]*?)<\/Prefix>[\s\S]*?<\/CommonPrefixes>/g,
+      )) {
+        const key = decodeXml(match[1]).replace(/\/+$/, '');
+        if (key && key !== directory) {
+          entries.set(key, {
+            key,
+            lastModified: '',
+            size: null,
+            type: 'directory',
+          });
+        }
+      }
+
+      for (const match of xml.matchAll(/<Contents>([\s\S]*?)<\/Contents>/g)) {
+        const block = match[1];
+        const key = parseXmlTag(block, 'Key');
+        if (!key || key === prefix || key.endsWith('/.keep')) continue;
+        entries.set(key, {
+          key,
+          lastModified: parseXmlTag(block, 'LastModified') ?? '',
+          size: Number(parseXmlTag(block, 'Size') ?? 0),
+          type: 'file',
+        });
+      }
+
+      const tokenMatch = xml.match(
+        /<NextContinuationToken>([\s\S]*?)<\/NextContinuationToken>/,
+      );
+      continuationToken = tokenMatch ? decodeXml(tokenMatch[1]) : undefined;
+    } while (continuationToken);
+
+    return [...entries.values()].sort((a, b) => {
+      if (a.type !== b.type) return a.type === 'directory' ? -1 : 1;
+      return a.key.localeCompare(b.key, 'zh-Hans-CN');
+    });
+  }
+
   async writeFile(userRelPath: string, data: Buffer): Promise<void> {
     await this.ensureBucket();
     await this.request('PUT', userRelPath, {
@@ -472,6 +540,11 @@ class OSS {
     }
 
     return this.readLocalFile(userRelPath);
+  }
+
+  async listDirectory(userRelPath: string): Promise<OssEntry[]> {
+    if (!this.minio) throw new Error('当前未启用远程 OSS');
+    return this.minio.listDirectory(userRelPath);
   }
 
   /**

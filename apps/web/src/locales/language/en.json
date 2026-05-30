@@ -39,7 +39,9 @@
       "msg": {
         "fetchModelFailed": "Failed to fetch model data:"
       },
-      "goSetting": "Go to settings and add a model"
+      "goSetting": "Go to settings and add a model",
+      "contactAdmin": "Contact admin to configure models",
+      "contactAdminMessage": "Model providers are managed in the admin console"
     }
   },
   "settings": {
@@ -1596,10 +1598,12 @@
     "configModelDesc": "First, you need to add at least one AI model service provider (such as OpenAI, Claude, etc.) in the settings and fill in the corresponding API Key.",
     "configModelTip": "Clicking the button below will open the \"Model Service\" tab of the settings page. After adding the supplier, return here to continue.",
     "configModelBtn": "Go to configure model service",
+    "adminManagedModel": "Model providers are managed by an admin",
     "configAgentTitle": "Assign Agent Model",
     "configAgentDesc": "Next, assign models to each functional module in the Agent configuration so that the system knows which model to call to complete the task.",
     "configAgentTip": "Clicking the button below will open the \"Agent Configuration\" tab of the settings page. Return here after assigning models to each function.",
     "configAgentBtn": "Go to configure Agent",
+    "adminManagedAgent": "Agent models are managed by an admin",
     "finishTitle": "🎉 Everything is ready!",
     "finishDesc": "The configuration is complete and now you can start using all the features. \nIf you need to adjust it, you can modify it in the settings at any time.",
     "qrcodeLabel": "Join the WeChat communication group to get more help:",

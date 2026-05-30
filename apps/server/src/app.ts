@@ -14,6 +14,7 @@ import u from "@/utils";
 import jwt from "jsonwebtoken";
 import socketInit from "@/socket/index";
 import { dbReady } from "@/utils/db";
+import { isAdminRequest } from "@/utils/admin";
 
 const app = express();
 const server = http.createServer(app);
@@ -116,6 +117,23 @@ export default async function startServe(randomPort: boolean = false) {
     } catch (err) {
       return res.status(401).send({ message: "无效的token" });
     }
+  });
+
+  const adminSettingPrefixes = [
+    "/api/setting/vendorConfig",
+    "/api/setting/modelMap",
+    "/api/setting/agentDeploy",
+    "/api/setting/promptManage",
+    "/api/setting/skillManagement",
+    "/api/setting/memoryConfig",
+    "/api/setting/dbConfig",
+    "/api/setting/fileManagement",
+  ];
+  app.use((req, res, next) => {
+    if (adminSettingPrefixes.some((prefix) => req.path.startsWith(prefix)) && !isAdminRequest(req)) {
+      return res.status(403).send({ message: "配置仅管理员可访问" });
+    }
+    next();
   });
 
   const router = await import("@/router");

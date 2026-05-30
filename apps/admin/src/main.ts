@@ -1,4 +1,4 @@
-import { initPreferences } from '@super/preferences';
+import { initPreferences, updatePreferences } from '@super/preferences';
 import { unmountGlobalLoading } from '@super/utils';
 
 import { overridesPreferences } from './preferences';
@@ -18,6 +18,14 @@ async function initApplication() {
     namespace,
     overrides: overridesPreferences,
   });
+  const appTitle = import.meta.env.VITE_APP_TITLE;
+  if (appTitle) {
+    updatePreferences({
+      app: {
+        name: appTitle,
+      },
+    });
+  }
 
   // 启动应用并挂载
   // vue应用主要逻辑及视图

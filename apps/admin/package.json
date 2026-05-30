@@ -13,6 +13,7 @@
     "#/*": "./src/*"
   },
   "dependencies": {
+    "@icon-park/vue-next": "catalog:",
     "@super/access": "workspace:*",
     "@super/common-ui": "workspace:*",
     "@super/constants": "workspace:*",
@@ -29,8 +30,11 @@
     "@super/types": "workspace:*",
     "@super/utils": "workspace:*",
     "@vueuse/core": "catalog:",
+    "axios": "catalog:",
     "dayjs": "catalog:",
     "es-toolkit": "catalog:",
+    "md-editor-v3": "catalog:",
+    "monaco-editor-vue3": "catalog:",
     "pinia": "catalog:",
     "tdesign-vue-next": "catalog:",
     "vue": "catalog:",

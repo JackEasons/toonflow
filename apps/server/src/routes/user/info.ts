@@ -1,6 +1,7 @@
 import express from "express";
 import u from "@/utils";
 import { success, error } from "@/lib/responseFormat";
+import { isAdminUser } from "@/utils/admin";
 
 const router = express.Router();
 
@@ -16,7 +17,7 @@ export default router.get("/", async (req, res) => {
       avatar: "",
       homePath: "/analytics",
       realName: user.name,
-      roles: ["admin"],
+      roles: isAdminUser(user) ? ["admin"] : ["user"],
       userId: String(user.id),
       username: user.name,
     }),
