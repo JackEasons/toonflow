@@ -14,7 +14,7 @@ import {
   updatePreferences,
   usePreferences,
 } from '@super/preferences';
-import { useAccessStore, useTabbarStore, useTimezoneStore } from '@super/stores';
+import { useAccessStore, useTabbarStore/*, useTimezoneStore */ } from '@super/stores';
 import { cloneDeep, mapTree } from '@super/utils';
 
 import { SuperAdminLayout } from '@super-core/layout-ui';
@@ -53,7 +53,7 @@ const {
   theme,
 } = usePreferences();
 const accessStore = useAccessStore();
-const timezoneStore = useTimezoneStore();
+// const timezoneStore = useTimezoneStore();
 const { refresh } = useRefresh();
 
 const sidebarTheme = computed(() => {
@@ -215,7 +215,7 @@ function refreshAll() {
 watch(i18n.global.locale, refreshAll, { flush: 'post' });
 
 // 时区更新后，刷新页面
-watch(() => timezoneStore.timezone, refreshAll, { flush: 'post' });
+// watch(() => timezoneStore.timezone, refreshAll, { flush: 'post' });
 
 const slots: SetupContext['slots'] = useSlots();
 const headerSlots = computed(() => {
@@ -334,9 +334,9 @@ const headerSlots = computed(() => {
         <template #notification>
           <slot name="notification"></slot>
         </template>
-        <template #timezone>
+        <!-- <template #timezone>
           <slot name="timezone"></slot>
-        </template>
+        </template> -->
         <template v-for="item in headerSlots" #[item]>
           <slot :name="item"></slot>
         </template>

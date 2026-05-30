@@ -18,6 +18,10 @@ export default async (knex: Knex, forceInit: boolean = false): Promise<void> => 
         table.bigIncrements("id");
         table.text("name");
         table.text("password");
+        table.text("realName");
+        table.text("avatar");
+        table.text("introduction");
+        table.text("notificationSettings");
       },
       initData: async (knex) => {
         await knex("o_user").insert([{ id: 1, name: "admin", password: await hashPassword("admin123") }]);

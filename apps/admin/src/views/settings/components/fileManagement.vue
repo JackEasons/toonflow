@@ -373,6 +373,9 @@ onMounted(() => fetchList(""));
 
 <style lang="scss" scoped>
 .fileManagement {
+  --file-hover-bg: linear-gradient(90deg, var(--ds-settings-accent-soft), var(--ds-settings-blue-soft)), var(--ds-settings-panel-soft);
+  --file-active-bg: linear-gradient(90deg, rgba(98, 216, 202, 0.18), rgba(111, 157, 255, 0.12)), var(--ds-settings-panel-soft);
+
   display: flex;
   flex-direction: column;
   gap: 12px;
@@ -463,20 +466,30 @@ onMounted(() => fetchList(""));
   padding: 10px;
   text-align: left;
   color: var(--td-text-color-primary);
-  background: transparent;
+  background: var(--ds-settings-folder-bg);
   border: 1px solid var(--td-component-border);
   border-radius: 8px;
   cursor: pointer;
+  transition:
+    border-color 0.18s ease,
+    background 0.18s ease,
+    color 0.18s ease;
 
   .t-icon {
     grid-row: span 2;
     margin-top: 2px;
+    color: var(--ds-settings-text);
   }
 
   &.active,
   &:hover {
     border-color: var(--td-brand-color);
-    background: var(--td-bg-color-container-hover);
+    background: var(--file-hover-bg);
+    color: var(--ds-settings-text);
+  }
+
+  &.active {
+    background: var(--file-active-bg);
   }
 }
 
@@ -484,6 +497,7 @@ onMounted(() => fetchList(""));
   overflow: hidden;
   font-size: 13px;
   font-weight: 600;
+  color: var(--ds-settings-text);
   text-overflow: ellipsis;
   white-space: nowrap;
 }
@@ -494,6 +508,11 @@ onMounted(() => fetchList(""));
   color: var(--td-text-color-secondary);
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+.quickPath.active .quickDesc,
+.quickPath:hover .quickDesc {
+  color: var(--ds-settings-muted);
 }
 
 .filePanel {
@@ -520,6 +539,21 @@ onMounted(() => fetchList(""));
 
 .fileTable :deep(.t-table__content) {
   overflow: auto;
+}
+
+.fileTable :deep(.t-table__body tr:hover),
+.fileTable :deep(.t-table__body tr:hover > td),
+.fileTable :deep(.t-table__body tr.t-table__row--hover),
+.fileTable :deep(.t-table__body tr.t-table__row--hover > td) {
+  background: var(--file-hover-bg) !important;
+  color: var(--ds-settings-text) !important;
+}
+
+.fileTable :deep(.t-table__body tr:hover .t-button--variant-text),
+.fileTable :deep(.t-table__body tr.t-table__row--hover .t-button--variant-text),
+.fileTable :deep(.t-table__body tr:hover .nameButton),
+.fileTable :deep(.t-table__body tr.t-table__row--hover .nameButton) {
+  color: var(--ds-settings-text) !important;
 }
 
 .nameButton {

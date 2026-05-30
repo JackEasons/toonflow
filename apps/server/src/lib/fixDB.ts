@@ -78,6 +78,10 @@ export default async (knex: Knex): Promise<void> => {
   await addColumn("o_video", "prompt", "text");
   await addColumn("o_video", "negativePrompt", "text");
   await addColumn("o_videoTrack", "negativePrompt", "text");
+  await addColumn("o_user", "realName", "text");
+  await addColumn("o_user", "avatar", "text");
+  await addColumn("o_user", "introduction", "text");
+  await addColumn("o_user", "notificationSettings", "text");
   if (isMysql(knex)) await alterColumnType("memories", "role", "text");
   if (isMysql(knex)) await alterColumnType("o_tasks", "relatedObjects", "text");
 

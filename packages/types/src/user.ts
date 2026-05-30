@@ -1,20 +1,34 @@
 import type { BasicUserInfo } from '@super-core/typings';
 
 /** 用户信息 */
+interface NotificationSettings {
+  accountPassword: boolean;
+  systemMessage: boolean;
+  todoTask: boolean;
+}
+
 interface UserInfo extends BasicUserInfo {
   /**
    * 用户描述
    */
-  desc: string;
+  desc?: string;
   /**
    * 首页地址
    */
   homePath: string;
+  /**
+   * 个人简介
+   */
+  introduction?: string;
+  /**
+   * 新消息提醒设置
+   */
+  notificationSettings?: NotificationSettings;
 
   /**
    * accessToken
    */
-  token: string;
+  token?: string;
 }
 
-export type { UserInfo };
+export type { NotificationSettings, UserInfo };

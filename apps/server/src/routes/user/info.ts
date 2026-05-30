@@ -1,7 +1,7 @@
 import express from "express";
 import u from "@/utils";
 import { success, error } from "@/lib/responseFormat";
-import { isAdminUser } from "@/utils/admin";
+import { buildUserInfo } from "@/utils/userProfile";
 
 const router = express.Router();
 
@@ -12,14 +12,5 @@ export default router.get("/", async (req, res) => {
   const user = await u.db("o_user").where("id", tokenUser.id).first();
   if (!user) return res.status(401).send(error("用户不存在"));
 
-  res.status(200).send(
-    success({
-      avatar: "",
-      homePath: "/analytics",
-      realName: user.name,
-      roles: isAdminUser(user) ? ["admin"] : ["user"],
-      userId: String(user.id),
-      username: user.name,
-    }),
-  );
+  res.status(200).send(success(buildUserInfo(user)));
 });

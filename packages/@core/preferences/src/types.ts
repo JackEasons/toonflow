@@ -374,7 +374,7 @@ interface WidgetPreferences {
   /** 是否显示主题切换部件 */
   themeToggle: boolean;
   /** 是否显示时区部件 */
-  timezone: boolean;
+  // timezone: boolean;
 }
 
 interface Preferences {

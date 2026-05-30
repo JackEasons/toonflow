@@ -307,6 +307,10 @@ CREATE TABLE `o_user` (
   `id` BIGINT UNSIGNED AUTO_INCREMENT NOT NULL,
   `name` LONGTEXT,
   `password` LONGTEXT,
+  `realName` LONGTEXT,
+  `avatar` LONGTEXT,
+  `introduction` LONGTEXT,
+  `notificationSettings` LONGTEXT,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 

@@ -13,7 +13,7 @@ import {
   LanguageToggle,
   PreferencesButton,
   ThemeToggle,
-  TimezoneButton,
+  // TimezoneButton,
 } from '../../widgets';
 
 interface Props {
@@ -73,12 +73,12 @@ const rightSlots = computed(() => {
         name: 'language-toggle',
       });
     }
-    if (preferences.widget.timezone) {
-      list.push({
-        index: REFERENCE_VALUE + 40,
-        name: 'timezone',
-      });
-    }
+    // if (preferences.widget.timezone) {
+    //   list.push({
+    //     index: REFERENCE_VALUE + 40,
+    //     name: 'timezone',
+    //   });
+    // }
   }
   // 全屏
   if (preferences.widget.fullscreen) {
