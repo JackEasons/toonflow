@@ -26,13 +26,12 @@ async function viteLicensePlugin(
         const copyrightText = `/*!
   * Super Admin
   * Version: ${version}
-  * Author: super
-  * Copyright (C) 2024 Super
-  * License: MIT License
+  * Author: Steven
+  * Copyright (C) 2024 Steven
   * Description: ${description}
   * Date Created: ${date}
   * Homepage: ${homepage}
-  * Contact: ann.super@gmail.com
+  * Contact: easonsjack@gmail.com
 */
               `.trim();
 

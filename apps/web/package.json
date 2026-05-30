@@ -34,6 +34,7 @@
     "dayjs": "catalog:",
     "es-toolkit": "catalog:",
     "js-confetti": "catalog:",
+    "jszip": "3.10.1",
     "lodash": "catalog:",
     "mammoth": "catalog:",
     "md-editor-v3": "catalog:",

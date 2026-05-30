@@ -1,16 +1,42 @@
-import isPathInside from "is-path-inside";
-import getPath from "@/utils/getPath";
-import fs from "node:fs/promises";
-import path from "node:path";
-import sharp from "sharp";
+import isPathInside from 'is-path-inside';
+import getPath from '@/utils/getPath';
+import crypto from 'node:crypto';
+import fs from 'node:fs/promises';
+import path from 'node:path';
+import sharp from 'sharp';
+
+const MIME_TYPES: Record<string, string> = {
+  '.bmp': 'image/bmp',
+  '.gif': 'image/gif',
+  '.ico': 'image/x-icon',
+  '.jpeg': 'image/jpeg',
+  '.jpg': 'image/jpeg',
+  '.mp3': 'audio/mpeg',
+  '.mp4': 'video/mp4',
+  '.png': 'image/png',
+  '.svg': 'image/svg+xml',
+  '.tif': 'image/tiff',
+  '.tiff': 'image/tiff',
+  '.webp': 'image/webp',
+};
 
 // 规范化路径：去除前导斜杠，并将路径分隔符统一转换为系统分隔符
 function normalizeUserPath(userPath: string): string {
   // 去除前导的 / 或 \
-  const trimmedPath = userPath.replace(/^[/\\]+/, "");
+  const trimmedPath = userPath.replace(/^[/\\]+/, '');
   // 将所有 / 替换为系统路径分隔符（path.sep）
   // 这样在 Windows 上会转为 \，在 Unix 上保持 /
-  return trimmedPath.split("/").join(path.sep);
+  return trimmedPath.split('/').join(path.sep);
+}
+
+function normalizeObjectKey(userPath: string): string {
+  const trimmedPath = userPath.replace(/^[/\\]+/, '').replaceAll('\\', '/');
+  const normalized = path.posix.normalize(trimmedPath);
+  if (normalized === '.') return '';
+  if (normalized === '..' || normalized.startsWith('../')) {
+    throw new Error(`${userPath} 不在 OSS 根目录内`);
+  }
+  return normalized;
 }
 
 // 校验路径
@@ -23,14 +49,341 @@ function resolveSafeLocalPath(userPath: string, rootDir: string): string {
   return absPath;
 }
 
+function getMimeType(userPath: string): string | undefined {
+  return MIME_TYPES[path.extname(userPath).toLowerCase()];
+}
+
+function decodeBase64Data(data: Buffer | string): Buffer {
+  // 如果 data 是 string，则视为 base64 编码，先解码再写入
+  // 自动去除可能存在的 Data URL 前缀（如 "data:image/png;base64,"）
+  return typeof data === 'string'
+    ? Buffer.from(data.replace(/^data:[^;]+;base64,/, ''), 'base64')
+    : data;
+}
+
+function isTruthyEnv(value: string | undefined, defaultValue = false): boolean {
+  if (value === undefined || value === '') return defaultValue;
+  return ['1', 'true', 'yes', 'on'].includes(value.toLowerCase());
+}
+
+function encodeRfc3986(value: string): string {
+  return encodeURIComponent(value).replace(
+    /[!'()*]/g,
+    (char) => `%${char.charCodeAt(0).toString(16).toUpperCase()}`,
+  );
+}
+
+function decodeXml(value: string): string {
+  return value
+    .replace(/&apos;/g, "'")
+    .replace(/&quot;/g, '"')
+    .replace(/&gt;/g, '>')
+    .replace(/&lt;/g, '<')
+    .replace(/&amp;/g, '&');
+}
+
+type MinioConfig = {
+  accessKey: string;
+  bucket: string;
+  endpoint: URL;
+  forcePathStyle: boolean;
+  region: string;
+  secretKey: string;
+};
+
+class MinioRequestError extends Error {
+  status: number;
+
+  constructor(status: number, message: string) {
+    super(message);
+    this.name = 'MinioRequestError';
+    this.status = status;
+  }
+}
+
+type MinioRequestOptions = {
+  body?: Buffer;
+  headers?: Record<string, string | undefined>;
+  query?: Record<string, string | undefined>;
+};
+
+class MinioStorage {
+  private bucketReady?: Promise<void>;
+
+  constructor(private readonly config: MinioConfig) {}
+
+  get description(): string {
+    return `${this.config.endpoint.origin}/${this.config.bucket}`;
+  }
+
+  private buildHost(): string {
+    if (this.config.forcePathStyle) return this.config.endpoint.host;
+    const port = this.config.endpoint.port
+      ? `:${this.config.endpoint.port}`
+      : '';
+    return `${this.config.bucket}.${this.config.endpoint.hostname}${port}`;
+  }
+
+  private buildCanonicalUri(key: string): string {
+    const segments = this.config.endpoint.pathname.split('/').filter(Boolean);
+
+    if (this.config.forcePathStyle) segments.push(this.config.bucket);
+    if (key) segments.push(...key.split('/').filter(Boolean));
+
+    return `/${segments.map(encodeRfc3986).join('/')}`;
+  }
+
+  private buildRequestUrl(
+    canonicalUri: string,
+    canonicalQuery: string,
+  ): string {
+    const host = this.buildHost();
+    return `${this.config.endpoint.protocol}//${host}${canonicalUri}${canonicalQuery ? `?${canonicalQuery}` : ''}`;
+  }
+
+  private buildCanonicalQuery(
+    query: Record<string, string | undefined> = {},
+  ): string {
+    return Object.entries(query)
+      .filter((entry): entry is [string, string] => entry[1] !== undefined)
+      .map(
+        ([key, value]) => [encodeRfc3986(key), encodeRfc3986(value)] as const,
+      )
+      .sort(
+        ([leftKey, leftValue], [rightKey, rightValue]) =>
+          leftKey.localeCompare(rightKey) ||
+          leftValue.localeCompare(rightValue),
+      )
+      .map(([key, value]) => `${key}=${value}`)
+      .join('&');
+  }
+
+  private sha256(data: Buffer | string): string {
+    return crypto.createHash('sha256').update(data).digest('hex');
+  }
+
+  private hmac(key: Buffer | string, data: string): Buffer {
+    return crypto.createHmac('sha256', key).update(data).digest();
+  }
+
+  private signingKey(dateStamp: string): Buffer {
+    const dateKey = this.hmac(`AWS4${this.config.secretKey}`, dateStamp);
+    const dateRegionKey = this.hmac(dateKey, this.config.region);
+    const dateRegionServiceKey = this.hmac(dateRegionKey, 's3');
+    return this.hmac(dateRegionServiceKey, 'aws4_request');
+  }
+
+  private toAmzDates(date: Date): { amzDate: string; dateStamp: string } {
+    const iso = date
+      .toISOString()
+      .replaceAll('-', '')
+      .replaceAll(':', '')
+      .replace(/\.\d{3}Z$/, 'Z');
+    return {
+      amzDate: iso,
+      dateStamp: iso.slice(0, 8),
+    };
+  }
+
+  private async request(
+    method: string,
+    userRelPath: string,
+    options: MinioRequestOptions = {},
+  ): Promise<Response> {
+    const key = normalizeObjectKey(userRelPath);
+    const body = options.body;
+    const payloadHash = this.sha256(body ?? Buffer.alloc(0));
+    const canonicalUri = this.buildCanonicalUri(key);
+    const canonicalQuery = this.buildCanonicalQuery(options.query);
+    const host = this.buildHost();
+    const { amzDate, dateStamp } = this.toAmzDates(new Date());
+
+    const headers: Record<string, string> = {
+      host,
+      'x-amz-content-sha256': payloadHash,
+      'x-amz-date': amzDate,
+    };
+
+    for (const [name, value] of Object.entries(options.headers ?? {})) {
+      if (value !== undefined && value !== '')
+        headers[name.toLowerCase()] = value;
+    }
+
+    const sortedHeaderNames = Object.keys(headers).sort();
+    const canonicalHeaders = sortedHeaderNames
+      .map((name) => `${name}:${headers[name].trim().replace(/\s+/g, ' ')}\n`)
+      .join('');
+    const signedHeaders = sortedHeaderNames.join(';');
+    const canonicalRequest = [
+      method,
+      canonicalUri,
+      canonicalQuery,
+      canonicalHeaders,
+      signedHeaders,
+      payloadHash,
+    ].join('\n');
+    const credentialScope = `${dateStamp}/${this.config.region}/s3/aws4_request`;
+    const stringToSign = [
+      'AWS4-HMAC-SHA256',
+      amzDate,
+      credentialScope,
+      this.sha256(canonicalRequest),
+    ].join('\n');
+    const signature = crypto
+      .createHmac('sha256', this.signingKey(dateStamp))
+      .update(stringToSign)
+      .digest('hex');
+
+    headers.authorization = [
+      `AWS4-HMAC-SHA256 Credential=${this.config.accessKey}/${credentialScope}`,
+      `SignedHeaders=${signedHeaders}`,
+      `Signature=${signature}`,
+    ].join(', ');
+
+    const response = await fetch(
+      this.buildRequestUrl(canonicalUri, canonicalQuery),
+      {
+        body: body && body.length > 0 ? body : undefined,
+        headers,
+        method,
+      },
+    );
+
+    if (!response.ok) {
+      const detail =
+        method === 'HEAD'
+          ? response.statusText
+          : await response.text().catch(() => response.statusText);
+      throw new MinioRequestError(
+        response.status,
+        detail || response.statusText,
+      );
+    }
+
+    return response;
+  }
+
+  private async ensureBucket(): Promise<void> {
+    if (!this.bucketReady) {
+      this.bucketReady = (async () => {
+        try {
+          await this.request('HEAD', '');
+        } catch (error) {
+          if (!(error instanceof MinioRequestError) || error.status !== 404)
+            throw error;
+          await this.request('PUT', '');
+        }
+      })();
+    }
+    await this.bucketReady;
+  }
+
+  async deleteDirectory(userRelPath: string): Promise<void> {
+    await this.ensureBucket();
+    const directory = normalizeObjectKey(userRelPath);
+    if (!directory) throw new Error('禁止删除 OSS 根目录');
+    const prefix = directory.endsWith('/') ? directory : `${directory}/`;
+
+    let continuationToken: string | undefined;
+    do {
+      const response = await this.request('GET', '', {
+        query: {
+          'continuation-token': continuationToken,
+          'list-type': '2',
+          prefix,
+        },
+      });
+      const xml = await response.text();
+      const keys = [...xml.matchAll(/<Key>([\s\S]*?)<\/Key>/g)].map((match) =>
+        decodeXml(match[1]),
+      );
+      await Promise.all(keys.map((key) => this.deleteFile(key)));
+
+      const tokenMatch = xml.match(
+        /<NextContinuationToken>([\s\S]*?)<\/NextContinuationToken>/,
+      );
+      continuationToken = tokenMatch ? decodeXml(tokenMatch[1]) : undefined;
+    } while (continuationToken);
+  }
+
+  async deleteFile(userRelPath: string): Promise<void> {
+    await this.ensureBucket();
+    try {
+      await this.request('DELETE', userRelPath);
+    } catch (error) {
+      if (!(error instanceof MinioRequestError) || error.status !== 404)
+        throw error;
+    }
+  }
+
+  async fileExists(userRelPath: string): Promise<boolean> {
+    try {
+      await this.request('HEAD', userRelPath);
+      return true;
+    } catch (error) {
+      if (error instanceof MinioRequestError && error.status === 404)
+        return false;
+      throw error;
+    }
+  }
+
+  async getFile(userRelPath: string): Promise<Buffer> {
+    const response = await this.request('GET', userRelPath);
+    return Buffer.from(await response.arrayBuffer());
+  }
+
+  async writeFile(userRelPath: string, data: Buffer): Promise<void> {
+    await this.ensureBucket();
+    await this.request('PUT', userRelPath, {
+      body: data,
+      headers: {
+        'content-type': getMimeType(userRelPath) ?? 'application/octet-stream',
+      },
+    });
+  }
+}
+
+function resolveMinioConfig(): MinioConfig | null {
+  const endpoint = process.env.MINIO_ENDPOINT;
+  const bucket = process.env.MINIO_BUCKET;
+  const accessKey = process.env.MINIO_ACCESS_KEY;
+  const secretKey = process.env.MINIO_SECRET_KEY;
+
+  if (!endpoint || !bucket || !accessKey || !secretKey) return null;
+
+  return {
+    accessKey,
+    bucket,
+    endpoint: new URL(endpoint),
+    forcePathStyle: isTruthyEnv(process.env.MINIO_FORCE_PATH_STYLE, true),
+    region: process.env.MINIO_REGION || 'us-east-1',
+    secretKey,
+  };
+}
+
 class OSS {
+  private minio: MinioStorage | null;
   private rootDir: string;
   private initPromise: Promise<void>;
 
   constructor() {
-    this.rootDir = getPath("oss");
+    this.rootDir = getPath('oss');
+    const minioConfig = resolveMinioConfig();
+    this.minio = minioConfig ? new MinioStorage(minioConfig) : null;
     // 初始化时自动创建根目录
-    this.initPromise = fs.mkdir(this.rootDir, { recursive: true }).then(() => {});
+    this.initPromise = fs
+      .mkdir(this.rootDir, { recursive: true })
+      .then(() => {});
+  }
+
+  isRemoteEnabled(): boolean {
+    return Boolean(this.minio);
+  }
+
+  getStorageDescription(): string {
+    return this.minio
+      ? `MinIO ${this.minio.description}`
+      : `local ${this.rootDir}`;
   }
 
   /**
@@ -41,21 +394,65 @@ class OSS {
     await this.initPromise;
   }
 
+  private async deleteLocalFile(userRelPath: string): Promise<void> {
+    await this.ensureInit();
+    await fs.unlink(resolveSafeLocalPath(userRelPath, this.rootDir));
+  }
+
+  private async deleteLocalDirectory(userRelPath: string): Promise<void> {
+    await this.ensureInit();
+    const absPath = resolveSafeLocalPath(userRelPath, this.rootDir);
+    const stat = await fs.stat(absPath);
+    if (!stat.isDirectory()) {
+      throw new Error(`${userRelPath} 不是文件夹`);
+    }
+    await fs.rm(absPath, { recursive: true, force: true });
+  }
+
+  private async localFileExists(userRelPath: string): Promise<boolean> {
+    await this.ensureInit();
+    try {
+      const stat = await fs.stat(
+        resolveSafeLocalPath(userRelPath, this.rootDir),
+      );
+      return stat.isFile();
+    } catch {
+      return false;
+    }
+  }
+
+  private async readLocalFile(userRelPath: string): Promise<Buffer> {
+    await this.ensureInit();
+    return fs.readFile(resolveSafeLocalPath(userRelPath, this.rootDir));
+  }
+
+  private async writeLocalFile(
+    userRelPath: string,
+    data: Buffer,
+  ): Promise<void> {
+    await this.ensureInit();
+    const absPath = resolveSafeLocalPath(userRelPath, this.rootDir);
+    await fs.mkdir(path.dirname(absPath), { recursive: true });
+    await fs.writeFile(absPath, data);
+  }
+
   /**
    * 获取指定相对路径文件的访问 URL。
    * @param userRelPath 用户传入的相对文件路径（使用 / 作为分隔符）
    * @returns 文件的 http 链接（本地服务地址）
    */
   async getFileUrl(userRelPath: string, prefix?: string): Promise<string> {
-    if (!prefix) prefix = "oss";
+    if (!prefix) prefix = 'oss';
     await this.ensureInit();
-    const safePath = normalizeUserPath(userRelPath);
+    const safePath = normalizeObjectKey(userRelPath);
     // URL 始终使用 /，所以这里需要将系统分隔符转回 /
     let url = `/${prefix}/`;
     const configuredBaseUrl = process.env.OSSURL || process.env.ossURL;
-    if (configuredBaseUrl && configuredBaseUrl !== "") url = `${configuredBaseUrl.replace(/\/+$/, "")}/${prefix}/`;
-    if (process.env.NODE_ENV == "dev") url = `http://localhost:${process.env.PORT || 10588}/${prefix}/`;
-    return `${url}${safePath.split(path.sep).join("/")}`;
+    if (configuredBaseUrl && configuredBaseUrl !== '')
+      url = `${configuredBaseUrl.replace(/\/+$/, '')}/${prefix}/`;
+    if (process.env.NODE_ENV == 'dev')
+      url = `http://localhost:${process.env.PORT || 10588}/${prefix}/`;
+    return `${url}${safePath}`;
   }
 
   /**
@@ -65,8 +462,16 @@ class OSS {
    * @throws 路径不在 OSS 根目录内、文件不存在等错误
    */
   async getFile(userRelPath: string): Promise<Buffer> {
-    await this.ensureInit();
-    return fs.readFile(resolveSafeLocalPath(userRelPath, this.rootDir));
+    if (this.minio) {
+      try {
+        return await this.minio.getFile(userRelPath);
+      } catch (error) {
+        if (!(error instanceof MinioRequestError) || error.status !== 404)
+          throw error;
+      }
+    }
+
+    return this.readLocalFile(userRelPath);
   }
 
   /**
@@ -76,40 +481,16 @@ class OSS {
    * @throws 路径不在 OSS 根目录内、文件不存在、不是图片文件等错误
    */
   async getImageBase64(userRelPath: string): Promise<string> {
-    await this.ensureInit();
-    const absPath = resolveSafeLocalPath(userRelPath, this.rootDir);
-
-    // 检查文件是否存在且为文件
-    const stat = await fs.stat(absPath);
-    if (!stat.isFile()) {
-      throw new Error(`${userRelPath} 不是文件`);
-    }
-
-    // 获取文件扩展名并确定 MIME 类型
-    const ext = path.extname(userRelPath).toLowerCase();
-    const mimeTypes: Record<string, string> = {
-      ".jpg": "image/jpeg",
-      ".jpeg": "image/jpeg",
-      ".png": "image/png",
-      ".gif": "image/gif",
-      ".webp": "image/webp",
-      ".bmp": "image/bmp",
-      ".svg": "image/svg+xml",
-      ".ico": "image/x-icon",
-      ".tiff": "image/tiff",
-      ".tif": "image/tiff",
-      ".mp4": "video/mp4",
-      ".mp3": "audio/mpeg",
-    };
-
-    const mimeType = mimeTypes[ext];
+    const mimeType = getMimeType(userRelPath);
     if (!mimeType) {
-      throw new Error(`不支持的图片格式: ${ext}。支持的格式: ${Object.keys(mimeTypes).join(", ")}`);
+      throw new Error(
+        `不支持的图片格式: ${path.extname(userRelPath).toLowerCase()}。支持的格式: ${Object.keys(MIME_TYPES).join(', ')}`,
+      );
     }
 
     // 读取文件并转换为 base64
-    const data = await fs.readFile(absPath);
-    const base64 = data.toString("base64");
+    const data = await this.getFile(userRelPath);
+    const base64 = data.toString('base64');
 
     // 返回完整的 Data URL
     return `data:${mimeType};base64,${base64}`;
@@ -120,8 +501,14 @@ class OSS {
    * @throws 路径不在 OSS 根目录内、文件不存在等错误
    */
   async deleteFile(userRelPath: string): Promise<void> {
-    await this.ensureInit();
-    await fs.unlink(resolveSafeLocalPath(userRelPath, this.rootDir));
+    if (this.minio) {
+      await this.minio.deleteFile(userRelPath);
+      if (await this.localFileExists(userRelPath))
+        await this.deleteLocalFile(userRelPath);
+      return;
+    }
+
+    await this.deleteLocalFile(userRelPath);
   }
 
   /**
@@ -130,13 +517,17 @@ class OSS {
    * @throws 路径不在 OSS 根目录内、文件夹不存在、目标是文件而非文件夹等错误
    */
   async deleteDirectory(userRelPath: string): Promise<void> {
-    await this.ensureInit();
-    const absPath = resolveSafeLocalPath(userRelPath, this.rootDir);
-    const stat = await fs.stat(absPath);
-    if (!stat.isDirectory()) {
-      throw new Error(`${userRelPath} 不是文件夹`);
+    if (this.minio) {
+      await this.minio.deleteDirectory(userRelPath);
+      try {
+        await this.deleteLocalDirectory(userRelPath);
+      } catch (error) {
+        if ((error as NodeJS.ErrnoException).code !== 'ENOENT') throw error;
+      }
+      return;
     }
-    await fs.rm(absPath, { recursive: true, force: true });
+
+    await this.deleteLocalDirectory(userRelPath);
   }
 
   /**
@@ -147,13 +538,14 @@ class OSS {
    * @throws 路径不在 OSS 根目录内等错误
    */
   async writeFile(userRelPath: string, data: Buffer | string): Promise<void> {
-    await this.ensureInit();
-    const absPath = resolveSafeLocalPath(userRelPath, this.rootDir);
-    await fs.mkdir(path.dirname(absPath), { recursive: true });
-    // 如果 data 是 string，则视为 base64 编码，先解码再写入
-    // 自动去除可能存在的 Data URL 前缀（如 "data:image/png;base64,"）
-    const buffer = typeof data === "string" ? Buffer.from(data.replace(/^data:[^;]+;base64,/, ""), "base64") : data;
-    await fs.writeFile(absPath, buffer);
+    const buffer = decodeBase64Data(data);
+
+    if (this.minio) {
+      await this.minio.writeFile(userRelPath, buffer);
+      return;
+    }
+
+    await this.writeLocalFile(userRelPath, buffer);
   }
 
   /**
@@ -162,13 +554,8 @@ class OSS {
    * @returns 文件存在返回 true，否则 false
    */
   async fileExists(userRelPath: string): Promise<boolean> {
-    await this.ensureInit();
-    try {
-      const stat = await fs.stat(resolveSafeLocalPath(userRelPath, this.rootDir));
-      return stat.isFile();
-    } catch {
-      return false;
-    }
+    if (this.minio && (await this.minio.fileExists(userRelPath))) return true;
+    return this.localFileExists(userRelPath);
   }
 
   /**
@@ -182,7 +569,7 @@ class OSS {
   async getSmallImageUrl(userRelPath: string): Promise<string> {
     // 构造缩略图相对路径：在原路径的目录层级前插入 smallImage 目录
     // 例如：123/abc.jpg => smallImage/123/abc.jpg
-    const smallImageRelPath = `smallImage/${userRelPath.replace(/^[/\\]+/, "")}`;
+    const smallImageRelPath = `smallImage/${userRelPath.replace(/^[/\\]+/, '')}`;
 
     if (await this.fileExists(smallImageRelPath)) {
       return this.getFileUrl(smallImageRelPath);
@@ -192,18 +579,18 @@ class OSS {
     const originalUrl = await this.getFileUrl(userRelPath);
 
     try {
-      await this.ensureInit();
-      const srcAbsPath = resolveSafeLocalPath(userRelPath, this.rootDir);
-      const dstAbsPath = resolveSafeLocalPath(smallImageRelPath, this.rootDir);
-      await fs.mkdir(path.dirname(dstAbsPath), { recursive: true });
-      await sharp(srcAbsPath)
-        .resize(512, 512, { fit: "inside", withoutEnlargement: true })
-        .toFile(dstAbsPath);
-      console.info(`[${dstAbsPath}]小图写入成功`);
+      const source = this.minio
+        ? await this.getFile(userRelPath)
+        : resolveSafeLocalPath(userRelPath, this.rootDir);
+      const output = await sharp(source)
+        .resize(512, 512, { fit: 'inside', withoutEnlargement: true })
+        .toBuffer();
+      await this.writeFile(smallImageRelPath, output);
+      console.info(`[${smallImageRelPath}]小图写入成功`);
       return this.getFileUrl(smallImageRelPath);
     } catch (e) {
       // 生成失败返回原图
-      console.warn("[OSS] 生成缩略图失败:", e);
+      console.warn('[OSS] 生成缩略图失败:', e);
       return originalUrl;
     }
   }

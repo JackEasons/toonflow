@@ -1,23 +1,38 @@
-import express from "express";
-import u from "@/utils";
-import { z } from "zod";
-import { error, success } from "@/lib/responseFormat";
-import { validateFields } from "@/middleware/middleware";
-import axios from "axios";
+import express from 'express';
+import u from '@/utils';
+import { z } from 'zod';
+import { error, success } from '@/lib/responseFormat';
+import { validateFields } from '@/middleware/middleware';
+import axios from 'axios';
 const router = express.Router();
 
 async function urlToBase64(imageUrl: string): Promise<string> {
-  if (imageUrl.startsWith("/oss/")) {
-    return await u.oss.getImageBase64(u.replaceUrl(imageUrl).replace("/smallImage", ""));
+  if (imageUrl.startsWith('data:')) return imageUrl;
+
+  const isRemoteUrl = /^https?:\/\//i.test(imageUrl);
+  const isOssUrl = (() => {
+    if (!isRemoteUrl) return true;
+    try {
+      const pathname = new URL(imageUrl).pathname;
+      return (
+        pathname.startsWith('/oss/') || pathname.startsWith('/smallImage/')
+      );
+    } catch {
+      return false;
+    }
+  })();
+
+  if (isOssUrl) {
+    return await u.oss.getImageBase64(u.replaceUrl(imageUrl));
   }
-  imageUrl = await u.oss.getFileUrl(u.replaceUrl(imageUrl))
-  const response = await axios.get(imageUrl, { responseType: "arraybuffer" });
-  const contentType = response.headers["content-type"] || "image/png";
-  const base64 = Buffer.from(response.data, "binary").toString("base64");
+
+  const response = await axios.get(imageUrl, { responseType: 'arraybuffer' });
+  const contentType = response.headers['content-type'] || 'image/png';
+  const base64 = Buffer.from(response.data, 'binary').toString('base64');
   return `data:${contentType};base64,${base64}`;
 }
 export default router.post(
-  "/",
+  '/',
   validateFields({
     model: z.string(),
     references: z.array(z.string()).optional(),
@@ -27,15 +42,25 @@ export default router.post(
     projectId: z.number(),
   }),
   async (req, res) => {
-    const { model, references = [], quality, ratio, prompt, projectId } = req.body;
+    const {
+      model,
+      references = [],
+      quality,
+      ratio,
+      prompt,
+      projectId,
+    } = req.body;
     try {
       const imageClass = await u.Ai.Image(model).run(
         {
           prompt: prompt,
           referenceList: await (async () => {
-            const list: { type: "image"; base64: string }[] = [];
+            const list: { type: 'image'; base64: string }[] = [];
             for (const url of references) {
-              list.push({ type: "image" as const, base64: await urlToBase64(url) });
+              list.push({
+                type: 'image' as const,
+                base64: await urlToBase64(url),
+              });
             }
             return list;
           })(),
@@ -43,8 +68,8 @@ export default router.post(
           aspectRatio: ratio,
         },
         {
-          taskClass: "工作流图片生成",
-          describe: "工作流图片生成",
+          taskClass: '工作流图片生成',
+          describe: '工作流图片生成',
           relatedObjects: JSON.stringify(req.body),
           projectId: projectId,
         },
@@ -55,8 +80,7 @@ export default router.post(
       const url = await u.oss.getSmallImageUrl(savePath);
       return res.status(200).send(success({ url }));
     } catch (e) {
-      res.status(400).send(error(u.error(e).message))
+      res.status(400).send(error(u.error(e).message));
     }
-
   },
 );

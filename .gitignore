@@ -77,3 +77,10 @@ apps/server/data/test.sqlite
 apps/server/data/version.txt
 apps/server/src/router.ts
 apps/server/src/types/database.d.ts
+
+# Docker release artifacts
+docker/.env
+docker/data/
+docker/images/
+docker/server/
+docker/www/

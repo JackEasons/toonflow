@@ -290,4 +290,7 @@ allowBuilds:
   core-js: true
   esbuild: true
   lefthook: true
+  onnxruntime-node: true
+  protobufjs: true
+  sharp: true
   vue-demi: true

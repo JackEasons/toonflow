@@ -9,7 +9,6 @@ apps/                 应用入口
   admin/              @super/admin 后台管理系统基础应用
   web/                @super/web 创作端前端应用，默认端口 50188
   server/             @super/server 后端服务，默认 API 端口 10588
-  backend-mock/       @super/backend-mock Vben mock 服务
 internal/             Vben 工程工具、lint、tsconfig、vite 配置
 packages/             可复用前端基础包
 scripts/              turbo-run、vsh、部署脚本
@@ -47,4 +46,3 @@ pnpm check:type
 - `@super/web` 位于 `apps/web`，保留原 Vite/Vue/TDesign 创作端业务代码。
 - `@super/server` 位于 `apps/server`，保留 Express/MySQL/AI SDK 后端服务。
 - `@super/admin` 位于 `apps/admin`，由 Vben TDesign 模板重命名而来，后续作为后台管理系统基础。
-- `@super/backend-mock` 位于 `apps/backend-mock`，作为 Vben mock 服务。

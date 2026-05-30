@@ -9,6 +9,7 @@ import logger from "morgan";
 import cors from "cors";
 import buildRoute from "@/core";
 import fs from "fs";
+import path from "node:path";
 import u from "@/utils";
 import jwt from "jsonwebtoken";
 import socketInit from "@/socket/index";
@@ -43,8 +44,28 @@ export default async function startServe(randomPort: boolean = false) {
   if (!fs.existsSync(ossDir)) {
     fs.mkdirSync(ossDir, { recursive: true });
   }
-  console.log("文件目录:", ossDir);
-  app.use("/oss", express.static(ossDir, { acceptRanges: false }));
+  console.log("OSS 存储:", u.oss.getStorageDescription());
+  if (u.oss.isRemoteEnabled()) {
+    app.use("/oss", async (req, res, next) => {
+      const filePath = req.path.replace(/^\/+/, "");
+      try {
+        const buffer = await u.oss.getFile(filePath);
+        res.setHeader("Accept-Ranges", "none");
+        res.type(path.extname(filePath) || "application/octet-stream");
+        res.send(buffer);
+      } catch (error) {
+        const err = error as NodeJS.ErrnoException & { status?: number };
+        if (err.status === 404 || err.code === "ENOENT") {
+          res.status(404).end();
+          return;
+        }
+        next(error);
+      }
+    });
+  } else {
+    console.log("文件目录:", ossDir);
+    app.use("/oss", express.static(ossDir, { acceptRanges: false }));
+  }
   // skills 静态资源
   const skillsDir = u.getPath("skills");
   if (!fs.existsSync(skillsDir)) {
