@@ -9,6 +9,10 @@ import type { FlowData, Storyboard } from "#/views/production/utils/flowBuilder"
 import type { ChatMessagesData } from "@tdesign-vue-next/chat";
 import { useThrottleFn } from "@vueuse/core";
 
+function getRequestErrorMessage(error: unknown, fallback: string) {
+  return (error as any)?.message || fallback;
+}
+
 function makeProductionAgentStore(projectId: string) {
   return defineStore(`productionAgent-${projectId}`, () => {
     const defMsg: ChatMessagesData[] = [
@@ -187,12 +191,20 @@ function makeProductionAgentStore(projectId: string) {
             callback({ success: true, message: $t("storyboard.assets.derivativeDelSuccess") });
           });
           s.on("generateDeriveAsset", async (data, callback) => {
-            const assetsData = await batchGenerateAssets(data.ids);
-            callback({ success: true, message: assetsData });
+            try {
+              const assetsData = await batchGenerateAssets(data.ids);
+              callback({ success: true, message: assetsData });
+            } catch (error) {
+              callback({ success: false, message: getRequestErrorMessage(error, "资产图片生成失败") });
+            }
           });
           s.on("generateStoryboard", async (data, callback) => {
-            const storyData = await batchGenerateStoryboard(data.ids);
-            callback({ success: true, message: storyData });
+            try {
+              const storyData = await batchGenerateStoryboard(data.ids);
+              callback({ success: true, message: storyData });
+            } catch (error) {
+              callback({ success: false, message: getRequestErrorMessage(error, "分镜图片生成失败") });
+            }
           });
         }
       },
@@ -215,38 +227,36 @@ function makeProductionAgentStore(projectId: string) {
       flowData.value = data;
     }
     async function batchGenerateStoryboard(allIds: number[], compulsory: boolean = false) {
-      try {
-        const { data } = await axios.post("/production/storyboard/batchGenerateImage", {
-          scriptId: episodesId.value,
-          projectId: projectId,
-          storyboardIds: allIds,
-          concurrentCount: settingStore().otherSetting.assetsBatchGenereateSize,
-          compulsory,
-        });
-        if (data) {
-          if (flowData.value.storyboard.length === 0) {
-            flowData.value.storyboard = data;
-            return data;
-          } else {
-            flowData.value.storyboard.forEach((item) => {
-              const findData = data.find((i: any) => i.id == item.id);
-              if (findData) {
-                item.state = findData.state;
-                item.src = findData.src;
-              }
-            });
-          }
+      const { data } = await axios.post("/production/storyboard/batchGenerateImage", {
+        scriptId: episodesId.value,
+        projectId: projectId,
+        storyboardIds: allIds,
+        concurrentCount: settingStore().otherSetting.assetsBatchGenereateSize,
+        compulsory,
+      });
+      if (data) {
+        if (flowData.value.storyboard.length === 0) {
+          flowData.value.storyboard = data;
+          return data;
+        } else {
+          flowData.value.storyboard.forEach((item) => {
+            const findData = data.find((i: any) => i.id == item.id);
+            if (findData) {
+              item.state = findData.state;
+              item.src = findData.src;
+            }
+          });
         }
-        return data;
-      } catch (e) {
-        window.$message.error((e as any)?.message);
       }
+      return data;
     }
     async function batchGenerateAssets(allIds: number[]) {
+      const previousStates = new Map<number, "未生成" | "生成中" | "已完成" | "生成失败">();
       flowData.value.assets.forEach((asset) => {
         if (asset.derive) {
           asset.derive.forEach((derive) => {
             if (allIds.includes(derive.id)) {
+              previousStates.set(derive.id, derive.state);
               derive.state = "生成中" as "未生成" | "生成中" | "已完成" | "生成失败";
             }
           });
@@ -274,7 +284,15 @@ function makeProductionAgentStore(projectId: string) {
           });
         }
         return data;
-      } catch (e) {}
+      } catch (error) {
+        flowData.value.assets.forEach((asset) => {
+          asset.derive?.forEach((derive) => {
+            const state = previousStates.get(derive.id);
+            if (state) derive.state = state;
+          });
+        });
+        throw error;
+      }
     }
     const assetsNotStateImageIds = computed(() => {
       const ids: number[] = [];

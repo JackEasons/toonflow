@@ -14,11 +14,11 @@
           </template>
           {{ $t("workbench.novel.batchDelete") }} {{ selectedRowKeys.length > 0 ? `(${selectedRowKeys.length})` : "" }}
         </t-button>
-        <t-button @click="startEventAnalysis" :disabled="selectedRowKeys.length === 0">
+        <t-button @click="startEventAnalysis" :loading="eventQuoteLoading" :disabled="eventAnalysisDisabled">
           <template #icon>
             <t-icon name="analytics" />
           </template>
-          {{ $t("workbench.novel.eventAnalysis") }} {{ selectedRowKeys.length > 0 ? `(${selectedRowKeys.length})` : "" }}
+          {{ eventAnalysisLabel }}
         </t-button>
       </t-space>
       <div class="f">
@@ -154,6 +154,11 @@ interface OriginalText {
   eventState?: number;
   errorReason?: string;
 }
+type BillingQuote = {
+  availablePoints: number;
+  enough: boolean;
+  requiredPoints: number;
+};
 const formData = ref<OriginalText>({ id: -1, index: 0, reel: "", chapter: "", chapterData: "", event: "" });
 const PREVIEW_MAX_LENGTH = 80;
 const previewVisible = ref(false);
@@ -178,6 +183,10 @@ const tableData = ref<OriginalText[]>([]);
 const loading = ref(false);
 // 选中行
 const selectedRowKeys = ref<Array<string | number>>([]);
+const eventQuote = ref<BillingQuote | null>(null);
+const eventQuoteError = ref("");
+const eventQuoteLoading = ref(false);
+let eventQuoteSeq = 0;
 // 分页
 const pagination = ref({
   page: 1,
@@ -224,6 +233,66 @@ const importNovelShow = ref(false);
 // 导入原文
 function importNovelFn() {
   importNovelShow.value = true;
+}
+
+function formatBillingPoints(value?: number) {
+  const points = Math.max(0, Number(value || 0));
+  return Number.isInteger(points) ? String(points) : points.toFixed(2);
+}
+
+function getBillingErrorMessage(error: unknown) {
+  return (error as any)?.message || "获取积分报价失败";
+}
+
+const eventAnalysisLabel = computed(() => {
+  const base = `${$t("workbench.novel.eventAnalysis")} ${selectedRowKeys.value.length > 0 ? `(${selectedRowKeys.value.length})` : ""}`.trim();
+  if (!selectedRowKeys.value.length) return base;
+  if (eventQuoteError.value) return `${base} · 报价不可用`;
+  const points = eventQuote.value?.requiredPoints || 0;
+  return points > 0 ? `${base} · ${formatBillingPoints(points)}积分` : base;
+});
+
+const eventAnalysisDisabled = computed(() => {
+  return (
+    selectedRowKeys.value.length === 0 ||
+    eventQuoteLoading.value ||
+    Boolean(eventQuoteError.value) ||
+    Boolean(eventQuote.value && !eventQuote.value.enough)
+  );
+});
+
+async function refreshEventQuote() {
+  const count = selectedRowKeys.value.length;
+  if (count <= 0) {
+    eventQuote.value = null;
+    eventQuoteError.value = "";
+    return;
+  }
+  const seq = ++eventQuoteSeq;
+  eventQuoteLoading.value = true;
+  try {
+    const { data } = await axios.post("/billing/quote", {
+      calls: [
+        {
+          count,
+          model: "universalAi",
+          modelType: "text",
+          taskType: "novel_event_extraction",
+        },
+      ],
+    });
+    if (seq === eventQuoteSeq) {
+      eventQuote.value = data;
+      eventQuoteError.value = "";
+    }
+  } catch (error) {
+    if (seq === eventQuoteSeq) {
+      eventQuote.value = null;
+      eventQuoteError.value = getBillingErrorMessage(error);
+    }
+  } finally {
+    if (seq === eventQuoteSeq) eventQuoteLoading.value = false;
+  }
 }
 // 处理选择变化
 function handleSelectChange(value: Array<string | number>, context: { selectedRowData: any[] }) {
@@ -272,7 +341,12 @@ function handleDelete(row: OriginalText) {
   });
 }
 
-function startEventAnalysis() {
+async function startEventAnalysis() {
+  if (!eventQuote.value && !eventQuoteError.value) await refreshEventQuote();
+  if (eventQuoteError.value) return window.$message.error(eventQuoteError.value);
+  if (eventQuote.value && !eventQuote.value.enough) {
+    return window.$message.error(`积分不足，需要 ${eventQuote.value.requiredPoints} 积分，当前可用 ${eventQuote.value.availablePoints} 积分`);
+  }
   const dialog = DialogPlugin.confirm({
     header: $t("workbench.novel.msg.eventAnalysisHeader"),
     body: $t("workbench.novel.msg.eventAnalysisBody", { count: selectedRowKeys.value.length }),
@@ -344,6 +418,11 @@ watch(notCompultedData, (val) => {
     stopPolling();
   }
 });
+watch(
+  () => selectedRowKeys.value.join(","),
+  () => refreshEventQuote(),
+  { immediate: true },
+);
 onUnmounted(() => {
   stopPolling();
 });

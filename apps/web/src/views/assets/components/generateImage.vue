@@ -31,9 +31,9 @@
           <div class="rawPicturePrompt">
             <div class="jb">
               <span style="font-size: 16px; font-weight: 900">{{ $t("workbench.assets.gen.promptLabel") }}</span>
-              <div class="ac" style="cursor: pointer" @click.stop="generatePrompt">
+              <div class="ac smartGenerateAction" :class="{ isDisabled: promptGenerateDisabled }" @click.stop="generatePrompt">
                 <i-magic theme="outline" size="18" />
-                <span style="margin-left: 5px; font-size: 13px">{{ $t("workbench.assets.gen.smartGenerate") }}</span>
+                <span style="margin-left: 5px; font-size: 13px">{{ promptGenerateLabel }}</span>
               </div>
             </div>
             <div class="input">
@@ -61,8 +61,8 @@
             </div>
           </div>
           <div class="generateButton" style="margin-top: 20px">
-            <t-button theme="primary" size="large" block :loading="generateLoading" @click="handleGenerate">
-              {{ $t("workbench.assets.gen.generateBtn") }}
+            <t-button theme="primary" size="large" block :loading="generateLoading || imageQuoteLoading" :disabled="imageGenerateDisabled" @click="handleGenerate">
+              {{ imageGenerateLabel }}
             </t-button>
           </div>
         </t-card>
@@ -139,7 +139,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from "vue";
+import { computed, ref, watch } from "vue";
 import { DialogPlugin } from "tdesign-vue-next";
 import { storeToRefs } from "pinia";
 import modelSelect from "#/components/modelSelect.vue";
@@ -176,11 +176,145 @@ const autoUpload = ref(false);
 const showImageFileName = ref(false);
 const generateLoading = ref(false);
 const selectValue = ref(""); //选择的模型
+const resolution = ref("1K");
 
 const value2 = ref("");
 //智能生成提示词
 const promptLoading = ref(false);
+
+type BillingQuote = {
+  availablePoints: number;
+  enough: boolean;
+  requiredPoints: number;
+};
+
+const promptQuote = ref<BillingQuote | null>(null);
+const promptQuoteError = ref("");
+const promptQuoteLoading = ref(false);
+let promptQuoteSeq = 0;
+
+const imageQuote = ref<BillingQuote | null>(null);
+const imageQuoteError = ref("");
+const imageQuoteLoading = ref(false);
+let imageQuoteSeq = 0;
+
+function formatBillingPoints(value?: number) {
+  const points = Math.max(0, Number(value || 0));
+  return Number.isInteger(points) ? String(points) : points.toFixed(2);
+}
+
+function getBillingErrorMessage(error: unknown) {
+  return (error as any)?.message || "获取积分报价失败";
+}
+
+const promptGenerateLabel = computed(() => {
+  const base = $t("workbench.assets.gen.smartGenerate");
+  if (promptQuoteError.value) return `${base} · 报价不可用`;
+  const points = promptQuote.value?.requiredPoints || 0;
+  return points > 0 ? `${base} · ${formatBillingPoints(points)}积分` : base;
+});
+
+const promptGenerateDisabled = computed(() => promptQuoteLoading.value || Boolean(promptQuoteError.value) || Boolean(promptQuote.value && !promptQuote.value.enough));
+
+const imageGenerateLabel = computed(() => {
+  const base = $t("workbench.assets.gen.generateBtn");
+  if (!selectValue.value) return `${base} · 选择模型`;
+  if (imageQuoteError.value) return `${base} · 报价不可用`;
+  const points = imageQuote.value?.requiredPoints || 0;
+  return points > 0 ? `${base} · ${formatBillingPoints(points)}积分` : base;
+});
+
+const imageGenerateDisabled = computed(() => !selectValue.value || Boolean(imageQuoteError.value) || Boolean(imageQuote.value && !imageQuote.value.enough));
+
+async function refreshPromptQuote() {
+  if (!generateImageShow.value || !project.value?.id || !props.formData.id) {
+    promptQuote.value = null;
+    promptQuoteError.value = "";
+    return;
+  }
+  const seq = ++promptQuoteSeq;
+  promptQuoteLoading.value = true;
+  try {
+    const { data } = await axios.post("/billing/quote", {
+      calls: [
+        {
+          count: 1,
+          model: "universalAi",
+          modelType: "text",
+          taskType: "asset_prompt_polish",
+        },
+      ],
+    });
+    if (seq === promptQuoteSeq) {
+      promptQuote.value = data;
+      promptQuoteError.value = "";
+    }
+  } catch (error) {
+    if (seq === promptQuoteSeq) {
+      promptQuote.value = null;
+      promptQuoteError.value = getBillingErrorMessage(error);
+    }
+  } finally {
+    if (seq === promptQuoteSeq) promptQuoteLoading.value = false;
+  }
+}
+
+async function refreshImageQuote() {
+  if (!generateImageShow.value || !selectValue.value) {
+    imageQuote.value = null;
+    imageQuoteError.value = "";
+    return;
+  }
+  const seq = ++imageQuoteSeq;
+  imageQuoteLoading.value = true;
+  try {
+    const { data } = await axios.post("/billing/quote", {
+      calls: [
+        {
+          count: 1,
+          model: selectValue.value,
+          modelType: "image",
+          resolution: resolution.value,
+          taskType: "asset_center_image_generation",
+        },
+      ],
+    });
+    if (seq === imageQuoteSeq) {
+      imageQuote.value = data;
+      imageQuoteError.value = "";
+    }
+  } catch (error) {
+    if (seq === imageQuoteSeq) {
+      imageQuote.value = null;
+      imageQuoteError.value = getBillingErrorMessage(error);
+    }
+  } finally {
+    if (seq === imageQuoteSeq) imageQuoteLoading.value = false;
+  }
+}
+
+watch(
+  () => [generateImageShow.value, project.value?.id, props.formData.id],
+  () => refreshPromptQuote(),
+  { immediate: true },
+);
+
+watch(
+  () => [generateImageShow.value, selectValue.value, resolution.value],
+  () => refreshImageQuote(),
+  { immediate: true },
+);
+
 async function generatePrompt() {
+  if (promptQuoteLoading.value) return;
+  if (promptQuoteError.value) {
+    window.$message.warning(promptQuoteError.value);
+    return;
+  }
+  if (promptQuote.value && !promptQuote.value.enough) {
+    window.$message.warning(`积分不足，需要 ${formatBillingPoints(promptQuote.value.requiredPoints)} 积分，当前可用 ${formatBillingPoints(promptQuote.value.availablePoints)} 积分`);
+    return;
+  }
   promptLoading.value = true;
   try {
     const { data } = await axios.post("/assetsGenerate/polishAssetsPrompt", {
@@ -201,7 +335,6 @@ async function generatePrompt() {
   }
 }
 const emit = defineEmits(["update"]);
-const resolution = ref("1K");
 //生成图片
 async function handleGenerate() {
   if (!props.formData.prompt) {
@@ -214,6 +347,14 @@ async function handleGenerate() {
   }
   if (!selectValue.value) {
     window.$message.error($t("workbench.assets.gen.pickModel"));
+    return;
+  }
+  if (imageQuoteError.value) {
+    window.$message.warning(imageQuoteError.value);
+    return;
+  }
+  if (imageQuote.value && !imageQuote.value.enough) {
+    window.$message.warning(`积分不足，需要 ${formatBillingPoints(imageQuote.value.requiredPoints)} 积分，当前可用 ${formatBillingPoints(imageQuote.value.availablePoints)} 积分`);
     return;
   }
   generateLoading.value = true;
@@ -399,6 +540,14 @@ async function onClick() {
     }
     .rawPicturePrompt {
       margin-top: 20px;
+      .smartGenerateAction {
+        cursor: pointer;
+        color: var(--td-brand-color);
+        &.isDisabled {
+          cursor: not-allowed;
+          opacity: 0.55;
+        }
+      }
       .input {
         margin-top: 10px;
       }

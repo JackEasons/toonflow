@@ -14,7 +14,9 @@
                 style="flex: 1"
                 :status="regexError ? 'error' : undefined"
                 :tips="regexError || undefined" />
-              <t-button :loading="aiRegexLoading" @click="getAiRegex">{{ $t("workbench.script.import.getAiRegex") }}</t-button>
+              <t-button :loading="aiRegexLoading || aiRegexQuoteLoading" :disabled="Boolean(aiRegexQuote && !aiRegexQuote.enough)" @click="getAiRegex">
+                {{ aiRegexLabel }}
+              </t-button>
             </div>
             <div class="uploadArea" @click="triggerUpload" @dragover.prevent @drop.prevent="handleDrop">
               <t-upload
@@ -109,6 +111,12 @@ interface ChapterItem {
   scriptData: string;
 }
 
+type BillingQuote = {
+  availablePoints: number;
+  enough: boolean;
+  requiredPoints: number;
+};
+
 const purgeNovelShow = defineModel<boolean>();
 
 const activeKey = ref("To1");
@@ -121,6 +129,60 @@ const nextLoading = ref(false);
 const customRegStr = ref("");
 const regexError = ref("");
 const aiRegexLoading = ref(false);
+const aiRegexQuote = ref<BillingQuote | null>(null);
+const aiRegexQuoteError = ref("");
+const aiRegexQuoteLoading = ref(false);
+let aiRegexQuoteSeq = 0;
+
+function formatBillingPoints(value?: number) {
+  const points = Math.max(0, Number(value || 0));
+  return Number.isInteger(points) ? String(points) : points.toFixed(2);
+}
+
+function getBillingErrorMessage(error: unknown) {
+  return (error as any)?.message || "获取积分报价失败";
+}
+
+const aiRegexLabel = computed(() => {
+  const base = $t("workbench.script.import.getAiRegex");
+  if (!content.value.trim()) return base;
+  if (aiRegexQuoteError.value) return `${base} · 报价不可用`;
+  const points = aiRegexQuote.value?.requiredPoints || 0;
+  return points > 0 ? `${base} · ${formatBillingPoints(points)}积分` : base;
+});
+
+async function refreshAiRegexQuote() {
+  if (!content.value.trim()) {
+    aiRegexQuote.value = null;
+    aiRegexQuoteError.value = "";
+    return;
+  }
+  const seq = ++aiRegexQuoteSeq;
+  aiRegexQuoteLoading.value = true;
+  try {
+    const { data } = await axios.post("/billing/quote", {
+      calls: [
+        {
+          count: 1,
+          model: "universalAi",
+          modelType: "text",
+          taskType: "script_regex_detection",
+        },
+      ],
+    });
+    if (seq === aiRegexQuoteSeq) {
+      aiRegexQuote.value = data;
+      aiRegexQuoteError.value = "";
+    }
+  } catch (error) {
+    if (seq === aiRegexQuoteSeq) {
+      aiRegexQuote.value = null;
+      aiRegexQuoteError.value = getBillingErrorMessage(error);
+    }
+  } finally {
+    if (seq === aiRegexQuoteSeq) aiRegexQuoteLoading.value = false;
+  }
+}
 
 // 验证正则合法性
 watch(customRegStr, (val) => {
@@ -267,6 +329,11 @@ async function getAiRegex() {
     window.$message.warning($t("workbench.script.import.msg.selectChapters"));
     return;
   }
+  if (!aiRegexQuote.value || aiRegexQuoteError.value) await refreshAiRegexQuote();
+  if (aiRegexQuoteError.value) return window.$message.error(aiRegexQuoteError.value);
+  if (aiRegexQuote.value && !aiRegexQuote.value.enough) {
+    return window.$message.error(`积分不足，需要 ${aiRegexQuote.value.requiredPoints} 积分，当前可用 ${aiRegexQuote.value.availablePoints} 积分`);
+  }
   const sample = content.value.slice(0, 2000);
   aiRegexLoading.value = true;
   try {
@@ -280,6 +347,12 @@ async function getAiRegex() {
     aiRegexLoading.value = false;
   }
 }
+
+watch(
+  () => Boolean(content.value.trim()),
+  () => refreshAiRegexQuote(),
+  { immediate: true },
+);
 </script>
 
 <style lang="scss" scoped>

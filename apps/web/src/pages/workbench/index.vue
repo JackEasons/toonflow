@@ -116,6 +116,12 @@ function handleClick(menu: any) {
   --tf-accent-2: #9bbcff;
   --tf-success: #71d99a;
   --tf-danger: #f07182;
+  --tf-nav-active-bg: linear-gradient(145deg, rgba(98, 216, 202, 0.18), rgba(9, 28, 29, 0.78));
+  --tf-nav-active-border: rgba(98, 216, 202, 0.38);
+  --tf-nav-active-shadow:
+    0 0 0 1px rgba(98, 216, 202, 0.06),
+    0 10px 24px rgba(0, 0, 0, 0.24),
+    inset 0 1px 0 rgba(245, 252, 249, 0.08);
   --td-bg-color-page: #090909;
   --td-bg-color-container: rgba(21, 21, 22, 0.96);
   --td-bg-color-container-hover: rgba(118, 218, 204, 0.1);
@@ -226,9 +232,10 @@ function handleClick(menu: any) {
         }
       }
       .active {
-        background: #242426 !important;
-        border-color: #3a3a3c;
+        background: var(--tf-nav-active-bg) !important;
+        border-color: var(--tf-nav-active-border);
         border-radius: 12px;
+        box-shadow: var(--tf-nav-active-shadow);
       }
     }
   }
@@ -363,18 +370,18 @@ function handleClick(menu: any) {
   }
   &:hover {
     color: rgba(245, 252, 249, 0.94);
-    background-color: #202022;
-    border-color: #303033;
+    background: rgba(98, 216, 202, 0.1);
+    border-color: rgba(98, 216, 202, 0.24);
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.22);
     transform: translateY(-1px);
   }
 }
 .active {
-  background: #242426 !important;
+  background: var(--tf-nav-active-bg) !important;
   color: #6ee7df;
-  border-color: #3a3a3c;
+  border-color: var(--tf-nav-active-border);
   border-radius: 12px;
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  box-shadow: var(--tf-nav-active-shadow);
 }
 .divider {
   width: 48px;

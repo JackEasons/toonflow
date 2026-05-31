@@ -7,6 +7,7 @@ import { validateFields } from "@/middleware/middleware";
 import { Output, tool } from "ai";
 import { assetItemSchema } from "@/agents/productionAgent/tools";
 import { resolveNegativePrompt } from "@/utils/negativePrompt";
+import { quoteModelCalls, releasePointHold, reserveModelCallPoints, settlePointHold } from "@/utils/modelBilling";
 const router = express.Router();
 export type AssetData = z.infer<typeof assetItemSchema>;
 
@@ -33,6 +34,8 @@ export default router.post(
       concurrentCount: number;
       compulsory: boolean;
     } = req.body;
+    const userId = String((req as any).user?.id || "");
+    if (!userId) return res.status(401).send(error("未提供token"));
     if (!storyboardIds || storyboardIds.length === 0) return res.status(400).send(error("storyboardIds不能为空"));
     // 当没有 storyboardIds 时，通过 AI 生成新的分镜面板数据
     let finalStoryboardIds: number[] = storyboardIds || [];
@@ -40,6 +43,23 @@ export default router.post(
     const storyboardData = await u.db("o_storyboard").where("scriptId", scriptId).where("projectId", projectId).whereIn("id", finalStoryboardIds);
     if (!storyboardData.length) return res.status(500).send(error("未查到分镜数据"));
     const storyIds = storyboardData.map((i) => i.id).filter((id): id is number => typeof id === "number");
+    const projectSettingData = await u.db("o_project").where("id", projectId).select("imageModel", "imageQuality", "artStyle", "videoRatio").first();
+    const generateList = compulsory ? storyboardData : storyboardData.filter((item) => item.shouldGenerateImage !== 0);
+    let quote;
+    try {
+      quote = await quoteModelCalls(userId, [
+        {
+          count: generateList.length,
+          model: projectSettingData?.imageModel as string,
+          modelType: "image",
+          taskType: "storyboard_image_generation",
+        },
+      ]);
+    } catch (err: any) {
+      return res.status(400).send(error(err?.message || "获取积分报价失败"));
+    }
+    if (!quote.enough) return res.status(400).send(error(`积分不足，需要 ${quote.requiredPoints} 积分，当前可用 ${quote.availablePoints} 积分`));
+
     if (compulsory) {
       await u.db("o_storyboard").whereIn("id", storyIds).where("scriptId", scriptId).update({ state: "生成中", shouldGenerateImage: 1 });
     } else {
@@ -47,7 +67,6 @@ export default router.post(
       await u.db("o_storyboard").whereIn("id", storyIds).where("scriptId", scriptId).where("shouldGenerateImage", 1).update({ state: "生成中" });
     }
 
-    const projectSettingData = await u.db("o_project").where("id", projectId).select("imageModel", "imageQuality", "artStyle", "videoRatio").first();
     const storyboardNegativePromptSource = u.getArtPrompt(projectSettingData?.artStyle ?? "", "art_skills", "director_storyboard");
 
     // 按 sort 顺序查出每个 storyboard 关联的 assetId 有序列表
@@ -79,6 +98,36 @@ export default router.post(
       }
     });
     const realStoryData = await u.db("o_storyboard").where("scriptId", scriptId).where("projectId", projectId).whereIn("id", storyIds);
+    const holdMap = new Map<number, Awaited<ReturnType<typeof reserveModelCallPoints>>>();
+    const billingAttemptId = u.uuid();
+    try {
+      const pointsPerCall = quote.items[0]?.pointsPerCall || 0;
+      for (const item of generateList) {
+        const itemQuote = {
+          ...quote,
+          enough: true,
+          items: quote.items[0] ? [{ ...quote.items[0], count: 1, requiredPoints: pointsPerCall }] : [],
+          requiredPoints: pointsPerCall,
+        };
+        const hold = await reserveModelCallPoints({
+          billingMeta: itemQuote,
+          description: `分镜图片生成：${quote.items[0]?.modelLabel || projectSettingData?.imageModel}`,
+          episodeId: scriptId,
+          idempotencyKey: `model-call:storyboard:${item.id}:${billingAttemptId}`,
+          projectId,
+          quote: itemQuote,
+          relatedId: item.id,
+          taskType: "storyboard_image_generation",
+          userId,
+        });
+        holdMap.set(item.id!, hold);
+      }
+    } catch (err: any) {
+      await Promise.all([...holdMap.values()].map((hold) => releasePointHold(hold?.id)));
+      await u.db("o_storyboard").whereIn("id", storyIds).where("scriptId", scriptId).update({ reason: err?.message || "积分冻结失败", state: "生成失败" });
+      return res.status(400).send(error(err?.message || "积分不足"));
+    }
+
     res.status(200).send(
       success(
         realStoryData.map((i) => ({
@@ -95,8 +144,15 @@ export default router.post(
     );
 
     const generateTask = async (item: (typeof storyboardData)[number]) => {
+      const billingHold = holdMap.get(item.id!);
       const repeloadObj = {
+        billingHoldId: billingHold?.id || null,
+        billingRelatedId: item.id,
+        billingTaskType: "storyboard_image_generation",
+        projectId,
         prompt: item.prompt!,
+        scriptId,
+        storyboardId: item.id,
         negativePrompt: resolveNegativePrompt(
           { prompt: item.prompt!, negativePromptSource: storyboardNegativePromptSource },
           { mediaType: "image", modelKey: projectSettingData?.imageModel as `${string}:${string}` },
@@ -124,12 +180,14 @@ export default router.post(
         const savePath = `/${projectId}/assets/${scriptId}/${u.uuid()}.jpg`;
         const storageProvider = u.oss.getStorageProvider();
         await imageCls.save(savePath, storageProvider);
+        await settlePointHold(billingHold?.id);
         await u.db("o_storyboard").where("id", item.id).update({
           filePath: savePath,
           storageProvider,
           state: "已完成",
         });
       } catch (e) {
+        await releasePointHold(billingHold?.id);
         u.db("o_storyboard")
           .where("id", item.id)
           .update({
@@ -141,12 +199,6 @@ export default router.post(
       }
     };
     // 按 concurrentCount 控制并发数，分批执行；跳过 shouldGenerateImage === 0 的分镜
-    let generateList = [];
-    if (compulsory) {
-      generateList = storyboardData;
-    } else {
-      generateList = storyboardData.filter((item) => item.shouldGenerateImage !== 0);
-    }
     for (let i = 0; i < generateList.length; i += concurrentCount) {
       const batch = generateList.slice(i, i + concurrentCount);
       await Promise.all(batch.map(generateTask));

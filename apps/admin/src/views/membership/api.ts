@@ -94,6 +94,29 @@ export interface PointTransaction {
   userName: string;
 }
 
+export interface ModelBillingRule {
+  enabled: boolean;
+  model: string;
+  modelLabel: string;
+  modelName: string;
+  modelType: 'image' | 'text' | 'video' | string;
+  pointsPerCall: number;
+  pricingMeta: null | string;
+  ruleId: null | string;
+  vendorEnabled: boolean;
+  vendorId: string;
+  vendorName: string;
+}
+
+export interface ModelBillingCatalog {
+  models: ModelBillingRule[];
+  summary: {
+    billableModels: number;
+    models: number;
+    vendors: number;
+  };
+}
+
 export interface PageResult<T> {
   list: T[];
   page: number;
@@ -154,6 +177,7 @@ export async function fetchUsers(params: {
 }
 
 export async function fetchOrders(params: {
+  keyword?: string;
   page: number;
   pageSize: number;
   status?: string;
@@ -209,4 +233,23 @@ export async function savePlan(payload: MembershipPlan) {
 export async function savePackage(payload: PointsPackage) {
   const res = await axios.post('/admin/membership/savePointsPackage', payload);
   return res.data as Pick<MembershipOverview, 'plans' | 'pointPackages'>;
+}
+
+export async function fetchModelBillingRules() {
+  const res = await axios.get('/admin/modelBilling/list');
+  return res.data as ModelBillingCatalog;
+}
+
+export async function saveModelBillingRules(rules: ModelBillingRule[]) {
+  const res = await axios.post('/admin/modelBilling/save', {
+    rules: rules.map((rule) => ({
+      enabled: Boolean(rule.enabled),
+      modelLabel: rule.modelLabel,
+      modelName: rule.modelName,
+      modelType: rule.modelType,
+      pointsPerCall: Number(rule.pointsPerCall || 0),
+      vendorId: rule.vendorId,
+    })),
+  });
+  return res.data as ModelBillingCatalog;
 }

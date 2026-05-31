@@ -4,6 +4,7 @@ import { getEmbedding, cosineSimilarity } from "./embedding";
 import type { memories as MemoryRow } from "@/types/database";
 import { tool, zodSchema } from "ai";
 import { z } from "zod";
+import { type ModelBillingQuote, quoteModelCalls, releasePointHold, reserveModelCallPoints, resolveModelBillingKey, settlePointHold } from "@/utils/modelBilling";
 
 // ── 可调配置默认值 ──
 const DEFAULTS: {
@@ -35,29 +36,72 @@ function vectorSearch(rows: MemoryRow[], queryEmbedding: number[], limit: number
 
 class Memory {
   private agentType: string;
+  private billingAttemptId: string;
   private isolationKey: string;
+  private userId?: string;
 
-  constructor(agentType: string, isolationKey: string) {
+  constructor(agentType: string, isolationKey: string, userId?: string) {
     this.agentType = agentType;
+    this.billingAttemptId = uuidv4();
     this.isolationKey = isolationKey;
+    this.userId = userId;
+  }
+
+  private async billedTextInvoke<T>(taskType: string, invoke: () => Promise<T>): Promise<T> {
+    if (!this.userId) return invoke();
+
+    let quote: ModelBillingQuote;
+    let billingHold: Awaited<ReturnType<typeof reserveModelCallPoints>> | null = null;
+    try {
+      const billingModel = await resolveModelBillingKey(this.agentType);
+      quote = await quoteModelCalls(this.userId, [
+        {
+          count: 1,
+          model: billingModel,
+          modelType: "text",
+          taskType,
+        },
+      ]);
+      if (!quote.enough) throw new Error(`积分不足，需要 ${quote.requiredPoints} 积分，当前可用 ${quote.availablePoints} 积分`);
+
+      billingHold = await reserveModelCallPoints({
+        billingMeta: quote,
+        description: `Agent记忆调用：${quote.items[0]?.modelLabel || this.agentType}`,
+        idempotencyKey: `model-call:${taskType}:${this.isolationKey}:${this.billingAttemptId}:${uuidv4()}`,
+        quote,
+        relatedId: this.isolationKey,
+        taskType,
+        userId: this.userId,
+      });
+      const result = await invoke();
+      await settlePointHold(billingHold?.id);
+      return result;
+    } catch (error) {
+      await releasePointHold(billingHold?.id);
+      throw error;
+    }
   }
 
   private async generateSummary(contents: string[]): Promise<string> {
     const { summaryMaxLength } = await this.getConfigData({ summaryMaxLength: DEFAULTS.summaryMaxLength });
-    const { text } = await u.Ai.Text(this.agentType as any).invoke({
-      system: `你是一个记忆压缩助手。请将以下多条记忆内容压缩为一段简洁的摘要，不超过${summaryMaxLength}个字符。只输出摘要内容，不要加任何前缀或解释。`,
-      messages: [{ role: "user", content: contents.map((c, i) => `${i + 1}. ${c}`).join("\n") }],
-    });
+    const { text } = await this.billedTextInvoke("agent_memory_summary", () =>
+      u.Ai.Text(this.agentType as any).invoke({
+        system: `你是一个记忆压缩助手。请将以下多条记忆内容压缩为一段简洁的摘要，不超过${summaryMaxLength}个字符。只输出摘要内容，不要加任何前缀或解释。`,
+        messages: [{ role: "user", content: contents.map((c, i) => `${i + 1}. ${c}`).join("\n") }],
+      }),
+    );
     return text.slice(0, Number(summaryMaxLength));
   }
 
   private async judgeSummaryRelevance(keyword: string, summaries: { id: string; content: string }[]): Promise<string[]> {
     const list = summaries.map((s) => `[${s.id}] ${s.content}`).join("\n");
-    const { text } = await u.Ai.Text(this.agentType as any).invoke({
-      system:
-        '你是一个信息检索助手。用户会给你一个关键词和一组摘要，请判断哪些摘要可能包含与关键词相关的详细信息。只返回相关摘要的id列表，用JSON数组格式，例如 ["id1","id2"]。不要解释。',
-      messages: [{ role: "user", content: `关键词: ${keyword}\n\n摘要列表:\n${list}` }],
-    });
+    const { text } = await this.billedTextInvoke("agent_memory_retrieval", () =>
+      u.Ai.Text(this.agentType as any).invoke({
+        system:
+          '你是一个信息检索助手。用户会给你一个关键词和一组摘要，请判断哪些摘要可能包含与关键词相关的详细信息。只返回相关摘要的id列表，用JSON数组格式，例如 ["id1","id2"]。不要解释。',
+        messages: [{ role: "user", content: `关键词: ${keyword}\n\n摘要列表:\n${list}` }],
+      }),
+    );
     try {
       const ids = JSON.parse(text);
       if (Array.isArray(ids)) return ids.map(String);

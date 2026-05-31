@@ -5,6 +5,7 @@ import { success, error } from "@/lib/responseFormat";
 import { validateFields } from "@/middleware/middleware";
 import fs from "fs/promises";
 import path from "path";
+import { quoteModelCalls, releasePointHold, reserveModelCallPoints, resolveModelBillingKey, settlePointHoldWithModelUsage } from "@/utils/modelBilling";
 const router = express.Router();
 
 export default router.post(
@@ -23,6 +24,8 @@ export default router.post(
   }),
   async (req, res) => {
     const { trackId, projectId, info, model, mode } = req.body;
+    const userId = String((req as any).user?.id || "");
+    if (!userId) return res.status(401).send(error("未提供token"));
 
     //查询参数
     const images = await Promise.all(
@@ -170,8 +173,40 @@ export default router.post(
           `;
     console.log("%c Line:156 🍬 content", "background:#4fff4B", content);
 
+    let quote;
     try {
-      const { text } = await u.Ai.Text("universalAi").invoke({
+      const billingModel = await resolveModelBillingKey("universalAi");
+      quote = await quoteModelCalls(userId, [
+        {
+          count: 1,
+          model: billingModel,
+          modelType: "text",
+          taskType: "video_prompt_generation",
+        },
+      ]);
+    } catch (err: any) {
+      return res.status(400).send(error(err?.message || "获取积分报价失败"));
+    }
+    if (!quote.enough) return res.status(400).send(error(`积分不足，需要 ${quote.requiredPoints} 积分，当前可用 ${quote.availablePoints} 积分`));
+
+    let billingHold = null;
+    try {
+      billingHold = await reserveModelCallPoints({
+        billingMeta: quote,
+        description: `视频提示词生成：${quote.items[0]?.modelLabel || "universalAi"}`,
+        idempotencyKey: `model-call:video-prompt:${trackId}:${u.uuid()}`,
+        projectId,
+        quote,
+        relatedId: trackId,
+        taskType: "video_prompt_generation",
+        userId,
+      });
+    } catch (err: any) {
+      return res.status(400).send(error(err?.message || "积分不足"));
+    }
+
+    try {
+      const aiResult = await u.Ai.Text("universalAi").invoke({
         system: videoPromptGeneration,
         messages: [
           {
@@ -184,11 +219,18 @@ export default router.post(
           },
         ],
       });
+      const { text } = aiResult;
+      if (!text) {
+        await releasePointHold(billingHold?.id);
+        return res.status(400).send(error("提示词生成失败"));
+      }
       await u.db("o_videoTrack").where({ id: trackId }).update({
         prompt: text,
       });
+      await settlePointHoldWithModelUsage(billingHold?.id, aiResult);
       res.status(200).send(success(text));
     } catch (e) {
+      await releasePointHold(billingHold?.id);
       res.status(400).send(error(u.error(e).message));
     }
   },

@@ -61,8 +61,8 @@
               <div class="selectedInfo">{{ $t("workbench.novel.import.selectedInfo", { count: selectedTextLength }) }}</div>
               <div style="margin-top: 16px; text-align: right">
                 <t-button variant="outline" @click="activeKey = 'To1'">{{ $t("workbench.novel.import.prevStep") }}</t-button>
-                <t-button theme="primary" style="margin-left: 10px" :loading="nextLoading" @click="keep">
-                  保存
+                <t-button theme="primary" style="margin-left: 10px" :loading="nextLoading || saveQuoteLoading" :disabled="saveDisabled" @click="keep">
+                  {{ saveLabel }}
                 </t-button>
               </div>
             </div>
@@ -89,6 +89,11 @@ interface ChapterItem {
   chapter: string;
   chapterData: string;
 }
+type BillingQuote = {
+  availablePoints: number;
+  enough: boolean;
+  requiredPoints: number;
+};
 
 const purgeNovelShow = defineModel<boolean>();
 
@@ -99,6 +104,10 @@ const fileList = ref<any[]>([]);
 const selectedRowKeys = ref<number[]>([]);
 
 const nextLoading = ref(false);
+const saveQuote = ref<BillingQuote | null>(null);
+const saveQuoteError = ref("");
+const saveQuoteLoading = ref(false);
+let saveQuoteSeq = 0;
 
 const columns: PrimaryTableCol<TableRowData>[] = [
   { colKey: "row-select", type: "multiple", width: 60 },
@@ -131,6 +140,61 @@ const selectedRows = computed(() => tableData.value.filter((item) => selectedRow
 
 // 已选文本总长度
 const selectedTextLength = computed(() => selectedRows.value.reduce((sum, item) => sum + item.chapterData.length, 0));
+
+function formatBillingPoints(value?: number) {
+  const points = Math.max(0, Number(value || 0));
+  return Number.isInteger(points) ? String(points) : points.toFixed(2);
+}
+
+function getBillingErrorMessage(error: unknown) {
+  return (error as any)?.message || "获取积分报价失败";
+}
+
+const saveLabel = computed(() => {
+  const base = "保存";
+  if (!selectedRows.value.length) return base;
+  if (saveQuoteError.value) return `${base} · 报价不可用`;
+  const points = saveQuote.value?.requiredPoints || 0;
+  return points > 0 ? `${base} · ${formatBillingPoints(points)}积分` : base;
+});
+
+const saveDisabled = computed(() => {
+  return saveQuoteLoading.value || Boolean(saveQuoteError.value) || Boolean(saveQuote.value && !saveQuote.value.enough);
+});
+
+async function refreshSaveQuote() {
+  const count = selectedRows.value.length;
+  if (count <= 0) {
+    saveQuote.value = null;
+    saveQuoteError.value = "";
+    return;
+  }
+  const seq = ++saveQuoteSeq;
+  saveQuoteLoading.value = true;
+  try {
+    const { data } = await axios.post("/billing/quote", {
+      calls: [
+        {
+          count,
+          model: "universalAi",
+          modelType: "text",
+          taskType: "novel_event_extraction",
+        },
+      ],
+    });
+    if (seq === saveQuoteSeq) {
+      saveQuote.value = data;
+      saveQuoteError.value = "";
+    }
+  } catch (error) {
+    if (seq === saveQuoteSeq) {
+      saveQuote.value = null;
+      saveQuoteError.value = getBillingErrorMessage(error);
+    }
+  } finally {
+    if (seq === saveQuoteSeq) saveQuoteLoading.value = false;
+  }
+}
 
 // 触发上传
 function triggerUpload() {
@@ -207,6 +271,15 @@ async function keep() {
     nextLoading.value = false;
     return;
   }
+  if (!saveQuote.value && !saveQuoteError.value) await refreshSaveQuote();
+  if (saveQuoteError.value) {
+    nextLoading.value = false;
+    return window.$message.error(saveQuoteError.value);
+  }
+  if (saveQuote.value && !saveQuote.value.enough) {
+    nextLoading.value = false;
+    return window.$message.error(`积分不足，需要 ${saveQuote.value.requiredPoints} 积分，当前可用 ${saveQuote.value.availablePoints} 积分`);
+  }
   try {
     await axios.post("/novel/addNovel", { projectId: project.value?.id, data: selectedRows.value });
     nextLoading.value = false;
@@ -229,6 +302,11 @@ watch(purgeNovelShow, (newVal) => {
     activeKey.value = "To1";
   }
 });
+watch(
+  () => selectedRows.value.length,
+  () => refreshSaveQuote(),
+  { immediate: true },
+);
 </script>
 
 <style lang="scss" scoped>

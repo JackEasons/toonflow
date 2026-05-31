@@ -29,7 +29,7 @@
       </t-chat-list>
       <t-chat-sender
         class="inputBox"
-        :disabled="status === 'pending' || status === 'streaming' || !connected"
+        :disabled="status === 'pending' || status === 'streaming' || !connected || agentQuoteDisabled"
         v-model="inputValue"
         :loading="status === 'pending' || status === 'streaming'"
         :placeholder="$t('workbench.production.chatBox.inputPlaceholder')"
@@ -88,6 +88,7 @@
                 </div>
               </template>
             </t-popup>
+            <span v-if="agentQuoteLabel" class="billingHint">{{ agentQuoteLabel }}</span>
           </div>
         </template>
       </t-chat-sender>
@@ -96,7 +97,7 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref, watch, watchEffect } from "vue";
+import { computed, onMounted, ref, watch, watchEffect } from "vue";
 import { DialogPlugin } from "tdesign-vue-next";
 import { storeToRefs } from "pinia";
 import { useMousePressed, useMouse } from "@vueuse/core";
@@ -118,8 +119,64 @@ const props = defineProps({ title: String });
 const emit = defineEmits(["close"]);
 
 const inputValue = ref("");
+type BillingQuote = {
+  availablePoints: number;
+  enough: boolean;
+  requiredPoints: number;
+};
+
+const agentQuote = ref<BillingQuote | null>(null);
+const agentQuoteError = ref("");
+const agentQuoteLoading = ref(false);
+
+function formatBillingPoints(value?: number) {
+  const points = Math.max(0, Number(value || 0));
+  return Number.isInteger(points) ? String(points) : points.toFixed(2);
+}
+
+function getBillingErrorMessage(error: unknown) {
+  return (error as any)?.message || "获取积分报价失败";
+}
+
+const agentQuoteLabel = computed(() => {
+  if (agentQuoteError.value) return "报价不可用";
+  if (agentQuote.value && !agentQuote.value.enough) return "积分不足";
+  const points = agentQuote.value?.requiredPoints || 0;
+  return points > 0 ? `起步 ${formatBillingPoints(points)}积分` : "";
+});
+
+const agentQuoteDisabled = computed(() => {
+  return agentQuoteLoading.value || Boolean(agentQuoteError.value) || Boolean(agentQuote.value && !agentQuote.value.enough);
+});
+
+async function refreshAgentQuote() {
+  agentQuoteLoading.value = true;
+  try {
+    const { data } = await axios.post("/billing/quote", {
+      calls: [
+        {
+          count: 1,
+          model: "productionAgent:decisionAgent",
+          modelType: "text",
+          taskType: "production_agent_call",
+        },
+      ],
+    });
+    agentQuote.value = data;
+    agentQuoteError.value = "";
+  } catch (error) {
+    agentQuote.value = null;
+    agentQuoteError.value = getBillingErrorMessage(error);
+  } finally {
+    agentQuoteLoading.value = false;
+  }
+}
 
 function handleSend(text: string) {
+  if (agentQuoteError.value) return window.$message.error(agentQuoteError.value);
+  if (agentQuote.value && !agentQuote.value.enough) {
+    return window.$message.error(`积分不足，需要 ${agentQuote.value.requiredPoints} 积分，当前可用 ${agentQuote.value.availablePoints} 积分`);
+  }
   productionAgentStore().chat(text);
   inputValue.value = "";
 }
@@ -190,6 +247,7 @@ watchEffect(() => {
 
 const showThink = ref(false);
 onMounted(async () => {
+  refreshAgentQuote();
   const { data } = await axios.post(`/project/getModelDetails`, { key: "productionAgent" });
   if (data && data.think) {
     showThink.value = true;
@@ -498,6 +556,12 @@ onMounted(async () => {
       color: var(--td-error-color);
     }
   }
+}
+.billingHint {
+  margin-left: 4px;
+  font-size: 12px;
+  color: var(--td-text-color-secondary);
+  white-space: nowrap;
 }
 .modelSelCls {
   gap: 5px;

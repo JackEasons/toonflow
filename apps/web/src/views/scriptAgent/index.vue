@@ -17,7 +17,7 @@
           </t-chat-list>
           <t-chat-sender
             class="inputBox"
-            :disabled="status === 'pending' || status === 'streaming'"
+            :disabled="status === 'pending' || status === 'streaming' || agentQuoteDisabled"
             v-model="inputValue"
             :loading="status === 'pending' || status === 'streaming'"
             :placeholder="$t('workbench.scriptAgent.inputPlaceholder')"
@@ -76,6 +76,7 @@
                   </div>
                 </template>
               </t-popup>
+              <span v-if="agentQuoteLabel" class="billingHint">{{ agentQuoteLabel }}</span>
             </template>
           </t-chat-sender>
           <i-dot class="dot" theme="outline" :fill="connected ? 'var(--tf-success)' : 'var(--tf-danger)'" />
@@ -274,10 +275,64 @@ onMounted(() => {
   if (messages.value.length <= 0) messages.value = [...defMsg, ...messages.value];
   getPlanData();
   getNovel();
+  refreshAgentQuote();
   scriptAgentStore().connect();
 
   if (messages.value.length <= 1) getHistory();
 });
+
+type BillingQuote = {
+  availablePoints: number;
+  enough: boolean;
+  requiredPoints: number;
+};
+
+const agentQuote = ref<BillingQuote | null>(null);
+const agentQuoteError = ref("");
+const agentQuoteLoading = ref(false);
+
+function formatBillingPoints(value?: number) {
+  const points = Math.max(0, Number(value || 0));
+  return Number.isInteger(points) ? String(points) : points.toFixed(2);
+}
+
+function getBillingErrorMessage(error: unknown) {
+  return (error as any)?.message || "获取积分报价失败";
+}
+
+const agentQuoteLabel = computed(() => {
+  if (agentQuoteError.value) return "报价不可用";
+  if (agentQuote.value && !agentQuote.value.enough) return "积分不足";
+  const points = agentQuote.value?.requiredPoints || 0;
+  return points > 0 ? `起步 ${formatBillingPoints(points)}积分` : "";
+});
+
+const agentQuoteDisabled = computed(() => {
+  return agentQuoteLoading.value || Boolean(agentQuoteError.value) || Boolean(agentQuote.value && !agentQuote.value.enough);
+});
+
+async function refreshAgentQuote() {
+  agentQuoteLoading.value = true;
+  try {
+    const { data } = await axios.post("/billing/quote", {
+      calls: [
+        {
+          count: 1,
+          model: "scriptAgent:decisionAgent",
+          modelType: "text",
+          taskType: "script_agent_call",
+        },
+      ],
+    });
+    agentQuote.value = data;
+    agentQuoteError.value = "";
+  } catch (error) {
+    agentQuote.value = null;
+    agentQuoteError.value = getBillingErrorMessage(error);
+  } finally {
+    agentQuoteLoading.value = false;
+  }
+}
 const agentWorkDataId = ref<number>();
 async function getPlanData() {
   const { data } = await axios.post("/scriptAgent/getPlanData", { projectId: project.value?.id, agentType: "scriptAgent" });
@@ -295,6 +350,10 @@ const handleActions = {
 };
 
 function handleSend(text: string) {
+  if (agentQuoteError.value) return window.$message.error(agentQuoteError.value);
+  if (agentQuote.value && !agentQuote.value.enough) {
+    return window.$message.error(`积分不足，需要 ${agentQuote.value.requiredPoints} 积分，当前可用 ${agentQuote.value.availablePoints} 积分`);
+  }
   scriptAgentStore().chat(text);
   inputValue.value = "";
 }
@@ -1209,6 +1268,12 @@ function toggleAllCards() {
       color: var(--td-error-color);
     }
   }
+}
+.billingHint {
+  margin-left: 8px;
+  font-size: 12px;
+  color: var(--td-text-color-secondary);
+  white-space: nowrap;
 }
 :deep(.t-tabs__operations--right) {
   top: 0;

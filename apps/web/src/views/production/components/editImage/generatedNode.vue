@@ -58,9 +58,10 @@
         </div>
 
         <div class="f" style="gap: 5px; margin-left: 5px">
-          <t-popup :content="$t('workbench.production.editImage.generateBtn')">
-            <t-button theme="primary" size="small" class="generateBtn" :disabled="generating" :loading="generating" @click="handleGenerate">
+          <t-popup :content="imageGenerateLabel">
+            <t-button theme="primary" size="small" class="generateBtn" :disabled="imageGenerateDisabled" :loading="generating || quoteLoading" @click="handleGenerate">
               <template #icon><i-arrow-up /></template>
+              <span class="buttonText">{{ imageGenerateLabel }}</span>
             </t-button>
           </t-popup>
           <t-popup :content="$t('workbench.production.save')">
@@ -76,7 +77,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, inject, onMounted, ref } from "vue";
+import { computed, inject, onMounted, ref, watch } from "vue";
 import { storeToRefs } from "pinia";
 import { Handle, useVueFlow, Position } from "@vue-flow/core";
 import type { Ref } from "vue";
@@ -96,6 +97,17 @@ const { open, onChange, onCancel } = useFileDialog({ multiple: false, reset: tru
 const selected = ref(true);
 const generating = ref(false);
 const episodesId = inject<Ref<number>>("episodesId")!;
+
+type BillingQuote = {
+  availablePoints: number;
+  enough: boolean;
+  requiredPoints: number;
+};
+
+const quote = ref<BillingQuote | null>(null);
+const quoteError = ref("");
+const quoteLoading = ref(false);
+let quoteSeq = 0;
 
 const emit = defineEmits(["keep"]);
 const { removeNodes } = useVueFlow("editImage");
@@ -119,6 +131,68 @@ const props = defineProps<{
 function selectedFn() {
   selected.value = !selected.value;
 }
+
+function formatBillingPoints(value?: number) {
+  const points = Math.max(0, Number(value || 0));
+  return Number.isInteger(points) ? String(points) : points.toFixed(2);
+}
+
+function getBillingErrorMessage(error: unknown) {
+  return (error as any)?.message || "获取积分报价失败";
+}
+
+const imageGenerateLabel = computed(() => {
+  const base = $t("workbench.production.editImage.generateBtn");
+  if (!props.data.model) return `${base} · 选择模型`;
+  if (quoteError.value) return `${base} · 报价不可用`;
+  const points = quote.value?.requiredPoints || 0;
+  return points > 0 ? `${base} · ${formatBillingPoints(points)}积分` : base;
+});
+
+const imageGenerateDisabled = computed(() => {
+  return generating.value || quoteLoading.value || !props.data.model || Boolean(quoteError.value) || Boolean(quote.value && !quote.value.enough);
+});
+
+async function refreshQuote() {
+  if (!props.data.model) {
+    quote.value = null;
+    quoteError.value = "";
+    return;
+  }
+  const seq = ++quoteSeq;
+  quoteLoading.value = true;
+  try {
+    const { data } = await axios.post("/billing/quote", {
+      calls: [
+        {
+          count: 1,
+          model: props.data.model,
+          modelType: "image",
+          resolution: props.data.quality,
+          taskType: "workflow_image_generation",
+        },
+      ],
+    });
+    if (seq === quoteSeq) {
+      quote.value = data;
+      quoteError.value = "";
+    }
+  } catch (error) {
+    if (seq === quoteSeq) {
+      quote.value = null;
+      quoteError.value = getBillingErrorMessage(error);
+    }
+  } finally {
+    if (seq === quoteSeq) quoteLoading.value = false;
+  }
+}
+
+watch(
+  () => [props.data.model, props.data.quality],
+  () => refreshQuote(),
+  { immediate: true },
+);
+
 function clickHandler(data: DropdownOption) {
   if (data.value == 1) {
     uploadFn();
@@ -178,6 +252,10 @@ async function handleGenerate() {
   if (!props.data.model) return window.$message.error($t("workbench.production.editImage.selectModel"));
   if (!props.data.quality) return window.$message.error($t("workbench.production.editImage.selectQuality"));
   if (!props.data.ratio) return window.$message.error($t("workbench.production.editImage.selectRatio"));
+  if (quoteError.value) return window.$message.warning(quoteError.value);
+  if (quote.value && !quote.value.enough) {
+    return window.$message.warning(`积分不足，需要 ${formatBillingPoints(quote.value.requiredPoints)} 积分，当前可用 ${formatBillingPoints(quote.value.availablePoints)} 积分`);
+  }
   generating.value = true;
   try {
     const { data } = await axios.post("/production/editImage/generateFlowImage", {
@@ -363,8 +441,16 @@ onMounted(() => {
 
       .generateBtn {
         margin-left: auto;
+        min-width: 86px;
         --td-brand-color: #5bccb3;
         --td-brand-color-hover: #4ab8a0;
+
+        .buttonText {
+          max-width: 120px;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
       }
     }
   }

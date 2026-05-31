@@ -32,6 +32,10 @@ export default async (knex: Knex): Promise<void> => {
       });
     }
   };
+  const createTableIfMissing = async (table: string, builder: (table: Knex.CreateTableBuilder) => void) => {
+    if (await knex.schema.hasTable(table)) return;
+    await knex.schema.createTable(table, builder);
+  };
   //矫正因软件异常退出导致的状态不一致问题
   await db("o_novel").where("eventState", 0).update({
     eventState: -1,
@@ -86,6 +90,45 @@ export default async (knex: Knex): Promise<void> => {
   await addColumn("o_user", "introduction", "text");
   await addColumn("o_user", "notificationSettings", "text");
   await addColumn("o_user", "role", "string");
+  await createTableIfMissing("model_billing_rules", (table) => {
+    table.string("id", 191).notNullable();
+    table.string("vendorId", 191).notNullable();
+    table.string("modelName", 191).notNullable();
+    table.string("modelType", 32).notNullable();
+    table.string("modelLabel", 191).nullable();
+    table.decimal("pointsPerCall", 18, 6).notNullable().defaultTo(0);
+    table.boolean("enabled").notNullable().defaultTo(true);
+    table.text("pricingMeta").nullable();
+    table.timestamp("createdAt").notNullable().defaultTo(knex.fn.now());
+    table.timestamp("updatedAt").notNullable().defaultTo(knex.fn.now());
+    table.primary(["id"]);
+    table.unique(["vendorId", "modelName"]);
+    table.index(["vendorId"]);
+    table.index(["modelType"]);
+    table.index(["enabled"]);
+  });
+  await createTableIfMissing("point_holds", (table) => {
+    table.string("id", 191).notNullable();
+    table.string("userId", 191).notNullable();
+    table.decimal("amount", 18, 6).notNullable().defaultTo(0);
+    table.string("status", 32).notNullable().defaultTo("frozen");
+    table.text("description").nullable();
+    table.string("relatedId", 191).nullable();
+    table.string("idempotencyKey", 191).nullable();
+    table.string("projectId", 191).nullable();
+    table.string("episodeId", 191).nullable();
+    table.string("taskType", 191).nullable();
+    table.text("billingMeta").nullable();
+    table.timestamp("createdAt").notNullable().defaultTo(knex.fn.now());
+    table.timestamp("updatedAt").notNullable().defaultTo(knex.fn.now());
+    table.timestamp("settledAt").nullable();
+    table.timestamp("releasedAt").nullable();
+    table.primary(["id"]);
+    table.unique(["idempotencyKey"]);
+    table.index(["userId"]);
+    table.index(["status"]);
+    table.index(["createdAt"]);
+  });
   if (isMysql(knex)) await alterColumnType("memories", "role", "text");
   if (isMysql(knex)) await alterColumnType("o_tasks", "relatedObjects", "text");
 

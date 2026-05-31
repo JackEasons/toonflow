@@ -55,13 +55,15 @@
                 </t-tag>
               </div>
               <div class="ac jb" style="width: 100%">
-                <t-button theme="primary" block @click="batchGenerationPrompt">{{ $t("workbench.cornerScape.batchGenerationPrompt") }}</t-button>
-                <t-button theme="primary" style="margin-left: 10px" block @click="batchSelectBindAudio">
-                  {{ $t("workbench.cornerScape.batchBingAudio") }}
+                <t-button theme="primary" block :loading="batchPromptQuoteLoading" :disabled="batchPromptDisabled" @click="batchGenerationPrompt">
+                  {{ batchPromptLabel }}
+                </t-button>
+                <t-button theme="primary" style="margin-left: 10px" block :loading="batchAudioQuoteLoading" :disabled="batchAudioDisabled" @click="batchSelectBindAudio">
+                  {{ batchAudioLabel }}
                 </t-button>
               </div>
-              <t-button theme="primary" block @click="batchGenerationImage">
-                {{ $t("workbench.cornerScape.startBatch") }}
+              <t-button theme="primary" block :loading="batchImageQuoteLoading" :disabled="batchImageDisabled" @click="batchGenerationImage">
+                {{ batchImageLabel }}
               </t-button>
             </div>
           </t-form-item>
@@ -224,15 +226,15 @@
               <t-button
                 theme="default"
                 variant="outline"
-                :loading="polishing"
+                :loading="polishing || singlePromptQuoteLoading"
                 @click="polishPrompts"
-                :disabled="currentItem.promptState == '生成中' ? true : false">
+                :disabled="currentItem.promptState == '生成中' || singlePromptDisabled ? true : false">
                 <template #icon><t-icon name="edit" /></template>
-                {{ $t("workbench.cornerScape.aiPolish") }}
+                {{ singlePromptLabel }}
               </t-button>
-              <t-button theme="primary" @click="regenerateItem" :disabled="currentItem.state == '生成中' ? true : false">
+              <t-button theme="primary" :loading="singleImageQuoteLoading" @click="regenerateItem" :disabled="currentItem.state == '生成中' || singleImageDisabled ? true : false">
                 <template #icon><t-icon name="refresh" /></template>
-                {{ $t("workbench.cornerScape.regenerate") }}
+                {{ singleImageLabel }}
               </t-button>
             </div>
           </t-form-item>
@@ -275,6 +277,11 @@ interface DataItem {
   relepedAudio: { id: number; name: string }[];
   audioBindState: string;
 }
+type BillingQuote = {
+  availablePoints: number;
+  enough: boolean;
+  requiredPoints: number;
+};
 
 const checkboxValue = ref<string[]>([]);
 const { project } = storeToRefs(projectStore());
@@ -349,6 +356,198 @@ async function getFilteredData() {
 }
 
 const selectedIds = ref<number[]>([]);
+
+const selectedItems = computed(() => dataList.value.filter((item) => selectedIds.value.includes(item.id)));
+const selectedItemsWithPrompt = computed(() => selectedItems.value.filter((item) => Boolean(item.prompt)));
+
+function formatBillingPoints(value?: number) {
+  const points = Math.max(0, Number(value || 0));
+  return Number.isInteger(points) ? String(points) : points.toFixed(2);
+}
+
+function getBillingErrorMessage(error: unknown) {
+  return (error as any)?.message || "获取积分报价失败";
+}
+
+const batchPromptQuote = ref<BillingQuote | null>(null);
+const batchPromptQuoteError = ref("");
+const batchPromptQuoteLoading = ref(false);
+let batchPromptQuoteSeq = 0;
+
+const batchImageQuote = ref<BillingQuote | null>(null);
+const batchImageQuoteError = ref("");
+const batchImageQuoteLoading = ref(false);
+let batchImageQuoteSeq = 0;
+const batchAudioQuote = ref<BillingQuote | null>(null);
+const batchAudioQuoteError = ref("");
+const batchAudioQuoteLoading = ref(false);
+let batchAudioQuoteSeq = 0;
+
+const batchPromptLabel = computed(() => {
+  const base = $t("workbench.cornerScape.batchGenerationPrompt");
+  if (selectedItems.value.length <= 0) return `${base} · 请选择`;
+  if (batchPromptQuoteError.value) return `${base} · 报价不可用`;
+  const points = batchPromptQuote.value?.requiredPoints || 0;
+  return points > 0 ? `${base} · ${formatBillingPoints(points)}积分` : base;
+});
+
+const batchPromptDisabled = computed(() => {
+  return selectedItems.value.length <= 0 || batchPromptQuoteLoading.value || Boolean(batchPromptQuoteError.value) || Boolean(batchPromptQuote.value && !batchPromptQuote.value.enough);
+});
+
+const batchImageLabel = computed(() => {
+  const base = $t("workbench.cornerScape.startBatch");
+  if (selectedItems.value.length <= 0) return `${base} · 请选择`;
+  if (!selectValue.value) return `${base} · 选择模型`;
+  if (selectedItemsWithPrompt.value.length <= 0) return `${base} · 补全提示词`;
+  if (batchImageQuoteError.value) return `${base} · 报价不可用`;
+  const points = batchImageQuote.value?.requiredPoints || 0;
+  return points > 0 ? `${base} · ${formatBillingPoints(points)}积分` : base;
+});
+
+const batchImageDisabled = computed(() => {
+  return (
+    selectedItems.value.length <= 0 ||
+    selectedItemsWithPrompt.value.length <= 0 ||
+    !selectValue.value ||
+    batchImageQuoteLoading.value ||
+    Boolean(batchImageQuoteError.value) ||
+    Boolean(batchImageQuote.value && !batchImageQuote.value.enough)
+  );
+});
+
+const batchAudioLabel = computed(() => {
+  const base = $t("workbench.cornerScape.batchBingAudio");
+  if (selectedItems.value.length <= 0) return `${base} · 请选择`;
+  if (batchAudioQuoteError.value) return `${base} · 报价不可用`;
+  const points = batchAudioQuote.value?.requiredPoints || 0;
+  return points > 0 ? `${base} · ${formatBillingPoints(points)}积分` : base;
+});
+
+const batchAudioDisabled = computed(() => {
+  return selectedItems.value.length <= 0 || batchAudioQuoteLoading.value || Boolean(batchAudioQuoteError.value) || Boolean(batchAudioQuote.value && !batchAudioQuote.value.enough);
+});
+
+async function refreshBatchPromptQuote() {
+  const count = selectedItems.value.length;
+  if (count <= 0) {
+    batchPromptQuote.value = null;
+    batchPromptQuoteError.value = "";
+    return;
+  }
+  const seq = ++batchPromptQuoteSeq;
+  batchPromptQuoteLoading.value = true;
+  try {
+    const { data } = await axios.post("/billing/quote", {
+      calls: [
+        {
+          count,
+          model: "universalAi",
+          modelType: "text",
+          taskType: "asset_prompt_polish",
+        },
+      ],
+    });
+    if (seq === batchPromptQuoteSeq) {
+      batchPromptQuote.value = data;
+      batchPromptQuoteError.value = "";
+    }
+  } catch (error) {
+    if (seq === batchPromptQuoteSeq) {
+      batchPromptQuote.value = null;
+      batchPromptQuoteError.value = getBillingErrorMessage(error);
+    }
+  } finally {
+    if (seq === batchPromptQuoteSeq) batchPromptQuoteLoading.value = false;
+  }
+}
+
+async function refreshBatchImageQuote() {
+  const count = selectedItemsWithPrompt.value.length;
+  if (!selectValue.value || count <= 0) {
+    batchImageQuote.value = null;
+    batchImageQuoteError.value = "";
+    return;
+  }
+  const seq = ++batchImageQuoteSeq;
+  batchImageQuoteLoading.value = true;
+  try {
+    const { data } = await axios.post("/billing/quote", {
+      calls: [
+        {
+          count,
+          model: selectValue.value,
+          modelType: "image",
+          resolution: resolution.value,
+          taskType: "asset_center_image_generation",
+        },
+      ],
+    });
+    if (seq === batchImageQuoteSeq) {
+      batchImageQuote.value = data;
+      batchImageQuoteError.value = "";
+    }
+  } catch (error) {
+    if (seq === batchImageQuoteSeq) {
+      batchImageQuote.value = null;
+      batchImageQuoteError.value = getBillingErrorMessage(error);
+    }
+  } finally {
+    if (seq === batchImageQuoteSeq) batchImageQuoteLoading.value = false;
+  }
+}
+
+async function refreshBatchAudioQuote() {
+  const count = selectedItems.value.length;
+  if (count <= 0) {
+    batchAudioQuote.value = null;
+    batchAudioQuoteError.value = "";
+    return;
+  }
+  const seq = ++batchAudioQuoteSeq;
+  batchAudioQuoteLoading.value = true;
+  try {
+    const { data } = await axios.post("/billing/quote", {
+      calls: [
+        {
+          count,
+          model: "universalAi",
+          modelType: "text",
+          taskType: "asset_audio_binding",
+        },
+      ],
+    });
+    if (seq === batchAudioQuoteSeq) {
+      batchAudioQuote.value = data;
+      batchAudioQuoteError.value = "";
+    }
+  } catch (error) {
+    if (seq === batchAudioQuoteSeq) {
+      batchAudioQuote.value = null;
+      batchAudioQuoteError.value = getBillingErrorMessage(error);
+    }
+  } finally {
+    if (seq === batchAudioQuoteSeq) batchAudioQuoteLoading.value = false;
+  }
+}
+
+watch(
+  () => selectedIds.value.join(","),
+  () => refreshBatchPromptQuote(),
+  { immediate: true },
+);
+
+watch(
+  () => selectedIds.value.join(","),
+  () => refreshBatchAudioQuote(),
+  { immediate: true },
+);
+
+watch(
+  () => [selectedIds.value.join(","), selectValue.value, resolution.value, selectedItemsWithPrompt.value.length],
+  () => refreshBatchImageQuote(),
+  { immediate: true },
+);
 
 function syncSelectedIdsWithData() {
   const visibleIds = new Set(dataList.value.map((item) => item.id));
@@ -478,6 +677,127 @@ const editForm = reactive({
   relepedAudio: [] as { id: number; name: string }[],
 });
 
+const singlePromptQuote = ref<BillingQuote | null>(null);
+const singlePromptQuoteError = ref("");
+const singlePromptQuoteLoading = ref(false);
+let singlePromptQuoteSeq = 0;
+
+const singleImageQuote = ref<BillingQuote | null>(null);
+const singleImageQuoteError = ref("");
+const singleImageQuoteLoading = ref(false);
+let singleImageQuoteSeq = 0;
+
+const singlePromptLabel = computed(() => {
+  const base = $t("workbench.cornerScape.aiPolish");
+  if (singlePromptQuoteError.value) return `${base} · 报价不可用`;
+  const points = singlePromptQuote.value?.requiredPoints || 0;
+  return points > 0 ? `${base} · ${formatBillingPoints(points)}积分` : base;
+});
+
+const singlePromptDisabled = computed(() => {
+  return singlePromptQuoteLoading.value || Boolean(singlePromptQuoteError.value) || Boolean(singlePromptQuote.value && !singlePromptQuote.value.enough);
+});
+
+const singleImageLabel = computed(() => {
+  const base = $t("workbench.cornerScape.regenerate");
+  if (!selectValue.value) return `${base} · 选择模型`;
+  if (!editForm.resolution) return `${base} · 选择分辨率`;
+  if (!editForm.prompt.trim()) return `${base} · 补全提示词`;
+  if (singleImageQuoteError.value) return `${base} · 报价不可用`;
+  const points = singleImageQuote.value?.requiredPoints || 0;
+  return points > 0 ? `${base} · ${formatBillingPoints(points)}积分` : base;
+});
+
+const singleImageDisabled = computed(() => {
+  return (
+    singleImageQuoteLoading.value ||
+    !selectValue.value ||
+    !editForm.resolution ||
+    !editForm.prompt.trim() ||
+    Boolean(singleImageQuoteError.value) ||
+    Boolean(singleImageQuote.value && !singleImageQuote.value.enough)
+  );
+});
+
+async function refreshSinglePromptQuote() {
+  if (!drawerVisible.value || !currentItem.value?.id) {
+    singlePromptQuote.value = null;
+    singlePromptQuoteError.value = "";
+    return;
+  }
+  const seq = ++singlePromptQuoteSeq;
+  singlePromptQuoteLoading.value = true;
+  try {
+    const { data } = await axios.post("/billing/quote", {
+      calls: [
+        {
+          count: 1,
+          model: "universalAi",
+          modelType: "text",
+          taskType: "asset_prompt_polish",
+        },
+      ],
+    });
+    if (seq === singlePromptQuoteSeq) {
+      singlePromptQuote.value = data;
+      singlePromptQuoteError.value = "";
+    }
+  } catch (error) {
+    if (seq === singlePromptQuoteSeq) {
+      singlePromptQuote.value = null;
+      singlePromptQuoteError.value = getBillingErrorMessage(error);
+    }
+  } finally {
+    if (seq === singlePromptQuoteSeq) singlePromptQuoteLoading.value = false;
+  }
+}
+
+async function refreshSingleImageQuote() {
+  if (!drawerVisible.value || !currentItem.value?.id || !selectValue.value || !editForm.resolution || !editForm.prompt.trim()) {
+    singleImageQuote.value = null;
+    singleImageQuoteError.value = "";
+    return;
+  }
+  const seq = ++singleImageQuoteSeq;
+  singleImageQuoteLoading.value = true;
+  try {
+    const { data } = await axios.post("/billing/quote", {
+      calls: [
+        {
+          count: 1,
+          model: selectValue.value,
+          modelType: "image",
+          resolution: editForm.resolution,
+          taskType: "asset_center_image_generation",
+        },
+      ],
+    });
+    if (seq === singleImageQuoteSeq) {
+      singleImageQuote.value = data;
+      singleImageQuoteError.value = "";
+    }
+  } catch (error) {
+    if (seq === singleImageQuoteSeq) {
+      singleImageQuote.value = null;
+      singleImageQuoteError.value = getBillingErrorMessage(error);
+    }
+  } finally {
+    if (seq === singleImageQuoteSeq) singleImageQuoteLoading.value = false;
+  }
+}
+
+watch(
+  () => [drawerVisible.value, currentItem.value?.id],
+  () => refreshSinglePromptQuote(),
+  { immediate: true },
+);
+
+watch(
+  () => [drawerVisible.value, currentItem.value?.id, selectValue.value, editForm.resolution, editForm.prompt],
+  () => refreshSingleImageQuote(),
+  { immediate: true },
+);
+
 async function openDrawer(item: DataItem) {
   selectedHistoryId.value = null;
   // 先用当前数据打开抽屉
@@ -532,6 +852,14 @@ function regenerateItem() {
   }
   if (!editForm.prompt.trim()) {
     window.$message.warning($t("workbench.cornerScape.msg.enterPrompt"));
+    return;
+  }
+  if (singleImageQuoteError.value) {
+    window.$message.warning(singleImageQuoteError.value);
+    return;
+  }
+  if (singleImageQuote.value && !singleImageQuote.value.enough) {
+    window.$message.warning(`积分不足，需要 ${formatBillingPoints(singleImageQuote.value.requiredPoints)} 积分，当前可用 ${formatBillingPoints(singleImageQuote.value.availablePoints)} 积分`);
     return;
   }
   const item = currentItem.value;
@@ -594,6 +922,14 @@ async function polishPrompts() {
     window.$message.warning($t("workbench.cornerScape.msg.enterPromptFirst"));
     return;
   }
+  if (singlePromptQuoteError.value) {
+    window.$message.warning(singlePromptQuoteError.value);
+    return;
+  }
+  if (singlePromptQuote.value && !singlePromptQuote.value.enough) {
+    window.$message.warning(`积分不足，需要 ${formatBillingPoints(singlePromptQuote.value.requiredPoints)} 积分，当前可用 ${formatBillingPoints(singlePromptQuote.value.availablePoints)} 积分`);
+    return;
+  }
   polishing.value = true;
   try {
     const { data } = await axios.post("/assetsGenerate/polishAssetsPrompt", {
@@ -618,6 +954,14 @@ async function polishPrompts() {
 async function batchGenerationPrompt() {
   if (selectedIds.value.length === 0) {
     window.$message.warning($t("workbench.cornerScape.msg.selectAtLeastOne"));
+    return;
+  }
+  if (batchPromptQuoteError.value) {
+    window.$message.warning(batchPromptQuoteError.value);
+    return;
+  }
+  if (batchPromptQuote.value && !batchPromptQuote.value.enough) {
+    window.$message.warning(`积分不足，需要 ${formatBillingPoints(batchPromptQuote.value.requiredPoints)} 积分，当前可用 ${formatBillingPoints(batchPromptQuote.value.availablePoints)} 积分`);
     return;
   }
 
@@ -656,6 +1000,14 @@ async function batchGenerationPrompt() {
 async function batchSelectBindAudio() {
   if (selectedIds.value.length === 0) {
     window.$message.warning($t("workbench.cornerScape.msg.selectAtLeastBindOne"));
+    return;
+  }
+  if (batchAudioQuoteError.value) {
+    window.$message.warning(batchAudioQuoteError.value);
+    return;
+  }
+  if (batchAudioQuote.value && !batchAudioQuote.value.enough) {
+    window.$message.warning(`积分不足，需要 ${formatBillingPoints(batchAudioQuote.value.requiredPoints)} 积分，当前可用 ${formatBillingPoints(batchAudioQuote.value.availablePoints)} 积分`);
     return;
   }
 
@@ -709,6 +1061,14 @@ async function batchGenerationImage() {
         emptyPromptNames,
       }),
     );
+    return;
+  }
+  if (batchImageQuoteError.value) {
+    window.$message.warning(batchImageQuoteError.value);
+    return;
+  }
+  if (batchImageQuote.value && !batchImageQuote.value.enough) {
+    window.$message.warning(`积分不足，需要 ${formatBillingPoints(batchImageQuote.value.requiredPoints)} 积分，当前可用 ${formatBillingPoints(batchImageQuote.value.availablePoints)} 积分`);
     return;
   }
 

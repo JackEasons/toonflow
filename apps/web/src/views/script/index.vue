@@ -24,9 +24,9 @@
           <template #icon><i-export /></template>
           {{ $t("workbench.script.exportScript") }}{{ selectedIds.length ? `(${selectedIds.length})` : "" }}
         </t-button>
-        <t-button theme="primary" @click="handleExtractAssets" :loading="scriptLoad" :disabled="selectedIds.length === 0">
+        <t-button theme="primary" @click="handleExtractAssets" :loading="scriptLoad || extractQuoteLoading" :disabled="extractDisabled">
           <template #icon><i-export /></template>
-          {{ $t("workbench.script.extractAssets") }}{{ selectedIds.length ? `(${selectedIds.length})` : "" }}
+          {{ extractAssetsLabel }}
         </t-button>
         <t-button theme="primary" @click="handleBatchDelete" :disabled="selectedIds.length === 0">
           <template #icon><i-delete /></template>
@@ -105,6 +105,11 @@ interface Script {
   errorReason?: string;
   relatedAssets?: ScriptAsset[];
 }
+type BillingQuote = {
+  availablePoints: number;
+  enough: boolean;
+  requiredPoints: number;
+};
 const scripts = ref<Script[]>([]);
 const searchQuery = ref("");
 const addScriptShow = ref(false);
@@ -112,6 +117,79 @@ const selectedIds = ref<number[]>([]);
 const scriptLoad = ref(false);
 const batchScriptShow = ref(false);
 const isAllSelected = computed(() => scripts.value.length > 0 && selectedIds.value.length === scripts.value.length);
+const extractQuote = ref<BillingQuote | null>(null);
+const extractQuoteError = ref("");
+const extractQuoteLoading = ref(false);
+let extractQuoteSeq = 0;
+
+function formatBillingPoints(value?: number) {
+  const points = Math.max(0, Number(value || 0));
+  return Number.isInteger(points) ? String(points) : points.toFixed(2);
+}
+
+function getBillingErrorMessage(error: unknown) {
+  return (error as any)?.message || "获取积分报价失败";
+}
+
+const extractQuoteCount = computed(() => {
+  if (!selectedIds.value.length) return 0;
+  const groupSize = Math.max(1, Math.floor(Number(otherSetting.value.assetsBatchGenereateSize || 5)));
+  const scriptChunkCount = Math.ceil(selectedIds.value.length / 5);
+  return Math.ceil(scriptChunkCount / groupSize);
+});
+
+const extractAssetsLabel = computed(() => {
+  const base = `${$t("workbench.script.extractAssets")}${selectedIds.value.length ? `(${selectedIds.value.length})` : ""}`;
+  if (!selectedIds.value.length) return base;
+  if (extractQuoteError.value) return `${base} · 报价不可用`;
+  const points = extractQuote.value?.requiredPoints || 0;
+  return points > 0 ? `${base} · ${formatBillingPoints(points)}积分` : base;
+});
+
+const extractDisabled = computed(() => {
+  return (
+    selectedIds.value.length === 0 ||
+    scriptLoad.value ||
+    extractQuoteLoading.value ||
+    Boolean(extractQuoteError.value) ||
+    Boolean(extractQuote.value && !extractQuote.value.enough)
+  );
+});
+
+async function refreshExtractQuote() {
+  const count = extractQuoteCount.value;
+  if (count <= 0) {
+    extractQuote.value = null;
+    extractQuoteError.value = "";
+    return;
+  }
+  const seq = ++extractQuoteSeq;
+  extractQuoteLoading.value = true;
+  try {
+    const { data } = await axios.post("/billing/quote", {
+      calls: [
+        {
+          count,
+          model: "universalAi",
+          modelType: "text",
+          taskType: "script_asset_extraction",
+        },
+      ],
+    });
+    if (seq === extractQuoteSeq) {
+      extractQuote.value = data;
+      extractQuoteError.value = "";
+    }
+  } catch (error) {
+    if (seq === extractQuoteSeq) {
+      extractQuote.value = null;
+      extractQuoteError.value = getBillingErrorMessage(error);
+    }
+  } finally {
+    if (seq === extractQuoteSeq) extractQuoteLoading.value = false;
+  }
+}
+
 function toggleSelect(id: number) {
   const idx = selectedIds.value.indexOf(id);
   if (idx === -1) {
@@ -219,6 +297,11 @@ async function handleDeleteScript(scriptId: number) {
 //提取资产
 async function handleExtractAssets() {
   if (!project.value) return window.$message.error($t("workbench.script.msg.projectNotFound"));
+  if (!extractQuote.value && !extractQuoteError.value) await refreshExtractQuote();
+  if (extractQuoteError.value) return window.$message.error(extractQuoteError.value);
+  if (extractQuote.value && !extractQuote.value.enough) {
+    return window.$message.error(`积分不足，需要 ${extractQuote.value.requiredPoints} 积分，当前可用 ${extractQuote.value.availablePoints} 积分`);
+  }
   //判断是否有资产正在提取中
   scriptLoad.value = true;
   try {
@@ -320,6 +403,11 @@ watch(
       stopPolling();
     }
   },
+);
+watch(
+  () => [selectedIds.value.join(","), otherSetting.value.assetsBatchGenereateSize],
+  () => refreshExtractQuote(),
+  { immediate: true },
 );
 onUnmounted(() => {
   stopPolling();

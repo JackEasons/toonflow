@@ -410,6 +410,7 @@
       top="10vh"
       placement="center"
       destroyOnClose
+      :confirm-btn="{ content: batchConfirmLabel, loading: batchQuoteLoading, disabled: batchConfirmDisabled }"
       @confirm="keep"
       @close="batchGenerationShow = false">
       <div class="batch">
@@ -547,6 +548,11 @@ interface Asset {
   promptState: string;
   filePath: string;
 }
+type BillingQuote = {
+  availablePoints: number;
+  enough: boolean;
+  requiredPoints: number;
+};
 const tableData = ref<Asset[]>([]);
 // 分页配置
 const pagination = ref({
@@ -674,6 +680,14 @@ function batchGeneration(type: number) {
   batchGenerationShow.value = true;
 }
 function keep() {
+  if (batchQuoteError.value) {
+    window.$message.warning(batchQuoteError.value);
+    return;
+  }
+  if (batchQuote.value && !batchQuote.value.enough) {
+    window.$message.warning(`积分不足，需要 ${formatBillingPoints(batchQuote.value.requiredPoints)} 积分，当前可用 ${formatBillingPoints(batchQuote.value.availablePoints)} 积分`);
+    return;
+  }
   if (batchType.value === $t("workbench.assets.batchGenPrompt")) {
     handleBatchGeneratePrompt();
   } else if (batchType.value === $t("workbench.assets.batchGenImage")) {
@@ -694,11 +708,109 @@ function getSelectedSubAssets(): Asset[] {
   });
   return subAssets;
 }
-// 批量生成提示词
-async function handleBatchGeneratePrompt() {
+function getSelectedAssetsForBatch() {
   const selectedParentAssets = tableData.value.filter((item: any) => selectedRowKeys.value.includes(item.id));
   const selectedSubAssets = getSelectedSubAssets();
-  const selectedAssets = [...selectedParentAssets, ...selectedSubAssets];
+  return {
+    selectedAssets: [...selectedParentAssets, ...selectedSubAssets],
+    selectedParentAssets,
+    selectedSubAssets,
+  };
+}
+
+function getBatchQuoteCount() {
+  const selectedAssets = getSelectedAssetsForBatch().selectedAssets;
+  if (batchType.value !== $t("workbench.assets.batchGenImage")) return selectedAssets.length;
+  return selectedAssets.filter((asset) => Boolean(asset.prompt)).length;
+}
+
+const batchQuote = ref<BillingQuote | null>(null);
+const batchQuoteError = ref("");
+const batchQuoteLoading = ref(false);
+let batchQuoteSeq = 0;
+
+function formatBillingPoints(value?: number) {
+  const points = Math.max(0, Number(value || 0));
+  return Number.isInteger(points) ? String(points) : points.toFixed(2);
+}
+
+function getBillingErrorMessage(error: unknown) {
+  return (error as any)?.message || "获取积分报价失败";
+}
+
+const batchConfirmLabel = computed(() => {
+  const base = batchType.value || $t("common.confirm");
+  const selectedCount = getSelectedAssetsForBatch().selectedAssets.length;
+  if (selectedCount <= 0) return `${base} · 请选择`;
+  if (batchType.value === $t("workbench.assets.batchGenImage") && !selectValue.value) return `${base} · 选择模型`;
+  if (batchType.value === $t("workbench.assets.batchGenImage") && getBatchQuoteCount() <= 0) return `${base} · 补全提示词`;
+  if (batchQuoteError.value) return `${base} · 报价不可用`;
+  const points = batchQuote.value?.requiredPoints || 0;
+  return points > 0 ? `${base} · ${formatBillingPoints(points)}积分` : base;
+});
+
+const batchConfirmDisabled = computed(() => {
+  const selectedCount = getSelectedAssetsForBatch().selectedAssets.length;
+  return (
+    selectedCount <= 0 ||
+    getBatchQuoteCount() <= 0 ||
+    batchQuoteLoading.value ||
+    (batchType.value === $t("workbench.assets.batchGenImage") && !selectValue.value) ||
+    Boolean(batchQuoteError.value) ||
+    Boolean(batchQuote.value && !batchQuote.value.enough)
+  );
+});
+
+async function refreshBatchQuote() {
+  const selectedCount = getBatchQuoteCount();
+  if (!batchGenerationShow.value || selectedCount <= 0) {
+    batchQuote.value = null;
+    batchQuoteError.value = "";
+    return;
+  }
+  const isImageBatch = batchType.value === $t("workbench.assets.batchGenImage");
+  if (isImageBatch && !selectValue.value) {
+    batchQuote.value = null;
+    batchQuoteError.value = "";
+    return;
+  }
+
+  const seq = ++batchQuoteSeq;
+  batchQuoteLoading.value = true;
+  try {
+    const { data } = await axios.post("/billing/quote", {
+      calls: [
+        {
+          count: selectedCount,
+          model: isImageBatch ? selectValue.value : "universalAi",
+          modelType: isImageBatch ? "image" : "text",
+          resolution: isImageBatch ? resolution.value : undefined,
+          taskType: isImageBatch ? "asset_center_image_generation" : "asset_prompt_polish",
+        },
+      ],
+    });
+    if (seq === batchQuoteSeq) {
+      batchQuote.value = data;
+      batchQuoteError.value = "";
+    }
+  } catch (error) {
+    if (seq === batchQuoteSeq) {
+      batchQuote.value = null;
+      batchQuoteError.value = getBillingErrorMessage(error);
+    }
+  } finally {
+    if (seq === batchQuoteSeq) batchQuoteLoading.value = false;
+  }
+}
+
+watch(
+  () => [batchGenerationShow.value, batchType.value, selectValue.value, resolution.value, selectedRowKeys.value.join(","), selectedSubRowKeys.value.join(",")],
+  () => refreshBatchQuote(),
+  { immediate: true },
+);
+// 批量生成提示词
+async function handleBatchGeneratePrompt() {
+  const { selectedParentAssets, selectedSubAssets, selectedAssets } = getSelectedAssetsForBatch();
   if (selectedAssets.length === 0) {
     window.$message.warning($t("workbench.assets.selectAtLeastOne"));
     return;
@@ -721,6 +833,7 @@ async function handleBatchGeneratePrompt() {
     await axios.post("/assetsGenerate/batchPolishAssetsPrompt", {
       projectId: project.value?.id,
       concurrentCount: otherSetting.value.assetsBatchGenereateSize,
+      otherTextPrompt: "",
       items: selectedAssets.map((item: { id: number; name: string; type: string; describe: string }) => ({
         assetsId: item.id,
         type: item.type ?? "props",
@@ -734,9 +847,7 @@ async function handleBatchGeneratePrompt() {
 }
 // 批量生成图片
 async function handleBatchGenerateImage() {
-  const selectedParentAssets = tableData.value.filter((item: any) => selectedRowKeys.value.includes(item.id));
-  const selectedSubAssets = getSelectedSubAssets();
-  const selectedAssets = [...selectedParentAssets, ...selectedSubAssets];
+  const { selectedParentAssets, selectedSubAssets, selectedAssets } = getSelectedAssetsForBatch();
   if (selectedAssets.length === 0) {
     window.$message.warning($t("workbench.assets.selectAtLeastOne"));
     return;

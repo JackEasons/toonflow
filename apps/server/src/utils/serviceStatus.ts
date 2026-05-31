@@ -301,11 +301,16 @@ async function getPaymentDependency(): Promise<ServiceDependency> {
     const paidPlans = numberFromCount(paidPlanRow?.count);
     const providers = options.providers.map((item) => item.label);
     const hasProvider = providers.length > 0;
+    const incompleteProviders = Object.values(options.readiness)
+      .filter((item) => item.enabled && !item.ready)
+      .map((item) => `${item.label}缺少${item.missing.join("、") || "必要配置"}`);
 
     return {
       action: "/settings/payment-config",
       detail: hasProvider
         ? `默认通道：${options.defaultProvider} · 公网地址${config.publicBaseUrl ? "已配置" : "未配置"}`
+        : incompleteProviders.length > 0
+          ? incompleteProviders.join("；")
         : paidPlans > 0
           ? "存在付费会员方案，但还没有启用支付通道"
           : "当前未启用支付通道",

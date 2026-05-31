@@ -9,6 +9,7 @@ export default router.get("/", async (req, res) => {
     return res.status(200).send(
       success(
         await getAdminMembershipOrders({
+          keyword: req.query.keyword ? String(req.query.keyword) : undefined,
           userId: req.query.userId ? String(req.query.userId) : undefined,
           status: req.query.status ? String(req.query.status) : undefined,
           page: Number(req.query.page || 1),

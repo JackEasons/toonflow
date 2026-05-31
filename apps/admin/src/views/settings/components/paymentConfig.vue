@@ -426,6 +426,12 @@ const alipayMissingFields = computed(() => {
   if (!hasSecretValue(formData.value.alipay.alipayPublicKey, formData.value.alipay.alipayPublicKeyConfigured)) {
     missing.push("支付宝公钥");
   }
+  if (!hasCallbackValue(formData.value.alipay.notifyUrl)) {
+    missing.push("异步通知地址或公网访问地址");
+  }
+  if (!hasCallbackValue(formData.value.alipay.returnUrl)) {
+    missing.push("同步返回地址或公网访问地址");
+  }
   return missing;
 });
 const wechatMissingFields = computed(() => {
@@ -460,6 +466,9 @@ const wechatMissingFields = computed(() => {
   }
   if (!hasSecretValue(formData.value.wechat.privateKey, formData.value.wechat.privateKeyConfigured)) {
     missing.push("商户 API 私钥");
+  }
+  if (!hasCallbackValue(formData.value.wechat.notifyUrl)) {
+    missing.push("通知地址或公网访问地址");
   }
   const hasWechatPublicKey =
     formData.value.wechat.wechatpayPublicKeyId.trim().length > 0 &&
@@ -534,6 +543,10 @@ const actionHint = computed(() => {
 
 function hasSecretValue(value: string, configured = false) {
   return configured || value.trim().length > 0;
+}
+
+function hasCallbackValue(value: string) {
+  return value.trim().length > 0 || formData.value.publicBaseUrl.trim().length > 0;
 }
 
 function buildCallbackPreview(path: string) {

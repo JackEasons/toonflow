@@ -9,6 +9,7 @@ const PAYMENT_CONFIG_KEY = "paymentConfig";
 const ALIPAY_PRODUCTION_GATEWAY = "https://openapi.alipay.com/gateway.do";
 const ALIPAY_SANDBOX_GATEWAY = "https://openapi-sandbox.dl.alipaydev.com/gateway.do";
 const WECHATPAY_GATEWAY = "https://api.mch.weixin.qq.com";
+const PAYMENT_SUBJECT_APP_NAME = process.env.APP_NAME || process.env.VITE_APP_TITLE || "DramaStudio";
 
 type AlipayProduct = "page" | "wap";
 type PaymentProvider = "alipay" | "wechat";
@@ -186,12 +187,70 @@ export function maskPaymentConfig(config: PaymentConfig) {
   return masked;
 }
 
+function hasValue(value: string) {
+  return Boolean(String(value || "").trim());
+}
+
+function hasCallbackUrl(config: PaymentConfig, configuredUrl: string) {
+  return hasValue(configuredUrl) || hasValue(config.publicBaseUrl);
+}
+
+export function getPaymentProviderReadiness(config: PaymentConfig) {
+  const alipayMissing: string[] = [];
+  if (config.alipay.enabled) {
+    if (!hasValue(config.alipay.appId)) alipayMissing.push("App ID");
+    if (!hasValue(config.alipay.appPrivateKey)) alipayMissing.push("应用私钥");
+    if (!hasValue(config.alipay.alipayPublicKey)) alipayMissing.push("支付宝公钥");
+    if (!hasCallbackUrl(config, config.alipay.notifyUrl)) alipayMissing.push("异步通知地址或公网访问地址");
+    if (!hasCallbackUrl(config, config.alipay.returnUrl)) alipayMissing.push("同步返回地址或公网访问地址");
+  }
+
+  const wechatMissing: string[] = [];
+  const wechat = config.wechat;
+  if (wechat.enabled) {
+    if (wechat.mode === "serviceProvider") {
+      if (!hasValue(wechat.spAppid)) wechatMissing.push("服务商 AppID");
+      if (!hasValue(wechat.spMchid)) wechatMissing.push("服务商商户号");
+      if (!hasValue(wechat.subMchid)) wechatMissing.push("子商户号");
+    } else {
+      if (!hasValue(wechat.appid)) wechatMissing.push("AppID");
+      if (!hasValue(wechat.mchid)) wechatMissing.push("商户号");
+    }
+    if (!hasValue(wechat.certificateSerialNo)) wechatMissing.push("API 证书序列号");
+    if (!hasValue(wechat.apiV3Key)) wechatMissing.push("APIv3 密钥");
+    if (!hasValue(wechat.privateKey)) wechatMissing.push("商户 API 私钥");
+    if (!hasCallbackUrl(config, wechat.notifyUrl)) wechatMissing.push("通知地址或公网访问地址");
+    const hasWechatPublicKey = hasValue(wechat.wechatpayPublicKeyId) && hasValue(wechat.wechatpayPublicKey);
+    const hasPlatformCertificate = hasValue(wechat.platformCertificate);
+    if (!hasWechatPublicKey && !hasPlatformCertificate) wechatMissing.push("微信支付公钥/平台证书");
+    if (hasPlatformCertificate && !hasValue(wechat.platformCertificateSerialNo)) wechatMissing.push("平台证书序列号");
+  }
+
+  return {
+    alipay: {
+      enabled: config.alipay.enabled,
+      label: "支付宝",
+      missing: alipayMissing,
+      ready: config.alipay.enabled && alipayMissing.length === 0,
+      value: "alipay" as const,
+    },
+    wechat: {
+      enabled: config.wechat.enabled,
+      label: "微信支付",
+      missing: wechatMissing,
+      ready: config.wechat.enabled && wechatMissing.length === 0,
+      value: "wechat" as const,
+    },
+  };
+}
+
 export function getEnabledPaymentOptions(config: PaymentConfig) {
+  const readiness = getPaymentProviderReadiness(config);
   const providers: Array<{ label: string; value: PaymentProvider }> = [];
-  if (config.alipay.enabled) providers.push({ label: "支付宝", value: "alipay" });
-  if (config.wechat.enabled) providers.push({ label: "微信支付", value: "wechat" });
+  if (readiness.alipay.ready) providers.push({ label: readiness.alipay.label, value: readiness.alipay.value });
+  if (readiness.wechat.ready) providers.push({ label: readiness.wechat.label, value: readiness.wechat.value });
   const defaultProvider = providers.some((item) => item.value === config.defaultProvider) ? config.defaultProvider : providers[0]?.value || "alipay";
-  return { defaultProvider, providers };
+  return { defaultProvider, providers, readiness };
 }
 
 function nowAlipayTimestamp() {
@@ -209,12 +268,12 @@ function amountFen(value: unknown) {
 }
 
 function cleanSubject(value: string) {
-  return value.replace(/[\/=&]/g, " ").replace(/\s+/g, " ").trim().slice(0, 120) || "DramaStudio 订单";
+  return value.replace(/[\/=&]/g, " ").replace(/\s+/g, " ").trim().slice(0, 120) || `${PAYMENT_SUBJECT_APP_NAME} 订单`;
 }
 
 function orderSubject(order: PaymentOrder) {
-  if (order.kind === "plan") return cleanSubject(`DramaStudio 会员订阅 ${order.planKey || order.orderNo}`);
-  return cleanSubject(`DramaStudio 积分包 ${order.points || ""} 积分`);
+  if (order.kind === "plan") return cleanSubject(`${PAYMENT_SUBJECT_APP_NAME} 会员订阅 ${order.planKey || order.orderNo}`);
+  return cleanSubject(`${PAYMENT_SUBJECT_APP_NAME} 积分包 ${order.points || ""} 积分`);
 }
 
 function requestBaseUrl(req?: Request, config?: PaymentConfig) {
@@ -442,15 +501,23 @@ async function createWechatPayment(config: PaymentConfig, order: PaymentOrder, r
 
 export async function createPaymentForOrder(order: PaymentOrder, provider: PaymentProvider | undefined, req?: Request) {
   const config = await getPaymentConfig();
-  const selected = provider || getEnabledPaymentOptions(config).defaultProvider;
+  const options = getEnabledPaymentOptions(config);
+  const selected = provider || options.defaultProvider;
   if (Number(order.amountCny || 0) <= 0) {
     return { provider: "free", type: "none", orderNo: order.orderNo };
   }
+  if (!provider && options.providers.length === 0) {
+    throw new Error("暂无可用支付通道，请先在后台完成支付配置");
+  }
   if (selected === "alipay") {
-    if (!config.alipay.enabled) throw new Error("支付宝支付未启用");
+    if (!options.readiness.alipay.ready) {
+      throw new Error(`支付宝支付未配置完整：${options.readiness.alipay.missing.join("、") || "未启用"}`);
+    }
     return createAlipayPayment(config, order, req);
   }
-  if (!config.wechat.enabled) throw new Error("微信支付未启用");
+  if (!options.readiness.wechat.ready) {
+    throw new Error(`微信支付未配置完整：${options.readiness.wechat.missing.join("、") || "未启用"}`);
+  }
   return createWechatPayment(config, order, req);
 }
 

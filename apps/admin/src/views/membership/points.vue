@@ -31,6 +31,7 @@ const formOptions: SuperFormProps = {
         options: [
           { label: '全部类型', value: 'all' },
           { label: '消耗', value: 'consume' },
+          { label: '模型调用消耗', value: 'model_consume' },
           { label: '积分包购买', value: 'points_purchase' },
           { label: '会员赠送', value: 'membership_grant' },
           { label: '会员后台调整', value: 'membership_admin_update' },

@@ -1164,6 +1164,27 @@ export default async (knex: Knex, forceInit: boolean = false): Promise<void> => 
       },
     },
     {
+      name: "model_billing_rules",
+      builder: (table) => {
+        table.string("id", 191).notNullable();
+        table.string("vendorId", 191).notNullable();
+        table.string("modelName", 191).notNullable();
+        table.string("modelType", 32).notNullable();
+        table.string("modelLabel", 191).nullable();
+        table.decimal("pointsPerCall", 18, 6).notNullable().defaultTo(0);
+        table.boolean("enabled").notNullable().defaultTo(true);
+        table.text("pricingMeta").nullable();
+        table.timestamp("createdAt").notNullable().defaultTo(knex.fn.now());
+        table.timestamp("updatedAt").notNullable().defaultTo(knex.fn.now());
+        table.primary(["id"]);
+        table.unique(["vendorId", "modelName"]);
+        table.index(["vendorId"]);
+        table.index(["modelType"]);
+        table.index(["enabled"]);
+      },
+      initData: async () => {},
+    },
+    {
       name: "user_balances",
       builder: (table) => {
         table.string("id", 191).notNullable();
@@ -1256,6 +1277,32 @@ export default async (knex: Knex, forceInit: boolean = false): Promise<void> => 
         table.index(["type"]);
         table.index(["createdAt"]);
         table.unique(["idempotencyKey"]);
+      },
+      initData: async () => {},
+    },
+    {
+      name: "point_holds",
+      builder: (table) => {
+        table.string("id", 191).notNullable();
+        table.string("userId", 191).notNullable();
+        table.decimal("amount", 18, 6).notNullable().defaultTo(0);
+        table.string("status", 32).notNullable().defaultTo("frozen");
+        table.text("description").nullable();
+        table.string("relatedId", 191).nullable();
+        table.string("idempotencyKey", 191).nullable();
+        table.string("projectId", 191).nullable();
+        table.string("episodeId", 191).nullable();
+        table.string("taskType", 191).nullable();
+        table.text("billingMeta").nullable();
+        table.timestamp("createdAt").notNullable().defaultTo(knex.fn.now());
+        table.timestamp("updatedAt").notNullable().defaultTo(knex.fn.now());
+        table.timestamp("settledAt").nullable();
+        table.timestamp("releasedAt").nullable();
+        table.primary(["id"]);
+        table.unique(["idempotencyKey"]);
+        table.index(["userId"]);
+        table.index(["status"]);
+        table.index(["createdAt"]);
       },
       initData: async () => {},
     },

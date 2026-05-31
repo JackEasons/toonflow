@@ -146,6 +146,92 @@ const adminSettingsMenus = [
   },
 ];
 
+const adminMembershipMenus = [
+  {
+    component: "BasicLayout",
+    meta: {
+      icon: "lucide:crown",
+      order: 5,
+      title: "会员中心",
+    },
+    name: "MembershipCenter",
+    path: "/membership",
+    redirect: "/membership/overview",
+    children: [
+      {
+        component: "/membership/overview.vue",
+        meta: {
+          affixTab: true,
+          icon: "lucide:layout-dashboard",
+          title: "总览",
+        },
+        name: "MembershipOverview",
+        path: "/membership/overview",
+      },
+      {
+        component: "/membership/users.vue",
+        meta: {
+          icon: "lucide:users",
+          title: "会员管理",
+        },
+        name: "MembershipUsers",
+        path: "/membership/users",
+      },
+      {
+        component: "/membership/orders.vue",
+        meta: {
+          icon: "lucide:receipt-text",
+          title: "订单管理",
+        },
+        name: "MembershipOrders",
+        path: "/membership/orders",
+      },
+      {
+        component: "/membership/points.vue",
+        meta: {
+          icon: "lucide:coins",
+          title: "积分流水",
+        },
+        name: "MembershipPoints",
+        path: "/membership/points",
+      },
+      {
+        component: "/membership/modelBilling.vue",
+        meta: {
+          icon: "lucide:badge-cent",
+          title: "模型计费",
+        },
+        name: "MembershipModelBilling",
+        path: "/membership/model-billing",
+      },
+      {
+        component: "/membership/functions.vue",
+        meta: {
+          icon: "lucide:sliders-horizontal",
+          title: "功能管理",
+        },
+        name: "MembershipFunctions",
+        path: "/membership/functions",
+      },
+    ],
+  },
+];
+
+const adminAccountMenus = [
+  {
+    component: "BasicLayout",
+    meta: {
+      icon: "lucide:shield-user",
+      order: 9,
+      title: "管理员管理",
+    },
+    name: "AdminUsers",
+    path: "/admin/users",
+  },
+];
+
 export default router.get("/", async (req, res) => {
-  res.status(200).send(success(isAdminRequest(req) ? [...dashboardMenus, ...adminSettingsMenus] : dashboardMenus));
+  res
+    .status(200)
+    .send(success(isAdminRequest(req) ? [...dashboardMenus, ...adminMembershipMenus, ...adminAccountMenus, ...adminSettingsMenus] : dashboardMenus));
 });

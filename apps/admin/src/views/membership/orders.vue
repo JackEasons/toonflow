@@ -23,7 +23,16 @@ const formOptions: SuperFormProps = {
       component: 'Input',
       componentProps: {
         clearable: true,
-        placeholder: '按用户 ID 筛选',
+        placeholder: '按订单号、用户名或套餐标识搜索',
+      },
+      fieldName: 'keyword',
+      label: '关键词',
+    },
+    {
+      component: 'Input',
+      componentProps: {
+        clearable: true,
+        placeholder: '精准筛选用户 ID',
       },
       fieldName: 'userId',
       label: '用户 ID',
@@ -55,9 +64,12 @@ const gridOptions: VxeTableGridOptions<OrderRecord> = {
     { field: 'orderNo', minWidth: 190, title: '订单号' },
     { field: 'user', slots: { default: 'user' }, title: '用户', width: 170 },
     { field: 'kind', slots: { default: 'kind' }, title: '类型', width: 110 },
+    { field: 'item', slots: { default: 'item' }, title: '商品', minWidth: 180 },
     { field: 'amount', slots: { default: 'amount' }, title: '金额/积分', width: 180 },
+    { field: 'paymentMethod', slots: { default: 'paymentMethod' }, title: '支付方式', width: 120 },
     { field: 'status', slots: { default: 'status' }, title: '状态', width: 120 },
     { field: 'createdAt', slots: { default: 'createdAt' }, title: '创建时间', width: 180 },
+    { field: 'paidAt', slots: { default: 'paidAt' }, title: '支付时间', width: 180 },
     {
       align: 'center',
       field: 'operation',
@@ -76,6 +88,7 @@ const gridOptions: VxeTableGridOptions<OrderRecord> = {
         const res = await fetchOrders({
           page: page.currentPage,
           pageSize: page.pageSize,
+          keyword: formValues.keyword?.trim() || undefined,
           status: formValues.status === 'all' ? undefined : formValues.status,
           userId: formValues.userId?.trim() || undefined,
         });
@@ -99,7 +112,7 @@ const [Grid, gridApi] = useSuperVxeGrid<OrderRecord>({
   gridOptions,
 });
 
-async function submitStatus(row: OrderRecord, nextStatus: 'canceled' | 'paid') {
+async function submitStatus(row: OrderRecord, nextStatus: 'canceled' | 'paid' | 'refunded') {
   await updateOrder({ id: row.id, status: nextStatus });
   window.$message.success('订单已更新');
   await gridApi.query();
@@ -132,8 +145,19 @@ async function submitStatus(row: OrderRecord, nextStatus: 'canceled' | 'paid') {
         </t-tag>
       </template>
 
+      <template #item="{ row }">
+        <div class="font-medium">
+          {{ row.kind === 'plan' ? row.planKey || '-' : row.pointsPackageKey || '-' }}
+        </div>
+        <div class="text-xs text-foreground/60">{{ row.orderNo }}</div>
+      </template>
+
       <template #amount="{ row }">
         {{ formatMoney(row.amountCny) }} / {{ formatInt(row.points) }} 积分
+      </template>
+
+      <template #paymentMethod="{ row }">
+        {{ row.paymentMethod || '-' }}
       </template>
 
       <template #status="{ row }">
@@ -154,22 +178,32 @@ async function submitStatus(row: OrderRecord, nextStatus: 'canceled' | 'paid') {
         {{ formatDateTime(row.createdAt) }}
       </template>
 
+      <template #paidAt="{ row }">
+        {{ formatDateTime(row.paidAt) }}
+      </template>
+
       <template #operation="{ row }">
         <t-space :size="0">
           <t-button
-            v-if="row.status !== 'paid'"
+            v-if="row.status === 'pending'"
             variant="text"
             theme="success"
             @click="submitStatus(row, 'paid')">
             标记支付
           </t-button>
           <t-button
-            v-if="row.status !== 'canceled'"
+            v-if="row.status === 'pending'"
             variant="text"
             theme="danger"
             @click="submitStatus(row, 'canceled')">
             取消
           </t-button>
+          <t-popconfirm
+            v-if="row.status === 'paid'"
+            content="退款会扣回对应积分，并在必要时恢复为免费会员，确认继续？"
+            @confirm="submitStatus(row, 'refunded')">
+            <t-button variant="text" theme="danger">退款</t-button>
+          </t-popconfirm>
         </t-space>
       </template>
     </Grid>

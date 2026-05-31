@@ -96,8 +96,12 @@
       </div>
       <div class="ac" style="gap: 10px">
         <t-button block @click="previewAll" :disabled="!storyboard.length">{{ $t("workbench.production.node.storyboard.gridPreview") }}</t-button>
-        <t-button block @click="batchGenerateImage" :disabled="!storyboard.length || !selectedIds.length" :loading="generateLoading">
-          {{ $t("workbench.production.node.storyboard.generateImage") }}
+        <t-button
+          block
+          @click="batchGenerateImage"
+          :disabled="storyboardGenerateDisabled"
+          :loading="generateLoading || storyboardQuoteLoading">
+          {{ storyboardGenerateLabel }}
         </t-button>
 
         <!-- <t-button block @click="batchGenerateImage" :disabled="!storyboard.length" :loading="generateLoading">
@@ -116,7 +120,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, h, reactive, ref, resolveComponent } from "vue";
+import { computed, h, reactive, ref, resolveComponent, watch } from "vue";
 import { storeToRefs } from "pinia";
 import { useLocalStorage } from "@vueuse/core";
 import editImage from "../components/editImage/index.vue";
@@ -266,15 +270,100 @@ const styleMaxSize = computed(() => {
   else 1;
 });
 const generateLoading = ref(false);
+interface BillingQuote {
+  availablePoints: number;
+  enough: boolean;
+  requiredPoints: number;
+}
+
+const storyboardQuote = ref<BillingQuote | null>(null);
+const storyboardQuoteError = ref("");
+const storyboardQuoteLoading = ref(false);
+let storyboardQuoteSeq = 0;
+
+function formatBillingPoints(value?: number) {
+  const points = Math.max(0, Number(value || 0));
+  return Number.isInteger(points) ? String(points) : points.toFixed(2);
+}
+
+const storyboardQuoteInsufficient = computed(() => Boolean(storyboardQuote.value && !storyboardQuote.value.enough));
+const storyboardGenerateDisabled = computed(() => {
+  return !storyboard.value.length || !selectedIds.value.length || !project.value?.imageModel || Boolean(storyboardQuoteError.value) || storyboardQuoteInsufficient.value;
+});
+const storyboardGenerateLabel = computed(() => {
+  const base = $t("workbench.production.node.storyboard.generateImage");
+  if (selectedIds.value.length > 0 && !project.value?.imageModel) return `${base} · 选择模型`;
+  if (storyboardQuoteError.value) return `${base} · 报价不可用`;
+  const points = storyboardQuote.value?.requiredPoints || 0;
+  return points > 0 ? `${base} · ${formatBillingPoints(points)}积分` : base;
+});
+
+function getBillingErrorMessage(error: unknown) {
+  return (error as any)?.message || "获取积分报价失败";
+}
+
+async function refreshStoryboardQuote() {
+  const model = project.value?.imageModel;
+  const count = selectedIds.value.length;
+  if (!model || count <= 0) {
+    storyboardQuote.value = null;
+    storyboardQuoteError.value = "";
+    return;
+  }
+  const seq = ++storyboardQuoteSeq;
+  storyboardQuoteLoading.value = true;
+  try {
+    const { data } = await axios.post("/billing/quote", {
+      calls: [
+        {
+          count,
+          model,
+          modelType: "image",
+          taskType: "storyboard_image_generation",
+        },
+      ],
+    });
+    if (seq === storyboardQuoteSeq) {
+      storyboardQuote.value = data;
+      storyboardQuoteError.value = "";
+    }
+  } catch (error) {
+    if (seq === storyboardQuoteSeq) {
+      storyboardQuote.value = null;
+      storyboardQuoteError.value = getBillingErrorMessage(error);
+    }
+  } finally {
+    if (seq === storyboardQuoteSeq) storyboardQuoteLoading.value = false;
+  }
+}
+
+watch(
+  () => [selectedIds.value.join(","), project.value?.imageModel],
+  () => refreshStoryboardQuote(),
+  { immediate: true },
+);
+
 async function batchGenerateImage() {
   if (!selectedIds.value.length) return window.$message.warning("请先选择分镜面板");
+  if (!project.value?.imageModel) {
+    window.$message.warning("请先选择图片模型");
+    return;
+  }
+  if (storyboardQuoteError.value) {
+    window.$message.warning(storyboardQuoteError.value);
+    return;
+  }
+  if (storyboardQuote.value && !storyboardQuote.value.enough) {
+    window.$message.warning(`积分不足，需要 ${formatBillingPoints(storyboardQuote.value.requiredPoints)} 积分，当前可用 ${formatBillingPoints(storyboardQuote.value.availablePoints)} 积分`);
+    return;
+  }
   generateLoading.value = true;
   try {
     await productionAgentStore().batchGenerateStoryboard(selectedIds.value, true);
     window.$message.success($t("workbench.production.node.storyboard.batchGenerateSuccess"));
     selectedIds.value = [];
   } catch (e) {
-    window.$message.error($t("workbench.production.node.storyboard.batchGenerateFailed"));
+    window.$message.error((e as any)?.message || $t("workbench.production.node.storyboard.batchGenerateFailed"));
   } finally {
     generateLoading.value = false;
   }

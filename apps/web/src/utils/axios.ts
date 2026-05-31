@@ -24,6 +24,8 @@ instance.interceptors.response.use(
   function (error) {
     if (error.status === 401) {
       localStorage.removeItem("token");
+      localStorage.removeItem("user");
+      localStorage.removeItem("userId");
       router.push("/login");
       MessagePlugin.error(window.$t("common.sessionExpired"));
     }

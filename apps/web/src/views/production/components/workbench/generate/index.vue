@@ -12,8 +12,8 @@
       <div class="prompt" v-if="currentTrack">
         <t-card :title="'#' + (activeTrackIndex + 1) + $t('workbench.generate.generateText')" header-bordered class="videoPrompt">
           <template #actions>
-            <t-button size="small" class="genTextbtn" :loading="activeTrackGenTextLoading" @click="genText">
-              {{ $t("workbench.generate.generateText") }}
+            <t-button size="small" class="genTextbtn" :loading="activeTrackGenTextLoading || singlePromptQuoteLoading" :disabled="singlePromptGenerateDisabled" @click="genText">
+              {{ singlePromptGenerateLabel }}
             </t-button>
           </template>
           <div class="promptData fc">
@@ -27,6 +27,9 @@
         <videoCard
           v-if="currentTrack"
           :active-track-index="activeTrackIndex"
+          :generate-disabled="singleVideoGenerateDisabled"
+          :generate-label="singleVideoGenerateLabel"
+          :quote-loading="singleVideoQuoteLoading"
           v-model:current-track="currentTrack"
           @refresh="getGenerateData"
           @generate="generateVideo" />
@@ -91,6 +94,12 @@ const modelParmas = ref<ModelSetting>({
   duration: 8,
   audio: false,
 });
+
+interface BillingQuote {
+  availablePoints: number;
+  enough: boolean;
+  requiredPoints: number;
+}
 
 const storyboardList = ref<StoryboardItem[]>([]); // 分镜列表
 
@@ -192,6 +201,128 @@ const currentTrack = computed({
     trackList.value[activeTrackIndex.value] = val;
   },
 });
+
+const singleVideoQuote = ref<BillingQuote | null>(null);
+const singleVideoQuoteError = ref("");
+const singleVideoQuoteLoading = ref(false);
+let singleVideoQuoteSeq = 0;
+const singlePromptQuote = ref<BillingQuote | null>(null);
+const singlePromptQuoteError = ref("");
+const singlePromptQuoteLoading = ref(false);
+let singlePromptQuoteSeq = 0;
+
+function formatBillingPoints(value?: number) {
+  const points = Math.max(0, Number(value || 0));
+  return Number.isInteger(points) ? String(points) : points.toFixed(2);
+}
+
+const singleVideoGenerateLabel = computed(() => {
+  const base = $t("workbench.generate.generate");
+  if (!modelParmas.value.model) return `${base} · 选择模型`;
+  if (singleVideoQuoteError.value) return `${base} · 报价不可用`;
+  const points = singleVideoQuote.value?.requiredPoints || 0;
+  return points > 0 ? `${base} · ${formatBillingPoints(points)}积分` : base;
+});
+
+const singleVideoGenerateDisabled = computed(() => {
+  return !modelParmas.value.model || Boolean(singleVideoQuoteError.value) || Boolean(singleVideoQuote.value && !singleVideoQuote.value.enough);
+});
+
+const singlePromptGenerateLabel = computed(() => {
+  const base = $t("workbench.generate.generateText");
+  if (singlePromptQuoteError.value) return `${base} · 报价不可用`;
+  const points = singlePromptQuote.value?.requiredPoints || 0;
+  return points > 0 ? `${base} · ${formatBillingPoints(points)}积分` : base;
+});
+
+const singlePromptGenerateDisabled = computed(() => {
+  return !currentTrack.value?.id || singlePromptQuoteLoading.value || Boolean(singlePromptQuoteError.value) || Boolean(singlePromptQuote.value && !singlePromptQuote.value.enough);
+});
+
+function getBillingErrorMessage(error: unknown) {
+  return (error as any)?.message || "获取积分报价失败";
+}
+
+async function refreshSingleVideoQuote() {
+  const model = modelParmas.value.model;
+  if (!model) {
+    singleVideoQuote.value = null;
+    singleVideoQuoteError.value = "";
+    return;
+  }
+  const seq = ++singleVideoQuoteSeq;
+  singleVideoQuoteLoading.value = true;
+  try {
+    const { data } = await axios.post("/billing/quote", {
+      calls: [
+        {
+          audio: Boolean(modelParmas.value.audio),
+          count: 1,
+          duration: modelParmas.value.duration,
+          model,
+          modelType: "video",
+          resolution: modelParmas.value.resolution,
+          taskType: "video_generation",
+        },
+      ],
+    });
+    if (seq === singleVideoQuoteSeq) {
+      singleVideoQuote.value = data;
+      singleVideoQuoteError.value = "";
+    }
+  } catch (error) {
+    if (seq === singleVideoQuoteSeq) {
+      singleVideoQuote.value = null;
+      singleVideoQuoteError.value = getBillingErrorMessage(error);
+    }
+  } finally {
+    if (seq === singleVideoQuoteSeq) singleVideoQuoteLoading.value = false;
+  }
+}
+
+async function refreshSinglePromptQuote() {
+  if (!currentTrack.value?.id) {
+    singlePromptQuote.value = null;
+    singlePromptQuoteError.value = "";
+    return;
+  }
+  const seq = ++singlePromptQuoteSeq;
+  singlePromptQuoteLoading.value = true;
+  try {
+    const { data } = await axios.post("/billing/quote", {
+      calls: [
+        {
+          count: 1,
+          model: "universalAi",
+          modelType: "text",
+          taskType: "video_prompt_generation",
+        },
+      ],
+    });
+    if (seq === singlePromptQuoteSeq) {
+      singlePromptQuote.value = data;
+      singlePromptQuoteError.value = "";
+    }
+  } catch (error) {
+    if (seq === singlePromptQuoteSeq) {
+      singlePromptQuote.value = null;
+      singlePromptQuoteError.value = getBillingErrorMessage(error);
+    }
+  } finally {
+    if (seq === singlePromptQuoteSeq) singlePromptQuoteLoading.value = false;
+  }
+}
+
+watch(
+  () => [modelParmas.value.model, modelParmas.value.duration, modelParmas.value.resolution, modelParmas.value.audio],
+  () => refreshSingleVideoQuote(),
+  { immediate: true },
+);
+watch(
+  () => currentTrack.value?.id,
+  () => refreshSinglePromptQuote(),
+  { immediate: true },
+);
 /** 当前轨道是否正在生成提示词 */
 const activeTrackGenTextLoading = computed(() => {
   const trackId = trackList.value[activeTrackIndex.value]?.id;
@@ -221,29 +352,43 @@ watch(
       modelParmas.value.mode = "";
       return;
     }
-    axios.post("/modelSelect/getModelDetail", { modelId: val }).then(({ data }) => {
-      modeOptions.value = data;
-      modelParmas.value.audio = data.audio === true || data.audio === "true" || data.audio == "optional";
-      const drMap = data.durationResolutionMap;
-      if (Array.isArray(drMap) && drMap.length > 0) {
-        if (drMap[0].resolution?.length) modelParmas.value.resolution = drMap[0].resolution[0];
-        if (drMap[0].duration?.length) modelParmas.value.duration = clampDuration(modelParmas.value.duration);
-      }
+    axios
+      .post("/modelSelect/getModelDetail", { modelId: val })
+      .then(({ data }) => {
+        modeOptions.value = data;
+        modelParmas.value.audio = data.audio === true || data.audio === "true" || data.audio == "optional";
+        const drMap = data.durationResolutionMap;
+        if (Array.isArray(drMap) && drMap.length > 0) {
+          if (drMap[0].resolution?.length) modelParmas.value.resolution = drMap[0].resolution[0];
+          if (drMap[0].duration?.length) modelParmas.value.duration = clampDuration(modelParmas.value.duration);
+        }
 
-      const currentParsed = parseMode(modelParmas.value.mode);
-      const modeMatched =
-        currentParsed !== null &&
-        data.mode.some((m: VideoMode) => {
-          if (Array.isArray(m) && Array.isArray(currentParsed)) {
-            return JSON.stringify(m) === JSON.stringify(currentParsed);
-          }
-          return m == currentParsed;
-        });
-      if (!modeMatched) {
-        const newMode = Array.isArray(data.mode[0]) ? JSON.stringify(data.mode[0]) : data.mode[0];
-        modeChange(newMode);
-      }
-    });
+        const currentParsed = parseMode(modelParmas.value.mode);
+        const modeMatched =
+          currentParsed !== null &&
+          data.mode.some((m: VideoMode) => {
+            if (Array.isArray(m) && Array.isArray(currentParsed)) {
+              return JSON.stringify(m) === JSON.stringify(currentParsed);
+            }
+            return m == currentParsed;
+          });
+        if (!modeMatched) {
+          const newMode = Array.isArray(data.mode[0]) ? JSON.stringify(data.mode[0]) : data.mode[0];
+          modeChange(newMode);
+        }
+      })
+      .catch((error) => {
+        modeOptions.value = {
+          name: "",
+          modelName: "",
+          durationResolutionMap: [],
+          audio: false,
+          type: "video",
+          mode: [],
+        };
+        modelParmas.value.mode = "";
+        window.$message.error(getBillingErrorMessage(error));
+      });
   },
 );
 function parseMode(value: string): VideoMode | null {
@@ -313,6 +458,14 @@ const genTextLoadingMap = ref<Record<number, boolean>>({}); // trackId -> 是否
 /** 单个轨道生成提示词 */
 async function genText() {
   if (currentTrack.value.id == null || genTextLoadingMap.value[currentTrack.value.id]) return;
+  if (singlePromptQuoteError.value) {
+    window.$message.warning(singlePromptQuoteError.value);
+    return;
+  }
+  if (singlePromptQuote.value && !singlePromptQuote.value.enough) {
+    window.$message.warning(`积分不足，需要 ${formatBillingPoints(singlePromptQuote.value.requiredPoints)} 积分，当前可用 ${formatBillingPoints(singlePromptQuote.value.availablePoints)} 积分`);
+    return;
+  }
   let info: PromptSourceInfo = [];
   const currentTrackId = currentTrack.value.id;
   const changeTrack = currentTrack.value;
@@ -402,9 +555,24 @@ onMounted(() => {
 });
 /** 单个轨道生成视频 */
 async function generateVideo() {
+  if (!modelParmas.value.model) {
+    window.$message.warning("请先选择模型");
+    return;
+  }
+  if (singleVideoQuoteError.value) {
+    window.$message.warning(singleVideoQuoteError.value);
+    return;
+  }
+  if (singleVideoQuote.value && !singleVideoQuote.value.enough) {
+    window.$message.warning(`积分不足，需要 ${formatBillingPoints(singleVideoQuote.value.requiredPoints)} 积分，当前可用 ${formatBillingPoints(singleVideoQuote.value.availablePoints)} 积分`);
+    return;
+  }
   const dlg = DialogPlugin.confirm({
     header: $t("workbench.generate.generateConfirm"),
-    body: $t("workbench.generate.generateConfirmBody"),
+    body:
+      (singleVideoQuote.value?.requiredPoints || 0) > 0
+        ? `${$t("workbench.generate.generateConfirmBody")}\n预计消耗 ${formatBillingPoints(singleVideoQuote.value?.requiredPoints)} 积分。`
+        : $t("workbench.generate.generateConfirmBody"),
     onConfirm: async () => {
       dlg.destroy();
       try {

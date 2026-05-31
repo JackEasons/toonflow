@@ -7,6 +7,7 @@ import useTools from "@/agents/scriptAgent/tools";
 import ResTool from "@/socket/resTool";
 import * as fs from "fs";
 import path from "path";
+import { quoteModelCalls, releasePointHold, reserveModelCallPoints, resolveModelBillingKey, settlePointHold } from "@/utils/modelBilling";
 
 export interface AgentContext {
   socket: Socket;
@@ -15,11 +16,36 @@ export interface AgentContext {
   userMessageTime?: number;
   abortSignal?: AbortSignal;
   resTool: ResTool;
+  userId?: string;
   msg: ReturnType<ResTool["newMessage"]>;
   thinkConfig: {
     think: boolean;
     thinlLevel: 0 | 1 | 2 | 3;
   };
+}
+
+async function reserveAgentCall(ctx: AgentContext, modelKey: `${string}:${string}` | string, taskType: string, description: string) {
+  if (!ctx.userId) return null;
+  const billingModel = await resolveModelBillingKey(modelKey);
+  const quote = await quoteModelCalls(ctx.userId, [
+    {
+      count: 1,
+      model: billingModel,
+      modelType: "text",
+      taskType,
+    },
+  ]);
+  if (!quote.enough) throw new Error(`积分不足，需要 ${quote.requiredPoints} 积分，当前可用 ${quote.availablePoints} 积分`);
+  return reserveModelCallPoints({
+    billingMeta: quote,
+    description: `${description}：${quote.items[0]?.modelLabel || modelKey}`,
+    idempotencyKey: `model-call:${taskType}:${ctx.isolationKey}:${u.uuid()}`,
+    projectId: ctx.resTool.data.projectId,
+    quote,
+    relatedId: ctx.isolationKey,
+    taskType,
+    userId: ctx.userId,
+  });
 }
 
 function buildMemPrompt(mem: Awaited<ReturnType<Memory["get"]>>): string {
@@ -40,7 +66,7 @@ function buildMemPrompt(mem: Awaited<ReturnType<Memory["get"]>>): string {
 
 export async function runDecisionAI(ctx: AgentContext) {
   const { isolationKey, text, userMessageTime, abortSignal, resTool } = ctx;
-  const memory = new Memory("scriptAgent", isolationKey);
+  const memory = new Memory("scriptAgent", isolationKey, ctx.userId);
   await memory.add("user", text, { createTime: userMessageTime });
 
   const skill = path.join(u.getPath("skills"), "script_agent_decision.md");
@@ -62,35 +88,47 @@ export async function runDecisionAI(ctx: AgentContext) {
     `章节数量：${novelData.length}章`,
   ].join("\n");
 
-  const { fullStream } = await u.Ai.Text("scriptAgent:decisionAgent", ctx.thinkConfig.think, ctx.thinkConfig.thinlLevel).stream({
-    messages: [
-      { role: "system", content: prompt },
-      { role: "assistant", content: projectInfo + "\n" + mem },
-      { role: "user", content: text },
-    ],
-    abortSignal,
-    tools: {
-      ...memory.getTools(),
-      ...useTools({ resTool: ctx.resTool, msg: ctx.msg }),
-      ...createSubAgent(ctx),
-    },
-    onFinish: async (completion) => {
-      await memory.add("assistant:decision", removeAllXmlTags(completion.text));
-    },
-  });
-
+  const billingHold = await reserveAgentCall(ctx, "scriptAgent:decisionAgent", "script_agent_call", "剧本Agent统筹");
+  let settled = false;
   let currentMsg = ctx.msg;
-  await consumeFullStream(fullStream, currentMsg, () => {
-    if (ctx.msg === currentMsg) return currentMsg;
-    currentMsg.complete();
-    currentMsg = ctx.msg;
-    return currentMsg;
-  });
+  try {
+    const { fullStream } = await u.Ai.Text("scriptAgent:decisionAgent", ctx.thinkConfig.think, ctx.thinkConfig.thinlLevel).stream({
+      messages: [
+        { role: "system", content: prompt },
+        { role: "assistant", content: projectInfo + "\n" + mem },
+        { role: "user", content: text },
+      ],
+      abortSignal,
+      tools: {
+        ...memory.getTools(),
+        ...useTools({ resTool: ctx.resTool, msg: ctx.msg }),
+        ...createSubAgent(ctx),
+      },
+      onFinish: async (completion) => {
+        try {
+          await memory.add("assistant:decision", removeAllXmlTags(completion.text));
+        } finally {
+          await settlePointHold(billingHold?.id);
+          settled = true;
+        }
+      },
+    });
+    await consumeFullStream(fullStream, currentMsg, () => {
+      if (ctx.msg === currentMsg) return currentMsg;
+      currentMsg.complete();
+      currentMsg = ctx.msg;
+      return currentMsg;
+    });
+    if (!settled) await settlePointHold(billingHold?.id);
+  } catch (error) {
+    if (!settled) await releasePointHold(billingHold?.id);
+    throw error;
+  }
 }
 
 function createSubAgent(parentCtx: AgentContext) {
   const { resTool, abortSignal } = parentCtx;
-  const memory = new Memory("scriptAgent", parentCtx.isolationKey);
+  const memory = new Memory("scriptAgent", parentCtx.isolationKey, parentCtx.userId);
 
   async function runAgent({
     key,
@@ -111,25 +149,33 @@ function createSubAgent(parentCtx: AgentContext) {
   }) {
     parentCtx.msg.complete();
     const subMsg = resTool.newMessage("assistant", name);
+    const billingHold = await reserveAgentCall(parentCtx, key, "script_agent_call", `剧本Agent-${name}`);
+    let settled = false;
 
-    const { fullStream } = await u.Ai.Text(key, parentCtx.thinkConfig.think, parentCtx.thinkConfig.thinlLevel).stream({
-      system,
-      messages: messages ?? [{ role: "user", content: prompt }],
-      abortSignal,
-      tools: { ...extraTools, ...useTools({ resTool, msg: subMsg }) },
-    });
-
-    const fullResponse = await consumeFullStream(fullStream, subMsg);
-
-    if (fullResponse.trim()) {
-      await memory.add(memoryKey, removeAllXmlTags(fullResponse), {
-        name,
-        createTime: new Date(subMsg.datetime).getTime(),
+    try {
+      const { fullStream } = await u.Ai.Text(key, parentCtx.thinkConfig.think, parentCtx.thinkConfig.thinlLevel).stream({
+        system,
+        messages: messages ?? [{ role: "user", content: prompt }],
+        abortSignal,
+        tools: { ...extraTools, ...useTools({ resTool, msg: subMsg }) },
       });
-    }
+      const fullResponse = await consumeFullStream(fullStream, subMsg);
+      await settlePointHold(billingHold?.id);
+      settled = true;
 
-    parentCtx.msg = resTool.newMessage("assistant", "视频策划");
-    return fullResponse;
+      if (fullResponse.trim()) {
+        await memory.add(memoryKey, removeAllXmlTags(fullResponse), {
+          name,
+          createTime: new Date(subMsg.datetime).getTime(),
+        });
+      }
+
+      parentCtx.msg = resTool.newMessage("assistant", "视频策划");
+      return fullResponse;
+    } catch (error) {
+      if (!settled) await releasePointHold(billingHold?.id);
+      throw error;
+    }
   }
 
   const promptInput = z.object({

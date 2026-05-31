@@ -204,7 +204,7 @@ function createOrderNo(prefix: string) {
 }
 
 function getPointTransactionCategory(type: string, amount: number): PointCategory {
-  if (type === "consume" || type === "shadow_consume" || amount < 0) return "consume";
+  if (type === "consume" || type === "shadow_consume" || type === "order_refund" || amount < 0) return "consume";
   if (type === "recharge" || type === "points_purchase" || type === "plan_purchase" || type === "membership_grant") return "purchase";
   return "earn";
 }
@@ -387,9 +387,11 @@ export async function getMembershipProfile(userId: string) {
 
   const plans = plansRaw.map(normalizePlan);
   const pointPackages = packagesRaw.map(normalizePackage);
+  const frozenAmount = toNumber(balance?.frozenAmount);
+  const balanceAmount = toNumber(balance?.balance);
   const pointSummary = {
-    remaining: toNumber(balance?.balance),
-    frozen: toNumber(balance?.frozenAmount),
+    remaining: Math.max(0, balanceAmount - frozenAmount),
+    frozen: frozenAmount,
     spent: toNumber(balance?.totalSpent),
     membership: toNumber(balance?.membershipPoints),
     recharge: toNumber(balance?.rechargePoints),
@@ -443,20 +445,44 @@ export async function getMembershipProfile(userId: string) {
         createdAt: toIso(item.createdAt) || now().toISOString(),
       };
     }),
-    orders: ordersRaw.map((order: any) => ({
-      id: order.id,
-      orderNo: order.orderNo,
-      kind: order.kind,
-      planKey: order.planKey,
-      pointsPackageKey: order.pointsPackageKey,
-      amountCny: toNumber(order.amountCny),
-      points: toNumber(order.points),
-      status: order.status,
-      paymentMethod: order.paymentMethod,
-      createdAt: toIso(order.createdAt) || now().toISOString(),
-      paidAt: toIso(order.paidAt),
-    })),
+    orders: ordersRaw.map(normalizeUserOrder),
   };
+}
+
+function normalizeUserOrder(order: any) {
+  return {
+    id: order.id,
+    orderNo: order.orderNo,
+    kind: order.kind,
+    planKey: order.planKey,
+    pointsPackageKey: order.pointsPackageKey,
+    amountCny: toNumber(order.amountCny),
+    points: toNumber(order.points),
+    status: order.status,
+    paymentMethod: order.paymentMethod,
+    createdAt: toIso(order.createdAt) || now().toISOString(),
+    paidAt: toIso(order.paidAt),
+  };
+}
+
+export async function getMembershipOrderStatus(userId: string, orderNo: string) {
+  await ensureUserMembership(userId);
+  const order = await db("subscription_orders").where({ userId, orderNo }).first();
+  if (!order) throw new Error("订单不存在");
+
+  return {
+    order: normalizeUserOrder(order),
+    profile: await getMembershipProfile(userId),
+  };
+}
+
+export async function getMembershipOrderForPayment(userId: string, orderNo: string) {
+  await ensureUserMembership(userId);
+  const order = await db("subscription_orders").where({ userId, orderNo }).first();
+  if (!order) throw new Error("订单不存在");
+  if (order.status === "paid") return order;
+  if (order.status !== "pending") throw new Error("当前订单状态不可继续支付");
+  return order;
 }
 
 async function addPoints(params: {
@@ -949,7 +975,7 @@ export async function getAdminMembershipUsers(params: { keyword?: string; page?:
         expiresAt: toIso(row.expiresAt),
       },
       points: {
-        remaining: toNumber(row.balance),
+        remaining: Math.max(0, toNumber(row.balance) - toNumber(row.frozenAmount)),
         frozen: toNumber(row.frozenAmount),
         spent: toNumber(row.totalSpent),
         membership: toNumber(row.membershipPoints),
@@ -999,12 +1025,22 @@ export async function getAdminMembershipTransactions(params: { userId?: string; 
   };
 }
 
-export async function getAdminMembershipOrders(params: { userId?: string; page?: number; pageSize?: number; status?: string }) {
+export async function getAdminMembershipOrders(params: { keyword?: string; userId?: string; page?: number; pageSize?: number; status?: string }) {
   const page = Math.max(1, Number(params.page || 1));
   const pageSize = Math.min(100, Math.max(1, Number(params.pageSize || 20)));
+  const keyword = String(params.keyword || "").trim();
   const query = db("subscription_orders").leftJoin("o_user", "o_user.id", "subscription_orders.userId");
   if (params.userId) query.where("subscription_orders.userId", String(params.userId));
   if (params.status && params.status !== "all") query.where("subscription_orders.status", params.status);
+  if (keyword) {
+    query.where((builder) => {
+      builder
+        .where("subscription_orders.orderNo", "like", `%${keyword}%`)
+        .orWhere("subscription_orders.planKey", "like", `%${keyword}%`)
+        .orWhere("subscription_orders.pointsPackageKey", "like", `%${keyword}%`)
+        .orWhere("o_user.name", "like", `%${keyword}%`);
+    });
+  }
 
   const [countRows, rows] = await Promise.all([
     query.clone().clearSelect().clearOrder().count<{ count: number }[]>({ count: "subscription_orders.id" }),
@@ -1038,20 +1074,127 @@ export async function getAdminMembershipOrders(params: { userId?: string; page?:
   };
 }
 
+async function deductRefundPoints(params: {
+  amount: number;
+  bucket: PointBucket;
+  description: string;
+  operatorId?: null | string;
+  orderId: string;
+  orderNo: string;
+  userId: string;
+}) {
+  const amount = Math.max(0, Math.round(toNumber(params.amount)));
+  if (amount <= 0) return;
+
+  await ensureUserMembership(params.userId, false);
+  const current = await db("user_balances").where("userId", params.userId).first();
+  if (!current) throw new Error("用户积分账户不存在");
+  if (toNumber(current.balance) < amount) throw new Error("用户剩余积分不足，无法自动退款扣回");
+
+  const nextBreakdown = deductBuckets(current, amount, params.bucket);
+  const nextBalance = nextBreakdown.membershipPoints + nextBreakdown.rechargePoints + nextBreakdown.bonusPoints;
+
+  await db("user_balances").where("userId", params.userId).update({
+    balance: nextBalance,
+    membershipPoints: nextBreakdown.membershipPoints,
+    rechargePoints: nextBreakdown.rechargePoints,
+    bonusPoints: nextBreakdown.bonusPoints,
+    updatedAt: now(),
+  });
+
+  await insertTransaction({
+    userId: params.userId,
+    type: "order_refund",
+    amount: -amount,
+    balanceAfter: nextBalance,
+    description: params.description,
+    relatedId: params.orderId,
+    operatorId: params.operatorId,
+    externalOrderId: params.orderNo,
+  });
+}
+
+async function refundSettledOrder(order: any, operatorId?: null | string) {
+  const userId = String(order.userId);
+  if (order.kind === "plan") {
+    await deductRefundPoints({
+      userId,
+      amount: toNumber(order.points),
+      bucket: "membership",
+      description: `会员订单退款扣回积分 -${Math.round(toNumber(order.points))}`,
+      orderId: order.id,
+      orderNo: order.orderNo,
+      operatorId,
+    });
+
+    const membership = await db("user_memberships").where("userId", userId).first();
+    if (membership?.sourceOrderId === order.id) {
+      await db("user_memberships").where("userId", userId).update({
+        levelKey: FREE_LEVEL.levelKey,
+        levelName: FREE_LEVEL.levelName,
+        planKey: "free",
+        status: "active",
+        autoRenew: false,
+        startedAt: now(),
+        expiresAt: null,
+        sourceOrderId: null,
+        updatedAt: now(),
+      });
+
+      await insertTransaction({
+        userId,
+        type: "membership_refund",
+        amount: 0,
+        balanceAfter: toNumber((await db("user_balances").where("userId", userId).first())?.balance),
+        description: "会员订单退款，会员权益恢复为免费会员",
+        relatedId: order.id,
+        operatorId,
+        externalOrderId: order.orderNo,
+      });
+    }
+    return;
+  }
+
+  if (order.kind === "points") {
+    await deductRefundPoints({
+      userId,
+      amount: toNumber(order.points),
+      bucket: "recharge",
+      description: `积分包订单退款扣回积分 -${Math.round(toNumber(order.points))}`,
+      orderId: order.id,
+      orderNo: order.orderNo,
+      operatorId,
+    });
+  }
+}
+
 export async function updateOrderStatus(params: { id: string; operatorId?: null | string; status: "canceled" | "paid" | "pending" | "refunded" }) {
   const order = await db("subscription_orders").where("id", params.id).first();
   if (!order) throw new Error("订单不存在");
-  if (params.status === "paid" && order.status !== "paid") {
+  const currentStatus = String(order.status || "");
+  if (currentStatus === params.status) return;
+
+  if (params.status === "paid") {
+    if (["canceled", "refunded"].includes(currentStatus)) throw new Error("已取消或已退款订单不能标记支付");
     await db("subscription_orders").where("id", params.id).update({
       status: "paid",
       paidAt: now(),
+      paymentMethod: order.paymentMethod || "manual",
       updatedAt: now(),
     });
     await settleOrder(order, params.operatorId);
-  } else {
-    await db("subscription_orders").where("id", params.id).update({
-      status: params.status,
-      updatedAt: now(),
-    });
+    return;
   }
+
+  if (params.status === "canceled" && currentStatus === "paid") throw new Error("已支付订单请使用退款操作");
+  if (params.status === "pending" && ["paid", "refunded"].includes(currentStatus)) throw new Error("已支付或已退款订单不能恢复待支付");
+  if (params.status === "refunded") {
+    if (currentStatus !== "paid") throw new Error("只有已支付订单可以退款");
+    await refundSettledOrder(order, params.operatorId);
+  }
+
+  await db("subscription_orders").where("id", params.id).update({
+    status: params.status,
+    updatedAt: now(),
+  });
 }

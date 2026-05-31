@@ -4,24 +4,24 @@ import { Namespace, Socket } from "socket.io";
 import * as agent from "@/agents/productionAgent/index";
 import ResTool from "@/socket/resTool";
 
-async function verifyToken(rawToken: string): Promise<Boolean> {
+async function verifyToken(rawToken: string): Promise<any | null> {
   const setting = await u.db("o_setting").where("key", "tokenKey").select("value").first();
-  if (!setting) return false;
+  if (!setting) return null;
   const { value: tokenKey } = setting;
-  if (!rawToken) return false;
+  if (!rawToken) return null;
   const token = rawToken.replace("Bearer ", "");
   try {
-    jwt.verify(token, tokenKey as string);
-    return true;
+    return jwt.verify(token, tokenKey as string);
   } catch (err) {
-    return false;
+    return null;
   }
 }
 
 export default (nsp: Namespace) => {
   nsp.on("connection", async (socket: Socket) => {
     const token = socket.handshake.auth.token;
-    if (!token || !(await verifyToken(token))) {
+    const tokenUser = token ? await verifyToken(token) : null;
+    if (!tokenUser) {
       console.log("[productionAgent] 连接失败，token无效");
       socket.disconnect();
       return;
@@ -70,6 +70,7 @@ export default (nsp: Namespace) => {
         userMessageTime: new Date(msg.datetime).getTime() - 1,
         abortSignal: currentController.signal,
         resTool,
+        userId: tokenUser.id ? String(tokenUser.id) : undefined,
         msg,
         thinkConfig,
       };

@@ -3,9 +3,9 @@ import u from "@/utils";
 import { z } from "zod";
 import { error, success } from "@/lib/responseFormat";
 import { validateFields } from "@/middleware/middleware";
-import { useSkill } from "@/utils/agent/skillsTools";
 import { tool, zodSchema } from "ai";
 import { o_script } from "@/types/database";
+import { type ModelBillingQuote, quoteModelCalls, releasePointHold, reserveModelCallPoints, resolveModelBillingKey, settlePointHoldWithModelUsage } from "@/utils/modelBilling";
 
 const router = express.Router();
 
@@ -31,7 +31,6 @@ export const AssetSchema = z.object({
 
 type NewAsset = z.infer<typeof NewAssetSchema>;
 type ExistingAssetRef = z.infer<typeof ExistingAssetRefSchema>;
-type Asset = z.infer<typeof AssetSchema>;
 
 /** 每批 AI 调用的结果 */
 type GroupResult = {
@@ -62,6 +61,8 @@ export default router.post(
   }),
   async (req, res) => {
     const { scriptIds, projectId, groupSize = 5 } = req.body;
+    const userId = String((req as any).user?.id || "");
+    if (!userId) return res.status(401).send(error("未提供token"));
 
     if (!scriptIds.length) return res.status(400).send(error("请先选择剧本"));
     const scripts = await u.db("o_script").whereIn("id", scriptIds);
@@ -69,15 +70,30 @@ export default router.post(
     // 构建 scriptId -> script 内容的映射
     const scriptMap = new Map(scripts.map((s: o_script) => [s.id, s]));
 
-    await u.db("o_script").whereIn("id", scriptIds).update({
-      extractState: 2,
-    });
-
     const errors: { scriptId: number; error: string }[] = [];
-    let successCount = 0;
 
     // 将 scriptIds 按 groupSize（默认5）分组，每组一起发给 AI
     const scriptGroups = chunkArray(scriptIds as number[], groupSize);
+
+    let quote: ModelBillingQuote;
+    try {
+      const billingModel = await resolveModelBillingKey("universalAi");
+      quote = await quoteModelCalls(userId, [
+        {
+          count: scriptGroups.length,
+          model: billingModel,
+          modelType: "text",
+          taskType: "script_asset_extraction",
+        },
+      ]);
+    } catch (err: any) {
+      return res.status(400).send(error(err?.message || "获取积分报价失败"));
+    }
+    if (!quote.enough) return res.status(400).send(error(`积分不足，需要 ${quote.requiredPoints} 积分，当前可用 ${quote.availablePoints} 积分`));
+
+    await u.db("o_script").whereIn("id", scriptIds).update({
+      extractState: 2,
+    });
 
     /** 一组剧本提取完成后统一入库并建立关联 */
     async function persistGroupResult(result: GroupResult) {
@@ -148,6 +164,9 @@ export default router.post(
     }
     res.send(success("开始提取资产"));
 
+    const pointsPerCall = quote.items[0]?.pointsPerCall || 0;
+    const billingAttemptId = u.uuid();
+
     function processGroup(group: number[][][]) {
       group.map(async (itemIds) => {
         const validScripts: { id: number; script: o_script }[] = [];
@@ -183,7 +202,25 @@ export default router.post(
 
         let collectedNew: NewAsset[] = [];
         let collectedExisting: ExistingAssetRef[] = [];
+        const itemQuote = {
+          ...quote,
+          enough: true,
+          items: quote.items[0] ? [{ ...quote.items[0], count: 1, requiredPoints: pointsPerCall }] : [],
+          requiredPoints: pointsPerCall,
+        };
+        let billingHold: Awaited<ReturnType<typeof reserveModelCallPoints>> | null = null;
         try {
+          billingHold = await reserveModelCallPoints({
+            billingMeta: itemQuote,
+            description: `剧本资产提取：${quote.items[0]?.modelLabel || "universalAi"}`,
+            idempotencyKey: `model-call:script-asset-extract:${validScriptIds.join("-")}:${billingAttemptId}`,
+            projectId,
+            quote: itemQuote,
+            relatedId: validScriptIds.join(","),
+            taskType: "script_asset_extraction",
+            userId,
+          });
+
           const resultTool = tool({
             description: "返回结果时必须调用这个工具",
             inputSchema: zodSchema<{ newAssets: NewAsset[]; existingAssetRefs: ExistingAssetRef[] }>(
@@ -213,7 +250,7 @@ export default router.post(
           const existingHint = existingAssetsList
             ? `\n\n【已有资产列表】：${existingAssetsList}\n对于已有资产，如果在剧本中出现，只需在 existingAssetRefs 中给出资产名称和对应的 scriptIds 数组即可，无需重复生成 desc/type。对于新发现的资产（不在已有列表中），请在 newAssets 中给出完整信息。`
             : "";
-          const output = await u.Ai.Text("universalAi").invoke({
+          const aiResult = await u.Ai.Text("universalAi").invoke({
             messages: [
               {
                 role: "system",
@@ -229,12 +266,22 @@ export default router.post(
             ],
             tools: { resultTool },
           });
+          if (!collectedNew.length && !collectedExisting.length) {
+            await releasePointHold(billingHold?.id);
+            for (const { id } of validScripts) {
+              errors.push({ scriptId: id, error: "AI 未返回任何资产" });
+              await u.db("o_script").where("id", id).update({ extractState: -1, errorReason: "AI 未返回任何资产" });
+            }
+            return;
+          }
           await persistGroupResult({
             batchScriptIds: validScriptIds,
             newAssets: collectedNew,
             existingRefs: collectedExisting,
           });
+          await settlePointHoldWithModelUsage(billingHold?.id, aiResult);
         } catch (e) {
+          await releasePointHold(billingHold?.id);
           console.error(`[extractAssets] group=[${validScriptIds.join(",")}] 提取失败:`, e);
           for (const { id, script } of validScripts) {
             errors.push({ scriptId: id, error: (script.name || "") + ":" + u.error(e).message });
@@ -242,13 +289,6 @@ export default router.post(
               .db("o_script")
               .where("id", id)
               .update({ extractState: -1, errorReason: u.error(e).message });
-          }
-          return;
-        }
-        if (!collectedNew.length && !collectedExisting.length) {
-          for (const { id } of validScripts) {
-            errors.push({ scriptId: id, error: "AI 未返回任何资产" });
-            await u.db("o_script").where("id", id).update({ extractState: -1, errorReason: "AI 未返回任何资产" });
           }
           return;
         }

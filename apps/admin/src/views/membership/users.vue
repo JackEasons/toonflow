@@ -163,10 +163,10 @@ async function submitPoints() {
 </script>
 
 <template>
-  <Page auto-content-height title="用户管理">
+  <Page auto-content-height title="会员管理">
     <template #description>
       <div class="mt-2 text-foreground/70">
-        查看用户会员身份、积分余额，并处理后台人工调整。
+        管理 Web 端注册会员的会员身份、积分余额和后台人工调整。
       </div>
     </template>
     <template #extra>
@@ -176,7 +176,7 @@ async function submitPoints() {
       </t-button>
     </template>
 
-    <Grid table-title="用户列表" table-title-help="支持按用户名、昵称或用户 ID 搜索">
+    <Grid table-title="会员列表" table-title-help="仅展示普通会员账号，支持按用户名、昵称或用户 ID 搜索">
       <template #user="{ row }">
         <div class="flex min-w-0 items-center gap-3">
           <t-avatar size="36px" :image="row.avatar || undefined">

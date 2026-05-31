@@ -5,6 +5,7 @@ import { v4 as uuidv4 } from "uuid";
 import { error, success } from "@/lib/responseFormat";
 import { validateFields } from "@/middleware/middleware";
 import { resolveNegativePrompt } from "@/utils/negativePrompt";
+import { quoteModelCalls, releasePointHold, reserveModelCallPoints, settlePointHold } from "@/utils/modelBilling";
 
 const router = express.Router();
 
@@ -78,6 +79,8 @@ const requestSchema = {
 
 export default router.post("/", validateFields(requestSchema), async (req, res) => {
   const { projectId, model, resolution, id, type, name, prompt, base64 } = req.body;
+  const userId = String((req as any).user?.id || "");
+  if (!userId) return res.status(401).send(error("未提供token"));
 
   // 1. 查询项目 & 获取类型配置
   const project = await u.db("o_project").where("id", projectId).select("artStyle", "type", "intro").first();
@@ -85,6 +88,21 @@ export default router.post("/", validateFields(requestSchema), async (req, res) 
 
   const cfg = assetTypeConfig[type as AssetType];
   if (!cfg) return res.status(400).send(error("不支持的类型"));
+
+  let quote;
+  try {
+    quote = await quoteModelCalls(userId, [
+      {
+        count: 1,
+        model,
+        modelType: "image",
+        taskType: "asset_center_image_generation",
+      },
+    ]);
+  } catch (err: any) {
+    return res.status(400).send(error(err?.message || "获取积分报价失败"));
+  }
+  if (!quote.enough) return res.status(400).send(error(`积分不足，需要 ${quote.requiredPoints} 积分，当前可用 ${quote.availablePoints} 积分`));
 
   const userPrompt = buildPrompt(cfg, project.artStyle!, name, prompt);
   const negativePromptSource = u.getArtPrompt(project.artStyle ?? "", "art_skills", cfg.visualPromptKey);
@@ -102,11 +120,38 @@ export default router.post("/", validateFields(requestSchema), async (req, res) 
   });
   await u.db("o_assets").where("id", id).update({ imageId });
 
+  let billingHold = null;
+  try {
+    billingHold = await reserveModelCallPoints({
+      billingMeta: quote,
+      description: `资产中心图片生成：${quote.items[0]?.modelLabel || model}`,
+      idempotencyKey: `model-call:asset-center-image:${imageId}`,
+      projectId,
+      quote,
+      relatedId: imageId,
+      taskType: "asset_center_image_generation",
+      userId,
+    });
+  } catch (err: any) {
+    await u.db("o_image").where("id", imageId).update({ state: "生成失败", errorReason: err?.message || "积分冻结失败" });
+    return res.status(400).send(error(err?.message || "积分不足"));
+  }
+
   // 3. 准备生成参数
   const imagePath = `/${projectId}/${cfg.dir}/${uuidv4()}.jpg`;
   const storageProvider = u.oss.getStorageProvider();
   const describe = `生成${cfg.label}图，名称：${name}，提示词：${prompt}`;
-  const relatedObjects = { id, projectId, type: cfg.label, prompt: userPrompt, negativePrompt };
+  const relatedObjects = {
+    billingHoldId: billingHold?.id || null,
+    billingRelatedId: imageId,
+    billingTaskType: "asset_center_image_generation",
+    id,
+    imageId,
+    projectId,
+    type: cfg.label,
+    prompt: userPrompt,
+    negativePrompt,
+  };
 
   try {
     const aiImage = u.Ai.Image(model);
@@ -126,11 +171,18 @@ export default router.post("/", validateFields(requestSchema), async (req, res) 
         relatedObjects: JSON.stringify(relatedObjects),
       },
     );
-    aiImage.save(imagePath, storageProvider);
+    await aiImage.save(imagePath, storageProvider);
     // 5. 更新记录 & 返回结果
     const imageData = await u.db("o_image").where("id", imageId).select("*").first();
-    if (!imageData) return res.status(500).send("资产已被删除");
-    if (imageData.state === "生成失败") return;
+    if (!imageData) {
+      await releasePointHold(billingHold?.id);
+      return res.status(500).send(error("资产已被删除"));
+    }
+    if (imageData.state === "生成失败") {
+      await releasePointHold(billingHold?.id);
+      return res.status(400).send(error(imageData.errorReason || "生成已取消"));
+    }
+    await settlePointHold(billingHold?.id);
     await u
       .db("o_image")
       .where("id", imageId)
@@ -150,6 +202,7 @@ export default router.post("/", validateFields(requestSchema), async (req, res) 
 
     return res.status(200).send(success({ path, assetsId: id }));
   } catch (e) {
+    await releasePointHold(billingHold?.id);
     await u
       .db("o_image")
       .where("id", imageId)

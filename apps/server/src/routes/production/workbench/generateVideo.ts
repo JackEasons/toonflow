@@ -2,10 +2,11 @@ import express from "express";
 import u from "@/utils";
 import { z } from "zod";
 import { v4 as uuidv4 } from "uuid";
-import { success } from "@/lib/responseFormat";
+import { success, error } from "@/lib/responseFormat";
 import { validateFields } from "@/middleware/middleware";
 import { ReferenceList } from "@/utils/ai";
 import { resolveNegativePrompt } from "@/utils/negativePrompt";
+import { quoteModelCalls, releasePointHold, reserveModelCallPoints, settlePointHold } from "@/utils/modelBilling";
 const router = express.Router();
 
 type Type = "imageReference" | "startImage" | "endImage" | "videoReference" | "audioReference";
@@ -40,6 +41,27 @@ export default router.post(
   }),
   async (req, res) => {
     const { scriptId, projectId, prompt, uploadData, model, duration, resolution, audio, mode, trackId } = req.body;
+    const userId = String((req as any).user?.id || "");
+    if (!userId) return res.status(401).send(error("未提供token"));
+
+    let quote;
+    try {
+      quote = await quoteModelCalls(userId, [
+        {
+          audio,
+          count: 1,
+          duration,
+          model,
+          modelType: "video",
+          resolution,
+          taskType: "video_generation",
+        },
+      ]);
+    } catch (err: any) {
+      return res.status(400).send(error(err?.message || "获取积分报价失败"));
+    }
+    if (!quote.enough) return res.status(400).send(error(`积分不足，需要 ${quote.requiredPoints} 积分，当前可用 ${quote.availablePoints} 积分`));
+
     let modeData = [];
     if (Array.isArray(mode)) {
     } else if (typeof mode === "string" && mode.startsWith('["') && mode.endsWith('"]')) {
@@ -91,8 +113,33 @@ export default router.post(
       videoTrackId: trackId,
     });
     await u.db("o_videoTrack").where("id", trackId).update({ negativePrompt });
+
+    let billingHold = null;
+    try {
+      billingHold = await reserveModelCallPoints({
+        billingMeta: quote,
+        description: `视频生成：${quote.items[0]?.modelLabel || model}`,
+        episodeId: scriptId,
+        idempotencyKey: `model-call:video:${videoId}`,
+        projectId,
+        quote,
+        relatedId: videoId,
+        taskType: "video_generation",
+        userId,
+      });
+    } catch (err: any) {
+      await u.db("o_video").where("id", videoId).update({
+        state: "生成失败",
+        errorReason: err?.message || "积分冻结失败",
+      });
+      return res.status(400).send(error(err?.message || "积分不足"));
+    }
+
     res.status(200).send(success(videoId));
     const relatedObjects = {
+      billingHoldId: billingHold?.id || null,
+      billingRelatedId: videoId,
+      billingTaskType: "video_generation",
       projectId,
       videoId,
       scriptId,
@@ -122,8 +169,10 @@ export default router.post(
         },
       )
       .then(async () => await aiVideo.save(videoPath, storageProvider))
+      .then(async () => await settlePointHold(billingHold?.id))
       .then(async () => await u.db("o_video").where("id", videoId).update({ state: "生成成功" }))
       .catch(async (error: any) => {
+        await releasePointHold(billingHold?.id);
         await u
           .db("o_video")
           .where("id", videoId)

@@ -8,11 +8,11 @@
         </div>
         <div class="right f ac">
           <t-button size="small" variant="outline" @click="batchDownloadVideo">{{ $t("workbench.generate.batchDownloadVideo") }}</t-button>
-          <t-button size="small" variant="outline" @click="batchGenText" :loading="generateTextLoad">
-            {{ $t("workbench.generate.batchGenerateText") }}
+          <t-button size="small" variant="outline" @click="batchGenText" :loading="generateTextLoad || batchPromptQuoteLoading" :disabled="batchPromptGenerateDisabled">
+            {{ batchPromptGenerateLabel }}
           </t-button>
-          <t-button size="small" variant="outline" @click="batchGenVideo" :loading="generateVideoLoad">
-            {{ $t("workbench.generate.batchGenerateVideo") }}
+          <t-button size="small" variant="outline" @click="batchGenVideo" :loading="generateVideoLoad || batchQuoteLoading" :disabled="batchVideoGenerateDisabled">
+            {{ batchVideoGenerateLabel }}
           </t-button>
           <!-- <t-button size="small" variant="outline" @click="importVideo">{{ $t("workbench.generate.importVideo") }}</t-button> -->
         </div>
@@ -68,7 +68,7 @@
 </template>
 
 <script setup lang="ts">
-import { inject, ref, watch } from "vue";
+import { computed, inject, ref, watch } from "vue";
 import { DialogPlugin } from "tdesign-vue-next";
 import { storeToRefs } from "pinia";
 import type { Ref } from "vue";
@@ -102,6 +102,12 @@ const emit = defineEmits<{
   saveImageList: [trackId: number];
 }>();
 const checkAll = ref(false); // 全选状态
+
+interface BillingQuote {
+  availablePoints: number;
+  enough: boolean;
+  requiredPoints: number;
+}
 
 type PromptSourceInfo = Array<{
   id: number | null | undefined;
@@ -251,6 +257,14 @@ async function batchDownloadVideo(): Promise<void> {
 }
 const generateTextLoad = ref(false);
 function batchGenText() {
+  if (batchPromptQuoteError.value) {
+    window.$message.warning(batchPromptQuoteError.value);
+    return;
+  }
+  if (batchPromptQuote.value && !batchPromptQuote.value.enough) {
+    window.$message.warning(`积分不足，需要 ${formatBillingPoints(batchPromptQuote.value.requiredPoints)} 积分，当前可用 ${formatBillingPoints(batchPromptQuote.value.availablePoints)} 积分`);
+    return;
+  }
   generateTextLoad.value = true;
   trackList.value.forEach((track, index) => {
     if (!checkedTrackIds.value.includes(track.id)) return;
@@ -306,17 +320,183 @@ function getTrackUploadInfo(track: TrackItem, filterEmpty = false): PromptSource
   return track.medias.filter((m) => !filterEmpty || Boolean(m.src)).map(({ id, sources }) => ({ id, sources: (sources ?? "storyboard") as string }));
 }
 const generateVideoLoad = ref(false);
+const batchQuote = ref<BillingQuote | null>(null);
+const batchQuoteError = ref("");
+const batchQuoteLoading = ref(false);
+let batchQuoteSeq = 0;
+
+const checkedTrackData = computed(() => trackList.value.filter((track) => checkedTrackIds.value.includes(track.id)));
+const batchPromptQuote = ref<BillingQuote | null>(null);
+const batchPromptQuoteError = ref("");
+const batchPromptQuoteLoading = ref(false);
+let batchPromptQuoteSeq = 0;
+
+const batchPromptGenerateLabel = computed(() => {
+  const base = $t("workbench.generate.batchGenerateText");
+  if (checkedTrackData.value.length <= 0) return `${base} · 请选择`;
+  if (batchPromptQuoteError.value) return `${base} · 报价不可用`;
+  const points = batchPromptQuote.value?.requiredPoints || 0;
+  return points > 0 ? `${base} · ${formatBillingPoints(points)}积分` : base;
+});
+
+const batchPromptGenerateDisabled = computed(() => {
+  return checkedTrackData.value.length <= 0 || batchPromptQuoteLoading.value || Boolean(batchPromptQuoteError.value) || Boolean(batchPromptQuote.value && !batchPromptQuote.value.enough);
+});
+
+async function refreshBatchPromptQuote() {
+  const count = checkedTrackData.value.length;
+  if (count <= 0) {
+    batchPromptQuote.value = null;
+    batchPromptQuoteError.value = "";
+    return;
+  }
+  const seq = ++batchPromptQuoteSeq;
+  batchPromptQuoteLoading.value = true;
+  try {
+    const { data } = await axios.post("/billing/quote", {
+      calls: [
+        {
+          count,
+          model: "universalAi",
+          modelType: "text",
+          taskType: "video_prompt_generation",
+        },
+      ],
+    });
+    if (seq === batchPromptQuoteSeq) {
+      batchPromptQuote.value = data;
+      batchPromptQuoteError.value = "";
+    }
+  } catch (error) {
+    if (seq === batchPromptQuoteSeq) {
+      batchPromptQuote.value = null;
+      batchPromptQuoteError.value = getBillingErrorMessage(error);
+    }
+  } finally {
+    if (seq === batchPromptQuoteSeq) batchPromptQuoteLoading.value = false;
+  }
+}
+
+watch(
+  () => checkedTrackIds.value.join(","),
+  () => refreshBatchPromptQuote(),
+  { immediate: true },
+);
+const checkedPromptTrackData = computed(() => checkedTrackData.value.filter((track) => Boolean(track.prompt)));
+const checkedTrackMissingPrompt = computed(() => checkedTrackData.value.length > 0 && checkedPromptTrackData.value.length !== checkedTrackData.value.length);
+
+function formatBillingPoints(value?: number) {
+  const points = Math.max(0, Number(value || 0));
+  return Number.isInteger(points) ? String(points) : points.toFixed(2);
+}
+
+const batchVideoGenerateLabel = computed(() => {
+  const base = $t("workbench.generate.batchGenerateVideo");
+  if (checkedTrackData.value.length > 0 && !props.modelParmas.model) return `${base} · 选择模型`;
+  if (checkedTrackMissingPrompt.value) return `${base} · 补全提示词`;
+  if (batchQuoteError.value) return `${base} · 报价不可用`;
+  const points = batchQuote.value?.requiredPoints || 0;
+  return points > 0 ? `${base} · ${formatBillingPoints(points)}积分` : base;
+});
+
+const batchVideoGenerateDisabled = computed(() => {
+  return (
+    checkedTrackData.value.length === 0 ||
+    !props.modelParmas.model ||
+    checkedTrackMissingPrompt.value ||
+    Boolean(batchQuoteError.value) ||
+    Boolean(batchQuote.value && !batchQuote.value.enough)
+  );
+});
+
+function getBillingErrorMessage(error: unknown) {
+  return (error as any)?.message || "获取积分报价失败";
+}
+
+async function refreshBatchQuote() {
+  const model = props.modelParmas.model;
+  const count = checkedTrackData.value.length;
+  if (!model || count <= 0 || checkedTrackMissingPrompt.value) {
+    batchQuote.value = null;
+    batchQuoteError.value = "";
+    return;
+  }
+  const seq = ++batchQuoteSeq;
+  batchQuoteLoading.value = true;
+  try {
+    const { data } = await axios.post("/billing/quote", {
+      calls: [
+        {
+          audio: Boolean(props.modelParmas.audio),
+          count,
+          model,
+          modelType: "video",
+          resolution: props.modelParmas.resolution,
+          taskType: "video_generation",
+        },
+      ],
+    });
+    if (seq === batchQuoteSeq) {
+      batchQuote.value = data;
+      batchQuoteError.value = "";
+    }
+  } catch (error) {
+    if (seq === batchQuoteSeq) {
+      batchQuote.value = null;
+      batchQuoteError.value = getBillingErrorMessage(error);
+    }
+  } finally {
+    if (seq === batchQuoteSeq) batchQuoteLoading.value = false;
+  }
+}
+
+watch(
+  () => [
+    checkedTrackIds.value.join(","),
+    props.modelParmas.model,
+    props.modelParmas.resolution,
+    props.modelParmas.audio,
+    trackList.value.map((track) => `${track.id}:${track.prompt ? 1 : 0}:${track.duration || ""}`).join("|"),
+  ],
+  () => refreshBatchQuote(),
+  { immediate: true },
+);
+
 /** 批量为已勾选轨道生成视频 */
 function batchGenVideo() {
+  if (!checkedTrackData.value.length) {
+    window.$message.warning("请先选择轨道");
+    return;
+  }
+  if (!props.modelParmas.model) {
+    window.$message.warning("请先选择模型");
+    return;
+  }
+  if (checkedTrackMissingPrompt.value) {
+    window.$message.warning($t("workbench.generate.skipDataWithEmptyVideoPromptWords"));
+    return;
+  }
+  if (batchQuoteError.value) {
+    window.$message.warning(batchQuoteError.value);
+    return;
+  }
+  if (batchQuote.value && !batchQuote.value.enough) {
+    window.$message.warning(`积分不足，需要 ${formatBillingPoints(batchQuote.value.requiredPoints)} 积分，当前可用 ${formatBillingPoints(batchQuote.value.availablePoints)} 积分`);
+    return;
+  }
   const dlg = DialogPlugin.confirm({
     header: $t("workbench.generate.generateConfirm"),
-    body: $t("workbench.generate.generateVideosInBatches"),
+    body:
+      (batchQuote.value?.requiredPoints || 0) > 0
+        ? `${$t("workbench.generate.generateVideosInBatches")}\n预计消耗 ${formatBillingPoints(batchQuote.value?.requiredPoints)} 积分。`
+        : $t("workbench.generate.generateVideosInBatches"),
     onConfirm: async () => {
       dlg.destroy();
 
       const checkedTrackData = trackList.value.filter((track) => checkedTrackIds.value.includes(track.id));
       const notHasPrompt = checkedTrackData.filter((i) => !i.prompt);
       if (notHasPrompt.length) return window.$message.warning($t("workbench.generate.skipDataWithEmptyVideoPromptWords"));
+      generateVideoLoad.value = true;
 
       const trackData = checkedTrackData.map((track) => {
         const trackId = track.id;

@@ -86,13 +86,14 @@ const routes: RouteRecordRaw[] = [
         path: '/settings/payment-config',
       },
       {
-        component: () => import('#/views/settings/components/adminAccounts.vue'),
         meta: {
+          hideInMenu: true,
           icon: 'lucide:user-plus',
           title: '管理员账号',
         },
         name: 'SettingsAdminAccounts',
         path: '/settings/admin-accounts',
+        redirect: '/admin/users',
       },
       {
         component: () => import('#/views/settings/components/dbConfig.vue'),

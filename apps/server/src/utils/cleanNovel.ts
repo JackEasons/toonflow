@@ -2,10 +2,18 @@ import { EventEmitter } from "events";
 import { o_novel } from "@/types/database";
 import u from "@/utils";
 import { stripThink } from "@/utils/stripThink";
+import { type ModelBillingQuote, releasePointHold, reserveModelCallPoints, settlePointHoldWithModelUsage } from "@/utils/modelBilling";
 export interface EventType {
   id: number;
   event: string;
 }
+
+type CleanNovelBillingOptions = {
+  attemptId?: string;
+  quote?: ModelBillingQuote;
+  taskType?: string;
+  userId?: string;
+};
 
 /*  文本数据清洗
  * @param textData 需要清洗的文本
@@ -18,14 +26,37 @@ class CleanNovel {
   emitter: EventEmitter;
   /** 最大并发数 */
   concurrency: number;
+  billing: CleanNovelBillingOptions;
 
-  constructor(concurrency: number = 5) {
+  constructor(concurrency: number = 5, billing: CleanNovelBillingOptions = {}) {
     this.emitter = new EventEmitter();
     this.concurrency = concurrency;
+    this.billing = billing;
   }
 
   private async processChapter(novel: o_novel): Promise<EventType | null> {
+    let billingHold: Awaited<ReturnType<typeof reserveModelCallPoints>> | null = null;
     try {
+      if (this.billing.userId && this.billing.quote) {
+        const pointsPerCall = this.billing.quote.items[0]?.pointsPerCall || 0;
+        const itemQuote = {
+          ...this.billing.quote,
+          enough: true,
+          items: this.billing.quote.items[0] ? [{ ...this.billing.quote.items[0], count: 1, requiredPoints: pointsPerCall }] : [],
+          requiredPoints: pointsPerCall,
+        };
+        billingHold = await reserveModelCallPoints({
+          billingMeta: itemQuote,
+          description: `小说事件提取：${this.billing.quote.items[0]?.modelLabel || "universalAi"}`,
+          episodeId: novel.chapterIndex,
+          idempotencyKey: `model-call:${this.billing.taskType || "novel_event_extraction"}:${novel.id}:${this.billing.attemptId || u.uuid()}`,
+          projectId: novel.projectId,
+          quote: itemQuote,
+          relatedId: novel.id,
+          taskType: this.billing.taskType || "novel_event_extraction",
+          userId: this.billing.userId,
+        });
+      }
       const prompt = await u.getPrompts("event");
       const promptData = await u.db("o_prompt").where("type", "eventExtraction").first();
       let eventExtraction = "" as string | undefined;
@@ -52,9 +83,12 @@ class CleanNovel {
         ],
       });
       const preData = stripThink(resData.text);
+      if (!preData.trim()) throw new Error("AI 未返回事件摘要");
       this.emitter.emit("item", { id: novel.id, event: preData });
+      await settlePointHoldWithModelUsage(billingHold?.id, resData);
       return { id: novel.id!, event: preData };
     } catch (e) {
+      await releasePointHold(billingHold?.id);
       this.emitter.emit("item", { id: novel.id, event: null, errorReason: u.error(e).message });
       return null;
     }

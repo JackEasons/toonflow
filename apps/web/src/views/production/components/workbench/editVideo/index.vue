@@ -34,10 +34,12 @@
           :default-scale="1"
           @add-transition="handleAddTransitionFromClick"
           @drop-media="handleDropMedia"
+          @clip:drag-end="queueRestoreScaffoldTracks"
+          @track-delete="handleTrackDelete"
           @transition-added="onTransitionAdded">
           <!-- 自定义操作按钮 -->
           <template #custom-operation-reset>
-            <t-button variant="text" size="small" @click="videoTrackRef?.reset()" :title="$t('workbench.production.editVideo.reset')">
+            <t-button variant="text" size="small" @click="handleResetTimeline" :title="$t('workbench.production.editVideo.reset')">
               <template #icon><i-refresh size="16" /></template>
               {{ $t("workbench.production.editVideo.reset") }}
             </t-button>
@@ -104,7 +106,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, onUnmounted, reactive, ref } from "vue";
+import { computed, nextTick, onMounted, onUnmounted, reactive, ref, watch } from "vue";
 import mediaLibrary from "./mediaLibrary.vue";
 import videoPreview from "./videoPreview.vue";
 import propertyPanel from "./propertyPanel.vue";
@@ -170,6 +172,73 @@ const previewStyle = computed(() => {
 const tracksStore = useTracksStore();
 const playbackStore = usePlaybackStore();
 const historyStore = useHistoryStore();
+
+function cloneTrack(track: Track): Track {
+  return JSON.parse(JSON.stringify(track)) as Track;
+}
+
+function cloneEmptyTrack(track: Track): Track {
+  const clonedTrack = cloneTrack(track);
+  clonedTrack.clips = [];
+  return clonedTrack;
+}
+
+const scaffoldTracks = props.initialTracks
+  .filter((track) => track.isMain || track.clips.length === 0)
+  .map((track) => cloneEmptyTrack(track));
+const deletedScaffoldTrackIds = new Set<string>();
+let isRestoringScaffoldTracks = false;
+let restoreScaffoldTracksQueued = false;
+
+function isScaffoldTrackMissing(track: Track): boolean {
+  if (deletedScaffoldTrackIds.has(track.id)) return false;
+  if (track.isMain) {
+    return !tracksStore.tracks.some((item) => item.isMain);
+  }
+  return !tracksStore.tracks.some((item) => item.id === track.id);
+}
+
+function restoreScaffoldTracks() {
+  const missingTracks = scaffoldTracks.filter(isScaffoldTrackMissing);
+  if (missingTracks.length === 0) return;
+
+  isRestoringScaffoldTracks = true;
+  missingTracks.forEach((track) => {
+    tracksStore.addTrack(cloneEmptyTrack(track));
+  });
+  nextTick(() => {
+    isRestoringScaffoldTracks = false;
+  });
+}
+
+function queueRestoreScaffoldTracks() {
+  if (restoreScaffoldTracksQueued) return;
+  restoreScaffoldTracksQueued = true;
+  nextTick(() => {
+    restoreScaffoldTracksQueued = false;
+    restoreScaffoldTracks();
+  });
+}
+
+function handleTrackDelete(trackId: string) {
+  deletedScaffoldTrackIds.add(trackId);
+}
+
+function handleResetTimeline() {
+  videoTrackRef.value?.reset();
+  deletedScaffoldTrackIds.clear();
+  queueRestoreScaffoldTracks();
+}
+
+watch(
+  () => tracksStore.tracks.map((track) => `${track.id}:${track.type}:${track.isMain ? 1 : 0}`).join("|"),
+  () => {
+    if (!isRestoringScaffoldTracks) {
+      queueRestoreScaffoldTracks();
+    }
+  },
+  { flush: "post" },
+);
 
 const operationButtons = ref<OperationButton[]>([
   { type: "custom", key: "reset" },
@@ -431,7 +500,7 @@ function initializeTracks() {
 
   if (props.initialTracks.length > 0) {
     props.initialTracks.forEach((track) => {
-      tracksStore.addTrack(track);
+      tracksStore.addTrack(cloneTrack(track));
     });
   }
 

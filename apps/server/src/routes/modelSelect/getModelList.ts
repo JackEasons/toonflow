@@ -3,6 +3,7 @@ import u from "@/utils";
 import { z } from "zod";
 import { success } from "@/lib/responseFormat";
 import { validateFields } from "@/middleware/middleware";
+import { isVendorModelEnabled } from "@/utils/modelBilling";
 const router = express.Router();
 
 export default router.post(
@@ -23,8 +24,8 @@ export default router.post(
         const models = modelList[index];
         const filtered =
           type === "all"
-            ? models.filter((item: { type: string }) => item.type !== "video")
-            : models.filter((item: { type: string }) => item.type === type);
+            ? models.filter((item: { type: string }) => item.type !== "video" && isVendorModelEnabled(item))
+            : models.filter((item: { type: string }) => item.type === type && isVendorModelEnabled(item));
         return filtered.map((item: { name: string; modelName: string; type: string }) => ({
           id: data.id,
           label: item.name,

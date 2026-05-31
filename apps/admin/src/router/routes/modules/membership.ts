@@ -26,7 +26,7 @@ const routes: RouteRecordRaw[] = [
         component: () => import('#/views/membership/users.vue'),
         meta: {
           icon: 'lucide:users',
-          title: '用户管理',
+          title: '会员管理',
         },
         name: 'MembershipUsers',
         path: '/membership/users',
@@ -48,6 +48,15 @@ const routes: RouteRecordRaw[] = [
         },
         name: 'MembershipPoints',
         path: '/membership/points',
+      },
+      {
+        component: () => import('#/views/membership/modelBilling.vue'),
+        meta: {
+          icon: 'lucide:badge-cent',
+          title: '模型计费',
+        },
+        name: 'MembershipModelBilling',
+        path: '/membership/model-billing',
       },
       {
         component: () => import('#/views/membership/functions.vue'),

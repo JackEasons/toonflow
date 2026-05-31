@@ -257,9 +257,14 @@
               <div v-for="order in orders" v-else :key="order.id" class="orderItem">
                 <div>
                   <strong>{{ order.name }}</strong>
-                  <span>{{ formatDateTime(order.createdAt) }}</span>
+                  <span>{{ formatDateTime(order.createdAt) }} · {{ order.orderNo || "-" }}</span>
                 </div>
-                <b>{{ order.status }}</b>
+                <div class="orderActions">
+                  <button v-if="order.status === 'pending'" type="button" :disabled="ordering" @click="continueOrderPayment(order)">
+                    继续支付
+                  </button>
+                  <b :class="order.status">{{ orderStatusLabel(order.status) }}</b>
+                </div>
               </div>
             </div>
           </section>
@@ -327,6 +332,7 @@ interface PointPackage {
 interface OrderRecord {
   id: string;
   name: string;
+  orderNo?: string;
   createdAt: string;
   status: string;
 }
@@ -361,6 +367,7 @@ interface MembershipProfile {
     createdAt: string;
     id: string;
     kind: "plan" | "points";
+    orderNo?: string;
     paidAt?: string | null;
     planKey?: string | null;
     points?: number;
@@ -481,13 +488,15 @@ const fallbackYearlyPlans: Plan[] = [
 ];
 
 const fallbackPointPackages: PointPackage[] = [
-  { key: "points-100", points: 100, price: "¥9.9", priceCny: 9.9, desc: "补充少量图片或分镜任务" },
-  { key: "points-600", points: 600, price: "¥49", priceCny: 49, desc: "适合集中生成一个短篇项目" },
-  { key: "points-1500", points: 1500, price: "¥99", priceCny: 99, desc: "适合多集短剧批量生产" },
+  { key: "points_500", points: 500, price: "¥60", priceCny: 60, desc: "约生成 50 个视频片段或 500 张图片" },
+  { key: "points_1000", points: 1000, price: "¥120", priceCny: 120, desc: "约生成 100 个视频片段或 1000 张图片" },
+  { key: "points_5000", points: 5000, price: "¥600", priceCny: 600, desc: "约生成 500 个视频片段或 5000 张图片" },
 ];
 const monthlyPlans = ref<Plan[]>(fallbackMonthlyPlans);
 const yearlyPlans = ref<Plan[]>(fallbackYearlyPlans);
 const pointPackages = ref<PointPackage[]>(fallbackPointPackages);
+let paymentPollingTimer: number | null = null;
+let paymentPolling = false;
 
 const transactions = ref<PointTransaction[]>([
   {
@@ -584,12 +593,13 @@ function applyMembershipProfile(profile: MembershipProfile) {
   if (Array.isArray(profile.orders)) {
     orders.value = profile.orders.map((order) => ({
       id: order.id,
+      orderNo: order.orderNo,
       name:
         order.kind === "plan"
           ? `会员订阅 ${order.planKey || ""}`.trim()
           : `积分包 ${formatInteger(order.points || 0)} 积分`,
       createdAt: order.createdAt,
-      status: order.status === "paid" ? "已支付" : order.status === "pending" ? "待支付" : order.status,
+      status: order.status,
     }));
   }
   if (profile.plans?.monthly?.length) monthlyPlans.value = profile.plans.monthly.filter((plan) => plan.billingPeriod !== "free").map(toPlanCard);
@@ -666,10 +676,23 @@ function openSubscriptionManage() {
 function openOrderRecords() {
   userMenuOpen.value = false;
   orderRecordsOpen.value = true;
+  void loadMembershipProfile();
+  void loadPaymentOptions();
 }
 
 function showRules() {
   window.$message?.info("积分按实际生成任务消耗，赠送积分优先使用。");
+}
+
+function orderStatusLabel(status: string) {
+  return (
+    {
+      canceled: "已取消",
+      paid: "已支付",
+      pending: "待支付",
+      refunded: "已退款",
+    } as Record<string, string>
+  )[status] || status;
 }
 
 async function submitPlanOrder(plan: Plan) {
@@ -712,6 +735,76 @@ async function submitPointPackageOrder(pkg: PointPackage) {
   }
 }
 
+async function continueOrderPayment(order: OrderRecord) {
+  if (!order.orderNo) return;
+  if (!selectedPaymentProvider.value) {
+    await loadPaymentOptions();
+  }
+  if (!selectedPaymentProvider.value) {
+    window.$message?.warning("请先联系管理员配置支付方式");
+    return;
+  }
+
+  ordering.value = true;
+  try {
+    const res = await axios.post(`/membership/orders/${encodeURIComponent(order.orderNo)}/pay`, {
+      paymentProvider: selectedPaymentProvider.value,
+    });
+    orderRecordsOpen.value = false;
+    await handleOrderCreated(res.data);
+  } catch (err: any) {
+    window.$message?.warning(err?.message || "继续支付失败");
+  } finally {
+    ordering.value = false;
+  }
+}
+
+function stopPaymentPolling() {
+  if (!paymentPollingTimer) return;
+  window.clearInterval(paymentPollingTimer);
+  paymentPollingTimer = null;
+}
+
+function startPaymentPolling(orderNo: string) {
+  stopPaymentPolling();
+  if (!orderNo) return;
+  void pollPaymentStatus(orderNo);
+  paymentPollingTimer = window.setInterval(() => {
+    void pollPaymentStatus(orderNo);
+  }, 3000);
+}
+
+async function pollPaymentStatus(orderNo: string, manual = false) {
+  if (paymentPolling) return;
+  paymentPolling = true;
+  try {
+    const res = await axios.get(`/membership/orders/${encodeURIComponent(orderNo)}`);
+    const payload = res.data || {};
+    if (payload.profile) applyMembershipProfile(payload.profile as MembershipProfile);
+
+    const status = String(payload.order?.status || "");
+    if (status === "paid") {
+      stopPaymentPolling();
+      paymentOpen.value = false;
+      activePayment.value = null;
+      window.$message?.success("支付已完成，权益已更新");
+      return;
+    }
+    if (["canceled", "refunded"].includes(status)) {
+      stopPaymentPolling();
+      paymentOpen.value = false;
+      activePayment.value = null;
+      window.$message?.warning(status === "refunded" ? "订单已退款" : "订单已取消");
+      return;
+    }
+    if (manual) window.$message?.info("订单仍在等待支付确认");
+  } catch (err: any) {
+    if (manual) window.$message?.warning(err?.message || "订单状态刷新失败");
+  } finally {
+    paymentPolling = false;
+  }
+}
+
 async function handleOrderCreated(payload: any) {
   if (payload?.profile) applyMembershipProfile(payload.profile as MembershipProfile);
   const payment = payload?.payment as PaymentResult | undefined;
@@ -724,6 +817,7 @@ async function handleOrderCreated(payload: any) {
   activePayment.value = payment;
   subscribeOpen.value = false;
   paymentOpen.value = true;
+  startPaymentPolling(payment.orderNo);
 
   if (payment.type === "alipay_form" && payment.formHtml) {
     const payWindow = window.open("", "_blank");
@@ -742,6 +836,11 @@ async function handleOrderCreated(payload: any) {
 }
 
 async function refreshAfterPayment() {
+  const orderNo = activePayment.value?.orderNo;
+  if (orderNo) {
+    await pollPaymentStatus(orderNo, true);
+    return;
+  }
   await loadMembershipProfile();
   paymentOpen.value = false;
 }
@@ -816,6 +915,12 @@ watch(
   },
 );
 
+watch(paymentOpen, (open) => {
+  if (open) return;
+  stopPaymentPolling();
+  activePayment.value = null;
+});
+
 onMounted(() => {
   void loadUserInfo();
   void loadMembershipProfile();
@@ -825,6 +930,7 @@ onMounted(() => {
 });
 
 onUnmounted(() => {
+  stopPaymentPolling();
   document.removeEventListener("pointerdown", handlePointerDown);
   document.removeEventListener("keydown", handleKeydown);
 });
@@ -1822,6 +1928,39 @@ const PointMetric = defineComponent({
 .orderItem b {
   color: #ffd36a;
   font-size: 14px;
+
+  &.paid {
+    color: #2ef4eb;
+  }
+
+  &.canceled,
+  &.refunded {
+    color: rgba(255, 255, 255, 0.42);
+  }
+}
+
+.orderActions {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  gap: 10px;
+
+  button {
+    height: 30px;
+    padding: 0 12px;
+    border: 1px solid rgba(46, 244, 235, 0.34);
+    border-radius: 999px;
+    background: rgba(46, 244, 235, 0.12);
+    color: #6ffdf4;
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: 900;
+
+    &:disabled {
+      cursor: not-allowed;
+      opacity: 0.45;
+    }
+  }
 }
 
 .member-pop-enter-active,
