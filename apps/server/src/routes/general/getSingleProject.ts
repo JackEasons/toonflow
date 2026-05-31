@@ -13,8 +13,10 @@ export default router.post(
   }),
   async (req, res) => {
     const { id } = req.body;
+    const userId = String((req as any).user?.id || "");
+    if (!userId) return res.status(401).send({ message: "未提供token" });
 
-    const data = await u.db("o_project").where("id", id).select("*");
+    const data = await u.db("o_project").where({ id, userId }).select("*");
 
     res.status(200).send(success(data));
   }

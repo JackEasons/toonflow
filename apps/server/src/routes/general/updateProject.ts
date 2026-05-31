@@ -18,8 +18,10 @@ export default router.post(
   }),
   async (req, res) => {
     const { id, intro, type, artStyle, videoRatio, projectType } = req.body;
+    const userId = String((req as any).user?.id || "");
+    if (!userId) return res.status(401).send({ message: "未提供token" });
 
-    await u.db("o_project").where("id", id).update({
+    await u.db("o_project").where({ id, userId }).update({
       intro,
       type,
       artStyle,

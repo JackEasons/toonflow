@@ -84,11 +84,18 @@ export interface OrderRecord {
 export interface PointTransaction {
   amount: number;
   balanceAfter: number;
+  billingMeta?: Record<string, any>;
   category: string;
   createdAt: null | string;
   description: string;
+  episodeId?: string;
+  freezeId?: string;
   id: string;
   operatorId: string;
+  projectId?: string;
+  relatedId?: string;
+  taskType?: string;
+  taskTypeLabel?: string;
   type: string;
   userId: string;
   userName: string;

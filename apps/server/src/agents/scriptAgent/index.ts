@@ -67,31 +67,32 @@ function buildMemPrompt(mem: Awaited<ReturnType<Memory["get"]>>): string {
 export async function runDecisionAI(ctx: AgentContext) {
   const { isolationKey, text, userMessageTime, abortSignal, resTool } = ctx;
   const memory = new Memory("scriptAgent", isolationKey, ctx.userId);
-  await memory.add("user", text, { createTime: userMessageTime });
-
-  const skill = path.join(u.getPath("skills"), "script_agent_decision.md");
-  const prompt = await fs.promises.readFile(skill, "utf-8");
-
-  const mem = buildMemPrompt(await memory.get(text));
-
-  const projectData = await u.db("o_project").where("id", resTool.data.projectId).first();
-
-  const novelData = await u.db("o_novel").where("projectId", resTool.data.projectId).select("chapterIndex");
-
-  const projectInfo = [
-    "## 项目信息",
-    `小说名称：${projectData?.name ?? "未知"}`,
-    `小说类型：${projectData?.type ?? "未知"}`,
-    `小说简介：${projectData?.intro ?? "无"}`,
-    `目标改编影视视觉手册|画风：${projectData?.artStyle ?? "无"}`,
-    `目标改编视频画幅：${projectData?.videoRatio ?? "16:9"}`,
-    `章节数量：${novelData.length}章`,
-  ].join("\n");
-
   const billingHold = await reserveAgentCall(ctx, "scriptAgent:decisionAgent", "script_agent_call", "剧本Agent统筹");
   let settled = false;
-  let currentMsg = ctx.msg;
+
   try {
+    await memory.addBestEffort("user", text, { createTime: userMessageTime });
+
+    const skill = path.join(u.getPath("skills"), "script_agent_decision.md");
+    const prompt = await fs.promises.readFile(skill, "utf-8");
+
+    const mem = buildMemPrompt(await memory.getBestEffort(text));
+
+    const projectData = await u.db("o_project").where("id", resTool.data.projectId).first();
+
+    const novelData = await u.db("o_novel").where("projectId", resTool.data.projectId).select("chapterIndex");
+
+    const projectInfo = [
+      "## 项目信息",
+      `小说名称：${projectData?.name ?? "未知"}`,
+      `小说类型：${projectData?.type ?? "未知"}`,
+      `小说简介：${projectData?.intro ?? "无"}`,
+      `目标改编影视视觉手册|画风：${projectData?.artStyle ?? "无"}`,
+      `目标改编视频画幅：${projectData?.videoRatio ?? "16:9"}`,
+      `章节数量：${novelData.length}章`,
+    ].join("\n");
+
+    let currentMsg = ctx.msg;
     const { fullStream } = await u.Ai.Text("scriptAgent:decisionAgent", ctx.thinkConfig.think, ctx.thinkConfig.thinlLevel).stream({
       messages: [
         { role: "system", content: prompt },
@@ -106,7 +107,7 @@ export async function runDecisionAI(ctx: AgentContext) {
       },
       onFinish: async (completion) => {
         try {
-          await memory.add("assistant:decision", removeAllXmlTags(completion.text));
+          await memory.addBestEffort("assistant:decision", removeAllXmlTags(completion.text));
         } finally {
           await settlePointHold(billingHold?.id);
           settled = true;
@@ -164,7 +165,7 @@ function createSubAgent(parentCtx: AgentContext) {
       settled = true;
 
       if (fullResponse.trim()) {
-        await memory.add(memoryKey, removeAllXmlTags(fullResponse), {
+        await memory.addBestEffort(memoryKey, removeAllXmlTags(fullResponse), {
           name,
           createTime: new Date(subMsg.datetime).getTime(),
         });

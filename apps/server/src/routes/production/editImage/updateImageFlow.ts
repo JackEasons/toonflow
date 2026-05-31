@@ -11,9 +11,10 @@ export default router.post(
     edges: z.any(),
     nodes: z.any(),
     flowId: z.number(),
+    projectId: z.number(),
   }),
   async (req, res) => {
-    const { edges, nodes, flowId } = req.body;
+    const { edges, nodes, flowId, projectId } = req.body;
     nodes.forEach((node: any) => {
       if (node.type == "upload") {
         node.data.image = node.data.image ? u.replaceUrl(node.data.image) : "";
@@ -29,7 +30,7 @@ export default router.post(
 
     await u
       .db("o_imageFlow")
-      .where("id", flowId)
+      .where({ id: flowId, projectId })
       .update({
         flowData: JSON.stringify({ edges, nodes }),
       });

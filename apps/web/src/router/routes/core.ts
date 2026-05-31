@@ -18,10 +18,10 @@ const workbenchRoutes: RouteRecordRaw[] = [
     meta: { title: "Task" },
   },
   {
-    path: "/service-status",
-    name: "ServiceStatus",
-    component: () => import("#/views/serviceStatus/index.vue"),
-    meta: { title: "Service Status" },
+    path: "/user-center",
+    name: "UserCenter",
+    component: () => import("#/pages/userCenter/index.vue"),
+    meta: { title: "User Center" },
   },
   {
     path: "/novel",

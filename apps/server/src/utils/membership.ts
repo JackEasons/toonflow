@@ -175,6 +175,18 @@ function toIso(value: unknown): string | null {
   return Number.isNaN(date.getTime()) ? null : date.toISOString();
 }
 
+function parseMetaObject(value: unknown): Record<string, any> {
+  if (!value) return {};
+  if (typeof value === "object" && !Array.isArray(value)) return value as Record<string, any>;
+  if (typeof value !== "string") return {};
+  try {
+    const parsed = JSON.parse(value);
+    return parsed && typeof parsed === "object" && !Array.isArray(parsed) ? parsed : {};
+  } catch {
+    return {};
+  }
+}
+
 function parseFeatures(value: unknown): string[] {
   if (Array.isArray(value)) return value.filter((item): item is string => typeof item === "string");
   if (typeof value !== "string" || !value.trim()) return [];
@@ -207,6 +219,30 @@ function getPointTransactionCategory(type: string, amount: number): PointCategor
   if (type === "consume" || type === "shadow_consume" || type === "order_refund" || amount < 0) return "consume";
   if (type === "recharge" || type === "points_purchase" || type === "plan_purchase" || type === "membership_grant") return "purchase";
   return "earn";
+}
+
+function getModelBillingTaskLabel(taskType: unknown): string {
+  const type = String(taskType || "");
+  return (
+    {
+      agent_memory_retrieval: "Agent记忆检索",
+      agent_memory_summary: "Agent记忆摘要",
+      art_style_prompt_extraction: "画风提示词提取",
+      asset_audio_binding: "资产音频匹配",
+      asset_center_image_generation: "资产中心图片生成",
+      asset_image_generation: "资产图片生成",
+      asset_prompt_polish: "资产提示词润色",
+      novel_event_extraction: "小说事件分析",
+      production_agent_call: "制片Agent调用",
+      script_agent_call: "剧本Agent调用",
+      script_asset_extraction: "剧本资产提取",
+      script_regex_detection: "剧本正则识别",
+      storyboard_image_generation: "分镜图片生成",
+      video_generation: "视频生成",
+      video_prompt_generation: "视频提示词生成",
+      workflow_image_generation: "工作流图片生成",
+    } as Record<string, string>
+  )[type] || type;
 }
 
 function normalizePlan(plan: any) {
@@ -1007,18 +1043,28 @@ export async function getAdminMembershipTransactions(params: { userId?: string; 
   ]);
 
   return {
-    list: rows.map((row: any) => ({
-      id: row.id,
-      userId: String(row.userId),
-      userName: row.userName || "",
-      type: row.type,
-      category: getPointTransactionCategory(row.type, toNumber(row.amount)),
-      amount: toNumber(row.amount),
-      balanceAfter: toNumber(row.balanceAfter),
-      description: row.description || "",
-      operatorId: row.operatorId || "",
-      createdAt: toIso(row.createdAt),
-    })),
+    list: rows.map((row: any) => {
+      const billingMeta = parseMetaObject(row.billingMeta);
+      return {
+        id: row.id,
+        userId: String(row.userId),
+        userName: row.userName || "",
+        type: row.type,
+        category: getPointTransactionCategory(row.type, toNumber(row.amount)),
+        amount: toNumber(row.amount),
+        balanceAfter: toNumber(row.balanceAfter),
+        description: row.description || "",
+        operatorId: row.operatorId || "",
+        createdAt: toIso(row.createdAt),
+        billingMeta,
+        episodeId: row.episodeId || "",
+        freezeId: row.freezeId || "",
+        projectId: row.projectId || "",
+        relatedId: row.relatedId || "",
+        taskType: row.taskType || "",
+        taskTypeLabel: getModelBillingTaskLabel(row.taskType),
+      };
+    }),
     page,
     pageSize,
     total: toNumber(countRows[0]?.count),

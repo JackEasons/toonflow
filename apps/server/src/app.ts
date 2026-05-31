@@ -15,6 +15,7 @@ import jwt from "jsonwebtoken";
 import socketInit from "@/socket/index";
 import { dbReady } from "@/utils/db";
 import { isAdminRequest } from "@/utils/admin";
+import { enforceProjectDataIsolation } from "@/middleware/dataIsolation";
 
 const app = express();
 const server = http.createServer(app);
@@ -153,6 +154,7 @@ export default async function startServe(randomPort: boolean = false) {
     }
     next();
   });
+  app.use(enforceProjectDataIsolation);
 
   const router = await import("@/router");
   await router.default(app);

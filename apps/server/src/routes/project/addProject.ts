@@ -23,6 +23,8 @@ export default router.post(
   }),
   async (req, res) => {
     const { projectType, name, intro, type, directorManual, artStyle, videoRatio, imageModel, videoModel, imageQuality, mode } = req.body;
+    const userId = String((req as any).user?.id || "");
+    if (!userId) return res.status(401).send({ message: "未提供token" });
 
     await u.db("o_project").insert({
       id: Date.now(),
@@ -33,7 +35,7 @@ export default router.post(
       artStyle,
       videoRatio,
       directorManual,
-      userId: 1,
+      userId: Number(userId),
       imageModel,
       videoModel,
       createTime: Date.now(),

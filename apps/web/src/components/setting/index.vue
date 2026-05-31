@@ -18,7 +18,6 @@
           <languageConfig v-if="activeMenu === 'language'" />
           <loginConfig v-if="activeMenu === 'loginConfig'" />
           <otherConfig v-if="activeMenu === 'otherConfig'" />
-          <logoutConfig v-if="activeMenu === 'logoutConfig'" />
           <devConfig v-if="activeMenu === 'devConfig'" />
         </div>
       </div>
@@ -36,7 +35,6 @@ import uiConfig from "./components/uiConfig.vue";
 import languageConfig from "./components/languageConfig.vue";
 import loginConfig from "./components/loginConfig.vue";
 import otherConfig from "./components/otherConfig.vue";
-import logoutConfig from "./components/logoutConfig.vue";
 import devConfig from "./components/devConfig.vue";
 
 const menuItems = [
@@ -44,8 +42,7 @@ const menuItems = [
   { key: "language", label: "settings.menu.language", icon: "i-translate" },
   { key: "loginConfig", label: "settings.menu.loginConfig", icon: "i-lock" },
   { key: "otherConfig", label: "settings.menu.otherConfig", icon: "i-application-menu" },
-  { key: "devConfig", label: "settings.menu.devConfig", icon: "i-flask" },
-  { key: "logoutConfig", label: "settings.menu.logoutConfig", icon: "i-logout" },
+  ...(import.meta.env.DEV ? [{ key: "devConfig", label: "settings.menu.devConfig", icon: "i-flask" }] : []),
 ];
 
 const currentMenuItem = computed(() => menuItems.find((item) => item.key === activeMenu.value));

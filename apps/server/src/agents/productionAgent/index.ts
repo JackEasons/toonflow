@@ -69,35 +69,36 @@ function buildMemPrompt(mem: Awaited<ReturnType<Memory["get"]>>): string {
 export async function runDecisionAI(ctx: AgentContext) {
   const { isolationKey, text, abortSignal } = ctx;
   const memory = new Memory("productionAgent", isolationKey, ctx.userId);
-  await memory.add("user", text);
-
-  const skill = path.join(u.getPath("skills"), "production_agent_decision.md");
-  const prompt = await fs.promises.readFile(skill, "utf-8");
-
-  const projectInfo = await u.db("o_project").where("id", ctx.resTool.data.projectId).first();
-  if (!projectInfo) throw new Error(`项目不存在，ID: ${ctx.resTool.data.projectId}`);
-  const [_, imageModelName] = projectInfo.imageModel!.split(/:(.+)/);
-  const [id, videoModelName] = projectInfo.videoModel!.split(/:(.+)/);
-  const models = await u.vendor.getModelList(id);
-  if (!models.length) throw new Error(`项目使用的模型不存在，ID: ${projectInfo.videoModel}`);
-  let videoMode = "";
-  try {
-    videoMode = JSON.parse(projectInfo.mode ?? "");
-  } catch (e) {
-    videoMode = projectInfo.mode ?? "";
-  }
-  const isRef = Array.isArray(videoMode) ? true : false;
-  // const findData = models.find((i: any) => i.modelName == videoModelName);
-  // const isRef = findData.mode.every((i: any) => Array.isArray(i));
-
-  const modelInfo = `项目使用的模型如下：\n图像模型：${imageModelName}\n视频模型：${videoModelName}\n多参：${isRef ? "是" : "否"}`;
-
-  const mem = buildMemPrompt(await memory.get(text));
-
   const billingHold = await reserveAgentCall(ctx, "productionAgent:decisionAgent", "production_agent_call", "制片Agent统筹");
   let settled = false;
-  let currentMsg = ctx.msg;
+
   try {
+    await memory.addBestEffort("user", text);
+
+    const skill = path.join(u.getPath("skills"), "production_agent_decision.md");
+    const prompt = await fs.promises.readFile(skill, "utf-8");
+
+    const projectInfo = await u.db("o_project").where("id", ctx.resTool.data.projectId).first();
+    if (!projectInfo) throw new Error(`项目不存在，ID: ${ctx.resTool.data.projectId}`);
+    const [_, imageModelName] = projectInfo.imageModel!.split(/:(.+)/);
+    const [id, videoModelName] = projectInfo.videoModel!.split(/:(.+)/);
+    const models = await u.vendor.getModelList(id);
+    if (!models.length) throw new Error(`项目使用的模型不存在，ID: ${projectInfo.videoModel}`);
+    let videoMode = "";
+    try {
+      videoMode = JSON.parse(projectInfo.mode ?? "");
+    } catch (e) {
+      videoMode = projectInfo.mode ?? "";
+    }
+    const isRef = Array.isArray(videoMode) ? true : false;
+    // const findData = models.find((i: any) => i.modelName == videoModelName);
+    // const isRef = findData.mode.every((i: any) => Array.isArray(i));
+
+    const modelInfo = `项目使用的模型如下：\n图像模型：${imageModelName}\n视频模型：${videoModelName}\n多参：${isRef ? "是" : "否"}`;
+
+    const mem = buildMemPrompt(await memory.getBestEffort(text));
+
+    let currentMsg = ctx.msg;
     const { fullStream } = await u.Ai.Text("productionAgent:decisionAgent", ctx.thinkConfig.think, ctx.thinkConfig.thinlLevel).stream({
       messages: [
         { role: "system", content: prompt },
@@ -112,7 +113,7 @@ export async function runDecisionAI(ctx: AgentContext) {
       },
       onFinish: async (completion) => {
         try {
-          await memory.add("assistant:decision", removeAllXmlTags(completion.text));
+          await memory.addBestEffort("assistant:decision", removeAllXmlTags(completion.text));
         } finally {
           await settlePointHold(billingHold?.id);
           settled = true;
@@ -169,7 +170,7 @@ async function createSubAgent(parentCtx: AgentContext) {
       settled = true;
 
       if (fullResponse.trim()) {
-        await memory.add(memoryKey, removeAllXmlTags(fullResponse), {
+        await memory.addBestEffort(memoryKey, removeAllXmlTags(fullResponse), {
           name,
           createTime: new Date(subMsg.datetime).getTime(),
         });

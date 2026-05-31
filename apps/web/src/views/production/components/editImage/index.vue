@@ -244,10 +244,10 @@ async function sureNode(imageUrl: string) {
     };
 
     if (props.flowData.flowId) {
-      await axios.post("/production/editImage/updateImageFlow", { ...payload, flowId: props.flowData.flowId });
+      await axios.post("/production/editImage/updateImageFlow", { ...payload, flowId: props.flowData.flowId, projectId: +project.value!.id });
       emit("save", { imageUrl, flowId: props.flowData.flowId });
     } else {
-      const { data } = await axios.post("/production/editImage/saveImageFlow", { ...payload });
+      const { data } = await axios.post("/production/editImage/saveImageFlow", { ...payload, projectId: +project.value!.id });
       emit("save", { imageUrl, flowId: data?.id });
     }
     visible.value = false;
@@ -260,6 +260,7 @@ onMounted(async () => {
     if (!props.flowData.flowId) return buildFlow();
     const { data } = await axios.post("/production/editImage/getImageFlow", {
       id: props.flowData.flowId,
+      projectId: +project.value!.id,
     });
     if (!data) return buildFlow();
     edges.value = data.edges.map((e: any) => ({ ...e, ...DEFAULT_EDGE_OPTIONS }));
@@ -307,6 +308,7 @@ function closeFn() {
       if (props.flowData.flowId) {
         const payload = {
           flowId: props.flowData.flowId,
+          projectId: +project.value!.id,
           nodes: cleanNodes(getNodes.value as NodeType[]),
           edges: cleanEdges(getEdges.value),
         };

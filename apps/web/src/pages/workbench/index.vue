@@ -76,7 +76,6 @@ const { showSetting, isElectron } = storeToRefs(settingStore());
 const menuList = ref([
   { type: "btn", path: "/project", labelKey: "workbench.menu.myProject", icon: "i-folder-close" },
   { type: "btn", path: "/task", labelKey: "workbench.menu.taskCenter", icon: "i-view-list" },
-  { type: "btn", path: "/service-status", labelKey: "workbench.menu.serviceStatus", icon: "i-data" },
   // { type: "divider" },
 ]);
 

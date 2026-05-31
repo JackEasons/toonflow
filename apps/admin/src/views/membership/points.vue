@@ -54,7 +54,8 @@ const gridOptions: VxeTableGridOptions<PointTransaction> = {
     { title: '序号', type: 'seq', width: 64 },
     { field: 'user', slots: { default: 'user' }, title: '用户', width: 180 },
     { field: 'type', slots: { default: 'type' }, title: '类型', width: 180 },
-    { field: 'description', minWidth: 260, title: '说明' },
+    { field: 'description', minWidth: 320, slots: { default: 'description' }, title: '说明' },
+    { field: 'trace', minWidth: 300, slots: { default: 'trace' }, title: '关联追踪' },
     { align: 'right', field: 'amount', slots: { default: 'amount' }, title: '变动', width: 140 },
     { align: 'right', field: 'balanceAfter', slots: { default: 'balanceAfter' }, title: '变动后余额', width: 150 },
     { field: 'createdAt', slots: { default: 'createdAt' }, title: '时间', width: 180 },
@@ -106,6 +107,29 @@ function categoryTheme(category: string) {
   if (category === 'purchase') return 'primary';
   return 'success';
 }
+
+function billingModels(row: PointTransaction) {
+  const items = row.billingMeta?.items;
+  if (!Array.isArray(items) || items.length === 0) return '';
+  return items
+    .map((item) => {
+      const label = item?.modelLabel || item?.modelName || item?.model || '模型';
+      const points = formatInt(item?.pointsPerCall || 0);
+      const count = formatInt(item?.count || 1);
+      return `${label} · ${points}积分/次 × ${count}`;
+    })
+    .join('；');
+}
+
+function traceItems(row: PointTransaction) {
+  return [
+    row.taskTypeLabel ? `任务：${row.taskTypeLabel}` : '',
+    row.projectId ? `项目：${row.projectId}` : '',
+    row.episodeId ? `剧集：${row.episodeId}` : '',
+    row.relatedId ? `关联：${row.relatedId}` : '',
+    row.freezeId ? `冻结单：${row.freezeId}` : '',
+  ].filter(Boolean);
+}
 </script>
 
 <template>
@@ -135,6 +159,20 @@ function categoryTheme(category: string) {
           </t-tag>
           <span class="text-xs text-foreground/60">{{ row.type }}</span>
         </t-space>
+      </template>
+
+      <template #description="{ row }">
+        <div class="font-medium">{{ row.description || row.type }}</div>
+        <div v-if="billingModels(row)" class="mt-1 text-xs text-foreground/60">
+          {{ billingModels(row) }}
+        </div>
+      </template>
+
+      <template #trace="{ row }">
+        <div v-if="traceItems(row).length" class="flex flex-col gap-1 text-xs text-foreground/60">
+          <span v-for="item in traceItems(row)" :key="item">{{ item }}</span>
+        </div>
+        <span v-else class="text-xs text-foreground/40">-</span>
       </template>
 
       <template #amount="{ row }">

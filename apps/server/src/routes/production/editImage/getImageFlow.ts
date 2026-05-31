@@ -9,10 +9,11 @@ export default router.post(
   "/",
   validateFields({
     id: z.number(),
+    projectId: z.number(),
   }),
   async (req, res) => {
-    const { id, type } = req.body;
-    const imageFlowData = await u.db("o_imageFlow").where("id", id).first();
+    const { id, projectId } = req.body;
+    const imageFlowData = await u.db("o_imageFlow").where({ id, projectId }).first();
     if (imageFlowData?.flowData) {
       const parseFlow = JSON.parse(imageFlowData.flowData);
       await Promise.all(

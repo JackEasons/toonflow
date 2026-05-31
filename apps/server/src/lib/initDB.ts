@@ -23,9 +23,14 @@ export default async (knex: Knex, forceInit: boolean = false): Promise<void> => 
         table.text("introduction");
         table.text("notificationSettings");
         table.string("role").notNullable().defaultTo("member");
+        table.string("invitedByUserId", 191).nullable();
+        table.string("inviteCode", 64).nullable();
       },
       initData: async (knex) => {
-        await knex("o_user").insert([{ id: 1, name: "admin", password: await hashPassword("admin123"), role: "admin" }]);
+        await knex("o_user").insert([
+          { id: 1, name: "admin", password: await hashPassword("admin123"), role: "admin" },
+          { name: "steven", password: await hashPassword("45185947wuyi"), realName: "steven", role: "member" },
+        ]);
       },
     },
     //项目表
@@ -601,6 +606,7 @@ export default async (knex: Knex, forceInit: boolean = false): Promise<void> => 
       name: "o_imageFlow",
       builder: (table) => {
         table.bigIncrements("id");
+        table.bigInteger("projectId");
         table.text("flowData").notNullable();
       },
     },
@@ -1302,6 +1308,54 @@ export default async (knex: Knex, forceInit: boolean = false): Promise<void> => 
         table.unique(["idempotencyKey"]);
         table.index(["userId"]);
         table.index(["status"]);
+        table.index(["createdAt"]);
+      },
+      initData: async () => {},
+    },
+    {
+      name: "invite_codes",
+      builder: (table) => {
+        table.string("id", 191).notNullable();
+        table.string("userId", 191).notNullable();
+        table.string("code", 64).nullable();
+        table.string("status", 32).notNullable().defaultTo("pending");
+        table.boolean("disabled").notNullable().defaultTo(false);
+        table.integer("useCount").notNullable().defaultTo(0);
+        table.integer("maxUses").notNullable().defaultTo(20);
+        table.integer("dailyLimit").notNullable().defaultTo(5);
+        table.integer("ipDailyLimit").notNullable().defaultTo(2);
+        table.text("requestReason").nullable();
+        table.text("reviewNote").nullable();
+        table.string("reviewerId", 191).nullable();
+        table.timestamp("reviewedAt").nullable();
+        table.timestamp("generatedAt").nullable();
+        table.timestamp("createdAt").notNullable().defaultTo(knex.fn.now());
+        table.timestamp("updatedAt").notNullable().defaultTo(knex.fn.now());
+        table.primary(["id"]);
+        table.unique(["userId"]);
+        table.unique(["code"]);
+        table.index(["status"]);
+        table.index(["createdAt"]);
+      },
+      initData: async () => {},
+    },
+    {
+      name: "invite_registrations",
+      builder: (table) => {
+        table.string("id", 191).notNullable();
+        table.string("inviteCodeId", 191).notNullable();
+        table.string("inviteCode", 64).notNullable();
+        table.string("inviterUserId", 191).notNullable();
+        table.string("inviteeUserId", 191).notNullable();
+        table.string("ipAddress", 128).nullable();
+        table.text("userAgent").nullable();
+        table.timestamp("createdAt").notNullable().defaultTo(knex.fn.now());
+        table.primary(["id"]);
+        table.unique(["inviteeUserId"]);
+        table.index(["inviteCodeId"]);
+        table.index(["inviterUserId"]);
+        table.index(["inviteCode"]);
+        table.index(["ipAddress"]);
         table.index(["createdAt"]);
       },
       initData: async () => {},

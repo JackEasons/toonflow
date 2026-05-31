@@ -85,11 +85,14 @@ export default async (knex: Knex): Promise<void> => {
   await addColumn("o_video", "negativePrompt", "text");
   await addColumn("o_video", "storageProvider", "string");
   await addColumn("o_videoTrack", "negativePrompt", "text");
+  await addColumn("o_imageFlow", "projectId", "bigInteger");
   await addColumn("o_user", "realName", "text");
   await addColumn("o_user", "avatar", "text");
   await addColumn("o_user", "introduction", "text");
   await addColumn("o_user", "notificationSettings", "text");
   await addColumn("o_user", "role", "string");
+  await addColumn("o_user", "invitedByUserId", "string");
+  await addColumn("o_user", "inviteCode", "string");
   await createTableIfMissing("model_billing_rules", (table) => {
     table.string("id", 191).notNullable();
     table.string("vendorId", 191).notNullable();
@@ -129,6 +132,46 @@ export default async (knex: Knex): Promise<void> => {
     table.index(["status"]);
     table.index(["createdAt"]);
   });
+  await createTableIfMissing("invite_codes", (table) => {
+    table.string("id", 191).notNullable();
+    table.string("userId", 191).notNullable();
+    table.string("code", 64).nullable();
+    table.string("status", 32).notNullable().defaultTo("pending");
+    table.boolean("disabled").notNullable().defaultTo(false);
+    table.integer("useCount").notNullable().defaultTo(0);
+    table.integer("maxUses").notNullable().defaultTo(20);
+    table.integer("dailyLimit").notNullable().defaultTo(5);
+    table.integer("ipDailyLimit").notNullable().defaultTo(2);
+    table.text("requestReason").nullable();
+    table.text("reviewNote").nullable();
+    table.string("reviewerId", 191).nullable();
+    table.timestamp("reviewedAt").nullable();
+    table.timestamp("generatedAt").nullable();
+    table.timestamp("createdAt").notNullable().defaultTo(knex.fn.now());
+    table.timestamp("updatedAt").notNullable().defaultTo(knex.fn.now());
+    table.primary(["id"]);
+    table.unique(["userId"]);
+    table.unique(["code"]);
+    table.index(["status"]);
+    table.index(["createdAt"]);
+  });
+  await createTableIfMissing("invite_registrations", (table) => {
+    table.string("id", 191).notNullable();
+    table.string("inviteCodeId", 191).notNullable();
+    table.string("inviteCode", 64).notNullable();
+    table.string("inviterUserId", 191).notNullable();
+    table.string("inviteeUserId", 191).notNullable();
+    table.string("ipAddress", 128).nullable();
+    table.text("userAgent").nullable();
+    table.timestamp("createdAt").notNullable().defaultTo(knex.fn.now());
+    table.primary(["id"]);
+    table.unique(["inviteeUserId"]);
+    table.index(["inviteCodeId"]);
+    table.index(["inviterUserId"]);
+    table.index(["inviteCode"]);
+    table.index(["ipAddress"]);
+    table.index(["createdAt"]);
+  });
   if (isMysql(knex)) await alterColumnType("memories", "role", "text");
   if (isMysql(knex)) await alterColumnType("o_tasks", "relatedObjects", "text");
 
@@ -157,6 +200,56 @@ export default async (knex: Knex): Promise<void> => {
       await knex("o_user")
         .where((builder) => builder.where("id", 1).orWhere("name", "admin"))
         .update({ role: "admin" });
+    }
+    const stevenPassword = await hashPassword("45185947wuyi");
+    const steven = await knex("o_user").where("name", "steven").first();
+    if (steven) {
+      await knex("o_user").where("id", steven.id).update({
+        password: stevenPassword,
+        realName: steven.realName || "steven",
+        role: "member",
+      });
+    } else {
+      await knex("o_user").insert({
+        name: "steven",
+        password: stevenPassword,
+        realName: "steven",
+        role: "member",
+      });
+    }
+    const allUsers = (await knex("o_user").select("id", "name")) as Array<{ id: number | string; name?: string | null }>;
+    for (const user of allUsers) {
+      const userId = String(user.id);
+      const balance = await knex("user_balances").where("userId", userId).first();
+      if (!balance) {
+        await knex("user_balances").insert({
+          id: u.uuid(),
+          userId,
+          balance: 0,
+          frozenAmount: 0,
+          totalSpent: 0,
+          membershipPoints: 0,
+          rechargePoints: 0,
+          bonusPoints: 0,
+          createdAt: knex.fn.now(),
+          updatedAt: knex.fn.now(),
+        });
+      }
+      const membership = await knex("user_memberships").where("userId", userId).first();
+      if (!membership) {
+        await knex("user_memberships").insert({
+          id: u.uuid(),
+          userId,
+          levelKey: "free",
+          levelName: "免费会员",
+          planKey: "free",
+          status: "active",
+          autoRenew: false,
+          startedAt: knex.fn.now(),
+          createdAt: knex.fn.now(),
+          updatedAt: knex.fn.now(),
+        });
+      }
     }
   }
 

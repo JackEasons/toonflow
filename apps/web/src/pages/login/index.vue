@@ -128,8 +128,9 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { onMounted, ref, watch } from "vue";
 import { useI18n } from "vue-i18n";
+import { useRoute } from "vue-router";
 import Router from "#/router/index.ts";
 import axios from "#/utils/axios";
 import settingStore from "#/stores/setting";
@@ -149,6 +150,7 @@ const handleChangeLang = (data) => {
 
 const store = settingStore();
 const { isElectron } = storeToRefs(store);
+const route = useRoute();
 
 const authMode = ref("login");
 const loginLoading = ref(false);
@@ -173,6 +175,26 @@ const switchAuthMode = (mode) => {
   authMode.value = mode;
   setNotice("success", "");
 };
+
+const normalizeInviteCode = (value) => String(value || "").replace(/\s+/g, "").toUpperCase();
+
+watch(
+  () => registerForm.value.inviteCode,
+  (value) => {
+    const normalized = normalizeInviteCode(value);
+    if (value !== normalized) registerForm.value.inviteCode = normalized;
+  },
+);
+
+onMounted(() => {
+  if (route.query.mode === "register") {
+    authMode.value = "register";
+  }
+  const routeInviteCode = String(route.query.inviteCode || "").trim();
+  if (!routeInviteCode) return;
+  registerForm.value.inviteCode = normalizeInviteCode(routeInviteCode);
+  authMode.value = "register";
+});
 
 const handleLogin = async () => {
   if (!loginForm.value.username || !loginForm.value.password) {
@@ -199,7 +221,8 @@ const handleLogin = async () => {
 
 const handleRegister = async () => {
   const username = registerForm.value.username.trim();
-  const { password, confirmPassword, inviteCode } = registerForm.value;
+  const { password, confirmPassword } = registerForm.value;
+  const inviteCode = normalizeInviteCode(registerForm.value.inviteCode);
 
   if (!username) {
     window.$message.warning(t("login.usernameRequired"));
@@ -221,7 +244,7 @@ const handleRegister = async () => {
     setNotice("error", t("login.passwordMismatch"));
     return;
   }
-  if (!inviteCode.trim()) {
+  if (!inviteCode) {
     window.$message.warning(t("login.inviteCodeRequired"));
     return;
   }
@@ -233,7 +256,7 @@ const handleRegister = async () => {
       username,
       password,
       confirmPassword,
-      inviteCode: inviteCode.trim(),
+      inviteCode,
     });
     loginForm.value.username = username;
     loginForm.value.password = "";

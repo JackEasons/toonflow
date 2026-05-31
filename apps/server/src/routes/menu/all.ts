@@ -205,6 +205,15 @@ const adminMembershipMenus = [
         path: "/membership/model-billing",
       },
       {
+        component: "/membership/invites.vue",
+        meta: {
+          icon: "lucide:ticket-check",
+          title: "邀请码管理",
+        },
+        name: "MembershipInvites",
+        path: "/membership/invites",
+      },
+      {
         component: "/membership/functions.vue",
         meta: {
           icon: "lucide:sliders-horizontal",

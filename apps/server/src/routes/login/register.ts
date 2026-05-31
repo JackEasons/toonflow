@@ -6,13 +6,10 @@ import { z } from "zod";
 import { hashPassword } from "@/lib/password";
 import { ensureUserMembership } from "@/utils/membership";
 import { USER_ROLE_MEMBER } from "@/utils/admin";
+import { getUsableInviteForRegistration, recordInviteRegistration } from "@/utils/invite";
+import { db as knexDb } from "@/utils/db";
 
 const router = express.Router();
-const DEFAULT_INVITE_CODE = "DRAMASTUDIO2026";
-
-function getInviteCode(): string {
-  return (process.env.DRAMASTUDIO_INVITE_CODE || process.env.INVITE_CODE || DEFAULT_INVITE_CODE).trim();
-}
 
 export default router.post(
   "/",
@@ -26,7 +23,7 @@ export default router.post(
     const username = String(req.body.username || "").trim();
     const password = String(req.body.password || "");
     const confirmPassword = String(req.body.confirmPassword || "");
-    const inviteCode = String(req.body.inviteCode || "").trim();
+    const inviteCode = String(req.body.inviteCode || "").trim().toUpperCase();
 
     if (!username) return res.status(400).send(error("请输入用户名"));
     if (username.length < 2 || username.length > 20) return res.status(400).send(error("用户名长度为 2-20 个字符"));
@@ -34,19 +31,33 @@ export default router.post(
     if (!confirmPassword) return res.status(400).send(error("请再次输入密码"));
     if (confirmPassword !== password) return res.status(400).send(error("两次输入的密码不一致"));
     if (!inviteCode) return res.status(400).send(error("请输入邀请码"));
-    if (inviteCode !== getInviteCode()) return res.status(400).send(error("邀请码无效"));
 
     const exists = await u.db("o_user").where("name", username).first();
     if (exists) return res.status(400).send(error("用户名已存在"));
 
-    const hashedPassword = await hashPassword(password);
-    const inserted = await u.db("o_user").insert({
-      name: username,
-      password: hashedPassword,
-      role: USER_ROLE_MEMBER,
-    } as any);
-    const userId = String(Array.isArray(inserted) ? inserted[0] : inserted);
-    await ensureUserMembership(userId);
+    let userId = "";
+    try {
+      const hashedPassword = await hashPassword(password);
+      userId = await knexDb.transaction(async (trx) => {
+        const existingUser = await trx("o_user").where("name", username).first();
+        if (existingUser) throw new Error("用户名已存在");
+
+        const invite = await getUsableInviteForRegistration(trx, inviteCode, req);
+        const inserted = await trx("o_user").insert({
+          name: username,
+          password: hashedPassword,
+          role: USER_ROLE_MEMBER,
+          invitedByUserId: String(invite.userId),
+          inviteCode: String(invite.code),
+        } as any);
+        const nextUserId = String(Array.isArray(inserted) ? inserted[0] : inserted);
+        await recordInviteRegistration(trx, invite, nextUserId, req);
+        return nextUserId;
+      });
+      await ensureUserMembership(userId);
+    } catch (err: any) {
+      return res.status(400).send(error(err?.message || "注册失败"));
+    }
 
     return res.status(200).send(
       success(

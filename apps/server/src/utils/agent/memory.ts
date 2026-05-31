@@ -47,6 +47,10 @@ class Memory {
     this.userId = userId;
   }
 
+  private warnBestEffort(scope: string, error: unknown) {
+    console.warn(`[Agent记忆] ${scope}失败，已跳过：`, error instanceof Error ? error.message : error);
+  }
+
   private async billedTextInvoke<T>(taskType: string, invoke: () => Promise<T>): Promise<T> {
     if (!this.userId) return invoke();
 
@@ -154,23 +158,37 @@ class Memory {
       const batchIds = batch.map((m) => m.id);
       const batchContents = batch.map((m) => m.content);
 
-      const summaryContent = await this.generateSummary(batchContents);
-      const summaryEmbedding = await getEmbedding(summaryContent);
-      const summaryId = uuidv4();
+      try {
+        const summaryContent = await this.generateSummary(batchContents);
+        const summaryEmbedding = await getEmbedding(summaryContent);
+        const summaryId = uuidv4();
 
-      await u.db("memories").insert({
-        id: summaryId,
-        isolationKey,
-        type: "summary",
-        content: summaryContent,
-        embedding: JSON.stringify(summaryEmbedding),
-        relatedMessageIds: JSON.stringify(batchIds),
-        summarized: 0,
-        createTime: Date.now(),
-      } as any);
+        await u.db("memories").insert({
+          id: summaryId,
+          isolationKey,
+          type: "summary",
+          content: summaryContent,
+          embedding: JSON.stringify(summaryEmbedding),
+          relatedMessageIds: JSON.stringify(batchIds),
+          summarized: 0,
+          createTime: Date.now(),
+        } as any);
 
-      // 标记已总结
-      await u.db("memories").whereIn("id", batchIds).update({ summarized: 1 });
+        // 标记已总结
+        await u.db("memories").whereIn("id", batchIds).update({ summarized: 1 });
+      } catch (error) {
+        this.warnBestEffort("生成摘要", error);
+      }
+    }
+  }
+
+  async addBestEffort(role: string = "user", content: string, options?: { name?: string; createTime?: number }) {
+    try {
+      await this.add(role, content, options);
+      return true;
+    } catch (error) {
+      this.warnBestEffort("写入记忆", error);
+      return false;
     }
   }
 
@@ -211,6 +229,19 @@ class Memory {
     };
   }
 
+  async getBestEffort(text: string) {
+    try {
+      return await this.get(text);
+    } catch (error) {
+      this.warnBestEffort("读取记忆", error);
+      return {
+        rag: [],
+        shortTerm: [],
+        summaries: [],
+      };
+    }
+  }
+
   async deepRetrieve(keyword: string) {
     const { deepRetrieveSummaryLimit } = await this.getConfigData({ deepRetrieveSummaryLimit: DEFAULTS.deepRetrieveSummaryLimit });
 
@@ -223,10 +254,16 @@ class Memory {
     if (topSummaries.length === 0) return [];
 
     // 步骤2: AI 判断相关性
-    const relevantIds = await this.judgeSummaryRelevance(
-      keyword,
-      topSummaries.map((s) => ({ id: s.id!, content: s.content })),
-    );
+    let relevantIds: string[] = [];
+    try {
+      relevantIds = await this.judgeSummaryRelevance(
+        keyword,
+        topSummaries.map((s) => ({ id: s.id!, content: s.content })),
+      );
+    } catch (error) {
+      this.warnBestEffort("深度检索相关性判断", error);
+      return [];
+    }
 
     if (relevantIds.length === 0) return [];
 
@@ -252,7 +289,12 @@ class Memory {
             }),
         ),
         execute: async ({ keyword }) => {
-          const results = await this.deepRetrieve(keyword);
+          let results: Awaited<ReturnType<Memory["deepRetrieve"]>> = [];
+          try {
+            results = await this.deepRetrieve(keyword);
+          } catch (error) {
+            this.warnBestEffort("深度检索", error);
+          }
           if (results.length === 0) return { found: false, message: "未找到相关记忆" };
           return { found: true, memories: results.map((r) => r.content) };
         },

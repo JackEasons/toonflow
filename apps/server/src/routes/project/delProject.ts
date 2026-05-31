@@ -13,8 +13,10 @@ export default router.post(
   }),
   async (req, res) => {
     const { id } = req.body;
+    const userId = String((req as any).user?.id || "");
+    if (!userId) return res.status(401).send({ message: "未提供token" });
     //删除项目
-    await u.db("o_project").where("id", id).delete();
+    await u.db("o_project").where({ id, userId }).delete();
     await u.db("o_agentWorkData").where("projectId", id).delete();
     //删除项目下的原文
     await u.db("o_novel").where("projectId", id).delete();

@@ -15,10 +15,13 @@ export default router.post(
   }),
   async (req, res) => {
     const { taskClass, state, projectId, page = 1, limit = 10 }: any = req.body;
+    const userId = String((req as any).user?.id || "");
+    if (!userId) return res.status(401).send({ message: "未提供token" });
     const offset = (page - 1) * limit;
     const data = await u
       .db("o_tasks")
       .leftJoin("o_project", "o_project.id", "o_tasks.projectId")
+      .where("o_project.userId", userId)
       .andWhere((qb) => {
         if (taskClass) {
           qb.andWhere("o_tasks.taskClass", taskClass);
@@ -36,6 +39,8 @@ export default router.post(
       .orderBy("o_tasks.id", "desc");
     const totalQuery = (await u
       .db("o_tasks")
+      .leftJoin("o_project", "o_project.id", "o_tasks.projectId")
+      .where("o_project.userId", userId)
       .andWhere((qb) => {
         if (taskClass) {
           qb.andWhere("o_tasks.taskClass", taskClass);

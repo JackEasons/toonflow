@@ -61,10 +61,16 @@
             </div>
           </div>
 
-          <button type="button" class="logoutButton" @click="logout">
-            <i-logout theme="outline" size="16" />
-            退出登录
-          </button>
+          <div class="accountActions">
+            <button type="button" class="accountAction logoutButton" @click="logout">
+              <i-logout theme="outline" size="16" />
+              退出登录
+            </button>
+            <button type="button" class="accountAction userCenterButton" @click="openUserCenter">
+              <i-user theme="outline" size="16" />
+              用户中心
+            </button>
+          </div>
         </div>
       </transition>
     </div>
@@ -886,6 +892,11 @@ async function logout() {
   await router.push("/login");
 }
 
+async function openUserCenter() {
+  userMenuOpen.value = false;
+  await router.push("/user-center");
+}
+
 function handlePointerDown(event: PointerEvent) {
   const target = event.target;
   if (target instanceof Node && !rootRef.value?.contains(target)) {
@@ -1270,12 +1281,19 @@ const PointMetric = defineComponent({
   }
 }
 
-.logoutButton {
+.accountActions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.accountAction {
   display: flex;
   width: 100%;
   align-items: center;
+  justify-content: center;
   gap: 12px;
-  margin-top: 14px;
   padding: 10px 12px;
   border: 0;
   border-radius: 16px;
@@ -1290,6 +1308,10 @@ const PointMetric = defineComponent({
     background: rgba(118, 218, 204, 0.1);
     color: rgba(245, 252, 249, 0.94);
   }
+}
+
+.userCenterButton {
+  color: #41ddc9;
 }
 
 .membershipModalOverlay {

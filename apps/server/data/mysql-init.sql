@@ -9,6 +9,8 @@ SET FOREIGN_KEY_CHECKS = 0;
 DROP TABLE IF EXISTS `o_videoTrack`;
 DROP TABLE IF EXISTS `o_video`;
 DROP TABLE IF EXISTS `o_vendorConfig`;
+DROP TABLE IF EXISTS `invite_registrations`;
+DROP TABLE IF EXISTS `invite_codes`;
 DROP TABLE IF EXISTS `o_user`;
 DROP TABLE IF EXISTS `o_tasks`;
 DROP TABLE IF EXISTS `o_storyboard`;
@@ -158,6 +160,7 @@ CREATE TABLE `o_image` (
 -- Schema: o_imageFlow
 CREATE TABLE `o_imageFlow` (
   `id` BIGINT UNSIGNED AUTO_INCREMENT NOT NULL,
+  `projectId` BIGINT,
   `flowData` LONGTEXT NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -311,7 +314,54 @@ CREATE TABLE `o_user` (
   `avatar` LONGTEXT,
   `introduction` LONGTEXT,
   `notificationSettings` LONGTEXT,
+  `role` VARCHAR(255) NOT NULL DEFAULT 'member',
+  `invitedByUserId` VARCHAR(191),
+  `inviteCode` VARCHAR(64),
   PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Schema: invite_codes
+CREATE TABLE `invite_codes` (
+  `id` VARCHAR(191) NOT NULL,
+  `userId` VARCHAR(191) NOT NULL,
+  `code` VARCHAR(64),
+  `status` VARCHAR(32) NOT NULL DEFAULT 'pending',
+  `disabled` TINYINT(1) NOT NULL DEFAULT 0,
+  `useCount` INT NOT NULL DEFAULT 0,
+  `maxUses` INT NOT NULL DEFAULT 20,
+  `dailyLimit` INT NOT NULL DEFAULT 5,
+  `ipDailyLimit` INT NOT NULL DEFAULT 2,
+  `requestReason` LONGTEXT,
+  `reviewNote` LONGTEXT,
+  `reviewerId` VARCHAR(191),
+  `reviewedAt` TIMESTAMP NULL,
+  `generatedAt` TIMESTAMP NULL,
+  `createdAt` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updatedAt` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `invite_codes_userid_unique` (`userId`),
+  UNIQUE KEY `invite_codes_code_unique` (`code`),
+  KEY `invite_codes_status_index` (`status`),
+  KEY `invite_codes_createdat_index` (`createdAt`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Schema: invite_registrations
+CREATE TABLE `invite_registrations` (
+  `id` VARCHAR(191) NOT NULL,
+  `inviteCodeId` VARCHAR(191) NOT NULL,
+  `inviteCode` VARCHAR(64) NOT NULL,
+  `inviterUserId` VARCHAR(191) NOT NULL,
+  `inviteeUserId` VARCHAR(191) NOT NULL,
+  `ipAddress` VARCHAR(128),
+  `userAgent` LONGTEXT,
+  `createdAt` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `invite_registrations_inviteeuserid_unique` (`inviteeUserId`),
+  KEY `invite_registrations_invitecodeid_index` (`inviteCodeId`),
+  KEY `invite_registrations_inviteruserid_index` (`inviterUserId`),
+  KEY `invite_registrations_invitecode_index` (`inviteCode`),
+  KEY `invite_registrations_ipaddress_index` (`ipAddress`),
+  KEY `invite_registrations_createdat_index` (`createdAt`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Schema: o_vendorConfig
@@ -889,10 +939,11 @@ INSERT INTO `o_tasks` (`id`, `projectId`, `taskClass`, `relatedObjects`, `model`
 (70, 1779904318831, '生成分镜图片', '{\"prompt\":\"@图1 为院门方向视角场景,\\n\\n【画面】@图1，全景构图，画面保持定格，字幕从画面底部淡入——二月二，龙抬头。院门口锦衣少年半幅衣摆微扬，墙头宋集薪笑容凝固，稚圭杏眼圆睁后退，一切如被按下暂停键。宿命降临的静谧笼罩院门方向。\\n\\n【风格】3D渲染风格，高精度高模建模，PBR物理材质，3D国风赛博，新中式赛博朋克，东方科幻美学，电影级光影，光线追踪，全局光照，3D国风赛博场景渲染，院门方向全景定格赛博质感，画面底部字幕二月二龙抬头画内文字清晰可辨字体符合中式美学，3D国风赛博渲染，东方科幻美学，新中式赛博朋克内核，中式美学与赛博元素有机融合，古风场景风格统一，PBR物理材质，电影级院线渲染，3D高清渲染，8K超高清，高细节，高精度高模建模，PBR物理材质，画面无字幕、无水印、无标题叠字、无UI界面，画面底部二月二龙抬头为画内字幕淡入效果。\",\"size\":\"1K\",\"aspectRatio\":\"16:9\"}', 'doubao-seedream-5-0-260128', '分镜图片生成', '已完成', 1779914499535, NULL);
 ALTER TABLE `o_tasks` AUTO_INCREMENT = 71;
 
--- Data: o_user (1 rows)
-INSERT INTO `o_user` (`id`, `name`, `password`) VALUES
-(1, 'admin', 'admin123');
-ALTER TABLE `o_user` AUTO_INCREMENT = 2;
+-- Data: o_user (2 rows)
+INSERT INTO `o_user` (`id`, `name`, `password`, `realName`, `role`) VALUES
+(1, 'admin', 'admin123', 'admin', 'admin'),
+(2, 'steven', '45185947wuyi', 'steven', 'member');
+ALTER TABLE `o_user` AUTO_INCREMENT = 3;
 
 -- Data: o_vendorConfig (10 rows)
 INSERT INTO `o_vendorConfig` (`id`, `inputValues`, `models`, `enable`) VALUES

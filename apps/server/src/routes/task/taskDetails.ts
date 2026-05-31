@@ -12,7 +12,15 @@ export default router.post(
   }),
   async (req, res) => {
     const { taskId } = req.body;
-    const data = await u.db("o_tasks").where("id", taskId).select("*").first();
+    const userId = String((req as any).user?.id || "");
+    if (!userId) return res.status(401).send({ message: "未提供token" });
+    const data = await u
+      .db("o_tasks")
+      .leftJoin("o_project", "o_project.id", "o_tasks.projectId")
+      .where("o_tasks.id", taskId)
+      .where("o_project.userId", userId)
+      .select("o_tasks.*")
+      .first();
     res.status(200).send(success(data));
   }
 );
