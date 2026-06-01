@@ -80,7 +80,7 @@ apps/server/src/types/database.d.ts
 
 # Docker release artifacts
 docker/.env
-docker/*.zip
+**/*.zip
 docker/data/
 docker/images/
 docker/server/
