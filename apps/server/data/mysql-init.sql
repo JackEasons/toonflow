@@ -154,6 +154,9 @@ CREATE TABLE `o_image` (
   `negativePrompt` LONGTEXT,
   `state` LONGTEXT,
   `errorReason` LONGTEXT,
+  `providerTaskId` varchar(191) DEFAULT NULL,
+  `providerTaskType` varchar(64) DEFAULT NULL,
+  `providerPayload` text,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 

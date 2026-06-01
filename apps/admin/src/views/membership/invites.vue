@@ -216,7 +216,7 @@ function riskTheme(level: InviteRiskLevel) {
   return 'default';
 }
 
-function formatDate(value?: string) {
+function formatDate(value?: string | null) {
   if (!value) return '-';
   return new Date(value).toLocaleString('zh-CN');
 }

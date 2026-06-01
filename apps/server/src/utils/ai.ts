@@ -23,7 +23,7 @@ type AiType =
   | "productionAgent:storyboardPanelAgent"
   | "productionAgent:storyboardTableAgent";
 
-type FnName = "textRequest" | "imageRequest" | "videoRequest" | "ttsRequest";
+type FnName = "textRequest" | "imageRequest" | "imageResultRequest" | "videoRequest" | "ttsRequest";
 
 const AiTypeValues: AiType[] = [
   "scriptAgent",
@@ -111,18 +111,13 @@ async function getModelConfig(value: AiType | `${string}:${string}`) {
   return null;
 }
 
-async function getVendorTemplateFn(
-  fnName: "textRequest",
-  modelName: `${string}:${string}`,
-): Promise<(think?: boolean, thinkLevel?: 0 | 1 | 2 | 3) => any>;
-async function getVendorTemplateFn(fnName: Exclude<FnName, "textRequest">, modelName: `${string}:${string}`): Promise<(input: any) => any>;
-async function getVendorTemplateFn(fnName: FnName, modelName: `${string}:${string}`): Promise<any> {
+async function getVendorRuntime(modelName: `${string}:${string}`) {
   const [id, name] = modelName.split(/:(.+)/);
   const vendorConfigData = await u.db("o_vendorConfig").where("id", id).first();
   if (!vendorConfigData) throw new Error(`未找到供应商配置 id=${id}`);
-  const modelList = await u.vendor.getModelList(id);
+  const modelList = await u.vendor.getEnabledModelList(id);
   const selectedModel = modelList.find((i: any) => i.modelName == name);
-  if (!selectedModel) throw new Error(`未找到模型 ${name} id=${id}`);
+  if (!selectedModel) throw new Error(`模型不存在或未启用 ${name} id=${id}`);
   const code = u.vendor.getCode(id);
   const jsCode = transform(code, { transforms: ["typescript"] }).code;
   const running = u.vm(jsCode);
@@ -130,6 +125,16 @@ async function getVendorTemplateFn(fnName: FnName, modelName: `${string}:${strin
     Object.assign(running.vendor.inputValues, JSON.parse(vendorConfigData.inputValues ?? "{}"));
     running.vendor.models = modelList;
   }
+  return { id, running, selectedModel };
+}
+
+async function getVendorTemplateFn(
+  fnName: "textRequest",
+  modelName: `${string}:${string}`,
+): Promise<(think?: boolean, thinkLevel?: 0 | 1 | 2 | 3) => any>;
+async function getVendorTemplateFn(fnName: Exclude<FnName, "textRequest">, modelName: `${string}:${string}`): Promise<(input: any) => any>;
+async function getVendorTemplateFn(fnName: FnName, modelName: `${string}:${string}`): Promise<any> {
+  const { id, running, selectedModel } = await getVendorRuntime(modelName);
   const fn = running[fnName];
   if (!fn) throw new Error(`未找到供应商配置中的函数 ${fnName} id=${id}`);
   if (fnName == "textRequest")
@@ -138,6 +143,12 @@ async function getVendorTemplateFn(fnName: FnName, modelName: `${string}:${strin
       return fn(selectedModel, effectiveThink, thinkLevel);
     };
   else return <T>(input: T) => fn(input, selectedModel);
+}
+
+async function getOptionalVendorTemplateFn(fnName: Exclude<FnName, "textRequest">, modelName: `${string}:${string}`): Promise<null | ((input: any) => any)> {
+  const { running, selectedModel } = await getVendorRuntime(modelName);
+  const fn = running[fnName];
+  return fn ? <T>(input: T) => fn(input, selectedModel) : null;
 }
 
 async function withTaskRecord<T>(
@@ -172,7 +183,16 @@ async function withTaskRecord<T>(
 async function urlToBase64(url: string, retries = 3, delay = 1000): Promise<string> {
   for (let attempt = 1; attempt <= retries; attempt++) {
     try {
-      const res = await axios.get(url, { responseType: "arraybuffer" });
+      const res = await axios.get(url, {
+        responseType: "arraybuffer",
+        timeout: 120000,
+        maxContentLength: Infinity,
+        maxBodyLength: Infinity,
+        headers: {
+          Accept: "image/*,*/*",
+          "User-Agent": "Toonflow/1.0",
+        },
+      });
       const base64 = Buffer.from(res.data).toString("base64");
       return `${base64}`;
     } catch (e) {
@@ -245,6 +265,7 @@ interface ImageConfig {
   referenceList?: Extract<ReferenceList, { type: "image" }>[];
   size: "1K" | "2K" | "4K";
   aspectRatio: `${number}:${number}`;
+  onTaskId?: (task: ImageProviderTask) => Promise<void> | void;
 }
 
 interface TaskRecord {
@@ -252,11 +273,32 @@ interface TaskRecord {
   describe: string; // 任务描述
   relatedObjects: string; // 相关对象信息，便于后续分析和追踪
   projectId: number; // 项目ID
+  onProviderTask?: (task: ImageProviderTask) => Promise<void> | void;
 }
 
 interface GenerationTaskDetails {
   prompt?: string;
   negativePrompt?: string;
+}
+
+interface ImageProviderTask {
+  payload?: any;
+  taskId: string;
+  taskType?: string;
+}
+
+export interface ImageResultQuery {
+  payload?: any;
+  taskId: string;
+  taskType?: string | null;
+}
+
+export interface ImageResultQueryResponse {
+  data?: string;
+  error?: string;
+  message?: string;
+  raw?: any;
+  status: "completed" | "failed" | "processing" | "unsupported";
 }
 
 function buildGenerationTaskDetails(input: NegativePromptInput, context: NegativePromptContext): GenerationTaskDetails {
@@ -278,6 +320,10 @@ class AiImage {
     const exec = async (mn: `${string}:${string}`) => {
       const fn = await getVendorTemplateFn("imageRequest", mn);
       const requestInput = withNegativePrompt(input, { mediaType: "image", modelKey: mn });
+      requestInput.onTaskId = async (task: ImageProviderTask) => {
+        if (!task?.taskId) return;
+        await taskRecord?.onProviderTask?.(task);
+      };
       await referenceList2imageBase642(mn.split(/:(.+)/)[0], requestInput);
       this.result = await fn(requestInput);
       if (this.result.startsWith("http")) this.result = await urlToBase64(this.result);
@@ -291,6 +337,20 @@ class AiImage {
     }
     await exec(modelName);
     return this;
+  }
+  async queryTask(input: ImageResultQuery): Promise<ImageResultQueryResponse> {
+    const modelName = await resolveModelName(this.key);
+    const fn = await getOptionalVendorTemplateFn("imageResultRequest", modelName);
+    if (!fn) {
+      return {
+        status: "unsupported",
+        message: "该供应商适配器未提供图片结果查询接口",
+      };
+    }
+    const result = (await fn(input)) as ImageResultQueryResponse | string;
+    const normalized = typeof result === "string" ? { status: "completed" as const, data: result } : result;
+    if (normalized.status === "completed" && normalized.data?.startsWith("http")) normalized.data = await urlToBase64(normalized.data);
+    return normalized;
   }
   async save(path: string, storageProvider = u.oss.getStorageProvider()) {
     await u.oss.writeFile(path, this.result, storageProvider);

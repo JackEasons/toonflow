@@ -82,7 +82,7 @@ export async function runDecisionAI(ctx: AgentContext) {
     if (!projectInfo) throw new Error(`项目不存在，ID: ${ctx.resTool.data.projectId}`);
     const [_, imageModelName] = projectInfo.imageModel!.split(/:(.+)/);
     const [id, videoModelName] = projectInfo.videoModel!.split(/:(.+)/);
-    const models = await u.vendor.getModelList(id);
+    const models = await u.vendor.getEnabledModelList(id);
     if (!models.length) throw new Error(`项目使用的模型不存在，ID: ${projectInfo.videoModel}`);
     let videoMode = "";
     try {
@@ -194,7 +194,7 @@ async function createSubAgent(parentCtx: AgentContext) {
 
   const [_, imageModelName] = projectInfo.imageModel!.split(/:(.+)/);
   const [id, videoModelName] = projectInfo.videoModel!.split(/:(.+)/);
-  const models = await u.vendor.getModelList(id);
+  const models = await u.vendor.getEnabledModelList(id);
   if (!models.length) throw new Error(`项目使用的模型不存在，ID: ${projectInfo.videoModel}`);
   // const findData = models.find((i: any) => i.modelName == videoModelName);
   //

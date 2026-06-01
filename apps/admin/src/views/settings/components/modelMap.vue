@@ -96,8 +96,8 @@
               v-model="editingPrompt.type"
               :disabled="editingPrompt.isEdit"
               :placeholder="$t('settings.memory.modelMap.promptTypePlaceholder')">
-              <!-- <t-option value="text" :label="$t('settings.memory.modelMap.typeText')" />
-              <t-option value="image" :label="$t('settings.memory.modelMap.typeImage')" /> -->
+              <t-option value="text" :label="$t('settings.memory.modelMap.typeText')" />
+              <t-option value="image" :label="$t('settings.memory.modelMap.typeImage')" />
               <t-option value="video" :label="$t('settings.memory.modelMap.typeVideo')" />
             </t-select>
           </t-form-item>

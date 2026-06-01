@@ -1,5 +1,5 @@
 <script lang="ts">
-import type { Component, PropType } from 'vue';
+import type { Component, PropType, VNode } from 'vue';
 
 import { defineComponent, h } from 'vue';
 
@@ -30,7 +30,7 @@ export default defineComponent({
       if (!isComponent) {
         if (props.renderBr && isString(props.content)) {
           const lines = props.content.split('\n');
-          const result = [];
+          const result: VNode[] = [];
           for (const [i, line] of lines.entries()) {
             result.push(h('p', { key: i }, line));
             // if (i < lines.length - 1) {
@@ -43,7 +43,7 @@ export default defineComponent({
         }
       }
       return h(
-        props.content as never,
+        props.content as Component,
         {
           ...attrs,
           props: {

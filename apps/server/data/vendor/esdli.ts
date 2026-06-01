@@ -618,6 +618,15 @@ const getJsonHeaders = () => ({
   Accept: "application/json",
 });
 
+const IMAGE_REQUEST_TIMEOUT_MS = 20 * 60 * 1000;
+
+const withLongRequestConfig = (headers: Record<string, string>) => ({
+  headers,
+  timeout: IMAGE_REQUEST_TIMEOUT_MS,
+  maxContentLength: Infinity,
+  maxBodyLength: Infinity,
+});
+
 const readByPath = (obj: any, path: string): any => {
   if (!obj || !path) return undefined;
   return path
@@ -727,6 +736,21 @@ const throwAxiosError = (error: any, action: string): never => {
   throw new Error(`${action}失败：${message}`);
 };
 
+const isAmbiguousNetworkError = (error: any) => {
+  if (error?.response) return false;
+  const message = String(error?.message || error || "");
+  return /socket hang up|ECONNRESET|ECONNABORTED|ETIMEDOUT|timeout|network error/i.test(message);
+};
+
+const throwImageError = (error: any): never => {
+  const data = error?.response?.data;
+  const message = extractError(data) || error?.message || "未知错误";
+  if (isAmbiguousNetworkError(error)) {
+    throw new Error(`图片生成结果待确认：连接在供应商处理过程中中断（${message}）。供应商可能已继续执行并计费，请勿直接重复生成。`);
+  }
+  throw new Error(`图片生成失败：${message}`);
+};
+
 // ============================================================
 // 适配器函数
 // ============================================================
@@ -773,12 +797,14 @@ const imageRequest = async (config: ImageConfig, model: ImageModel): Promise<str
       }
 
       logger(`火键API图片编辑任务：${model.modelName}，参考图 ${imageRefs.length} 张`);
-      const response = await axios.post(joinUrl(getApiBaseUrl(), "/images/edits"), formData, {
-        headers: {
+      const response = await axios.post(
+        joinUrl(getApiBaseUrl(), "/images/edits"),
+        formData,
+        withLongRequestConfig({
           Authorization: getAuthorization(),
           ...(typeof formData.getHeaders === "function" ? formData.getHeaders() : {}),
-        },
-      });
+        }),
+      );
       const result = extractResult(response.data);
       if (!result) throw new Error(`接口未返回图片结果：${JSON.stringify(response.data).slice(0, 500)}`);
       return await ensureImageBase64(result);
@@ -798,12 +824,12 @@ const imageRequest = async (config: ImageConfig, model: ImageModel): Promise<str
     }
 
     logger(`火键API图片生成任务：${model.modelName}`);
-    const response = await axios.post(joinUrl(getApiBaseUrl(), "/images/generations"), body, { headers: getJsonHeaders() });
+    const response = await axios.post(joinUrl(getApiBaseUrl(), "/images/generations"), body, withLongRequestConfig(getJsonHeaders()));
     const result = extractResult(response.data);
     if (!result) throw new Error(`接口未返回图片结果：${JSON.stringify(response.data).slice(0, 500)}`);
     return await ensureImageBase64(result);
   } catch (error: any) {
-    throwAxiosError(error, "图片生成");
+    throwImageError(error);
   }
 };
 

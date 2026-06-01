@@ -13,7 +13,7 @@ export default router.post(
   validateFields({
     name: z.string().min(1),
     data: z.string(),
-    type: z.enum(["image", "video"]),
+    type: z.enum(["text", "image", "video"]),
   }),
   async (req, res) => {
     const { name, data, type } = req.body;

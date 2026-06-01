@@ -14,7 +14,7 @@ interface IconifyResponse {
   aliases?: Recordable<string>;
 }
 
-const PENDING_REQUESTS: Recordable<Promise<string[]>> = {};
+const PENDING_REQUESTS: Recordable<Promise<string[]> | undefined> = {};
 
 /**
  * 通过Iconify接口获取图标集数据。

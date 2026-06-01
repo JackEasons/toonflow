@@ -3,6 +3,7 @@ import u from "@/utils";
 import { z } from "zod";
 import { success } from "@/lib/responseFormat";
 import { validateFields } from "@/middleware/middleware";
+import { normalizeAmbiguousImageState } from "@/utils/imageGenerationState";
 const router = express.Router();
 
 export default router.post(
@@ -55,8 +56,9 @@ export default router.post(
             filePath: img.filePath && (await u.oss.getSmallImageUrl(img.filePath)),
           })),
         );
+        const normalized = normalizeAmbiguousImageState(parent);
         return {
-          ...parent,
+          ...normalized,
           filePath: parent.filePath && (await u.oss.getSmallImageUrl(parent.filePath!)),
           historyImages: historyImagesWithUrl,
           relepedAudio: repleAssets[parent.id] ?? [],

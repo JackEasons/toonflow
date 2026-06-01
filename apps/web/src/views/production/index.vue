@@ -149,13 +149,20 @@ function onSpaceMouseUp() {
   document.removeEventListener("mousemove", onSpaceMouseMove);
 }
 
+function isEditableKeyboardTarget(target: EventTarget | null) {
+  if (!(target instanceof HTMLElement)) return false;
+  return Boolean(target.closest("input, textarea, select, [contenteditable='true'], [contenteditable='plaintext-only']"));
+}
+
 useEventListener(document, "keydown", (e: KeyboardEvent) => {
+  if (e.isComposing || isEditableKeyboardTarget(e.target)) return;
   if (e.code === "Space" && !e.repeat) {
     e.preventDefault();
     isSpacePressed.value = true;
   }
 });
 useEventListener(document, "keyup", (e: KeyboardEvent) => {
+  if (e.isComposing || isEditableKeyboardTarget(e.target)) return;
   if (e.code === "Space") isSpacePressed.value = false;
 });
 

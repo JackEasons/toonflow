@@ -86,6 +86,9 @@
               {{ item.audioBindState === "生成中" ? $t("workbench.cornerScape.audioState") : $t("workbench.cornerScape.generating") }}
             </span>
           </div>
+          <t-popup :content="item.errorReason" v-else-if="item.state === '结果待确认'">
+            <t-empty type="maintenance" title="结果待确认" />
+          </t-popup>
           <t-popup :content="item.errorReason" v-else-if="item.state === '生成失败'">
             <t-empty type="fail" :title="$t('workbench.cornerScape.genFailed')" />
           </t-popup>
@@ -163,6 +166,7 @@
             <t-loading />
             <span class="generatingText">{{ $t("workbench.cornerScape.generating") }}</span>
           </div>
+          <t-empty v-else-if="currentItem.state === '结果待确认'" type="maintenance" title="结果待确认" :description="currentItem.errorReason" />
           <t-empty v-else-if="currentItem.state === '生成失败'" type="fail" :title="$t('workbench.cornerScape.genFailed')" />
           <t-image v-else-if="currentItem.filePath" class="image" :src="currentItem.filePath" fit="contain">
             <template #error>
@@ -232,7 +236,20 @@
                 <template #icon><t-icon name="edit" /></template>
                 {{ singlePromptLabel }}
               </t-button>
-              <t-button theme="primary" :loading="singleImageQuoteLoading" @click="regenerateItem" :disabled="currentItem.state == '生成中' || singleImageDisabled ? true : false">
+              <t-button
+                v-if="currentItem.state === IMAGE_RESULT_PENDING_STATE"
+                theme="primary"
+                variant="outline"
+                :loading="recoveringImageResult"
+                @click="queryPendingImageResult">
+                <template #icon><t-icon name="search" /></template>
+                查询结果
+              </t-button>
+              <t-button
+                theme="primary"
+                :loading="singleImageQuoteLoading"
+                @click="regenerateItem"
+                :disabled="currentItem.state == '生成中' || singleImageDisabled ? true : false">
                 <template #icon><t-icon name="refresh" /></template>
                 {{ singleImageLabel }}
               </t-button>
@@ -359,6 +376,9 @@ const selectedIds = ref<number[]>([]);
 
 const selectedItems = computed(() => dataList.value.filter((item) => selectedIds.value.includes(item.id)));
 const selectedItemsWithPrompt = computed(() => selectedItems.value.filter((item) => Boolean(item.prompt)));
+
+const IMAGE_RESULT_PENDING_STATE = "结果待确认";
+const recoveringImageResult = ref(false);
 
 function formatBillingPoints(value?: number) {
   const points = Math.max(0, Number(value || 0));
@@ -840,7 +860,68 @@ function setItemState(id: number, state: string) {
   if (currentItem.value?.id === id) currentItem.value.state = state;
 }
 
-function regenerateItem() {
+async function queryPendingImageResult() {
+  if (!currentItem.value) return;
+  recoveringImageResult.value = true;
+  try {
+    const { data } = await axios.post("/assetsGenerate/recoverImageResult", {
+      id: currentItem.value.id,
+      model: selectValue.value,
+      projectId: project.value?.id,
+    });
+    if (data?.status === "completed") {
+      window.$message.success("已从供应商查询并保存图片结果");
+      await getFilteredData();
+      const freshItem = dataList.value.find((item) => item.id === currentItem.value?.id);
+      if (freshItem) currentItem.value = freshItem;
+      return;
+    }
+    if (data?.status === "processing") {
+      window.$message.warning(data.message || "供应商任务仍在生成中，请稍后再查询");
+      return;
+    }
+    if (data?.status === "failed") {
+      window.$message.error(data.error || data.message || "供应商任务失败");
+      await getFilteredData();
+      const freshItem = dataList.value.find((item) => item.id === currentItem.value?.id);
+      if (freshItem) currentItem.value = freshItem;
+      return;
+    }
+    window.$message.warning(data?.message || "该供应商暂不支持回查图片结果");
+  } catch (e: any) {
+    window.$message.error(e.message || "查询供应商图片结果失败");
+  } finally {
+    recoveringImageResult.value = false;
+  }
+}
+
+function confirmPendingImageRegeneration(count: number) {
+  return new Promise<boolean>((resolve) => {
+    let settled = false;
+    let dialog: ReturnType<typeof DialogPlugin.confirm>;
+    const close = (confirmed: boolean) => {
+      if (settled) return;
+      settled = true;
+      dialog.destroy();
+      resolve(confirmed);
+    };
+    dialog = DialogPlugin.confirm({
+      header: "结果待确认，确认重新生成？",
+      body:
+        count > 1
+          ? `已选 ${count} 个待确认素材。本地没有收到供应商返回的图片 URL，继续会重新提交生成请求，可能再次产生供应商费用。`
+          : "本地没有收到供应商返回的图片 URL。继续会重新提交生成请求，可能再次产生供应商费用。",
+      confirmBtn: "仍要重新生成",
+      cancelBtn: "先不生成",
+      theme: "warning",
+      onCancel: () => close(false),
+      onClose: () => close(false),
+      onConfirm: () => close(true),
+    });
+  });
+}
+
+async function regenerateItem() {
   if (!currentItem.value) return;
   if (!selectValue.value) {
     window.$message.warning($t("workbench.cornerScape.msg.selectModel"));
@@ -852,6 +933,9 @@ function regenerateItem() {
   }
   if (!editForm.prompt.trim()) {
     window.$message.warning($t("workbench.cornerScape.msg.enterPrompt"));
+    return;
+  }
+  if (currentItem.value.state === IMAGE_RESULT_PENDING_STATE && !(await confirmPendingImageRegeneration(1))) {
     return;
   }
   if (singleImageQuoteError.value) {
@@ -882,8 +966,9 @@ function regenerateItem() {
       },
       { signal: controller.signal },
     )
-    .then(async () => {
-      window.$message.success($t("workbench.cornerScape.msg.genSuccess", { name: item.name }));
+    .then(async (response) => {
+      if (response.data?.pending) window.$message.warning(response.data.message || "图片结果待确认，请勿直接重复生成");
+      else window.$message.success($t("workbench.cornerScape.msg.genSuccess", { name: item.name }));
       await getFilteredData();
     })
     .catch((e: any) => {
@@ -1052,6 +1137,15 @@ async function batchGenerationImage() {
   }
 
   const items = dataList.value.filter((item) => selectedIds.value.includes(item.id));
+  const generatingItems = items.filter((item) => item.state === "生成中");
+  if (generatingItems.length > 0) {
+    window.$message.warning(`已选 ${generatingItems.length} 个生成中素材，请等待当前任务结束。`);
+    return;
+  }
+  const pendingItems = items.filter((item) => item.state === IMAGE_RESULT_PENDING_STATE);
+  if (pendingItems.length > 0 && !(await confirmPendingImageRegeneration(pendingItems.length))) {
+    return;
+  }
   //检查如果勾选的数据prompt有空的，提示用户勾选的哪一个提示词未生成，然后终止批量生成
   const emptyPrompts = items.filter((item) => !item.prompt);
   if (emptyPrompts.length > 0) {

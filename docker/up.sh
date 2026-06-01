@@ -20,4 +20,4 @@ mkdir -p \
 "${SCRIPT_DIR}/load-images.sh"
 
 cd "${SCRIPT_DIR}"
-docker compose up -d
+docker compose up -d --force-recreate --remove-orphans

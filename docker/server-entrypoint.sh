@@ -1,9 +1,9 @@
 #!/bin/sh
 set -eu
 
-seed_dir="/opt/drama-studio/server-data"
+seed_dir="/opt/drama-studio-t/server-data"
 data_dir="/app/apps/server/data"
-serve_seed_dir="/opt/drama-studio/server-serve"
+serve_seed_dir="/opt/drama-studio-t/server-serve"
 serve_dir="/app/apps/server/serve"
 
 mkdir -p "$data_dir"

@@ -1,10 +1,13 @@
-# drama-studio Docker Release
+# drama-studio-t Docker Release
 
 Build on the packaging machine:
 
 ```sh
 ./scripts/deploy/build-local-docker-image.sh
 ```
+
+The release defaults to `linux/amd64` for server deployment. To target another
+platform explicitly, set `TARGET_PLATFORM` before packaging.
 
 Upload the whole `docker/` directory to the server, then start:
 
@@ -15,11 +18,11 @@ cd docker
 
 Service URLs:
 
-- App: `http://server-ip:6001`
-- Admin: `http://server-ip:6001/admin`
-- MySQL: `server-ip:13306`
-- MinIO API: `http://server-ip:19000`
-- MinIO Console: `http://server-ip:19001`
+- App: `http://server-ip:6002`
+- Admin: `http://server-ip:6002/admin`
+- MySQL: `server-ip:23306`
+- MinIO API: `http://server-ip:29000`
+- MinIO Console: `http://server-ip:29001`
 
 MinIO console login:
 

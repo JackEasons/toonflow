@@ -5,6 +5,7 @@ import { z } from "zod";
 import { v4 as uuidv4 } from "uuid";
 import { error, success } from "@/lib/responseFormat";
 import { validateFields } from "@/middleware/middleware";
+import { IMAGE_RESULT_PENDING_STATE, isAmbiguousImageGenerationError, toPendingImageGenerationReason } from "@/utils/imageGenerationState";
 import { resolveNegativePrompt } from "@/utils/negativePrompt";
 import { quoteModelCalls, releasePointHold, reserveModelCallPoints, settlePointHold } from "@/utils/modelBilling";
 
@@ -202,6 +203,16 @@ export default router.post("/", validateFields(requestSchema), async (req, res) 
             describe,
             projectId,
             relatedObjects: JSON.stringify(relatedObjects),
+            onProviderTask: async (task) => {
+              await u
+                .db("o_image")
+                .where("id", imageId)
+                .update({
+                  providerTaskId: task.taskId,
+                  providerTaskType: task.taskType || null,
+                  providerPayload: task.payload ? JSON.stringify(task.payload) : null,
+                });
+            },
           },
         );
         await aiImage.save(imagePath, storageProvider);
@@ -228,11 +239,14 @@ export default router.post("/", validateFields(requestSchema), async (req, res) 
 
         await u.db("o_assets").where("id", item.id).update({ imageId });
       } catch (e: any) {
+        const normalized = u.error(e);
+        const pendingConfirmation = isAmbiguousImageGenerationError(normalized.message);
+        const errorReason = pendingConfirmation ? toPendingImageGenerationReason(normalized.message) : normalized.message;
         await releasePointHold(billingHold?.id);
         await u
           .db("o_image")
           .where("id", imageId)
-          .update({ state: "生成失败", errorReason: u.error(e).message });
+          .update({ state: pendingConfirmation ? IMAGE_RESULT_PENDING_STATE : "生成失败", errorReason });
       }
     }),
   );

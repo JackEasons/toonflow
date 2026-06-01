@@ -6,10 +6,7 @@ function useSortable<T extends HTMLElement>(
   options: SortableOptions = {},
 ) {
   const initializeSortable = async () => {
-    const Sortable = await import(
-      // @ts-expect-error - This is a dynamic import
-      'sortablejs/modular/sortable.complete.esm.js'
-    );
+    const Sortable = await import('sortablejs/modular/sortable.complete.esm.js');
     const sortable = Sortable?.default?.create?.(sortableContainer, {
       animation: 300,
       delay: 400,

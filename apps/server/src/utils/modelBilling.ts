@@ -268,12 +268,12 @@ export async function listModelBillingRules() {
     try {
       const vendorData = vendor.getVendor(String(row.id));
       vendorName = vendorData?.name || vendorName;
-      modelList = await vendor.getModelList(String(row.id));
+      modelList = await vendor.getEnabledModelList(String(row.id));
     } catch {
       modelList = [];
     }
 
-    for (const model of modelList.filter(isVendorModelEnabled)) {
+    for (const model of modelList) {
       const rule = ruleMap.get(`${row.id}:${model.modelName}`);
       models.push({
         enabled: rule ? boolFromDb(rule.enabled) : false,
@@ -296,7 +296,7 @@ export async function listModelBillingRules() {
     summary: {
       billableModels: models.filter((item) => item.enabled && item.pointsPerCall > 0).length,
       models: models.length,
-      vendors: vendorRows.length,
+      vendors: new Set(models.map((item) => item.vendorId)).size,
     },
   };
 }
@@ -358,12 +358,12 @@ async function resolveActiveModel(modelId: string) {
   try {
     const vendorData = vendor.getVendor(vendorId);
     vendorName = vendorData?.name || vendorName;
-    modelList = await vendor.getModelList(vendorId);
+    modelList = await vendor.getEnabledModelList(vendorId);
   } catch {
     throw new Error("模型供应商配置不可用");
   }
 
-  const model = modelList.find((item) => item?.modelName === modelName && isVendorModelEnabled(item));
+  const model = modelList.find((item) => item?.modelName === modelName);
   if (!model) throw new Error("模型不存在或未启用");
 
   return {

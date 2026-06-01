@@ -467,6 +467,9 @@ export default async (knex: Knex, forceInit: boolean = false): Promise<void> => 
         table.text("negativePrompt");
         table.text("state");
         table.text("errorReason");
+        table.string("providerTaskId", 191);
+        table.string("providerTaskType", 64);
+        table.text("providerPayload");
       },
     },
     //分镜

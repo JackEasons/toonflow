@@ -79,6 +79,21 @@ interface ImageConfig {
   referenceList?: Extract<ReferenceList, { type: "image" }>[];
   size: "1K" | "2K" | "4K";
   aspectRatio: `${number}:${number}`;
+  onTaskId?: (task: { payload?: any; taskId: string; taskType?: string }) => Promise<void> | void;
+}
+
+interface ImageResultQuery {
+  payload?: any;
+  taskId: string;
+  taskType?: string | null;
+}
+
+interface ImageResultQueryResponse {
+  data?: string;
+  error?: string;
+  message?: string;
+  raw?: any;
+  status: "completed" | "failed" | "processing" | "unsupported";
 }
 
 interface VideoConfig {
@@ -142,6 +157,7 @@ declare const exports: {
   vendor: VendorConfig;
   textRequest: (m: TextModel, t: boolean, tl: 0 | 1 | 2 | 3) => any; //文本模型
   imageRequest: (c: ImageConfig, m: ImageModel) => Promise<string>; //图片模型，返回有头base64字符串
+  imageResultRequest?: (c: ImageResultQuery, m: ImageModel) => Promise<ImageResultQueryResponse>;
   videoRequest: (c: VideoConfig, m: VideoModel) => Promise<string>; //视频模型，返回有头base64字符串
   ttsRequest: (c: TTSConfig, m: TTSModel) => Promise<string>; //（暂未开放）语音模型，返回有头base64字符串
   checkForUpdates?: () => Promise<{
@@ -274,6 +290,7 @@ const imageRequest = async (
     throw new Error(`任务提交失败：${submitResp.data.msg}`);
 
   const taskId = submitResp.data.data.id;
+  await config.onTaskId?.({ payload: { apiPath }, taskId, taskType: "grsai:image" });
   logger(`图片任务提交成功，任务ID：${taskId}`);
 
   // 轮询结果
@@ -307,6 +324,30 @@ const imageRequest = async (
   if (pollResult.error) throw new Error(pollResult.error);
   logger(`图片生成完成，开始转换Base64`);
   return await urlToBase64(pollResult.data!);
+};
+
+const imageResultRequest = async (
+  config: ImageResultQuery,
+  _model: ImageModel,
+): Promise<ImageResultQueryResponse> => {
+  if (!config.taskId) return { status: "unsupported", message: "缺少供应商任务ID" };
+  const resp = await axios.post(
+    `${vendor.inputValues.baseUrl}/v1/draw/result`,
+    { id: config.taskId },
+    { headers: getHeaders() },
+  );
+  if (resp.data.code !== 0) return { error: resp.data.msg, raw: resp.data, status: "failed" };
+
+  const taskData = resp.data.data;
+  if (taskData.status === "failed") {
+    return { error: taskData.failure_reason || taskData.error || "图片生成失败", raw: taskData, status: "failed" };
+  }
+  if (taskData.status === "succeeded") {
+    const imgUrl = taskData.results?.[0]?.url || taskData.url;
+    if (imgUrl) return { data: imgUrl, raw: taskData, status: "completed" };
+    return { error: "图片生成完成但未返回图片结果", raw: taskData, status: "failed" };
+  }
+  return { raw: taskData, status: "processing" };
 };
 
 const videoRequest = async (
@@ -415,6 +456,7 @@ const updateVendor = async (): Promise<string> => {
 exports.vendor = vendor;
 exports.textRequest = textRequest;
 exports.imageRequest = imageRequest;
+exports.imageResultRequest = imageResultRequest;
 exports.videoRequest = videoRequest;
 exports.ttsRequest = ttsRequest;
 exports.checkForUpdates = checkForUpdates;

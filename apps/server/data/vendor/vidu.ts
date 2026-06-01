@@ -206,6 +206,21 @@ interface ImageConfig {
   imageBase64: string[]; //输入的图片提示词
   size: "1K" | "2K" | "4K"; // 图片尺寸
   aspectRatio: `${number}:${number}`; // 长宽比
+  onTaskId?: (task: { payload?: any; taskId: string; taskType?: string }) => Promise<void> | void;
+}
+
+interface ImageResultQuery {
+  payload?: any;
+  taskId: string;
+  taskType?: string | null;
+}
+
+interface ImageResultQueryResponse {
+  data?: string;
+  error?: string;
+  message?: string;
+  raw?: any;
+  status: "completed" | "failed" | "processing" | "unsupported";
 }
 const imageRequest = async (imageConfig: ImageConfig, imageModel: ImageModel) => {
   if (!vendor.inputValues.apiKey) throw new Error("缺少API Key");
@@ -246,6 +261,7 @@ const imageRequest = async (imageConfig: ImageConfig, imageModel: ImageModel) =>
     throw new Error(`请求失败，状态码: ${response.status}, 错误信息: ${errorText}`);
   }
   const data = await response.json();
+  await imageConfig.onTaskId?.({ payload: { endpoint: "reference2image" }, taskId: data.task_id, taskType: "vidu:image" });
   const res = await checkTaskResult(data.task_id);
   if (!res.data) {
     throw new Error("图片未能生成");
@@ -254,6 +270,31 @@ const imageRequest = async (imageConfig: ImageConfig, imageModel: ImageModel) =>
   return list[0].url;
 };
 exports.imageRequest = imageRequest;
+
+const imageResultRequest = async (config: ImageResultQuery, _model: ImageModel): Promise<ImageResultQueryResponse> => {
+  if (!config.taskId) return { status: "unsupported", message: "缺少供应商任务ID" };
+  const queryUrl = vendor.inputValues.baseUrl + "/tasks/{id}/creations";
+  const queryResponse = await fetch(queryUrl.replace("{id}", config.taskId), {
+    method: "GET",
+    headers: { Authorization: `Token ${vendor.inputValues.apiKey}`, "Content-Type": "application/json" },
+  });
+  if (!queryResponse.ok) {
+    const errorText = await queryResponse.text();
+    return { error: `请求失败，状态码: ${queryResponse.status}, 错误信息: ${errorText}`, status: "failed" };
+  }
+  const queryData = await queryResponse.json();
+  const status = queryData?.state ?? queryData?.data?.state;
+  const failReason = queryData?.data?.err_code ?? queryData?.data;
+  if (["completed", "SUCCESS", "success"].includes(status)) {
+    const creations = queryData.creations ?? queryData.data?.creations ?? [];
+    const url = creations?.[0]?.url;
+    if (url) return { data: url, raw: queryData, status: "completed" };
+    return { error: "图片生成完成但未返回图片结果", raw: queryData, status: "failed" };
+  }
+  if (["FAILURE", "failed"].includes(status)) return { error: failReason || "生成失败", raw: queryData, status: "failed" };
+  return { raw: queryData, status: "processing" };
+};
+exports.imageResultRequest = imageResultRequest;
 
 interface VideoConfig {
   duration: number;

@@ -1,23 +1,24 @@
-name: drama-studio
+name: drama-studio-t
 
 services:
   mysql:
     image: ${MYSQL_IMAGE:-mysql:8.0}
-    container_name: drama-studio-mysql
+    platform: ${DRAMA_STUDIO_T_PLATFORM:-linux/amd64}
+    container_name: drama-studio-t-mysql
     restart: unless-stopped
     labels:
-      drama-studio.autoheal: "true"
+      drama-studio-t.autoheal: "true"
     environment:
       MYSQL_ROOT_PASSWORD: dramaStudio123
-      MYSQL_DATABASE: drama_studio
-      MYSQL_USER: drama_studio
+      MYSQL_DATABASE: drama_studio_t
+      MYSQL_USER: drama_studio_t
       MYSQL_PASSWORD: dramaStudio2026
       MYSQL_ROOT_HOST: "%"
     ports:
-      - "13306:3306"
+      - "23306:3306"
     volumes:
       - ./data/mysql:/var/lib/mysql
-      - ./data/mysql-init.sql:/docker-entrypoint-initdb.d/10-drama-studio.sql:ro
+      - ./data/mysql-init.sql:/docker-entrypoint-initdb.d/10-drama-studio-t.sql:ro
     command:
       - "--default-authentication-plugin=mysql_native_password"
       - "--sql_mode=STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION"
@@ -30,49 +31,51 @@ services:
 
   minio:
     image: ${MINIO_IMAGE:-minio/minio:latest}
-    container_name: drama-studio-minio
+    platform: ${DRAMA_STUDIO_T_PLATFORM:-linux/amd64}
+    container_name: drama-studio-t-minio
     restart: unless-stopped
     labels:
-      drama-studio.autoheal: "true"
+      drama-studio-t.autoheal: "true"
     environment:
       MINIO_ROOT_USER: minioadmin
       MINIO_ROOT_PASSWORD: minioadmin
     command: server /data --console-address ":9001"
     ports:
-      - "19000:9000"
-      - "19001:9001"
+      - "29000:9000"
+      - "29001:9001"
     volumes:
       - ./data/minio:/data
     healthcheck:
-      test: ["CMD", "mc", "ready", "local"]
+      test: ["CMD", "curl", "-f", "http://127.0.0.1:9000/minio/health/live"]
       interval: 10s
       timeout: 5s
       retries: 12
       start_period: 10s
 
   server:
-    image: drama-studio-server:${DRAMA_STUDIO_VERSION:-latest}
-    container_name: drama-studio-server
+    image: drama-studio-t-server:${DRAMA_STUDIO_T_VERSION:-latest}
+    platform: ${DRAMA_STUDIO_T_PLATFORM:-linux/amd64}
+    container_name: drama-studio-t-server
     restart: unless-stopped
     labels:
-      drama-studio.autoheal: "true"
+      drama-studio-t.autoheal: "true"
     environment:
       NODE_ENV: prod
       PORT: "10588"
       MYSQL_HOST: mysql
       MYSQL_PORT: "3306"
-      MYSQL_USER: drama_studio
+      MYSQL_USER: drama_studio_t
       MYSQL_PASSWORD: dramaStudio2026
-      MYSQL_DATABASE: drama_studio
+      MYSQL_DATABASE: drama_studio_t
       MYSQL_CONNECTION_LIMIT: "10"
       MYSQL_CHARSET: utf8mb4
       MYSQL_TIMEZONE: Z
       MYSQL_AUTO_CREATE_DATABASE: "false"
-      INVITE_CODE: DRAMA_STUDIO2026
+      INVITE_CODE: DRAMA_STUDIO_T2026
       OSSURL: ""
       MINIO_ENDPOINT: http://minio:9000
       MINIO_REGION: us-east-1
-      MINIO_BUCKET: drama-studio
+      MINIO_BUCKET: drama-studio-t
       MINIO_ACCESS_KEY: minioadmin
       MINIO_SECRET_KEY: minioadmin
       MINIO_FORCE_PATH_STYLE: "true"
@@ -100,13 +103,14 @@ services:
         condition: service_healthy
 
   app:
-    image: drama-studio-app:${DRAMA_STUDIO_VERSION:-latest}
-    container_name: drama-studio-app
+    image: drama-studio-t-app:${DRAMA_STUDIO_T_VERSION:-latest}
+    platform: ${DRAMA_STUDIO_T_PLATFORM:-linux/amd64}
+    container_name: drama-studio-t-app
     restart: unless-stopped
     labels:
-      drama-studio.autoheal: "true"
+      drama-studio-t.autoheal: "true"
     ports:
-      - "6001:8080"
+      - "6002:8080"
     volumes:
       - ./www/app:/usr/share/nginx/html
       - ./www/admin:/usr/share/nginx/admin
@@ -122,7 +126,8 @@ services:
 
   autoheal:
     image: ${AUTOHEAL_IMAGE:-docker:27-cli}
-    container_name: drama-studio-autoheal
+    platform: ${DRAMA_STUDIO_T_PLATFORM:-linux/amd64}
+    container_name: drama-studio-t-autoheal
     restart: unless-stopped
     environment:
       AUTOHEAL_INTERVAL: "15"
@@ -136,7 +141,7 @@ services:
         set -eu
         interval="$${AUTOHEAL_INTERVAL:-15}"
         while :; do
-          docker ps --filter "label=drama-studio.autoheal=true" --format "{{.ID}} {{.Names}}" | while read -r id name; do
+          docker ps --filter "label=drama-studio-t.autoheal=true" --format "{{.ID}} {{.Names}}" | while read -r id name; do
             [ -n "$${id}" ] || continue
             status="$$(docker inspect --format '{{if .State.Health}}{{.State.Health.Status}}{{else}}none{{end}}' "$${id}" 2>/dev/null || true)"
             if [ "$${status}" = "unhealthy" ]; then

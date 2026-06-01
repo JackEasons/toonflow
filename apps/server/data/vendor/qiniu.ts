@@ -69,6 +69,21 @@ interface ImageConfig {
   referenceList?: Extract<ReferenceList, { type: "image" }>[];
   size: "1K" | "2K" | "4K";
   aspectRatio: `${number}:${number}`;
+  onTaskId?: (task: { payload?: any; taskId: string; taskType?: string }) => Promise<void> | void;
+}
+
+interface ImageResultQuery {
+  payload?: any;
+  taskId: string;
+  taskType?: string | null;
+}
+
+interface ImageResultQueryResponse {
+  data?: string;
+  error?: string;
+  message?: string;
+  raw?: any;
+  status: "completed" | "failed" | "processing" | "unsupported";
 }
 
 interface VideoConfig {
@@ -121,6 +136,7 @@ declare const exports: {
   vendor: VendorConfig;
   textRequest: (m: TextModel, t: boolean, tl: 0 | 1 | 2 | 3) => any;
   imageRequest: (c: ImageConfig, m: ImageModel) => Promise<string>;
+  imageResultRequest?: (c: ImageResultQuery, m: ImageModel) => Promise<ImageResultQueryResponse>;
   videoRequest: (c: VideoConfig, m: VideoModel) => Promise<string>;
   ttsRequest: (c: TTSConfig, m: TTSModel) => Promise<string>;
   checkForUpdates?: () => Promise<{ hasUpdate: boolean; latestVersion: string; notice: string }>;
@@ -283,6 +299,7 @@ const imageRequest = async (config: ImageConfig, model: ImageModel): Promise<str
     throw new Error(`图片任务创建失败: ${JSON.stringify(createData)}`);
   }
 
+  await config.onTaskId?.({ payload: { createUrl }, taskId, taskType: "qiniu:image" });
   logger(`[qiniu] 图片任务ID: ${taskId}`);
   const pollResult = await pollTask(async () => {
     logger(`[qiniu] 轮询图片任务: ${taskId}`);
@@ -328,6 +345,27 @@ const imageRequest = async (config: ImageConfig, model: ImageModel): Promise<str
   return pollResult.data;
 };
 
+const imageResultRequest = async (config: ImageResultQuery, _model: ImageModel): Promise<ImageResultQueryResponse> => {
+  if (!config.taskId) return { status: "unsupported", message: "缺少供应商任务ID" };
+  const queryResponse = await axios.get(`${getBaseUrl()}/images/generations/${config.taskId}`, {
+    headers: {
+      Authorization: getAuthorization(),
+    },
+  });
+  const queryData = queryResponse?.data;
+  const status = getTaskStatus(queryData);
+  const imageUrl = extractImageUrl(queryData);
+
+  if (imageUrl) return { data: imageUrl, raw: queryData, status: "completed" };
+  if (["FAILED", "FAIL", "ERROR", "CANCELED", "CANCELLED"].includes(status)) {
+    return { error: getTaskError(queryData) || "图片生成失败", raw: queryData, status: "failed" };
+  }
+  if (["SUCCEEDED", "SUCCESS", "COMPLETED", "DONE"].includes(status)) {
+    return { error: "图片生成完成但未返回图片结果", raw: queryData, status: "failed" };
+  }
+  return { raw: queryData, status: "processing" };
+};
+
 const videoRequest = async (_config: VideoConfig, _model: VideoModel): Promise<string> => {
   return "";
 };
@@ -351,6 +389,7 @@ const updateVendor = async (): Promise<string> => {
 exports.vendor = vendor;
 exports.textRequest = textRequest;
 exports.imageRequest = imageRequest;
+exports.imageResultRequest = imageResultRequest;
 exports.videoRequest = videoRequest;
 exports.ttsRequest = ttsRequest;
 exports.checkForUpdates = checkForUpdates;

@@ -12,5 +12,5 @@ init_static_dir() {
   fi
 }
 
-init_static_dir "/opt/drama-studio/static/app" "/usr/share/nginx/html"
-init_static_dir "/opt/drama-studio/static/admin" "/usr/share/nginx/admin"
+init_static_dir "/opt/drama-studio-t/static/app" "/usr/share/nginx/html"
+init_static_dir "/opt/drama-studio-t/static/admin" "/usr/share/nginx/admin"

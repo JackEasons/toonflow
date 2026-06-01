@@ -3,6 +3,7 @@ import u from "@/utils";
 import { z } from "zod";
 import { success } from "@/lib/responseFormat";
 import { validateFields } from "@/middleware/middleware";
+import { normalizeAmbiguousImageState } from "@/utils/imageGenerationState";
 const router = express.Router();
 
 export default router.post(
@@ -17,12 +18,15 @@ export default router.post(
       .leftJoin("o_image", "o_assets.imageId", "o_image.id")
       .whereIn("o_assets.id", ids)
       .whereNot("o_image.state", "生成中")
-      .select("o_image.state", "o_assets.id", "o_image.filePath");
+      .select("o_image.state", "o_assets.id", "o_image.filePath", "o_image.errorReason");
     const result = await Promise.all(
-      data.map(async (item: any) => ({
-        ...item,
-        filePath: item.filePath ? await u.oss.getSmallImageUrl(item.filePath) : null,
-      })),
+      data.map(async (item: any) => {
+        const normalized = normalizeAmbiguousImageState(item);
+        return {
+          ...normalized,
+          filePath: normalized.filePath ? await u.oss.getSmallImageUrl(normalized.filePath) : null,
+        };
+      }),
     );
     res.status(200).send(success(result));
   },

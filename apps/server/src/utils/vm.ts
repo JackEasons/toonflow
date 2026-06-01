@@ -78,11 +78,28 @@ export async function zipImageResolution(completeBase64: string, width: number, 
 }
 
 //url转Base64
-export async function urlToBase64(url: string): Promise<string> {
-  const res = await axios.get(url, { responseType: "arraybuffer" });
-  const mime = res.headers["content-type"] || "image/jpeg";
-  const b64 = Buffer.from(res.data).toString("base64");
-  return `data:${mime};base64,${b64}`;
+export async function urlToBase64(url: string, retries = 4, delay = 1500): Promise<string> {
+  for (let attempt = 1; attempt <= retries; attempt += 1) {
+    try {
+      const res = await axios.get(url, {
+        responseType: "arraybuffer",
+        timeout: 120000,
+        maxContentLength: Infinity,
+        maxBodyLength: Infinity,
+        headers: {
+          Accept: "image/*,*/*",
+          "User-Agent": "Toonflow/1.0",
+        },
+      });
+      const mime = res.headers["content-type"] || "image/jpeg";
+      const b64 = Buffer.from(res.data).toString("base64");
+      return `data:${mime};base64,${b64}`;
+    } catch (e) {
+      if (attempt === retries) throw e;
+      await new Promise((resolve) => setTimeout(resolve, delay * attempt));
+    }
+  }
+  throw new Error("urlToBase64 failed");
 }
 
 export async function pollTask(

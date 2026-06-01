@@ -16,12 +16,12 @@ WORKDIR /app
 
 COPY . /app
 
-RUN --mount=type=cache,id=drama-studio-pnpm,target=/pnpm/store \
+RUN --mount=type=cache,id=drama-studio-t-pnpm,target=/pnpm/store \
   pnpm install --frozen-lockfile
 
 RUN printf '%s\n' \
-  'VITE_APP_TITLE=drama-studio' \
-  'VITE_APP_NAMESPACE=drama-studio-app' \
+  'VITE_APP_TITLE=drama-studio-t' \
+  'VITE_APP_NAMESPACE=drama-studio-t-app' \
   'VITE_APP_STORE_SECURE_KEY=please-replace-me-with-your-own-key' \
   'VITE_BASE=./' \
   'VITE_ROUTER_HISTORY=hash' \
@@ -33,8 +33,8 @@ RUN printf '%s\n' \
   'VITE_ARCHIVER=false' \
   > apps/web/.env.production.local \
   && printf '%s\n' \
-  'VITE_APP_TITLE=drama-studio Admin' \
-  'VITE_APP_NAMESPACE=drama-studio-admin' \
+  'VITE_APP_TITLE=drama-studio-t Admin' \
+  'VITE_APP_NAMESPACE=drama-studio-t-admin' \
   'VITE_APP_STORE_SECURE_KEY=please-replace-me-with-your-own-key' \
   'VITE_BASE=/admin/' \
   'VITE_ROUTER_HISTORY=hash' \
@@ -64,26 +64,26 @@ COPY --from=builder /app/pnpm-workspace.yaml /app/pnpm-workspace.yaml
 COPY --from=builder /app/apps/server/package.json ./package.json
 COPY --from=builder /app/apps/server/node_modules ./node_modules
 COPY --from=builder /app/apps/server/data/serve ./serve
-COPY --from=builder /app/apps/server/data/serve /opt/drama-studio/server-serve
-COPY --from=builder /app/apps/server/data /opt/drama-studio/server-data
-COPY docker/server-entrypoint.sh /usr/local/bin/drama-studio-server-entrypoint
+COPY --from=builder /app/apps/server/data/serve /opt/drama-studio-t/server-serve
+COPY --from=builder /app/apps/server/data /opt/drama-studio-t/server-data
+COPY docker/server-entrypoint.sh /usr/local/bin/drama-studio-t-server-entrypoint
 
-RUN rm -rf /opt/drama-studio/server-data/serve \
-  && chmod +x /usr/local/bin/drama-studio-server-entrypoint
+RUN rm -rf /opt/drama-studio-t/server-data/serve \
+  && chmod +x /usr/local/bin/drama-studio-t-server-entrypoint
 
 EXPOSE 10588
 
-ENTRYPOINT ["/usr/bin/tini", "--", "/usr/local/bin/drama-studio-server-entrypoint"]
+ENTRYPOINT ["/usr/bin/tini", "--", "/usr/local/bin/drama-studio-t-server-entrypoint"]
 CMD ["node", "serve/app.js"]
 
 FROM nginx:stable-alpine AS app
 
-COPY --from=builder /app/apps/web/dist /opt/drama-studio/static/app
-COPY --from=builder /app/apps/admin/dist /opt/drama-studio/static/admin
+COPY --from=builder /app/apps/web/dist /opt/drama-studio-t/static/app
+COPY --from=builder /app/apps/admin/dist /opt/drama-studio-t/static/admin
 COPY docker/nginx.conf /etc/nginx/nginx.conf
-COPY docker/app-entrypoint.sh /docker-entrypoint.d/10-init-drama-studio-static.sh
+COPY docker/app-entrypoint.sh /docker-entrypoint.d/10-init-drama-studio-t-static.sh
 
 RUN rm -f /etc/nginx/conf.d/default.conf \
-  && chmod +x /docker-entrypoint.d/10-init-drama-studio-static.sh
+  && chmod +x /docker-entrypoint.d/10-init-drama-studio-t-static.sh
 
 EXPOSE 8080

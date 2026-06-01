@@ -3,7 +3,6 @@ import u from "@/utils";
 import { z } from "zod";
 import { success } from "@/lib/responseFormat";
 import { validateFields } from "@/middleware/middleware";
-import { isVendorModelEnabled } from "@/utils/modelBilling";
 const router = express.Router();
 
 export default router.post(
@@ -17,15 +16,15 @@ export default router.post(
     if (!dataList || dataList.length === 0) {
       return res.status(404).send({ error: "模型未找到" });
     }
-    const modelList = await Promise.all(dataList.map((i) => u.vendor.getModelList(i.id!)));
+    const modelList = await Promise.all(dataList.map((i) => u.vendor.getEnabledModelList(i.id!)));
     const result = await Promise.all(
       dataList.map(async (data, index) => {
         const vendorData = await u.vendor.getVendor(data.id!);
         const models = modelList[index];
         const filtered =
           type === "all"
-            ? models.filter((item: { type: string }) => item.type !== "video" && isVendorModelEnabled(item))
-            : models.filter((item: { type: string }) => item.type === type && isVendorModelEnabled(item));
+            ? models.filter((item: { type: string }) => item.type !== "video")
+            : models.filter((item: { type: string }) => item.type === type);
         return filtered.map((item: { name: string; modelName: string; type: string }) => ({
           id: data.id,
           label: item.name,

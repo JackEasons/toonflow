@@ -79,6 +79,9 @@ export default async (knex: Knex): Promise<void> => {
   await addColumn("o_image", "prompt", "text");
   await addColumn("o_image", "negativePrompt", "text");
   await addColumn("o_image", "storageProvider", "string");
+  await addColumn("o_image", "providerTaskId", "string");
+  await addColumn("o_image", "providerTaskType", "string");
+  await addColumn("o_image", "providerPayload", "text");
   await addColumn("o_storyboard", "negativePrompt", "text");
   await addColumn("o_storyboard", "storageProvider", "string");
   await addColumn("o_video", "prompt", "text");
