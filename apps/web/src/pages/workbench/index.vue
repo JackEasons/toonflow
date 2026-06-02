@@ -59,20 +59,22 @@
     </div>
   </div>
   <hello />
-  <setting />
+  <Setting v-if="showSetting" />
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from "vue";
+import { defineAsyncComponent, ref, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { storeToRefs } from "pinia";
-import setting from "#/components/setting/index.vue";
 import hello from "#/components/hello.vue";
 import UserMembershipCenter from "#/components/membership/UserMembershipCenter.vue";
 import projectStore from "#/stores/project";
 const { project } = storeToRefs(projectStore());
 import settingStore from "#/stores/setting";
 const { showSetting, isElectron } = storeToRefs(settingStore());
+
+const Setting = defineAsyncComponent(() => import("#/components/setting/index.vue"));
+
 const menuList = ref([
   { type: "btn", path: "/project", labelKey: "workbench.menu.myProject", icon: "i-folder-close" },
   { type: "btn", path: "/task", labelKey: "workbench.menu.taskCenter", icon: "i-view-list" },

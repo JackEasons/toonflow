@@ -14,11 +14,11 @@
       <div class="settingRight">
         <div class="sectionTitle">{{ currentMenuItem ? $t(currentMenuItem.label) : "" }}</div>
         <div class="settingContent">
-          <uiConfig v-if="activeMenu === 'ui'" />
-          <languageConfig v-if="activeMenu === 'language'" />
-          <loginConfig v-if="activeMenu === 'loginConfig'" />
-          <otherConfig v-if="activeMenu === 'otherConfig'" />
-          <devConfig v-if="activeMenu === 'devConfig'" />
+          <UiConfig v-if="activeMenu === 'ui'" />
+          <LanguageConfig v-if="activeMenu === 'language'" />
+          <LoginConfig v-if="activeMenu === 'loginConfig'" />
+          <OtherConfig v-if="activeMenu === 'otherConfig'" />
+          <DevConfig v-if="activeMenu === 'devConfig'" />
         </div>
       </div>
     </div>
@@ -26,16 +26,16 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from "vue";
+import { computed, defineAsyncComponent } from "vue";
 import { storeToRefs } from "pinia";
 import settingStore from "#/stores/setting";
 const { showSetting, activeMenu, needUpdate } = storeToRefs(settingStore());
 
-import uiConfig from "./components/uiConfig.vue";
-import languageConfig from "./components/languageConfig.vue";
-import loginConfig from "./components/loginConfig.vue";
-import otherConfig from "./components/otherConfig.vue";
-import devConfig from "./components/devConfig.vue";
+const UiConfig = defineAsyncComponent(() => import("./components/uiConfig.vue"));
+const LanguageConfig = defineAsyncComponent(() => import("./components/languageConfig.vue"));
+const LoginConfig = defineAsyncComponent(() => import("./components/loginConfig.vue"));
+const OtherConfig = defineAsyncComponent(() => import("./components/otherConfig.vue"));
+const DevConfig = defineAsyncComponent(() => import("./components/devConfig.vue"));
 
 const menuItems = [
   { key: "ui", label: "settings.menu.ui", icon: "i-theme" },

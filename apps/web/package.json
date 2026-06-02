@@ -63,7 +63,6 @@
     "postcss-px-to-viewport": "catalog:",
     "typescript": "catalog:",
     "vite": "catalog:",
-    "vite-plugin-singlefile": "catalog:",
     "vue-tsc": "catalog:"
   }
 }

@@ -2,10 +2,30 @@ import { createRequire } from "node:module";
 import { fileURLToPath, URL } from "node:url";
 
 import { defineConfig } from "@super/vite-config";
-import { viteSingleFile } from "vite-plugin-singlefile";
 
 const require = createRequire(import.meta.url);
 const postcsspxtoviewport = require("postcss-px-to-viewport") as (options: Record<string, unknown>) => any;
+
+function getPackageName(id: string) {
+  const parts = id.split("/node_modules/");
+  if (parts.length < 2) return "";
+  const packagePath = parts.at(-1) ?? "";
+  const segments = packagePath.split("/");
+  return packagePath.startsWith("@") ? `${segments[0]}/${segments[1]}` : segments[0];
+}
+
+function manualChunks(id: string) {
+  const packageName = getPackageName(id);
+  if (!packageName) return undefined;
+  if (packageName === "monaco-editor" || packageName === "monaco-editor-vue3") return "vendor-editor";
+  if (packageName === "@icon-park/vue-next" || packageName === "@devui-design/icons") return "vendor-icons";
+  if (packageName.startsWith("@tdesign-vue-next") || packageName === "tdesign-vue-next") return "vendor-ui";
+  if (packageName.startsWith("@vue-flow") || packageName.startsWith("@webav") || packageName === "vue-clip-track") return "vendor-workbench";
+  if (packageName === "md-editor-v3" || packageName === "mammoth" || packageName === "jszip") return "vendor-file";
+  if (packageName === "vue" || packageName.startsWith("@vue/") || ["pinia", "vue-router", "vue-i18n"].includes(packageName)) return "vendor-vue";
+  if (packageName.startsWith("@vueuse/") || ["lodash", "dayjs", "axios", "es-toolkit"].includes(packageName)) return "vendor-utils";
+  return undefined;
+}
 
 export default defineConfig(async () => {
   return {
@@ -16,10 +36,11 @@ export default defineConfig(async () => {
     },
     vite: {
       build: {
-        assetsInlineLimit: Infinity,
-        rollupOptions: {
+        assetsInlineLimit: 4096,
+        cssCodeSplit: true,
+        rolldownOptions: {
           output: {
-            inlineDynamicImports: true,
+            manualChunks,
           },
         },
       },
@@ -60,7 +81,6 @@ export default defineConfig(async () => {
           ],
         },
       },
-      plugins: [viteSingleFile()],
       resolve: {
         alias: {
           "@": fileURLToPath(new URL("./src", import.meta.url)),
