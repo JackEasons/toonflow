@@ -30,6 +30,26 @@
 ></storyboardItem>
 ```
 
+### 2.1 分镜连续性上下文格式
+
+输入中可能包含 `<sequenceItem>` 列表，用于描述当前分镜与全片前后分镜、同一视频轨道内分镜的关系：
+
+```xml
+<sequenceItem
+  relation='previous|current|next|sameTrack'
+  index='全片分镜顺序'
+  track='分组'
+  trackId='视频轨道ID'
+  duration='时长'
+  videoDesc='相邻或同轨分镜的视频描述'
+  prompt='相邻或同轨分镜的分镜图提示词'
+></sequenceItem>
+```
+
+- `previous` / `next` 只作为连续性参考，禁止作为额外分镜输出
+- `sameTrack` 表示同一视频轨道内的连续动作，应维持同一人物、同一场景、同一光线与空间关系
+- 若 `<storyboardItem>` 与 `<sequenceItem>` 同时存在，以 `<storyboardItem>` 为生成目标，以 `<sequenceItem>` 为连续性约束
+
 ### 3. videoDesc 解析规则
 
 从 `videoDesc` 括号内按顿号分隔提取以下12个字段：
@@ -53,8 +73,10 @@
 
 - **视觉风格**：风格相关描述参考 Assistant 中的「视觉风格约束」部分内容，不在本 Skill 内自行定义风格
 - **仅输出视频提示词**：不附加任何解释、注释、分析过程、推理步骤、分隔线（`---`）或额外说明
-- **负面约束必填**：在提示词正文末尾加入 `[Negative constraints]`，至少包含 `low quality, blurry, flicker, jitter, morphing body, identity drift, temporal inconsistency, deformed anatomy, bad hands, duplicated subjects, subtitles, watermark, logo, UI text, title overlay`。若目标模型使用中文提示词，可输出对应中文负面约束；不要把该段写成解释说明
+- **负面约束必填**：在提示词正文末尾加入 `[Negative constraints]`，至少包含 `low quality, blurry, flicker, jitter, morphing body, identity drift, clothing drift, scene drift, temporal inconsistency, deformed anatomy, bad hands, extra fingers, fingers growing from legs or body, extra arms, fused hands, duplicated subjects, subtitles, watermark, logo, UI text, title overlay`。若目标模型使用中文提示词，可输出对应中文负面约束；不要把该段写成解释说明
 - **严格遵循 videoDesc**：提示词内容严格基于 videoDesc 中的12个字段生成，不编造额外内容
+- **分镜连续性必填**：若输入存在 `<sequenceItem>`，必须承接 `previous` 的角色姿态、情绪状态、空间位置、光线方向与环境物件，并为 `next` 保留自然衔接；不得在相邻分镜之间重置人物和场景
+- **同轨道锁定**：同一 `trackId` / `sameTrack` 中的分镜视为同一段连续动作，只允许 videoDesc 明确描述的动作、景别、运镜变化，角色身份、服装、场景布局和光源方向保持稳定
 - **台词不可缺失**：videoDesc 中有台词的分镜，必须在提示词中完整体现台词内容，不得遗漏
 - **台词保持原始输入**：台词内容严禁翻译，必须保持 videoDesc 中的原始语言原样输出
 - **台词类型标注**：必须区分普通对白（dialogue / 说）、内心独白（OS / 内心OS）、画外音（VO / 画外音VO）
@@ -137,7 +159,8 @@
 7. **不说话的主体标注 `silent`**：防止误生口型
 8. **Motion 时间轴**：每段最低 1 秒，不超过总时长
 9. **全程单一连贯镜头**：Camera 段落描述从头到尾一个镜头，绝不切镜
-10. **镜头类型**从以下选取：`Wide establishing shot / Over-the-shoulder / Medium shot / Close-up / Wide shot / POV / Dutch angle / Crane up / Dolly right / Whip pan / Handheld / Slow motion`
+10. **连续性上下文只作约束**：`previous` / `next` 不作为独立输出段落；`sameTrack` 用于锁定同轨动作、人物和空间连续性
+11. **镜头类型**从以下选取：`Wide establishing shot / Over-the-shoulder / Medium shot / Close-up / Wide shot / POV / Dutch angle / Crane up / Dolly right / Whip pan / Handheld / Slow motion`
 
 ---
 

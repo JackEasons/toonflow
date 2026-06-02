@@ -23,8 +23,7 @@
           <i-video v-else-if="item.type === 'video'" class="ref-popup-icon" />
           <i-volume-mute v-else-if="item.type === 'audio'" class="ref-popup-icon" />
           <span v-else class="ref-popup-text">文</span>
-          <span class="reference-label">{{ $t("workbench.production.editImage.reference", { index: index + 1 }) }}</span>
-          <span class="ref-index-badge">#{{ index + 1 }}</span>
+          <span class="reference-label">{{ getReferenceDisplayLabel(index) }}</span>
         </div>
         <div v-if="!references?.length" class="no-references">{{ $t("workbench.production.editImage.noReferences") }}</div>
       </div>
@@ -39,8 +38,9 @@ import { Popup } from "tdesign-vue-next";
 import { Video, VolumeMute } from "@icon-park/vue-next";
 
 const props = defineProps<{
-  references?: { type: "image" | "video" | "audio" | "text"; src: string }[];
-  placeholder?: String;
+  references?: { type: "image" | "video" | "audio" | "text"; src: string; name?: string; label?: string }[];
+  placeholder?: string;
+  referenceToken?: "图" | "参考";
 }>();
 
 const prompt = defineModel<string>({ default: "" });
@@ -54,32 +54,87 @@ const editorContent = ref("");
 let savedRange: Range | null = null;
 let internalUpdate = false;
 
+function getReferenceTokenPrefix(prefix?: string): "图" | "参考" {
+  return prefix === "参考" ? "参考" : "图";
+}
+
+function getReferenceToken(index: number, prefix?: string): string {
+  return `@${getReferenceTokenPrefix(prefix)}${index + 1}`;
+}
+
+function getReferenceDisplayName(index: number): string {
+  const ref = props.references?.[index];
+  return String(ref?.name || ref?.label || "")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+function getReferenceDisplayLabel(index: number): string {
+  return getReferenceDisplayName(index) || `素材${index + 1}`;
+}
+
+function getReferenceTagLabel(index: number): string {
+  return `@${getReferenceDisplayLabel(index)}`;
+}
+
+function escapeRegExp(value: string): string {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
+function getConsumedReferenceName(text: string, startIndex: number, index: number, prefix: string): { endIndex: number; extractText: string } | null {
+  const displayName = getReferenceDisplayName(index);
+  if (!displayName) return null;
+  const token = getReferenceToken(index, prefix);
+  const escapedName = escapeRegExp(displayName);
+  const rest = text.slice(startIndex);
+  const directMatch = rest.match(new RegExp(`^(\\s*)(${escapedName})`));
+  if (directMatch?.[0]) {
+    return {
+      endIndex: startIndex + directMatch[0].length,
+      extractText: `${token}${directMatch[0]}`,
+    };
+  }
+  const definitionMatch = rest.match(new RegExp(`^(\\s*[:：]\\s*)(${escapedName})`));
+  if (definitionMatch?.[0]) {
+    return {
+      endIndex: startIndex + definitionMatch[0].length,
+      extractText: `${token}${definitionMatch[0]}`,
+    };
+  }
+  return null;
+}
+
 // 创建引用标签元素
-function createRefTag(index: number): HTMLSpanElement {
+function createRefTag(index: number, prefix?: string, extractText?: string): HTMLSpanElement {
   const ref = props.references?.[index];
   const refType = ref?.type ?? "image";
   const refSrc = ref?.src ?? "";
+  const displayName = getReferenceDisplayName(index);
+  const tokenPrefix = getReferenceTokenPrefix(prefix ?? props.referenceToken);
   const container = document.createElement("span");
   container.contentEditable = "false";
   container.dataset.refIndex = String(index);
+  container.dataset.refPrefix = tokenPrefix;
   container.dataset.imgSrc = refSrc;
+  if (displayName) container.dataset.refName = displayName;
+  if (extractText) container.dataset.refExtractText = extractText;
 
   const popupContent = () => {
-    if (refType === "image") {
+    if (refType === "image" && refSrc) {
       return h("img", {
         src: refSrc,
-        style: { width: "200px", borderRadius: "8px", display: "block" },
+        style: { width: "260px", maxHeight: "260px", objectFit: "contain", borderRadius: "8px", display: "block" },
         alt: "",
       });
     }
     if (refType === "text") {
       return h("span", { style: { padding: "8px", display: "block", fontSize: "14px" } }, "文本参考");
     }
-    return h("span", { style: { padding: "8px", display: "block" } }, refSrc);
+    return h("span", { style: { padding: "8px", display: "block" } }, refSrc || getReferenceTagLabel(index));
   };
 
   const tagContent = () => {
-    if (refType === "image") {
+    if (refType === "image" && refSrc) {
       return h("img", { src: refSrc, alt: "" });
     }
     if (refType === "video") {
@@ -100,7 +155,10 @@ function createRefTag(index: number): HTMLSpanElement {
     },
     {
       default: () => [
-        h("div", { class: "tag" }, [tagContent(), h("span", null, $t("workbench.production.editImage.reference", { index: index + 1 }))]),
+        h("div", { class: "tag" }, [
+          tagContent(),
+          h("span", { class: "tag-label" }, getReferenceTagLabel(index)),
+        ]),
       ],
     },
   );
@@ -108,11 +166,11 @@ function createRefTag(index: number): HTMLSpanElement {
   return container;
 }
 
-// 将 prompt 文本渲染到编辑器，处理 @图N 为标签，\n 为 <br>
+// 将 prompt 文本渲染到编辑器，处理 @图N/@参考N 为标签，\n 为 <br>
 function renderPromptToEditor(text: string) {
   if (!editorRef.value) return;
   editorRef.value.innerHTML = "";
-  const regex = /@图(\d+)|\n/g;
+  const regex = /@(图|参考)(\d+)|\n/g;
   let lastIndex = 0;
   let match: RegExpExecArray | null;
   while ((match = regex.exec(text)) !== null) {
@@ -122,8 +180,14 @@ function renderPromptToEditor(text: string) {
     if (match[0] === "\n") {
       editorRef.value.appendChild(document.createElement("br"));
     } else {
-      editorRef.value.appendChild(createRefTag(Number(match[1]) - 1));
+      const refIndex = Number(match[2]) - 1;
+      const tokenPrefix = match[1];
+      const consumedName = getConsumedReferenceName(text, regex.lastIndex, refIndex, tokenPrefix);
+      editorRef.value.appendChild(createRefTag(refIndex, tokenPrefix, consumedName?.extractText));
       editorRef.value.appendChild(document.createTextNode("\u200B"));
+      if (consumedName) {
+        regex.lastIndex = consumedName.endIndex;
+      }
     }
     lastIndex = regex.lastIndex;
   }
@@ -318,8 +382,14 @@ function extractContent(parent: Node): string {
     } else if (node.nodeName === "BR") {
       result += "\n";
     } else if ((node as HTMLElement).dataset?.refIndex !== undefined) {
+      const refExtractText = (node as HTMLElement).dataset.refExtractText;
+      if (refExtractText) {
+        result += ` ${refExtractText} `;
+        return;
+      }
       const refIndex = (node as HTMLElement).dataset.refIndex;
-      result += ` @图${Number(refIndex) + 1} `;
+      const refPrefix = getReferenceTokenPrefix((node as HTMLElement).dataset.refPrefix);
+      result += ` @${refPrefix}${Number(refIndex) + 1} `;
     } else if (node.nodeType === Node.ELEMENT_NODE) {
       // 处理 contenteditable 可能产生的 <div>/<p> 等块级元素
       const inner = extractContent(node);
@@ -473,13 +543,6 @@ function handlePaste(e: ClipboardEvent) {
       flex: 1;
     }
 
-    .ref-index-badge {
-      font-size: 11px;
-      color: var(--td-text-color-placeholder);
-      background: var(--td-bg-color-component);
-      border-radius: 4px;
-      padding: 1px 5px;
-    }
   }
 
   .no-references {
@@ -543,6 +606,14 @@ function handlePaste(e: ClipboardEvent) {
     font-size: 12px;
     font-weight: 600;
     flex-shrink: 0;
+  }
+
+  .tag-label {
+    display: inline-block;
+    max-width: 10em;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 }
 </style>

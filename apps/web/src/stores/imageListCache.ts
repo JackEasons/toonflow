@@ -4,6 +4,7 @@ import { defineStore } from "pinia";
 import { ref } from "vue";
 
 import axios from "#/utils/axios";
+import settingStore from "#/stores/setting";
 
 /**
  * 图片列表缓存 Pinia Store
@@ -32,6 +33,11 @@ function makeUrlKey(id: number | null | undefined, sources: string | undefined):
   return `${id ?? ""}:${sources ?? ""}`;
 }
 
+function getItemCacheKey(item: Pick<UploadItem | TrackMedia | CachedUploadItem, "id"> & { sources?: string }): string | null {
+  if (item.id == null) return null;
+  return makeUrlKey(item.id, item.sources);
+}
+
 /** 从完整 URL 中提取路径部分（去掉 origin） */
 function extractPath(url: string | undefined): string {
   if (!url) return "";
@@ -46,6 +52,10 @@ function extractPath(url: string | undefined): string {
   }
 }
 
+function isSpecialOrAbsoluteUrl(url: string): boolean {
+  return /^(data:|blob:|https?:\/\/)/i.test(url);
+}
+
 /** 将 UploadItem[] 转为缓存格式（src 只保留路径） */
 function toCachedItems(items: (UploadItem | TrackMedia)[]): CachedUploadItem[] {
   return items.map((item) => ({
@@ -54,9 +64,50 @@ function toCachedItems(items: (UploadItem | TrackMedia)[]): CachedUploadItem[] {
   }));
 }
 
+function mergeCachedItems(existing: CachedUploadItem[], incomingItems: (UploadItem | TrackMedia)[]): CachedUploadItem[] {
+  const incoming = toCachedItems(incomingItems);
+  const existingByKey = new Map<string, CachedUploadItem>();
+  existing.forEach((item) => {
+    const key = getItemCacheKey(item);
+    if (key) existingByKey.set(key, item);
+  });
+
+  const hasNewServerItem = incoming.some((item) => {
+    const key = getItemCacheKey(item);
+    return key && !existingByKey.has(key);
+  });
+  const base = hasNewServerItem ? incoming : existing;
+  const baseKeys = new Set<string>();
+
+  const merged = base.map((item) => {
+    const key = getItemCacheKey(item);
+    if (!key) return item;
+    baseKeys.add(key);
+    const cached = existingByKey.get(key);
+    if (!cached) return item;
+    return {
+      ...item,
+      ...cached,
+      fileType: cached.fileType || item.fileType,
+      index: (cached as any).index ?? (item as any).index,
+      prompt: cached.prompt || item.prompt,
+      src: cached.src || item.src,
+    } as CachedUploadItem;
+  });
+
+  existing.forEach((item) => {
+    const key = getItemCacheKey(item);
+    if (key && baseKeys.has(key)) return;
+    merged.push(item);
+  });
+
+  return merged;
+}
+
 export default defineStore(
   "imageListCache",
   () => {
+    const settings = settingStore();
     const cacheData = ref<ImageListCacheData>({});
 
     /** URL 解析缓存: "id:sources" -> 后端返回的完整 URL，避免重复请求 */
@@ -127,6 +178,14 @@ export default defineStore(
         const key = makeUrlKey(id, sources);
         if (urlMap.value[key]) return urlMap.value[key];
       }
+      if (fallbackPath?.startsWith("/")) {
+        try {
+          return new URL(fallbackPath, settings.baseUrl).toString();
+        } catch {
+          return fallbackPath;
+        }
+      }
+      if (fallbackPath && isSpecialOrAbsoluteUrl(fallbackPath)) return fallbackPath;
       // 降级返回原始路径
       return fallbackPath || "";
     }
@@ -241,10 +300,10 @@ export default defineStore(
     function initCacheFromTrackList(projectId: CacheKey, scriptId: CacheKey, trackList: TrackItem[]): void {
       trackList.forEach((track) => {
         if (track.id == null) return;
-        if (cacheData.value[projectId]?.[scriptId]?.[track.id]) return;
         if (!cacheData.value[projectId]) cacheData.value[projectId] = {};
         if (!cacheData.value[projectId][scriptId]) cacheData.value[projectId][scriptId] = {};
-        cacheData.value[projectId][scriptId][track.id] = toCachedItems(track.medias);
+        const cached = cacheData.value[projectId][scriptId][track.id];
+        cacheData.value[projectId][scriptId][track.id] = cached ? mergeCachedItems(cached, track.medias) : toCachedItems(track.medias);
       });
     }
 

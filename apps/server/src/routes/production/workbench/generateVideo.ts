@@ -7,6 +7,7 @@ import { validateFields } from "@/middleware/middleware";
 import { ReferenceList } from "@/utils/ai";
 import { resolveNegativePrompt } from "@/utils/negativePrompt";
 import { quoteModelCalls, releasePointHold, reserveModelCallPoints, settlePointHold } from "@/utils/modelBilling";
+import { appendVideoConsistencyGuard, loadVideoPromptContext } from "@/utils/videoPromptContext";
 const router = express.Router();
 
 type Type = "imageReference" | "startImage" | "endImage" | "videoReference" | "audioReference";
@@ -72,7 +73,9 @@ export default router.post(
     //获取生成视频比例
     const project = await u.db("o_project").select("videoRatio", "artStyle").where("id", projectId).first();
     const negativePromptSource = u.getArtPrompt(project?.artStyle ?? "", "art_skills", "director_storyboard");
-    const negativePrompt = resolveNegativePrompt({ prompt, negativePromptSource }, { mediaType: "video", modelKey: model });
+    const promptContext = await loadVideoPromptContext(uploadData);
+    const requestPrompt = appendVideoConsistencyGuard(prompt, promptContext);
+    const negativePrompt = resolveNegativePrompt({ prompt: requestPrompt, negativePromptSource }, { mediaType: "video", modelKey: model });
     const videoPath = `/${projectId}/video/${uuidv4()}.mp4`; //视频保存路径
     const storageProvider = u.oss.getStorageProvider();
     //查询出图片数据
@@ -106,7 +109,7 @@ export default router.post(
       storageProvider,
       time: Date.now(),
       state: "生成中",
-      prompt,
+      prompt: requestPrompt,
       negativePrompt,
       scriptId,
       projectId,
@@ -144,14 +147,14 @@ export default router.post(
       videoId,
       scriptId,
       type: "视频",
-      prompt,
+      prompt: requestPrompt,
       negativePrompt,
     };
     const aiVideo = u.Ai.Video(model);
     aiVideo
       .run(
         {
-          prompt,
+          prompt: requestPrompt,
           negativePrompt,
           negativePromptSource,
           referenceList: base64.filter(Boolean) as ReferenceList[],

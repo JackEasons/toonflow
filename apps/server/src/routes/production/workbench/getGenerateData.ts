@@ -15,6 +15,7 @@ interface TrackMedia {
   src: string;
   id?: number;
   fileType: "image" | "video" | "audio";
+  sources?: string;
   videoDesc?: string;
 }
 
@@ -26,6 +27,7 @@ interface TrackItem {
   duration?: number;
   selectVideoId?: number;
   medias: TrackMedia[];
+  promptReferences: TrackMedia[];
   videoList: VideoItem[];
 }
 
@@ -63,7 +65,7 @@ export default router.post(
           src: i.filePath,
           fileType: "image",
           sources: "storyboard",
-          ...(i.prompt != null ? { prompt: i.videoDesc } : {}),
+          ...(i.videoDesc != null ? { prompt: i.videoDesc } : {}),
           ...(i.id != null ? { id: i.id } : {}),
           index: i.index,
         });
@@ -73,7 +75,7 @@ export default router.post(
             src: i.filePath,
             fileType: "image",
             sources: "storyboard",
-            ...(i.prompt != null ? { prompt: i.videoDesc } : {}),
+            ...(i.videoDesc != null ? { prompt: i.videoDesc } : {}),
             ...(i.id != null ? { id: i.id } : {}),
             index: i.index,
           },
@@ -90,49 +92,53 @@ export default router.post(
       const num = parseInt(item.split(":")[1], 10);
       return isNaN(num) ? 0 : num;
     })();
-    if (isRef) {
-      const storyIds = storyboardList.map((s) => s.id);
-
+    const storyIds = storyboardList.map((s) => s.id).filter(Boolean);
+    if (storyIds.length) {
       const assetDatas = await u
         .db("o_assets2Storyboard")
         .leftJoin("o_assets", "o_assets2Storyboard.assetId", "o_assets.id")
         .leftJoin("o_image", "o_image.id", "o_assets.imageId")
         .whereIn("o_assets2Storyboard.storyboardId", storyIds as number[])
-        .select("o_assets.*", "o_image.filePath", "o_assets2Storyboard.storyboardId");
+        .select("o_assets.*", "o_image.filePath", "o_assets2Storyboard.storyboardId", "o_assets2Storyboard.sort")
+        .orderBy("o_assets2Storyboard.storyboardId", "asc")
+        .orderBy("o_assets2Storyboard.sort", "asc")
+        .orderBy("o_assets2Storyboard.assetId", "asc");
 
-      const queryAudioIds = [...assetDatas.map((i) => i.id!), ...assetDatas.map((i) => i.assetsId!)].filter(Boolean);
-      const assets2AudioData = await u
-        .db("o_assetsRole2Audio")
-        .leftJoin("o_assets", "o_assets.assetsId", "o_assetsRole2Audio.assetsAudioId")
-        .leftJoin("o_image", "o_image.id", "o_assets.imageId")
-        .whereIn("o_assetsRole2Audio.assetsRoleId", queryAudioIds)
-        .select(
-          "o_assets.id",
-          "o_assets.name",
-          "o_assetsRole2Audio.assetsRoleId",
-          "o_assets.describe",
-          "o_assets.type",
-          "o_assets.prompt",
-          "o_image.filePath",
-        );
       const audioRecord: Record<string, any> = {};
-      await Promise.all(
-        assets2AudioData.map(async (i) => {
-          if (!audioRecord[i.assetsRoleId]) audioRecord[i.assetsRoleId] = [];
-          audioRecord[i.assetsRoleId].push({
-            id: i.id,
-            name: i.name,
-            describe: i.describe,
-            type: i.type,
-            fileType: "audio" as const,
-            sources: "assets",
-            prompt: i.prompt,
-            src: i.filePath ? await u.oss.getFileUrl(i.filePath) : "",
-          });
-        }),
-      );
+      if (isRef) {
+        const queryAudioIds = [...assetDatas.map((i) => i.id!), ...assetDatas.map((i) => i.assetsId!)].filter(Boolean);
+        const assets2AudioData = await u
+          .db("o_assetsRole2Audio")
+          .leftJoin("o_assets", "o_assets.assetsId", "o_assetsRole2Audio.assetsAudioId")
+          .leftJoin("o_image", "o_image.id", "o_assets.imageId")
+          .whereIn("o_assetsRole2Audio.assetsRoleId", queryAudioIds)
+          .select(
+            "o_assets.id",
+            "o_assets.name",
+            "o_assetsRole2Audio.assetsRoleId",
+            "o_assets.describe",
+            "o_assets.type",
+            "o_assets.prompt",
+            "o_image.filePath",
+          );
+        await Promise.all(
+          assets2AudioData.map(async (i) => {
+            if (!audioRecord[i.assetsRoleId]) audioRecord[i.assetsRoleId] = [];
+            audioRecord[i.assetsRoleId].push({
+              id: i.id,
+              name: i.name,
+              describe: i.describe,
+              type: i.type,
+              fileType: "audio" as const,
+              sources: "assets",
+              prompt: i.prompt,
+              src: i.filePath ? await u.oss.getFileUrl(i.filePath) : "",
+            });
+          }),
+        );
+      }
 
-      await Promise.all(
+      const orderedAssetItems = await Promise.all(
         assetDatas.map(async (i) => {
           const item = {
             id: i.id,
@@ -144,12 +150,32 @@ export default router.post(
             src: i.filePath ? await u.oss.getSmallImageUrl(i.filePath) : "",
           };
           const sid = i.storyboardId as number;
-          if (!otherDataMap[sid]) otherDataMap[sid] = [];
-          otherDataMap[sid].push(item);
-          if (audioRecord[i.id]) otherDataMap[sid].push(...audioRecord[i.id]);
-          if (audioRecord[i.assetsId]) otherDataMap[sid].push(...audioRecord[i.assetsId]);
+          return { asset: i, item, sid };
         }),
       );
+      orderedAssetItems.forEach(({ asset, item, sid }) => {
+        if (!otherDataMap[sid]) otherDataMap[sid] = [];
+        otherDataMap[sid].push(item);
+        if (audioRecord[asset.id]) otherDataMap[sid].push(...audioRecord[asset.id]);
+        if (audioRecord[asset.assetsId]) otherDataMap[sid].push(...audioRecord[asset.assetsId]);
+      });
+    }
+
+    function buildPromptReferences(storyboardMedias: TrackMedia[]): TrackMedia[] {
+      const seen = new Set<string>();
+      const references: TrackMedia[] = [];
+      const add = (item: TrackMedia) => {
+        if (item.id == null) return;
+        const key = `${item.sources ?? ""}:${item.id}`;
+        if (seen.has(key)) return;
+        seen.add(key);
+        references.push(item);
+      };
+      storyboardMedias.forEach((storyboard) => {
+        (otherDataMap[storyboard.id!] ?? []).forEach(add);
+      });
+      storyboardMedias.forEach(add);
+      return references;
     }
 
     const trackData = await u.db("o_videoTrack").where({ projectId, scriptId });
@@ -170,6 +196,7 @@ export default router.post(
         selectVideoId: Number(item?.videoId)!,
         medias: (() => {
           const storyboardMedias = storyboardTrackRecord[trackId] ?? [];
+          if (!isRef) return storyboardMedias;
           const assetMedias = storyboardMedias.flatMap((s) => otherDataMap[s.id] ?? []);
 
           const seenAssetIds = new Set<number>();
@@ -195,6 +222,7 @@ export default router.post(
 
           return [...hasImageAssetData, ...storyboardMedias, ...notHasImageAssetData];
         })(),
+        promptReferences: buildPromptReferences(storyboardTrackRecord[trackId] ?? []),
         videoList: await Promise.all(
           videoList
             .filter((v) => v.videoTrackId === trackId)

@@ -26,6 +26,23 @@ export default router.post(
         const assetsIds = items.filter((item: any) => item.sources == "assets").map((item: any) => item.id)
         if (assetsIds.length) {
             const assetsPaths = await u.db("o_assets").leftJoin("o_image", "o_image.id", "o_assets.imageId").whereIn("o_assets.id", assetsIds).select("o_assets.id", "o_image.filePath");
+            const missingAssetIds = assetsPaths.filter((item) => !item.filePath).map((item) => item.id).filter(Boolean);
+            if (missingAssetIds.length) {
+                const fallbackImages = await u
+                    .db("o_image")
+                    .whereIn("assetsId", missingAssetIds)
+                    .andWhere("state", "已完成")
+                    .whereNotNull("filePath")
+                    .select("assetsId", "filePath")
+                    .orderBy("id", "desc");
+                const fallbackMap = new Map<number, string>();
+                fallbackImages.forEach((item) => {
+                    if (item.assetsId != null && item.filePath && !fallbackMap.has(item.assetsId)) fallbackMap.set(item.assetsId, item.filePath);
+                });
+                assetsPaths.forEach((item) => {
+                    if (!item.filePath && fallbackMap.has(item.id)) item.filePath = fallbackMap.get(item.id);
+                });
+            }
             totalFilePaths.push(...assetsPaths.map(i => ({ id: i.id, filePath: i.filePath, sources: "assets" })))
         }
 

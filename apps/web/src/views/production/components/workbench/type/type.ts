@@ -52,6 +52,7 @@ declare global {
     reason?: string;
     selectVideoId?: number | null;
     medias: TrackMedia[];
+    promptReferences?: TrackMedia[];
     videoList: VideoItem[];
     duration: number;
   }

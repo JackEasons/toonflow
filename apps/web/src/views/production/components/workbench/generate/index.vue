@@ -18,7 +18,7 @@
           </template>
           <div class="promptData fc">
             <div class="promptInput" @focusout="handlePromptBlur">
-              <promptEditor v-model="currentTrack.prompt" :references="references" :placeholder="$t('workbench.generate.promptPlaceholder')" />
+              <promptEditor v-model="currentTrack.prompt" :references="references" reference-token="参考" :placeholder="$t('workbench.generate.promptPlaceholder')" />
             </div>
           </div>
         </t-card>
@@ -410,12 +410,25 @@ const references = computed(() => {
     return "image";
   }
 
-  return imageList.value
-    .filter((item) => item.src)
-    .map((item) => ({
-      type: getFileTypeByExt(item.src) as "image" | "video" | "audio" | "text",
-      src: item.src ?? "",
-    }));
+  const referenceItems = currentTrack.value?.promptReferences?.length ? currentTrack.value.promptReferences : imageList.value;
+  return referenceItems.map((item) => {
+    const name =
+      (item as any).name ||
+      (item as any).label ||
+      ((item as any).sources === "storyboard" && (item as any).index != null ? `分镜图${Number((item as any).index) + 1}` : "");
+    if (!item.src) {
+      return {
+        name,
+        type: "text" as const,
+        src: item.prompt ?? "",
+      };
+    }
+    return {
+      name,
+      type: (item.fileType || getFileTypeByExt(item.src)) as "image" | "video" | "audio",
+      src: item.src,
+    };
+  });
 });
 
 async function getGenerateData() {
@@ -698,8 +711,16 @@ onUnmounted(() => {
         overflow: hidden;
         display: flex;
         flex-direction: column;
+        :deep(.t-loading__parent) {
+          flex: 1 1 0;
+          min-height: 0;
+          overflow: hidden;
+          display: flex;
+          flex-direction: column;
+        }
         :deep(.t-card__body) {
           flex: 1;
+          height: 100%;
           min-height: 0;
           overflow: hidden;
           display: flex;
@@ -714,7 +735,17 @@ onUnmounted(() => {
           .promptInput {
             flex: 1;
             min-height: 0;
-            overflow-y: auto;
+            overflow: hidden;
+            :deep(.textareaWrapper) {
+              min-height: 0;
+              overflow: hidden;
+            }
+            :deep(.promptEditor) {
+              min-height: 0;
+              overflow-y: auto;
+              overscroll-behavior: contain;
+              scrollbar-gutter: stable;
+            }
           }
         }
       }

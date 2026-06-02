@@ -7,6 +7,7 @@ import { validateFields } from "@/middleware/middleware";
 import { ReferenceList } from "@/utils/ai";
 import { resolveNegativePrompt } from "@/utils/negativePrompt";
 import { quoteModelCalls, releasePointHold, reserveModelCallPoints, settlePointHold } from "@/utils/modelBilling";
+import { appendVideoConsistencyGuard, loadVideoPromptContext } from "@/utils/videoPromptContext";
 const router = express.Router();
 
 type Type = "imageReference" | "startImage" | "endImage" | "videoReference" | "audioReference";
@@ -105,13 +106,15 @@ export default router.post(
 
         const videoPath = `/${projectId}/video/${uuidv4()}.mp4`;
         const storageProvider = u.oss.getStorageProvider();
-        const negativePrompt = resolveNegativePrompt({ prompt, negativePromptSource }, { mediaType: "video", modelKey: model });
+        const promptContext = await loadVideoPromptContext(uploadData);
+        const requestPrompt = appendVideoConsistencyGuard(prompt, promptContext);
+        const negativePrompt = resolveNegativePrompt({ prompt: requestPrompt, negativePromptSource }, { mediaType: "video", modelKey: model });
         const [videoId] = await u.db("o_video").insert({
           filePath: videoPath,
           storageProvider,
           time: Date.now(),
           state: "生成中",
-          prompt,
+          prompt: requestPrompt,
           negativePrompt,
           scriptId,
           projectId,
@@ -138,7 +141,7 @@ export default router.post(
           userId,
         });
         reservedHolds.push(billingHold);
-        tasks.push({ billingHold, duration, images, negativePrompt, prompt, storageProvider, trackId, videoId, videoPath });
+        tasks.push({ billingHold, duration, images, negativePrompt, prompt: requestPrompt, storageProvider, trackId, videoId, videoPath });
       }
     } catch (err: any) {
       await Promise.all(reservedHolds.map((hold) => releasePointHold(hold?.id)));

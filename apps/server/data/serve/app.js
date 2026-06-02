@@ -19515,7 +19515,7 @@ var require_finalhandler = __commonJS({
           } else {
             headers = getErrorHeaders(err);
           }
-          msg = getErrorMessage6(err, status, env2);
+          msg = getErrorMessage7(err, status, env2);
         } else {
           status = 404;
           msg = "Cannot " + req.method + " " + encodeUrl(getResourceName(req));
@@ -19540,7 +19540,7 @@ var require_finalhandler = __commonJS({
       }
       return { ...err.headers };
     }
-    function getErrorMessage6(err, status, env2) {
+    function getErrorMessage7(err, status, env2) {
       var msg;
       if (env2 !== "production") {
         msg = err.stack;
@@ -21447,16 +21447,16 @@ var require_router = __commonJS({
         return new Router(options);
       }
       const opts = options || {};
-      function router227(req, res, next) {
-        router227.handle(req, res, next);
+      function router228(req, res, next) {
+        router228.handle(req, res, next);
       }
-      Object.setPrototypeOf(router227, this);
-      router227.caseSensitive = opts.caseSensitive;
-      router227.mergeParams = opts.mergeParams;
-      router227.params = {};
-      router227.strict = opts.strict;
-      router227.stack = [];
-      return router227;
+      Object.setPrototypeOf(router228, this);
+      router228.caseSensitive = opts.caseSensitive;
+      router228.mergeParams = opts.mergeParams;
+      router228.params = {};
+      router228.strict = opts.strict;
+      router228.stack = [];
+      return router228;
     }
     Router.prototype = function() {
     };
@@ -21844,7 +21844,7 @@ var require_application = __commonJS({
     var app2 = exports2 = module2.exports = {};
     var trustProxyDefaultSymbol = "@@symbol:trust_proxy_default";
     app2.init = function init() {
-      var router227 = null;
+      var router228 = null;
       this.cache = /* @__PURE__ */ Object.create(null);
       this.engines = /* @__PURE__ */ Object.create(null);
       this.settings = /* @__PURE__ */ Object.create(null);
@@ -21853,13 +21853,13 @@ var require_application = __commonJS({
         configurable: true,
         enumerable: true,
         get: function getrouter() {
-          if (router227 === null) {
-            router227 = new Router({
+          if (router228 === null) {
+            router228 = new Router({
               caseSensitive: this.enabled("case sensitive routing"),
               strict: this.enabled("strict routing")
             });
           }
-          return router227;
+          return router228;
         }
       });
     };
@@ -21930,15 +21930,15 @@ var require_application = __commonJS({
       if (fns.length === 0) {
         throw new TypeError("app.use() requires a middleware function");
       }
-      var router227 = this.router;
+      var router228 = this.router;
       fns.forEach(function(fn2) {
         if (!fn2 || !fn2.handle || !fn2.set) {
-          return router227.use(path32, fn2);
+          return router228.use(path32, fn2);
         }
         debug12(".use app under %s", path32);
         fn2.mountpath = path32;
         fn2.parent = this;
-        router227.use(path32, function mounted_app(req, res, next) {
+        router228.use(path32, function mounted_app(req, res, next) {
           var orig = req.app;
           fn2.handle(req, res, function(err) {
             Object.setPrototypeOf(req, orig.request);
@@ -49499,8 +49499,8 @@ var require_lib4 = __commonJS({
         getWss: function getWss() {
           return wsServer;
         },
-        applyTo: function applyTo(router227) {
-          (0, _addWsMethod2.default)(router227);
+        applyTo: function applyTo(router228) {
+          (0, _addWsMethod2.default)(router228);
         }
       };
     }
@@ -59306,6 +59306,9 @@ A medium tracking shot follows the woman from behind as she ascends and approach
             table.text("negativePrompt");
             table.text("state");
             table.text("errorReason");
+            table.string("providerTaskId", 191);
+            table.string("providerTaskType", 64);
+            table.text("providerPayload");
           }
         },
         //分镜
@@ -60354,6 +60357,9 @@ var init_fixDB = __esm({
       await addColumn("o_image", "prompt", "text");
       await addColumn("o_image", "negativePrompt", "text");
       await addColumn("o_image", "storageProvider", "string");
+      await addColumn("o_image", "providerTaskId", "string");
+      await addColumn("o_image", "providerTaskType", "string");
+      await addColumn("o_image", "providerPayload", "text");
       await addColumn("o_storyboard", "negativePrompt", "text");
       await addColumn("o_storyboard", "storageProvider", "string");
       await addColumn("o_video", "prompt", "text");
@@ -65453,7 +65459,7 @@ var require_builder = __commonJS({
           }
           render = /* @__PURE__ */ (function(_this) {
             return function(element, obj) {
-              var attr, child, entry, index, key, value;
+              var attr2, child, entry, index, key, value;
               if (typeof obj !== "object") {
                 if (_this.options.cdata && requiresCDATA(obj)) {
                   element.raw(wrapCDATA(obj));
@@ -65475,9 +65481,9 @@ var require_builder = __commonJS({
                   child = obj[key];
                   if (key === attrkey) {
                     if (typeof child === "object") {
-                      for (attr in child) {
-                        value = child[attr];
-                        element = element.att(attr, value);
+                      for (attr2 in child) {
+                        value = child[attr2];
+                        element = element.att(attr2, value);
                       }
                     }
                   } else if (key === charkey) {
@@ -103003,7 +103009,7 @@ var require_dbcs_data2 = __commonJS({
       // == Japanese/ShiftJIS ====================================================
       // All japanese encodings are based on JIS X set of standards:
       // JIS X 0201 - Single-byte encoding of ASCII + ¥ + Kana chars at 0xA1-0xDF.
-      // JIS X 0208 - Main set of 6879 characters, placed in 94x94 plane, to be encoded by 2 bytes.
+      // JIS X 0208 - Main set of 6879 characters, placed in 94x94 plane, to be encoded by 2 bytes. 
       //              Has several variations in 1978, 1983, 1990 and 1997.
       // JIS X 0212 - Supplementary plane of 6067 chars in 94x94 plane. 1990. Effectively dead.
       // JIS X 0213 - Extension and modern replacement of 0208 and 0212. Total chars: 11233.
@@ -103020,7 +103026,7 @@ var require_dbcs_data2 = __commonJS({
       //               0x8F, (0xA1-0xFE)x2 - 0212 plane (94x94).
       //  * JIS X 208: 7-bit, direct encoding of 0208. Byte ranges: 0x21-0x7E (94 values). Uncommon.
       //               Used as-is in ISO2022 family.
-      //  * ISO2022-JP: Stateful encoding, with escape sequences to switch between ASCII,
+      //  * ISO2022-JP: Stateful encoding, with escape sequences to switch between ASCII, 
       //                0201-1976 Roman, 0208-1978, 0208-1983.
       //  * ISO2022-JP-1: Adds esc seq for 0212-1990.
       //  * ISO2022-JP-2: Adds esc seq for GB2313-1980, KSX1001-1992, ISO8859-1, ISO8859-7.
@@ -103131,7 +103137,7 @@ var require_dbcs_data2 = __commonJS({
       //  * Windows CP 951: Microsoft variant of Big5-HKSCS-2001. Seems to be never public. http://me.abelcheung.org/articles/research/what-is-cp951/
       //  * Big5-2003 (Taiwan standard) almost superset of cp950.
       //  * Unicode-at-on (UAO) / Mozilla 1.8. Falling out of use on the Web. Not supported by other browsers.
-      //  * Big5-HKSCS (-2001, -2004, -2008). Hong Kong standard.
+      //  * Big5-HKSCS (-2001, -2004, -2008). Hong Kong standard. 
       //    many unicode code points moved from PUA to Supplementary plane (U+2XXXX) over the years.
       //    Plus, it has 4 combining sequences.
       //    Seems that Mozilla refused to support it for 10 yrs. https://bugzilla.mozilla.org/show_bug.cgi?id=162431 https://bugzilla.mozilla.org/show_bug.cgi?id=310299
@@ -103142,7 +103148,7 @@ var require_dbcs_data2 = __commonJS({
       //    In the encoder, it might make sense to support encoding old PUA mappings to Big5 bytes seq-s.
       //    Official spec: http://www.ogcio.gov.hk/en/business/tech_promotion/ccli/terms/doc/2003cmp_2008.txt
       //                   http://www.ogcio.gov.hk/tc/business/tech_promotion/ccli/terms/doc/hkscs-2008-big5-iso.txt
-      //
+      // 
       // Current understanding of how to deal with Big5(-HKSCS) is in the Encoding Standard, http://encoding.spec.whatwg.org/#big5-encoder
       // Unicode mapping (http://www.unicode.org/Public/MAPPINGS/OBSOLETE/EASTASIA/OTHER/BIG5.TXT) is said to be wrong.
       "windows950": "cp950",
@@ -110434,9 +110440,9 @@ var require_jstoxml = __commonJS({
         var filter6 = arguments.length > 1 ? arguments[1] : void 0;
         var keyVals = [];
         if (Array.isArray(attributes)) {
-          keyVals = attributes.map(function(attr) {
-            var key = Object.keys(attr)[0];
-            var val = attr[key];
+          keyVals = attributes.map(function(attr2) {
+            var key = Object.keys(attr2)[0];
+            var val = attr2[key];
             var filteredVal = filter6 ? filterStr(val, filter6) : val;
             var valStr = filteredVal === true ? "" : '="'.concat(filteredVal, '"');
             return "".concat(key).concat(valStr);
@@ -143627,1638 +143633,6 @@ var require_dist8 = __commonJS({
   }
 });
 
-// src/utils/vendor.ts
-var vendor_exports = {};
-__export(vendor_exports, {
-  getCode: () => getCode,
-  getModelList: () => getModelList,
-  getVendor: () => getVendor,
-  writeCode: () => writeCode
-});
-function writeCode(id, tsCode) {
-  const rootDir = utils_default.getPath("vendor");
-  import_fs5.default.mkdirSync(rootDir, { recursive: true });
-  if (import_fs5.default.existsSync(import_path8.default.join(rootDir, `${id}.ts`))) {
-    import_fs5.default.writeFileSync(import_path8.default.join(rootDir, `${id}.ts`), tsCode);
-  }
-  import_fs5.default.writeFileSync(import_path8.default.join(rootDir, `${id}.ts`), tsCode);
-}
-function getCode(id) {
-  const rootDir = utils_default.getPath("vendor");
-  const targetFile = import_path8.default.join(rootDir, `${id}.ts`);
-  if (!import_fs5.default.existsSync(targetFile)) return "";
-  return import_fs5.default.readFileSync(targetFile, "utf-8");
-}
-async function getModelList(id) {
-  const models = await utils_default.db("o_vendorConfig").where("id", id).select("models").first();
-  if (!models || !models.models) return [];
-  const code = getCode(id);
-  const jsCode = (0, import_sucrase.transform)(code, { transforms: ["typescript"] }).code;
-  const vendorData2 = utils_default.vm(jsCode);
-  if (!vendorData2 || !vendorData2.vendor || !vendorData2.vendor.models) return [];
-  const combined = [...JSON.parse(JSON.stringify(vendorData2.vendor.models)), ...JSON.parse(models?.models ?? "[]")];
-  const map3 = /* @__PURE__ */ new Map();
-  for (const m of combined) {
-    map3.set(m.modelName, m);
-  }
-  return [...map3.values()];
-}
-function getVendor(id) {
-  const code = getCode(id);
-  const jsCode = (0, import_sucrase.transform)(code, { transforms: ["typescript"] }).code;
-  const vendorData2 = utils_default.vm(jsCode);
-  return vendorData2.vendor;
-}
-var import_sucrase, import_fs5, import_path8;
-var init_vendor2 = __esm({
-  "src/utils/vendor.ts"() {
-    "use strict";
-    import_sucrase = __toESM(require_dist8());
-    import_fs5 = __toESM(require("fs"));
-    import_path8 = __toESM(require("path"));
-    init_utils3();
-  }
-});
-
-// src/utils/admin.ts
-function isLegacyAdminUser(user) {
-  return Number(user?.id) === 1 || user?.name === "admin";
-}
-function normalizeUserRole(user) {
-  const role = String(user?.role || "").trim().toLowerCase();
-  if (role) return role;
-  return isLegacyAdminUser(user) ? USER_ROLE_ADMIN : USER_ROLE_MEMBER;
-}
-function isAdminUser(user) {
-  const role = String(user?.role || "").trim().toLowerCase();
-  if (role) return role === USER_ROLE_ADMIN;
-  return isLegacyAdminUser(user);
-}
-function isAdminRequest(req) {
-  return isAdminUser(req.user);
-}
-var USER_ROLE_ADMIN, USER_ROLE_MEMBER;
-var init_admin = __esm({
-  "src/utils/admin.ts"() {
-    "use strict";
-    USER_ROLE_ADMIN = "admin";
-    USER_ROLE_MEMBER = "member";
-  }
-});
-
-// src/utils/membership.ts
-function now() {
-  return /* @__PURE__ */ new Date();
-}
-function addDays(date6, days) {
-  const next = new Date(date6);
-  next.setDate(next.getDate() + days);
-  return next;
-}
-function toNumber(value) {
-  if (value === null || value === void 0 || value === "") return 0;
-  const numberValue = Number(value);
-  return Number.isFinite(numberValue) ? numberValue : 0;
-}
-function toIso(value) {
-  if (!value) return null;
-  const date6 = value instanceof Date ? value : new Date(String(value));
-  return Number.isNaN(date6.getTime()) ? null : date6.toISOString();
-}
-function parseMetaObject(value) {
-  if (!value) return {};
-  if (typeof value === "object" && !Array.isArray(value)) return value;
-  if (typeof value !== "string") return {};
-  try {
-    const parsed = JSON.parse(value);
-    return parsed && typeof parsed === "object" && !Array.isArray(parsed) ? parsed : {};
-  } catch {
-    return {};
-  }
-}
-function parseFeatures(value) {
-  if (Array.isArray(value)) return value.filter((item) => typeof item === "string");
-  if (typeof value !== "string" || !value.trim()) return [];
-  try {
-    const parsed = JSON.parse(value);
-    return Array.isArray(parsed) ? parsed.filter((item) => typeof item === "string") : [];
-  } catch {
-    return [];
-  }
-}
-function normalizeFeatures(value) {
-  if (Array.isArray(value)) {
-    return value.map((item) => String(item).trim()).filter(Boolean);
-  }
-  if (typeof value === "string") {
-    return value.split(/\n|,/).map((item) => item.trim()).filter(Boolean);
-  }
-  return [];
-}
-function createOrderNo(prefix) {
-  return `${prefix}_${Date.now()}_${Math.random().toString(36).slice(2, 10)}`;
-}
-function getPointTransactionCategory(type, amount) {
-  if (type === "consume" || type === "shadow_consume" || type === "order_refund" || amount < 0) return "consume";
-  if (type === "recharge" || type === "points_purchase" || type === "plan_purchase" || type === "membership_grant") return "purchase";
-  return "earn";
-}
-function getModelBillingTaskLabel(taskType) {
-  const type = String(taskType || "");
-  return {
-    agent_memory_retrieval: "Agent\u8BB0\u5FC6\u68C0\u7D22",
-    agent_memory_summary: "Agent\u8BB0\u5FC6\u6458\u8981",
-    art_style_prompt_extraction: "\u753B\u98CE\u63D0\u793A\u8BCD\u63D0\u53D6",
-    asset_audio_binding: "\u8D44\u4EA7\u97F3\u9891\u5339\u914D",
-    asset_center_image_generation: "\u8D44\u4EA7\u4E2D\u5FC3\u56FE\u7247\u751F\u6210",
-    asset_image_generation: "\u8D44\u4EA7\u56FE\u7247\u751F\u6210",
-    asset_prompt_polish: "\u8D44\u4EA7\u63D0\u793A\u8BCD\u6DA6\u8272",
-    novel_event_extraction: "\u5C0F\u8BF4\u4E8B\u4EF6\u5206\u6790",
-    production_agent_call: "\u5236\u7247Agent\u8C03\u7528",
-    script_agent_call: "\u5267\u672CAgent\u8C03\u7528",
-    script_asset_extraction: "\u5267\u672C\u8D44\u4EA7\u63D0\u53D6",
-    script_regex_detection: "\u5267\u672C\u6B63\u5219\u8BC6\u522B",
-    storyboard_image_generation: "\u5206\u955C\u56FE\u7247\u751F\u6210",
-    video_generation: "\u89C6\u9891\u751F\u6210",
-    video_prompt_generation: "\u89C6\u9891\u63D0\u793A\u8BCD\u751F\u6210",
-    workflow_image_generation: "\u5DE5\u4F5C\u6D41\u56FE\u7247\u751F\u6210"
-  }[type] || type;
-}
-function normalizePlan(plan) {
-  return {
-    key: String(plan.key || ""),
-    name: String(plan.name || ""),
-    levelKey: String(plan.levelKey || "free"),
-    levelName: String(plan.levelName || "\u514D\u8D39\u4F1A\u5458"),
-    billingPeriod: String(plan.billingPeriod || "free"),
-    priceCny: toNumber(plan.priceCny),
-    originalPriceCny: plan.originalPriceCny === null || plan.originalPriceCny === void 0 ? null : toNumber(plan.originalPriceCny),
-    yearlyDiscountLabel: plan.yearlyDiscountLabel ? String(plan.yearlyDiscountLabel) : null,
-    points: toNumber(plan.points),
-    pointValidityDays: toNumber(plan.pointValidityDays || 365),
-    maxShots: plan.maxShots === null || plan.maxShots === void 0 ? null : toNumber(plan.maxShots),
-    maxSeries: plan.maxSeries === null || plan.maxSeries === void 0 ? null : toNumber(plan.maxSeries),
-    features: parseFeatures(plan.features),
-    enabled: Boolean(plan.enabled),
-    popular: Boolean(plan.popular),
-    sortOrder: toNumber(plan.sortOrder)
-  };
-}
-function normalizePackage(pkg) {
-  return {
-    key: String(pkg.key || ""),
-    points: toNumber(pkg.points),
-    priceCny: toNumber(pkg.priceCny),
-    description: pkg.description ? String(pkg.description) : "",
-    validityDays: toNumber(pkg.validityDays || 730),
-    enabled: Boolean(pkg.enabled),
-    sortOrder: toNumber(pkg.sortOrder)
-  };
-}
-async function insertTransaction(params) {
-  if (params.idempotencyKey) {
-    const existing = await db_default("balance_transactions").where("idempotencyKey", params.idempotencyKey).first();
-    if (existing) return;
-  }
-  await db_default("balance_transactions").insert({
-    id: v4_default(),
-    userId: params.userId,
-    type: params.type,
-    amount: params.amount,
-    balanceAfter: params.balanceAfter,
-    description: params.description,
-    relatedId: params.relatedId || null,
-    operatorId: params.operatorId || null,
-    externalOrderId: params.externalOrderId || null,
-    idempotencyKey: params.idempotencyKey || null,
-    createdAt: now()
-  });
-}
-async function ensureMembershipCatalog() {
-  for (const plan of DEFAULT_MEMBERSHIP_PLANS) {
-    const exists = await db_default("membership_plans").where("key", plan.key).first();
-    if (exists) continue;
-    await db_default("membership_plans").insert({
-      id: v4_default(),
-      ...plan,
-      originalPriceCny: plan.originalPriceCny ?? null,
-      yearlyDiscountLabel: plan.yearlyDiscountLabel ?? null,
-      maxShots: plan.maxShots ?? null,
-      maxSeries: plan.maxSeries ?? null,
-      features: JSON.stringify(plan.features),
-      enabled: true,
-      popular: Boolean(plan.popular),
-      createdAt: now(),
-      updatedAt: now()
-    });
-  }
-  for (const pkg of DEFAULT_POINTS_PACKAGES) {
-    const exists = await db_default("points_packages").where("key", pkg.key).first();
-    if (exists) continue;
-    await db_default("points_packages").insert({
-      id: v4_default(),
-      ...pkg,
-      enabled: true,
-      createdAt: now(),
-      updatedAt: now()
-    });
-  }
-}
-async function ensureUserMembership(userId, grantWelcome = true) {
-  await ensureMembershipCatalog();
-  const balance = await db_default("user_balances").where("userId", userId).first();
-  if (!balance) {
-    await db_default("user_balances").insert({
-      id: v4_default(),
-      userId,
-      balance: 0,
-      frozenAmount: 0,
-      totalSpent: 0,
-      membershipPoints: 0,
-      rechargePoints: 0,
-      bonusPoints: 0,
-      createdAt: now(),
-      updatedAt: now()
-    });
-  }
-  const membership = await db_default("user_memberships").where("userId", userId).first();
-  if (!membership) {
-    await db_default("user_memberships").insert({
-      id: v4_default(),
-      userId,
-      ...FREE_LEVEL,
-      planKey: "free",
-      status: "active",
-      autoRenew: false,
-      startedAt: now(),
-      createdAt: now(),
-      updatedAt: now()
-    });
-  }
-  if (grantWelcome) await grantWelcomePoints(userId);
-}
-async function grantWelcomePoints(userId, amount = 50) {
-  if (!Number.isFinite(amount) || amount <= 0) return;
-  const idempotencyKey = `welcome:${userId}`;
-  const existing = await db_default("balance_transactions").where("idempotencyKey", idempotencyKey).first();
-  if (existing) return;
-  const current = await db_default("user_balances").where("userId", userId).first();
-  if (!current) {
-    await ensureUserMembership(userId, false);
-  }
-  const balance = await db_default("user_balances").where("userId", userId).first();
-  const nextBalance = toNumber(balance?.balance) + amount;
-  await db_default("user_balances").where("userId", userId).update({
-    balance: nextBalance,
-    bonusPoints: toNumber(balance?.bonusPoints) + amount,
-    updatedAt: now()
-  });
-  await insertTransaction({
-    userId,
-    type: "bonus",
-    amount,
-    balanceAfter: nextBalance,
-    description: `\u65B0\u4EBA\u8D60\u9001\u79EF\u5206 +${amount}`,
-    idempotencyKey
-  });
-}
-async function getMembershipProfile(userId) {
-  await ensureUserMembership(userId);
-  const [user, balance, membership, plansRaw, packagesRaw, transactionsRaw, ordersRaw] = await Promise.all([
-    db_default("o_user").where("id", userId).first(),
-    db_default("user_balances").where("userId", userId).first(),
-    db_default("user_memberships").where("userId", userId).first(),
-    db_default("membership_plans").where("enabled", true).orderBy("sortOrder", "asc").orderBy("priceCny", "asc"),
-    db_default("points_packages").where("enabled", true).orderBy("sortOrder", "asc").orderBy("points", "asc"),
-    db_default("balance_transactions").where("userId", userId).orderBy("createdAt", "desc").limit(50),
-    db_default("subscription_orders").where("userId", userId).orderBy("createdAt", "desc").limit(30)
-  ]);
-  const plans = plansRaw.map(normalizePlan);
-  const pointPackages = packagesRaw.map(normalizePackage);
-  const frozenAmount = toNumber(balance?.frozenAmount);
-  const balanceAmount = toNumber(balance?.balance);
-  const pointSummary = {
-    remaining: Math.max(0, balanceAmount - frozenAmount),
-    frozen: frozenAmount,
-    spent: toNumber(balance?.totalSpent),
-    membership: toNumber(balance?.membershipPoints),
-    recharge: toNumber(balance?.rechargePoints),
-    bonus: toNumber(balance?.bonusPoints),
-    pointsExpireAt: toIso(balance?.pointsExpireAt)
-  };
-  return {
-    user: user ? {
-      id: String(user.id),
-      name: user.name || "",
-      realName: user.realName || user.name || "",
-      avatar: user.avatar || ""
-    } : null,
-    membership: membership ? {
-      levelKey: membership.levelKey || FREE_LEVEL.levelKey,
-      levelName: membership.levelName || FREE_LEVEL.levelName,
-      planKey: membership.planKey || "free",
-      status: membership.status || "active",
-      autoRenew: Boolean(membership.autoRenew),
-      startedAt: toIso(membership.startedAt),
-      expiresAt: toIso(membership.expiresAt)
-    } : {
-      ...FREE_LEVEL,
-      planKey: "free",
-      status: "active",
-      autoRenew: false,
-      startedAt: now().toISOString(),
-      expiresAt: null
-    },
-    pointSummary,
-    plans: {
-      all: plans,
-      monthly: plans.filter((plan) => ["free", "monthly", "enterprise"].includes(plan.billingPeriod)),
-      yearly: plans.filter((plan) => ["free", "yearly", "enterprise"].includes(plan.billingPeriod))
-    },
-    pointPackages,
-    transactions: transactionsRaw.map((item) => {
-      const amount = toNumber(item.amount);
-      return {
-        id: item.id,
-        type: item.type,
-        category: getPointTransactionCategory(item.type, amount),
-        amount,
-        balanceAfter: toNumber(item.balanceAfter),
-        description: item.description || item.type,
-        createdAt: toIso(item.createdAt) || now().toISOString()
-      };
-    }),
-    orders: ordersRaw.map(normalizeUserOrder)
-  };
-}
-function normalizeUserOrder(order) {
-  return {
-    id: order.id,
-    orderNo: order.orderNo,
-    kind: order.kind,
-    planKey: order.planKey,
-    pointsPackageKey: order.pointsPackageKey,
-    amountCny: toNumber(order.amountCny),
-    points: toNumber(order.points),
-    status: order.status,
-    paymentMethod: order.paymentMethod,
-    createdAt: toIso(order.createdAt) || now().toISOString(),
-    paidAt: toIso(order.paidAt)
-  };
-}
-async function getMembershipOrderStatus(userId, orderNo) {
-  await ensureUserMembership(userId);
-  const order = await db_default("subscription_orders").where({ userId, orderNo }).first();
-  if (!order) throw new Error("\u8BA2\u5355\u4E0D\u5B58\u5728");
-  return {
-    order: normalizeUserOrder(order),
-    profile: await getMembershipProfile(userId)
-  };
-}
-async function getMembershipOrderForPayment(userId, orderNo) {
-  await ensureUserMembership(userId);
-  const order = await db_default("subscription_orders").where({ userId, orderNo }).first();
-  if (!order) throw new Error("\u8BA2\u5355\u4E0D\u5B58\u5728");
-  if (order.status === "paid") return order;
-  if (order.status !== "pending") throw new Error("\u5F53\u524D\u8BA2\u5355\u72B6\u6001\u4E0D\u53EF\u7EE7\u7EED\u652F\u4ED8");
-  return order;
-}
-async function addPoints(params) {
-  await ensureUserMembership(params.userId, false);
-  const current = await db_default("user_balances").where("userId", params.userId).first();
-  const nextBalance = toNumber(current?.balance) + params.amount;
-  const bucketColumn = params.bucket === "membership" ? "membershipPoints" : params.bucket === "recharge" ? "rechargePoints" : "bonusPoints";
-  await db_default("user_balances").where("userId", params.userId).update({
-    balance: nextBalance,
-    [bucketColumn]: toNumber(current?.[bucketColumn]) + params.amount,
-    pointsExpireAt: params.expireAt || current?.pointsExpireAt || null,
-    updatedAt: now()
-  });
-  await insertTransaction({
-    userId: params.userId,
-    type: params.type,
-    amount: params.amount,
-    balanceAfter: nextBalance,
-    description: params.description,
-    relatedId: params.relatedId,
-    operatorId: params.operatorId,
-    externalOrderId: params.externalOrderId
-  });
-}
-async function settleOrder(order, operatorId) {
-  const userId = String(order.userId);
-  const paidAt = now();
-  if (order.kind === "plan" && order.planKey) {
-    const plan = await db_default("membership_plans").where("key", order.planKey).first();
-    if (!plan) throw new Error("\u4F1A\u5458\u5957\u9910\u4E0D\u5B58\u5728");
-    const normalized = normalizePlan(plan);
-    const expiresAt = normalized.billingPeriod === "monthly" ? addDays(paidAt, 31) : normalized.billingPeriod === "yearly" ? addDays(paidAt, 365) : null;
-    await db_default("user_memberships").where("userId", userId).update({
-      levelKey: normalized.levelKey,
-      levelName: normalized.levelName,
-      planKey: normalized.key,
-      status: "active",
-      startedAt: paidAt,
-      expiresAt,
-      sourceOrderId: order.id,
-      updatedAt: paidAt
-    });
-    if (normalized.points > 0) {
-      await addPoints({
-        userId,
-        amount: normalized.points,
-        bucket: "membership",
-        type: "membership_grant",
-        description: `${normalized.name}\u8D60\u9001\u79EF\u5206 +${normalized.points}`,
-        relatedId: order.id,
-        operatorId,
-        externalOrderId: order.orderNo,
-        expireAt: addDays(paidAt, normalized.pointValidityDays)
-      });
-    }
-    return;
-  }
-  if (order.kind === "points" && order.pointsPackageKey) {
-    const pkg = await db_default("points_packages").where("key", order.pointsPackageKey).first();
-    if (!pkg) throw new Error("\u79EF\u5206\u5305\u4E0D\u5B58\u5728");
-    const normalized = normalizePackage(pkg);
-    await addPoints({
-      userId,
-      amount: normalized.points,
-      bucket: "recharge",
-      type: "points_purchase",
-      description: `\u8D2D\u4E70\u79EF\u5206 +${normalized.points}`,
-      relatedId: order.id,
-      operatorId,
-      externalOrderId: order.orderNo,
-      expireAt: addDays(paidAt, normalized.validityDays)
-    });
-  }
-}
-function parseOrderMetadata(value) {
-  if (!value || typeof value !== "string") return {};
-  try {
-    const parsed = JSON.parse(value);
-    return parsed && typeof parsed === "object" && !Array.isArray(parsed) ? parsed : {};
-  } catch {
-    return {};
-  }
-}
-async function createMembershipOrder(userId, input, paymentMethod = "manual_checkout") {
-  await ensureUserMembership(userId);
-  const orderNo = createOrderNo(input.kind === "plan" ? "sub" : "pts");
-  const timestamp = now();
-  if (input.kind === "plan") {
-    const plan = await db_default("membership_plans").where("key", input.planKey).first();
-    if (!plan || !plan.enabled) throw new Error("\u4F1A\u5458\u5957\u9910\u4E0D\u5B58\u5728\u6216\u5DF2\u505C\u7528");
-    const normalized2 = normalizePlan(plan);
-    if (normalized2.billingPeriod === "enterprise") throw new Error("\u4F01\u4E1A\u4F1A\u5458\u8BF7\u8054\u7CFB\u7BA1\u7406\u5458\u5F00\u901A");
-    const order2 = {
-      id: v4_default(),
-      orderNo,
-      userId,
-      kind: "plan",
-      planKey: normalized2.key,
-      pointsPackageKey: null,
-      amountCny: normalized2.priceCny,
-      points: normalized2.points,
-      status: normalized2.priceCny > 0 ? "pending" : "paid",
-      paymentMethod,
-      paidAt: normalized2.priceCny > 0 ? null : timestamp,
-      createdAt: timestamp,
-      updatedAt: timestamp
-    };
-    await db_default("subscription_orders").insert(order2);
-    if (order2.status === "paid") await settleOrder(order2);
-    return order2;
-  }
-  const pkg = await db_default("points_packages").where("key", input.pointsPackageKey).first();
-  if (!pkg || !pkg.enabled) throw new Error("\u79EF\u5206\u5305\u4E0D\u5B58\u5728\u6216\u5DF2\u505C\u7528");
-  const normalized = normalizePackage(pkg);
-  const order = {
-    id: v4_default(),
-    orderNo,
-    userId,
-    kind: "points",
-    planKey: null,
-    pointsPackageKey: normalized.key,
-    amountCny: normalized.priceCny,
-    points: normalized.points,
-    status: normalized.priceCny > 0 ? "pending" : "paid",
-    paymentMethod,
-    paidAt: normalized.priceCny > 0 ? null : timestamp,
-    createdAt: timestamp,
-    updatedAt: timestamp
-  };
-  await db_default("subscription_orders").insert(order);
-  if (order.status === "paid") await settleOrder(order);
-  return order;
-}
-async function markMembershipOrderPaidByOrderNo(params) {
-  const order = await db_default("subscription_orders").where("orderNo", params.orderNo).first();
-  if (!order) throw new Error("\u8BA2\u5355\u4E0D\u5B58\u5728");
-  const orderAmount = toNumber(order.amountCny);
-  if (params.amountCny !== void 0 && Math.round(orderAmount * 100) !== Math.round(params.amountCny * 100)) {
-    throw new Error("\u652F\u4ED8\u91D1\u989D\u4E0E\u8BA2\u5355\u91D1\u989D\u4E0D\u4E00\u81F4");
-  }
-  const mergedMetadata = {
-    ...parseOrderMetadata(order.metadata),
-    ...params.metadata || {},
-    externalTradeNo: params.externalTradeNo || void 0,
-    paidBy: params.paymentMethod
-  };
-  if (order.status === "paid") {
-    await db_default("subscription_orders").where("id", order.id).update({
-      metadata: JSON.stringify(mergedMetadata),
-      paymentMethod: params.paymentMethod,
-      updatedAt: now()
-    });
-    return order;
-  }
-  await db_default("subscription_orders").where("id", order.id).update({
-    status: "paid",
-    paidAt: now(),
-    paymentMethod: params.paymentMethod,
-    metadata: JSON.stringify(mergedMetadata),
-    updatedAt: now()
-  });
-  await settleOrder(order);
-  return {
-    ...order,
-    status: "paid",
-    paymentMethod: params.paymentMethod
-  };
-}
-function deductBuckets(current, amount, preferredBucket) {
-  const values = {
-    membershipPoints: toNumber(current.membershipPoints),
-    rechargePoints: toNumber(current.rechargePoints),
-    bonusPoints: toNumber(current.bonusPoints)
-  };
-  const orderedColumns = [
-    preferredBucket === "membership" ? "membershipPoints" : preferredBucket === "recharge" ? "rechargePoints" : "bonusPoints",
-    "bonusPoints",
-    "rechargePoints",
-    "membershipPoints"
-  ].filter((item, index, list2) => list2.indexOf(item) === index);
-  let remaining = amount;
-  for (const column of orderedColumns) {
-    const used = Math.min(values[column], remaining);
-    values[column] -= used;
-    remaining -= used;
-    if (remaining <= 0) break;
-  }
-  return values;
-}
-async function adjustUserPoints(params) {
-  const amount = Number(params.amount);
-  if (!Number.isFinite(amount) || amount === 0) throw new Error("\u79EF\u5206\u8C03\u6574\u6570\u91CF\u65E0\u6548");
-  await ensureUserMembership(params.userId, false);
-  const current = await db_default("user_balances").where("userId", params.userId).first();
-  if (!current) throw new Error("\u7528\u6237\u79EF\u5206\u8D26\u6237\u4E0D\u5B58\u5728");
-  const bucket = params.bucket || "bonus";
-  const currentBalance = toNumber(current.balance);
-  if (amount < 0 && currentBalance < Math.abs(amount)) throw new Error("\u7528\u6237\u79EF\u5206\u4E0D\u8DB3");
-  const nextBreakdown = amount < 0 ? deductBuckets(current, Math.abs(amount), bucket) : {
-    membershipPoints: toNumber(current.membershipPoints) + (bucket === "membership" ? amount : 0),
-    rechargePoints: toNumber(current.rechargePoints) + (bucket === "recharge" ? amount : 0),
-    bonusPoints: toNumber(current.bonusPoints) + (bucket === "bonus" ? amount : 0)
-  };
-  const nextBalance = nextBreakdown.membershipPoints + nextBreakdown.rechargePoints + nextBreakdown.bonusPoints;
-  await db_default("user_balances").where("userId", params.userId).update({
-    balance: nextBalance,
-    membershipPoints: nextBreakdown.membershipPoints,
-    rechargePoints: nextBreakdown.rechargePoints,
-    bonusPoints: nextBreakdown.bonusPoints,
-    totalSpent: toNumber(current.totalSpent) + (amount < 0 ? Math.abs(amount) : 0),
-    updatedAt: now()
-  });
-  await insertTransaction({
-    userId: params.userId,
-    type: "admin_adjust",
-    amount,
-    balanceAfter: nextBalance,
-    description: params.description || `\u540E\u53F0\u8C03\u6574\u79EF\u5206 ${amount > 0 ? "+" : ""}${amount}`,
-    operatorId: params.operatorId
-  });
-}
-async function updateUserMembership(params) {
-  await ensureUserMembership(params.userId, false);
-  const startedAt = now();
-  await db_default("user_memberships").where("userId", params.userId).update({
-    levelKey: params.levelKey,
-    levelName: params.levelName,
-    planKey: params.planKey || null,
-    status: params.status,
-    autoRenew: Boolean(params.autoRenew),
-    startedAt,
-    expiresAt: params.expiresAt ? new Date(params.expiresAt) : null,
-    updatedAt: startedAt
-  });
-  await insertTransaction({
-    userId: params.userId,
-    type: "membership_admin_update",
-    amount: 0,
-    balanceAfter: toNumber((await db_default("user_balances").where("userId", params.userId).first())?.balance),
-    description: `\u540E\u53F0\u8C03\u6574\u4F1A\u5458\uFF1A${params.levelName}`,
-    operatorId: params.operatorId
-  });
-}
-async function getAdminMembershipOverview() {
-  await ensureMembershipCatalog();
-  const [userCount, memberCountRow, balanceRow, paidOrdersRow, plans, pointPackages] = await Promise.all([
-    db_default("o_user").count({ count: "*" }),
-    db_default("user_memberships").whereNot("levelKey", "free").where("status", "active").count({ count: "*" }),
-    db_default("user_balances").sum({
-      balance: "balance",
-      frozen: "frozenAmount",
-      spent: "totalSpent"
-    }),
-    db_default("subscription_orders").where("status", "paid").count({ count: "*" }),
-    db_default("membership_plans").orderBy("sortOrder", "asc").orderBy("priceCny", "asc"),
-    db_default("points_packages").orderBy("sortOrder", "asc").orderBy("points", "asc")
-  ]);
-  return {
-    totals: {
-      users: toNumber(userCount[0]?.count),
-      activeMembers: toNumber(memberCountRow[0]?.count),
-      balance: toNumber(balanceRow[0]?.balance),
-      frozenBalance: toNumber(balanceRow[0]?.frozen),
-      totalSpent: toNumber(balanceRow[0]?.spent),
-      paidOrders: toNumber(paidOrdersRow[0]?.count)
-    },
-    plans: plans.map(normalizePlan),
-    pointPackages: pointPackages.map(normalizePackage)
-  };
-}
-async function getAdminMembershipCatalog() {
-  await ensureMembershipCatalog();
-  const [plans, pointPackages] = await Promise.all([
-    db_default("membership_plans").orderBy("sortOrder", "asc").orderBy("priceCny", "asc"),
-    db_default("points_packages").orderBy("sortOrder", "asc").orderBy("points", "asc")
-  ]);
-  return {
-    plans: plans.map(normalizePlan),
-    pointPackages: pointPackages.map(normalizePackage)
-  };
-}
-async function saveMembershipPlan(input) {
-  await ensureMembershipCatalog();
-  const key = String(input.key || "").trim();
-  if (!key) throw new Error("\u5957\u9910\u6807\u8BC6\u4E0D\u80FD\u4E3A\u7A7A");
-  const timestamp = now();
-  const payload = {
-    key,
-    name: String(input.name || "").trim() || key,
-    levelKey: String(input.levelKey || "free").trim(),
-    levelName: String(input.levelName || input.name || "\u514D\u8D39\u4F1A\u5458").trim(),
-    billingPeriod: String(input.billingPeriod || "monthly").trim(),
-    priceCny: toNumber(input.priceCny),
-    originalPriceCny: input.originalPriceCny === null || input.originalPriceCny === void 0 ? null : toNumber(input.originalPriceCny),
-    yearlyDiscountLabel: input.yearlyDiscountLabel ? String(input.yearlyDiscountLabel).trim() : null,
-    points: Math.max(0, Math.round(toNumber(input.points))),
-    pointValidityDays: Math.max(1, Math.round(toNumber(input.pointValidityDays || 365))),
-    maxShots: input.maxShots === null || input.maxShots === void 0 ? null : Math.max(0, Math.round(toNumber(input.maxShots))),
-    maxSeries: input.maxSeries === null || input.maxSeries === void 0 ? null : Math.max(0, Math.round(toNumber(input.maxSeries))),
-    features: JSON.stringify(normalizeFeatures(input.features)),
-    enabled: input.enabled !== false,
-    popular: Boolean(input.popular),
-    sortOrder: Math.round(toNumber(input.sortOrder)),
-    updatedAt: timestamp
-  };
-  const existing = await db_default("membership_plans").where("key", key).first();
-  if (existing) {
-    await db_default("membership_plans").where("key", key).update(payload);
-  } else {
-    await db_default("membership_plans").insert({
-      id: v4_default(),
-      ...payload,
-      createdAt: timestamp
-    });
-  }
-  return getAdminMembershipCatalog();
-}
-async function savePointsPackage(input) {
-  await ensureMembershipCatalog();
-  const key = String(input.key || "").trim();
-  if (!key) throw new Error("\u79EF\u5206\u5305\u6807\u8BC6\u4E0D\u80FD\u4E3A\u7A7A");
-  const timestamp = now();
-  const payload = {
-    key,
-    points: Math.max(1, Math.round(toNumber(input.points))),
-    priceCny: toNumber(input.priceCny),
-    description: String(input.description || "").trim(),
-    validityDays: Math.max(1, Math.round(toNumber(input.validityDays || 730))),
-    enabled: input.enabled !== false,
-    sortOrder: Math.round(toNumber(input.sortOrder)),
-    updatedAt: timestamp
-  };
-  const existing = await db_default("points_packages").where("key", key).first();
-  if (existing) {
-    await db_default("points_packages").where("key", key).update(payload);
-  } else {
-    await db_default("points_packages").insert({
-      id: v4_default(),
-      ...payload,
-      createdAt: timestamp
-    });
-  }
-  return getAdminMembershipCatalog();
-}
-async function getAdminMembershipUsers(params) {
-  const page = Math.max(1, Number(params.page || 1));
-  const pageSize = Math.min(100, Math.max(1, Number(params.pageSize || 20)));
-  const keyword = String(params.keyword || "").trim();
-  const base = db_default("o_user").leftJoin("user_balances", "user_balances.userId", "o_user.id").leftJoin("user_memberships", "user_memberships.userId", "o_user.id").where((builder) => builder.where("o_user.role", USER_ROLE_MEMBER).orWhereNull("o_user.role").orWhere("o_user.role", "")).whereNot("o_user.id", 1).where((builder) => builder.whereNull("o_user.name").orWhereNot("o_user.name", "admin"));
-  if (keyword) {
-    base.where((builder) => {
-      builder.where("o_user.name", "like", `%${keyword}%`).orWhere("o_user.id", keyword);
-    });
-  }
-  const countQuery = base.clone().clearSelect().clearOrder().count({ count: "o_user.id" });
-  const rowsQuery = base.clone().select(
-    "o_user.id",
-    "o_user.name",
-    "o_user.realName",
-    "o_user.avatar",
-    "user_balances.balance",
-    "user_balances.frozenAmount",
-    "user_balances.totalSpent",
-    "user_balances.membershipPoints",
-    "user_balances.rechargePoints",
-    "user_balances.bonusPoints",
-    "user_memberships.levelKey",
-    "user_memberships.levelName",
-    "user_memberships.planKey",
-    "user_memberships.status",
-    "user_memberships.autoRenew",
-    "user_memberships.expiresAt"
-  ).orderBy("o_user.id", "desc").limit(pageSize).offset((page - 1) * pageSize);
-  const [countRows, rows] = await Promise.all([countQuery, rowsQuery]);
-  return {
-    list: rows.map((row) => ({
-      userId: String(row.id),
-      name: row.realName || row.name || `\u7528\u6237 ${row.id}`,
-      username: row.name || "",
-      avatar: row.avatar || "",
-      membership: {
-        levelKey: row.levelKey || "free",
-        levelName: row.levelName || "\u514D\u8D39\u4F1A\u5458",
-        planKey: row.planKey || "free",
-        status: row.status || "active",
-        autoRenew: Boolean(row.autoRenew),
-        expiresAt: toIso(row.expiresAt)
-      },
-      points: {
-        remaining: Math.max(0, toNumber(row.balance) - toNumber(row.frozenAmount)),
-        frozen: toNumber(row.frozenAmount),
-        spent: toNumber(row.totalSpent),
-        membership: toNumber(row.membershipPoints),
-        recharge: toNumber(row.rechargePoints),
-        bonus: toNumber(row.bonusPoints)
-      }
-    })),
-    page,
-    pageSize,
-    total: toNumber(countRows[0]?.count)
-  };
-}
-async function getAdminMembershipTransactions(params) {
-  const page = Math.max(1, Number(params.page || 1));
-  const pageSize = Math.min(100, Math.max(1, Number(params.pageSize || 20)));
-  const query = db_default("balance_transactions").leftJoin("o_user", "o_user.id", "balance_transactions.userId");
-  if (params.userId) query.where("balance_transactions.userId", String(params.userId));
-  if (params.type && params.type !== "all") query.where("balance_transactions.type", params.type);
-  const [countRows, rows] = await Promise.all([
-    query.clone().clearSelect().clearOrder().count({ count: "balance_transactions.id" }),
-    query.clone().select("balance_transactions.*", "o_user.name as userName").orderBy("balance_transactions.createdAt", "desc").limit(pageSize).offset((page - 1) * pageSize)
-  ]);
-  return {
-    list: rows.map((row) => {
-      const billingMeta = parseMetaObject(row.billingMeta);
-      return {
-        id: row.id,
-        userId: String(row.userId),
-        userName: row.userName || "",
-        type: row.type,
-        category: getPointTransactionCategory(row.type, toNumber(row.amount)),
-        amount: toNumber(row.amount),
-        balanceAfter: toNumber(row.balanceAfter),
-        description: row.description || "",
-        operatorId: row.operatorId || "",
-        createdAt: toIso(row.createdAt),
-        billingMeta,
-        episodeId: row.episodeId || "",
-        freezeId: row.freezeId || "",
-        projectId: row.projectId || "",
-        relatedId: row.relatedId || "",
-        taskType: row.taskType || "",
-        taskTypeLabel: getModelBillingTaskLabel(row.taskType)
-      };
-    }),
-    page,
-    pageSize,
-    total: toNumber(countRows[0]?.count)
-  };
-}
-async function getAdminMembershipOrders(params) {
-  const page = Math.max(1, Number(params.page || 1));
-  const pageSize = Math.min(100, Math.max(1, Number(params.pageSize || 20)));
-  const keyword = String(params.keyword || "").trim();
-  const query = db_default("subscription_orders").leftJoin("o_user", "o_user.id", "subscription_orders.userId");
-  if (params.userId) query.where("subscription_orders.userId", String(params.userId));
-  if (params.status && params.status !== "all") query.where("subscription_orders.status", params.status);
-  if (keyword) {
-    query.where((builder) => {
-      builder.where("subscription_orders.orderNo", "like", `%${keyword}%`).orWhere("subscription_orders.planKey", "like", `%${keyword}%`).orWhere("subscription_orders.pointsPackageKey", "like", `%${keyword}%`).orWhere("o_user.name", "like", `%${keyword}%`);
-    });
-  }
-  const [countRows, rows] = await Promise.all([
-    query.clone().clearSelect().clearOrder().count({ count: "subscription_orders.id" }),
-    query.clone().select("subscription_orders.*", "o_user.name as userName").orderBy("subscription_orders.createdAt", "desc").limit(pageSize).offset((page - 1) * pageSize)
-  ]);
-  return {
-    list: rows.map((row) => ({
-      id: row.id,
-      orderNo: row.orderNo,
-      userId: String(row.userId),
-      userName: row.userName || "",
-      kind: row.kind,
-      planKey: row.planKey || "",
-      pointsPackageKey: row.pointsPackageKey || "",
-      amountCny: toNumber(row.amountCny),
-      points: toNumber(row.points),
-      status: row.status,
-      paymentMethod: row.paymentMethod || "",
-      createdAt: toIso(row.createdAt),
-      paidAt: toIso(row.paidAt)
-    })),
-    page,
-    pageSize,
-    total: toNumber(countRows[0]?.count)
-  };
-}
-async function deductRefundPoints(params) {
-  const amount = Math.max(0, Math.round(toNumber(params.amount)));
-  if (amount <= 0) return;
-  await ensureUserMembership(params.userId, false);
-  const current = await db_default("user_balances").where("userId", params.userId).first();
-  if (!current) throw new Error("\u7528\u6237\u79EF\u5206\u8D26\u6237\u4E0D\u5B58\u5728");
-  if (toNumber(current.balance) < amount) throw new Error("\u7528\u6237\u5269\u4F59\u79EF\u5206\u4E0D\u8DB3\uFF0C\u65E0\u6CD5\u81EA\u52A8\u9000\u6B3E\u6263\u56DE");
-  const nextBreakdown = deductBuckets(current, amount, params.bucket);
-  const nextBalance = nextBreakdown.membershipPoints + nextBreakdown.rechargePoints + nextBreakdown.bonusPoints;
-  await db_default("user_balances").where("userId", params.userId).update({
-    balance: nextBalance,
-    membershipPoints: nextBreakdown.membershipPoints,
-    rechargePoints: nextBreakdown.rechargePoints,
-    bonusPoints: nextBreakdown.bonusPoints,
-    updatedAt: now()
-  });
-  await insertTransaction({
-    userId: params.userId,
-    type: "order_refund",
-    amount: -amount,
-    balanceAfter: nextBalance,
-    description: params.description,
-    relatedId: params.orderId,
-    operatorId: params.operatorId,
-    externalOrderId: params.orderNo
-  });
-}
-async function refundSettledOrder(order, operatorId) {
-  const userId = String(order.userId);
-  if (order.kind === "plan") {
-    await deductRefundPoints({
-      userId,
-      amount: toNumber(order.points),
-      bucket: "membership",
-      description: `\u4F1A\u5458\u8BA2\u5355\u9000\u6B3E\u6263\u56DE\u79EF\u5206 -${Math.round(toNumber(order.points))}`,
-      orderId: order.id,
-      orderNo: order.orderNo,
-      operatorId
-    });
-    const membership = await db_default("user_memberships").where("userId", userId).first();
-    if (membership?.sourceOrderId === order.id) {
-      await db_default("user_memberships").where("userId", userId).update({
-        levelKey: FREE_LEVEL.levelKey,
-        levelName: FREE_LEVEL.levelName,
-        planKey: "free",
-        status: "active",
-        autoRenew: false,
-        startedAt: now(),
-        expiresAt: null,
-        sourceOrderId: null,
-        updatedAt: now()
-      });
-      await insertTransaction({
-        userId,
-        type: "membership_refund",
-        amount: 0,
-        balanceAfter: toNumber((await db_default("user_balances").where("userId", userId).first())?.balance),
-        description: "\u4F1A\u5458\u8BA2\u5355\u9000\u6B3E\uFF0C\u4F1A\u5458\u6743\u76CA\u6062\u590D\u4E3A\u514D\u8D39\u4F1A\u5458",
-        relatedId: order.id,
-        operatorId,
-        externalOrderId: order.orderNo
-      });
-    }
-    return;
-  }
-  if (order.kind === "points") {
-    await deductRefundPoints({
-      userId,
-      amount: toNumber(order.points),
-      bucket: "recharge",
-      description: `\u79EF\u5206\u5305\u8BA2\u5355\u9000\u6B3E\u6263\u56DE\u79EF\u5206 -${Math.round(toNumber(order.points))}`,
-      orderId: order.id,
-      orderNo: order.orderNo,
-      operatorId
-    });
-  }
-}
-async function updateOrderStatus(params) {
-  const order = await db_default("subscription_orders").where("id", params.id).first();
-  if (!order) throw new Error("\u8BA2\u5355\u4E0D\u5B58\u5728");
-  const currentStatus = String(order.status || "");
-  if (currentStatus === params.status) return;
-  if (params.status === "paid") {
-    if (["canceled", "refunded"].includes(currentStatus)) throw new Error("\u5DF2\u53D6\u6D88\u6216\u5DF2\u9000\u6B3E\u8BA2\u5355\u4E0D\u80FD\u6807\u8BB0\u652F\u4ED8");
-    await db_default("subscription_orders").where("id", params.id).update({
-      status: "paid",
-      paidAt: now(),
-      paymentMethod: order.paymentMethod || "manual",
-      updatedAt: now()
-    });
-    await settleOrder(order, params.operatorId);
-    return;
-  }
-  if (params.status === "canceled" && currentStatus === "paid") throw new Error("\u5DF2\u652F\u4ED8\u8BA2\u5355\u8BF7\u4F7F\u7528\u9000\u6B3E\u64CD\u4F5C");
-  if (params.status === "pending" && ["paid", "refunded"].includes(currentStatus)) throw new Error("\u5DF2\u652F\u4ED8\u6216\u5DF2\u9000\u6B3E\u8BA2\u5355\u4E0D\u80FD\u6062\u590D\u5F85\u652F\u4ED8");
-  if (params.status === "refunded") {
-    if (currentStatus !== "paid") throw new Error("\u53EA\u6709\u5DF2\u652F\u4ED8\u8BA2\u5355\u53EF\u4EE5\u9000\u6B3E");
-    await refundSettledOrder(order, params.operatorId);
-  }
-  await db_default("subscription_orders").where("id", params.id).update({
-    status: params.status,
-    updatedAt: now()
-  });
-}
-var FREE_LEVEL, DEFAULT_MEMBERSHIP_PLANS, DEFAULT_POINTS_PACKAGES;
-var init_membership = __esm({
-  "src/utils/membership.ts"() {
-    "use strict";
-    init_dist_node();
-    init_db();
-    init_admin();
-    FREE_LEVEL = {
-      levelKey: "free",
-      levelName: "\u514D\u8D39\u4F1A\u5458"
-    };
-    DEFAULT_MEMBERSHIP_PLANS = [
-      {
-        key: "free",
-        name: "\u514D\u8D39\u4F1A\u5458",
-        levelKey: "free",
-        levelName: "\u514D\u8D39\u4F1A\u5458",
-        billingPeriod: "free",
-        priceCny: 0,
-        points: 0,
-        pointValidityDays: 365,
-        maxShots: 30,
-        maxSeries: 1,
-        sortOrder: 0,
-        features: ["\u6BCF\u65E5\u767B\u5F55\u8D60\u9001\u79EF\u5206", "\u652F\u6301\u57FA\u7840\u77ED\u5267\u9879\u76EE\u521B\u4F5C", "\u4FDD\u7559\u57FA\u7840\u9879\u76EE\u8D44\u4EA7"]
-      },
-      {
-        key: "standard_monthly",
-        name: "\u6807\u51C6\u4F1A\u5458",
-        levelKey: "standard",
-        levelName: "\u6807\u51C6\u4F1A\u5458",
-        billingPeriod: "monthly",
-        priceCny: 60,
-        points: 500,
-        pointValidityDays: 31,
-        maxShots: 50,
-        maxSeries: 10,
-        sortOrder: 10,
-        features: ["\u6BCF\u6708 500 \u79EF\u5206", "\u652F\u6301\u9AD8\u6E05\u89C6\u9891\u751F\u6210", "\u4E0B\u8F7D\u53BB\u6C34\u5370", "\u57FA\u7840\u961F\u5217\u4F18\u5148\u7EA7"]
-      },
-      {
-        key: "advanced_monthly",
-        name: "\u9AD8\u7EA7\u4F1A\u5458",
-        levelKey: "advanced",
-        levelName: "\u9AD8\u7EA7\u4F1A\u5458",
-        billingPeriod: "monthly",
-        priceCny: 300,
-        points: 3e3,
-        pointValidityDays: 31,
-        maxShots: 80,
-        maxSeries: 50,
-        popular: true,
-        sortOrder: 20,
-        features: ["\u6BCF\u6708 3000 \u79EF\u5206", "\u9AD8\u5CF0\u961F\u5217\u4F18\u5148\u7EA7", "\u6279\u91CF\u4EFB\u52A1\u989D\u5EA6\u63D0\u5347", "\u4E0B\u8F7D\u53BB\u6C34\u5370"]
-      },
-      {
-        key: "standard_yearly",
-        name: "\u6807\u51C6\u5E74\u5361",
-        levelKey: "standard",
-        levelName: "\u6807\u51C6\u4F1A\u5458",
-        billingPeriod: "yearly",
-        priceCny: 576,
-        originalPriceCny: 720,
-        yearlyDiscountLabel: "8\u6298",
-        points: 6e3,
-        pointValidityDays: 365,
-        maxShots: 50,
-        maxSeries: 10,
-        sortOrder: 10,
-        features: ["\u6BCF\u5E74 6000 \u79EF\u5206", "\u542B 2 \u4E2A\u6708\u6298\u6263", "\u652F\u6301\u9AD8\u6E05\u89C6\u9891\u751F\u6210", "\u4E0B\u8F7D\u53BB\u6C34\u5370"]
-      },
-      {
-        key: "advanced_yearly",
-        name: "\u9AD8\u7EA7\u5E74\u5361",
-        levelKey: "advanced",
-        levelName: "\u9AD8\u7EA7\u4F1A\u5458",
-        billingPeriod: "yearly",
-        priceCny: 2880,
-        originalPriceCny: 3600,
-        yearlyDiscountLabel: "8\u6298",
-        points: 36e3,
-        pointValidityDays: 365,
-        maxShots: 80,
-        maxSeries: 50,
-        popular: true,
-        sortOrder: 20,
-        features: ["\u6BCF\u5E74 36000 \u79EF\u5206", "\u9AD8\u5CF0\u961F\u5217\u4F18\u5148\u7EA7", "\u6279\u91CF\u4EFB\u52A1\u989D\u5EA6\u63D0\u5347", "\u4E0B\u8F7D\u53BB\u6C34\u5370"]
-      }
-    ];
-    DEFAULT_POINTS_PACKAGES = [
-      { key: "points_500", points: 500, priceCny: 60, description: "\u7EA6\u751F\u6210 50 \u4E2A\u89C6\u9891\u7247\u6BB5\u6216 500 \u5F20\u56FE\u7247", validityDays: 730, sortOrder: 10 },
-      { key: "points_1000", points: 1e3, priceCny: 120, description: "\u7EA6\u751F\u6210 100 \u4E2A\u89C6\u9891\u7247\u6BB5\u6216 1000 \u5F20\u56FE\u7247", validityDays: 730, sortOrder: 20 },
-      { key: "points_1500", points: 1500, priceCny: 180, description: "\u7EA6\u751F\u6210 150 \u4E2A\u89C6\u9891\u7247\u6BB5\u6216 1500 \u5F20\u56FE\u7247", validityDays: 730, sortOrder: 30 },
-      { key: "points_3000", points: 3e3, priceCny: 360, description: "\u7EA6\u751F\u6210 300 \u4E2A\u89C6\u9891\u7247\u6BB5\u6216 3000 \u5F20\u56FE\u7247", validityDays: 730, sortOrder: 40 },
-      { key: "points_5000", points: 5e3, priceCny: 600, description: "\u7EA6\u751F\u6210 500 \u4E2A\u89C6\u9891\u7247\u6BB5\u6216 5000 \u5F20\u56FE\u7247", validityDays: 730, sortOrder: 50 }
-    ];
-  }
-});
-
-// src/utils/modelBilling.ts
-function now2() {
-  return /* @__PURE__ */ new Date();
-}
-function toNumber2(value) {
-  if (value === null || value === void 0 || value === "") return 0;
-  const numberValue = Number(value);
-  return Number.isFinite(numberValue) ? numberValue : 0;
-}
-function roundPoints(value) {
-  if (!Number.isFinite(value)) return 0;
-  return Math.max(0, Math.round(value * 1e6) / 1e6);
-}
-function normalizeCount(value) {
-  if (value === null || value === void 0 || value === "") return 1;
-  const count = Math.floor(toNumber2(value));
-  return Number.isFinite(count) ? Math.max(0, count) : 0;
-}
-function splitModelId(model) {
-  const value = String(model || "");
-  const separatorIndex = value.indexOf(":");
-  if (separatorIndex <= 0 || separatorIndex === value.length - 1) throw new Error("\u6A21\u578B\u53C2\u6570\u65E0\u6548");
-  return {
-    modelName: value.slice(separatorIndex + 1),
-    vendorId: value.slice(0, separatorIndex)
-  };
-}
-function boolFromDb(value) {
-  return value === true || value === 1 || value === "1";
-}
-function isVendorModelEnabled(model) {
-  if (boolFromDb(model.disabled)) return false;
-  const raw = model.enabled ?? model.enable;
-  if (raw === void 0 || raw === null || raw === "") return true;
-  return boolFromDb(raw);
-}
-function stringifyMeta(value) {
-  if (value === null || value === void 0 || value === "") return null;
-  if (typeof value === "string") return value;
-  return JSON.stringify(value);
-}
-function parseMetaObject2(value) {
-  if (!value) return {};
-  if (typeof value === "object" && !Array.isArray(value)) return value;
-  if (typeof value !== "string") return {};
-  try {
-    const parsed = JSON.parse(value);
-    return parsed && typeof parsed === "object" && !Array.isArray(parsed) ? parsed : {};
-  } catch {
-    return {};
-  }
-}
-function mergeMeta(existing, patch) {
-  const patchData = parseMetaObject2(patch);
-  if (!Object.keys(patchData).length) return stringifyMeta(existing);
-  return stringifyMeta({
-    ...parseMetaObject2(existing),
-    ...patchData
-  });
-}
-function normalizeUsageNumber(value) {
-  const numberValue = Number(value);
-  return Number.isFinite(numberValue) ? numberValue : void 0;
-}
-async function resolveUsage(value) {
-  if (!value) return null;
-  const awaited = typeof value?.then === "function" ? await value : value;
-  const source = awaited?.totalUsage || awaited?.usage || awaited;
-  const usage = typeof source?.then === "function" ? await source : source;
-  if (!usage || typeof usage !== "object") return null;
-  const promptTokens = normalizeUsageNumber(usage.promptTokens ?? usage.prompt_tokens ?? usage.inputTokens ?? usage.input_tokens);
-  const completionTokens = normalizeUsageNumber(usage.completionTokens ?? usage.completion_tokens ?? usage.outputTokens ?? usage.output_tokens);
-  const reasoningTokens = normalizeUsageNumber(usage.reasoningTokens ?? usage.reasoning_tokens ?? usage.outputTokenDetails?.reasoningTokens);
-  const cachedInputTokens = normalizeUsageNumber(usage.cachedInputTokens ?? usage.cached_input_tokens ?? usage.inputTokenDetails?.cacheReadTokens);
-  const totalTokens = normalizeUsageNumber(usage.totalTokens ?? usage.total_tokens) ?? (promptTokens !== void 0 || completionTokens !== void 0 ? roundPoints((promptTokens || 0) + (completionTokens || 0) + (reasoningTokens || 0)) : void 0);
-  if (promptTokens === void 0 && completionTokens === void 0 && reasoningTokens === void 0 && totalTokens === void 0 && cachedInputTokens === void 0) return null;
-  return {
-    cachedInputTokens,
-    completionTokens,
-    promptTokens,
-    reasoningTokens,
-    totalTokens
-  };
-}
-function deductBuckets2(current, amount) {
-  const values = {
-    bonusPoints: toNumber2(current.bonusPoints),
-    membershipPoints: toNumber2(current.membershipPoints),
-    rechargePoints: toNumber2(current.rechargePoints)
-  };
-  const orderedColumns = ["bonusPoints", "rechargePoints", "membershipPoints"];
-  let remaining = amount;
-  for (const column of orderedColumns) {
-    const used = Math.min(values[column], remaining);
-    values[column] = roundPoints(values[column] - used);
-    remaining = roundPoints(remaining - used);
-    if (remaining <= 0) break;
-  }
-  if (remaining > 0) throw new Error("\u7528\u6237\u79EF\u5206\u4E0D\u8DB3");
-  return values;
-}
-async function updatePointHoldBillingMeta(holdId, patch) {
-  if (!holdId || patch === null || patch === void 0) return;
-  const current = await pointHoldsTable().select("billingMeta").where("id", holdId).first();
-  if (!current) return;
-  await pointHoldsTable().where("id", holdId).update({
-    billingMeta: mergeMeta(current.billingMeta, patch),
-    updatedAt: now2()
-  });
-}
-async function recordPointHoldModelUsage(holdId, result, extraMeta) {
-  const tokenUsage = await resolveUsage(result);
-  if (!tokenUsage) return;
-  await updatePointHoldBillingMeta(holdId, {
-    ...extraMeta || {},
-    tokenUsage,
-    usage: tokenUsage,
-    usageRecordedAt: now2().toISOString(),
-    usageSource: "ai-sdk"
-  });
-}
-async function resolveModelBillingKey(modelKey) {
-  const key = String(modelKey || "").trim();
-  if (!logicalAiTypes.has(key)) return key;
-  const agentUseModeVal = await db_default("o_setting").where("key", "agentUseMode").first();
-  if (agentUseModeVal?.value === "1") {
-    const agentDeployData2 = await db_default("o_agentDeploy").where("key", key).first();
-    if (!agentDeployData2?.modelName) throw new Error(`\u9AD8\u7EA7\u914D\u7F6E\u6A21\u5F0F\u4E0B\uFF0C\u672A\u627E\u5230\u5BF9\u5E94\u7684\u6A21\u578B\u914D\u7F6E ${key}`);
-    return String(agentDeployData2.modelName);
-  }
-  if (agentUseModeVal?.value === "0") {
-    const [mainly2] = key.split(/:(.+)/);
-    const mainlyData2 = await db_default("o_agentDeploy").where("key", mainly2).first();
-    if (!mainlyData2?.modelName) throw new Error(`\u7B80\u6613\u914D\u7F6E\u6A21\u5F0F\u4E0B\uFF0C\u672A\u627E\u5230\u90E8\u7F72\u914D\u7F6E ${key}`);
-    return String(mainlyData2.modelName);
-  }
-  const agentDeployData = await db_default("o_agentDeploy").where("key", key).first();
-  if (agentDeployData?.modelName) return String(agentDeployData.modelName);
-  const [mainly] = key.split(/:(.+)/);
-  const mainlyData = await db_default("o_agentDeploy").where("key", mainly).first();
-  if (!mainlyData?.modelName) throw new Error(`\u672A\u627E\u5230\u90E8\u7F72\u914D\u7F6E ${key}`);
-  return String(mainlyData.modelName);
-}
-async function listModelBillingRules() {
-  const vendorRows = await db_default("o_vendorConfig").select("id", "enable").where("enable", 1).orderBy("id", "asc");
-  const rules = await billingRulesTable().select("*");
-  const ruleMap = /* @__PURE__ */ new Map();
-  for (const rule of rules) {
-    ruleMap.set(`${rule.vendorId}:${rule.modelName}`, rule);
-  }
-  const models = [];
-  for (const row of vendorRows) {
-    let vendorName = String(row.id);
-    let modelList = [];
-    try {
-      const vendorData2 = getVendor(String(row.id));
-      vendorName = vendorData2?.name || vendorName;
-      modelList = await getModelList(String(row.id));
-    } catch {
-      modelList = [];
-    }
-    for (const model of modelList.filter(isVendorModelEnabled)) {
-      const rule = ruleMap.get(`${row.id}:${model.modelName}`);
-      models.push({
-        enabled: rule ? boolFromDb(rule.enabled) : false,
-        model: `${row.id}:${model.modelName}`,
-        modelLabel: rule?.modelLabel || model.name || model.modelName,
-        modelName: model.modelName,
-        modelType: rule?.modelType || model.type || "text",
-        pointsPerCall: rule ? toNumber2(rule.pointsPerCall) : 0,
-        pricingMeta: rule?.pricingMeta || null,
-        ruleId: rule?.id || null,
-        vendorEnabled: boolFromDb(row.enable),
-        vendorId: String(row.id),
-        vendorName
-      });
-    }
-  }
-  return {
-    models,
-    summary: {
-      billableModels: models.filter((item) => item.enabled && item.pointsPerCall > 0).length,
-      models: models.length,
-      vendors: vendorRows.length
-    }
-  };
-}
-async function saveModelBillingRules(rules) {
-  const currentTime = now2();
-  for (const input of rules) {
-    const vendorId = String(input.vendorId || "").trim();
-    const modelName = String(input.modelName || "").trim();
-    if (!vendorId || !modelName) throw new Error("\u6A21\u578B\u8BA1\u8D39\u89C4\u5219\u7F3A\u5C11\u6A21\u578B\u6807\u8BC6");
-    const payload = {
-      enabled: input.enabled !== false,
-      modelLabel: input.modelLabel ? String(input.modelLabel) : modelName,
-      modelName,
-      modelType: input.modelType ? String(input.modelType) : "text",
-      pointsPerCall: roundPoints(toNumber2(input.pointsPerCall)),
-      pricingMeta: stringifyMeta(input.pricingMeta),
-      updatedAt: currentTime,
-      vendorId
-    };
-    const existing = await billingRulesTable().where({ vendorId, modelName }).first();
-    if (existing) {
-      await billingRulesTable().where({ id: existing.id }).update(payload);
-    } else {
-      await billingRulesTable().insert({
-        id: v4_default(),
-        ...payload,
-        createdAt: currentTime
-      });
-    }
-  }
-  return listModelBillingRules();
-}
-async function getRuleMapForCalls(calls) {
-  const keys = calls.map((call) => splitModelId(call.model));
-  const rules = await billingRulesTable().where((builder) => {
-    keys.forEach(({ vendorId, modelName }, index) => {
-      const method = index === 0 ? "where" : "orWhere";
-      builder[method]({ vendorId, modelName });
-    });
-  });
-  const ruleMap = /* @__PURE__ */ new Map();
-  for (const rule of rules) {
-    ruleMap.set(`${rule.vendorId}:${rule.modelName}`, rule);
-  }
-  return ruleMap;
-}
-async function resolveActiveModel(modelId) {
-  const { vendorId, modelName } = splitModelId(modelId);
-  const vendorRow = await db_default("o_vendorConfig").select("id", "enable").where("id", vendorId).first();
-  if (!vendorRow || !boolFromDb(vendorRow.enable)) throw new Error("\u6A21\u578B\u4F9B\u5E94\u5546\u4E0D\u5B58\u5728\u6216\u672A\u542F\u7528");
-  let vendorName = vendorId;
-  let modelList = [];
-  try {
-    const vendorData2 = getVendor(vendorId);
-    vendorName = vendorData2?.name || vendorName;
-    modelList = await getModelList(vendorId);
-  } catch {
-    throw new Error("\u6A21\u578B\u4F9B\u5E94\u5546\u914D\u7F6E\u4E0D\u53EF\u7528");
-  }
-  const model = modelList.find((item) => item?.modelName === modelName && isVendorModelEnabled(item));
-  if (!model) throw new Error("\u6A21\u578B\u4E0D\u5B58\u5728\u6216\u672A\u542F\u7528");
-  return {
-    model,
-    modelName,
-    vendorId,
-    vendorName
-  };
-}
-async function quoteModelCalls(userId, calls) {
-  const normalizedCalls = calls.filter((call) => normalizeCount(call?.count) > 0);
-  for (const call of normalizedCalls) {
-    if (!String(call?.model || "").trim()) throw new Error("\u6A21\u578B\u53C2\u6570\u65E0\u6548");
-  }
-  const ruleMap = normalizedCalls.length ? await getRuleMapForCalls(normalizedCalls) : /* @__PURE__ */ new Map();
-  const items = [];
-  for (const call of normalizedCalls) {
-    const { model, modelName, vendorId, vendorName } = await resolveActiveModel(call.model);
-    const rule = ruleMap.get(`${vendorId}:${modelName}`);
-    const count = normalizeCount(call.count);
-    const pointsPerCall = rule && boolFromDb(rule.enabled) ? roundPoints(toNumber2(rule.pointsPerCall)) : 0;
-    items.push({
-      count,
-      enabled: rule ? boolFromDb(rule.enabled) : false,
-      model: call.model,
-      modelLabel: rule?.modelLabel || model.name || modelName,
-      modelName,
-      modelType: rule?.modelType || model.type || call.modelType || "text",
-      pointsPerCall,
-      requiredPoints: roundPoints(pointsPerCall * count),
-      vendorId,
-      vendorName
-    });
-  }
-  let totalPoints = 0;
-  let frozenPoints = 0;
-  if (userId) {
-    await ensureUserMembership(String(userId), false);
-    const balance = await userBalancesTable().where("userId", String(userId)).first();
-    totalPoints = toNumber2(balance?.balance);
-    frozenPoints = toNumber2(balance?.frozenAmount);
-  }
-  const requiredPoints = roundPoints(items.reduce((sum, item) => sum + item.requiredPoints, 0));
-  const availablePoints = Math.max(0, roundPoints(totalPoints - frozenPoints));
-  return {
-    availablePoints,
-    enough: requiredPoints <= availablePoints,
-    frozenPoints,
-    items,
-    requiredPoints,
-    totalPoints
-  };
-}
-async function reserveModelCallPoints(params) {
-  const amount = roundPoints(params.quote.requiredPoints);
-  if (amount <= 0) return null;
-  await ensureUserMembership(params.userId, false);
-  return await db.transaction(async (trx) => {
-    const existing = await pointHoldsTable(trx).where("idempotencyKey", params.idempotencyKey).first();
-    if (existing) {
-      const status = String(existing.status || "");
-      if (status === "frozen" || status === "settled") return existing;
-      throw new Error("\u8BE5\u6A21\u578B\u8C03\u7528\u51BB\u7ED3\u8BB0\u5F55\u5DF2\u91CA\u653E\uFF0C\u8BF7\u91CD\u65B0\u53D1\u8D77\u751F\u6210");
-    }
-    const current = await userBalancesTable(trx).where("userId", params.userId).forUpdate().first();
-    if (!current) throw new Error("\u7528\u6237\u79EF\u5206\u8D26\u6237\u4E0D\u5B58\u5728");
-    const balance = toNumber2(current.balance);
-    const frozen = toNumber2(current.frozenAmount);
-    const available = roundPoints(balance - frozen);
-    if (available < amount) {
-      throw new Error(`\u79EF\u5206\u4E0D\u8DB3\uFF0C\u9700\u8981 ${amount} \u79EF\u5206\uFF0C\u5F53\u524D\u53EF\u7528 ${Math.max(0, available)} \u79EF\u5206`);
-    }
-    const hold = {
-      amount,
-      billingMeta: stringifyMeta(params.billingMeta ?? params.quote),
-      description: params.description || `\u6A21\u578B\u8C03\u7528\u51BB\u7ED3 ${amount} \u79EF\u5206`,
-      episodeId: params.episodeId === null || params.episodeId === void 0 ? null : String(params.episodeId),
-      id: v4_default(),
-      idempotencyKey: params.idempotencyKey,
-      projectId: params.projectId === null || params.projectId === void 0 ? null : String(params.projectId),
-      relatedId: params.relatedId === null || params.relatedId === void 0 ? null : String(params.relatedId),
-      status: "frozen",
-      taskType: params.taskType || null,
-      userId: params.userId
-    };
-    await userBalancesTable(trx).where("userId", params.userId).update({
-      frozenAmount: roundPoints(frozen + amount),
-      updatedAt: now2()
-    });
-    await pointHoldsTable(trx).insert({
-      ...hold,
-      createdAt: now2(),
-      releasedAt: null,
-      settledAt: null,
-      updatedAt: now2()
-    });
-    return hold;
-  });
-}
-async function settlePointHold(holdId, billingMetaPatch) {
-  if (!holdId) return;
-  await db.transaction(async (trx) => {
-    const hold = await pointHoldsTable(trx).where("id", holdId).forUpdate().first();
-    if (!hold || hold.status !== "frozen") return;
-    const current = await userBalancesTable(trx).where("userId", hold.userId).forUpdate().first();
-    if (!current) throw new Error("\u7528\u6237\u79EF\u5206\u8D26\u6237\u4E0D\u5B58\u5728");
-    const amount = roundPoints(toNumber2(hold.amount));
-    const frozen = toNumber2(current.frozenAmount);
-    const nextBreakdown = deductBuckets2(current, amount);
-    const nextBalance = roundPoints(nextBreakdown.membershipPoints + nextBreakdown.rechargePoints + nextBreakdown.bonusPoints);
-    const bucketDeductions = {
-      bonus: roundPoints(toNumber2(current.bonusPoints) - nextBreakdown.bonusPoints),
-      membership: roundPoints(toNumber2(current.membershipPoints) - nextBreakdown.membershipPoints),
-      recharge: roundPoints(toNumber2(current.rechargePoints) - nextBreakdown.rechargePoints)
-    };
-    const billingMeta = mergeMeta(hold.billingMeta, {
-      ...parseMetaObject2(billingMetaPatch),
-      pointDeduction: {
-        balanceAfter: nextBalance,
-        balanceBefore: toNumber2(current.balance),
-        bucketDeductions
-      }
-    });
-    await userBalancesTable(trx).where("userId", hold.userId).update({
-      balance: nextBalance,
-      bonusPoints: nextBreakdown.bonusPoints,
-      frozenAmount: Math.max(0, roundPoints(frozen - amount)),
-      membershipPoints: nextBreakdown.membershipPoints,
-      rechargePoints: nextBreakdown.rechargePoints,
-      totalSpent: roundPoints(toNumber2(current.totalSpent) + amount),
-      updatedAt: now2()
-    });
-    await balanceTransactionsTable(trx).insert({
-      amount: -amount,
-      balanceAfter: nextBalance,
-      billingMeta,
-      createdAt: now2(),
-      description: hold.description || `\u6A21\u578B\u8C03\u7528\u6D88\u8017 ${amount} \u79EF\u5206`,
-      episodeId: hold.episodeId || null,
-      freezeId: hold.id,
-      id: v4_default(),
-      idempotencyKey: `consume:${hold.id}`,
-      projectId: hold.projectId || null,
-      relatedId: hold.relatedId || null,
-      taskType: hold.taskType || null,
-      type: "model_consume",
-      userId: hold.userId
-    });
-    await pointHoldsTable(trx).where("id", hold.id).update({
-      billingMeta,
-      settledAt: now2(),
-      status: "settled",
-      updatedAt: now2()
-    });
-  });
-}
-async function settlePointHoldWithModelUsage(holdId, result, extraMeta) {
-  await recordPointHoldModelUsage(holdId, result, extraMeta);
-  await settlePointHold(holdId);
-}
-async function releasePointHold(holdId) {
-  if (!holdId) return;
-  await db.transaction(async (trx) => {
-    const hold = await pointHoldsTable(trx).where("id", holdId).forUpdate().first();
-    if (!hold || hold.status !== "frozen") return;
-    const current = await userBalancesTable(trx).where("userId", hold.userId).forUpdate().first();
-    if (current) {
-      await userBalancesTable(trx).where("userId", hold.userId).update({
-        frozenAmount: Math.max(0, roundPoints(toNumber2(current.frozenAmount) - toNumber2(hold.amount))),
-        updatedAt: now2()
-      });
-    }
-    await pointHoldsTable(trx).where("id", hold.id).update({
-      releasedAt: now2(),
-      status: "released",
-      updatedAt: now2()
-    });
-  });
-}
-async function releasePointHoldsByRelatedId(params) {
-  const relatedId = String(params.relatedId);
-  const query = pointHoldsTable().select("id").where({ relatedId, status: "frozen" });
-  if (params.taskTypes?.length) query.whereIn("taskType", params.taskTypes);
-  if (params.userId !== null && params.userId !== void 0 && params.userId !== "") query.where("userId", String(params.userId));
-  const holds = await query;
-  await Promise.all(holds.map((hold) => releasePointHold(hold.id)));
-  return holds.length;
-}
-var logicalAiTypes, billingRulesTable, pointHoldsTable, balanceTransactionsTable, userBalancesTable;
-var init_modelBilling = __esm({
-  "src/utils/modelBilling.ts"() {
-    "use strict";
-    init_dist_node();
-    init_db();
-    init_vendor2();
-    init_membership();
-    logicalAiTypes = /* @__PURE__ */ new Set([
-      "scriptAgent",
-      "productionAgent",
-      "universalAi",
-      "scriptAgent:decisionAgent",
-      "scriptAgent:supervisionAgent",
-      "scriptAgent:storySkeletonAgent",
-      "scriptAgent:adaptationStrategyAgent",
-      "scriptAgent:scriptAgent",
-      "productionAgent:decisionAgent",
-      "productionAgent:supervisionAgent",
-      "productionAgent:deriveAssetsAgent",
-      "productionAgent:generateAssetsAgent",
-      "productionAgent:directorPlanAgent",
-      "productionAgent:storyboardGenAgent",
-      "productionAgent:storyboardPanelAgent",
-      "productionAgent:storyboardTableAgent"
-    ]);
-    billingRulesTable = (trx = db_default) => trx("model_billing_rules");
-    pointHoldsTable = (trx = db_default) => trx("point_holds");
-    balanceTransactionsTable = (trx = db_default) => trx("balance_transactions");
-    userBalancesTable = (trx = db_default) => trx("user_balances");
-  }
-});
-
-// src/utils/cleanNovel.ts
-var import_events5, CleanNovel, cleanNovel_default;
-var init_cleanNovel = __esm({
-  "src/utils/cleanNovel.ts"() {
-    "use strict";
-    import_events5 = require("events");
-    init_utils3();
-    init_stripThink();
-    init_modelBilling();
-    CleanNovel = class {
-      emitter;
-      /** 最大并发数 */
-      concurrency;
-      billing;
-      constructor(concurrency = 5, billing = {}) {
-        this.emitter = new import_events5.EventEmitter();
-        this.concurrency = concurrency;
-        this.billing = billing;
-      }
-      async processChapter(novel) {
-        let billingHold = null;
-        try {
-          if (this.billing.userId && this.billing.quote) {
-            const pointsPerCall = this.billing.quote.items[0]?.pointsPerCall || 0;
-            const itemQuote = {
-              ...this.billing.quote,
-              enough: true,
-              items: this.billing.quote.items[0] ? [{ ...this.billing.quote.items[0], count: 1, requiredPoints: pointsPerCall }] : [],
-              requiredPoints: pointsPerCall
-            };
-            billingHold = await reserveModelCallPoints({
-              billingMeta: itemQuote,
-              description: `\u5C0F\u8BF4\u4E8B\u4EF6\u63D0\u53D6\uFF1A${this.billing.quote.items[0]?.modelLabel || "universalAi"}`,
-              episodeId: novel.chapterIndex,
-              idempotencyKey: `model-call:${this.billing.taskType || "novel_event_extraction"}:${novel.id}:${this.billing.attemptId || utils_default.uuid()}`,
-              projectId: novel.projectId,
-              quote: itemQuote,
-              relatedId: novel.id,
-              taskType: this.billing.taskType || "novel_event_extraction",
-              userId: this.billing.userId
-            });
-          }
-          const prompt = await utils_default.getPrompts("event");
-          const promptData = await utils_default.db("o_prompt").where("type", "eventExtraction").first();
-          let eventExtraction = "";
-          if (promptData && promptData.useData) {
-            eventExtraction = promptData.useData;
-          } else {
-            eventExtraction = promptData?.data ?? void 0;
-          }
-          const resData = await utils_default.Ai.Text("universalAi").invoke({
-            system: eventExtraction ? JSON.stringify(eventExtraction) : prompt,
-            messages: [
-              {
-                role: "user",
-                content: "\u8BF7\u6839\u636E\u4EE5\u4E0B\u5C0F\u8BF4\u7AE0\u8282\u6570\uFF1A" + novel.chapterIndex + "\u5C0F\u8BF4\u7AE0\u8282\u5238\uFF1A" + novel.reel + "\u5C0F\u8BF4\u7AE0\u8282\u540D\u79F0\uFF1A" + novel.chapter + "\u3001\u5C0F\u8BF4\u7AE0\u8282\u5185\u5BB9\u751F\u6210\u4E8B\u4EF6\u6458\u8981\uFF1A\n" + novel.chapterData
-              }
-            ]
-          });
-          const preData = stripThink(resData.text);
-          if (!preData.trim()) throw new Error("AI \u672A\u8FD4\u56DE\u4E8B\u4EF6\u6458\u8981");
-          this.emitter.emit("item", { id: novel.id, event: preData });
-          await settlePointHoldWithModelUsage(billingHold?.id, resData);
-          return { id: novel.id, event: preData };
-        } catch (e) {
-          await releasePointHold(billingHold?.id);
-          this.emitter.emit("item", { id: novel.id, event: null, errorReason: utils_default.error(e).message });
-          return null;
-        }
-      }
-      async start(allChapters, projectId) {
-        const totalEvent = [];
-        let running = 0;
-        let index = 0;
-        const results = [];
-        const runNext = () => {
-          if (index >= allChapters.length) return Promise.resolve();
-          const novel = allChapters[index++];
-          running++;
-          return this.processChapter(novel).then((result) => {
-            if (result) totalEvent.push(result);
-            running--;
-            return runNext();
-          });
-        };
-        const workers = Array.from({ length: Math.min(this.concurrency, allChapters.length) }, () => runNext());
-        await Promise.all(workers);
-        return totalEvent;
-      }
-    };
-    cleanNovel_default = CleanNovel;
-  }
-});
-
 // ../../node_modules/.pnpm/@ai-sdk+provider@3.0.10/node_modules/@ai-sdk/provider/dist/index.mjs
 function getErrorMessage(error75) {
   if (error75 == null) {
@@ -148514,7 +146888,7 @@ var init_schemas = __esm({
             })));
           }
         }
-
+        
         if (${id}.value === undefined) {
           if (${k} in input) {
             newResult[${k}] = undefined;
@@ -148522,7 +146896,7 @@ var init_schemas = __esm({
         } else {
           newResult[${k}] = ${id}.value;
         }
-
+        
       `);
           } else if (!isOptionalIn) {
             doc.write(`
@@ -148559,7 +146933,7 @@ var init_schemas = __esm({
             path: iss.path ? [${k}, ...iss.path] : [${k}]
           })));
         }
-
+        
         if (${id}.value === undefined) {
           if (${k} in input) {
             newResult[${k}] = undefined;
@@ -148567,7 +146941,7 @@ var init_schemas = __esm({
         } else {
           newResult[${k}] = ${id}.value;
         }
-
+        
       `);
           }
         }
@@ -158597,7 +156971,7 @@ __export(schemas_exports2, {
   superRefine: () => superRefine,
   symbol: () => symbol15,
   templateLiteral: () => templateLiteral,
-  transform: () => transform2,
+  transform: () => transform,
   tuple: () => tuple,
   uint32: () => uint32,
   uint64: () => uint64,
@@ -158947,7 +157321,7 @@ function literal(value, params) {
 function file2(params) {
   return _file(ZodFile, params);
 }
-function transform2(fn) {
+function transform(fn) {
   return new ZodTransform({
     type: "transform",
     transform: fn
@@ -159122,7 +157496,7 @@ function json(params) {
 function preprocess(fn, schema) {
   return new ZodPreprocess({
     type: "pipe",
-    in: transform2(fn),
+    in: transform(fn),
     out: schema
   });
 }
@@ -159220,7 +157594,7 @@ var init_schemas2 = __esm({
           return intersection(this, arg);
         },
         transform(tx) {
-          return pipe(this, transform2(tx));
+          return pipe(this, transform(tx));
         },
         default(d) {
           return _default2(this, d);
@@ -160691,7 +159065,7 @@ __export(external_exports, {
   toJSONSchema: () => toJSONSchema,
   toLowerCase: () => _toLowerCase,
   toUpperCase: () => _toUpperCase,
-  transform: () => transform2,
+  transform: () => transform,
   treeifyError: () => treeifyError,
   trim: () => _trim,
   tuple: () => tuple,
@@ -178866,7 +177240,7 @@ function literal2(value, params) {
 function file3(params) {
   return /* @__PURE__ */ _file2(ZodFile2, params);
 }
-function transform3(fn) {
+function transform2(fn) {
   return new ZodTransform2({
     type: "transform",
     transform: fn
@@ -179031,7 +177405,7 @@ function json2(params) {
   return jsonSchema4;
 }
 function preprocess2(fn, schema) {
-  return pipe2(transform3(fn), schema);
+  return pipe2(transform2(fn), schema);
 }
 function setErrorMap2(map22) {
   config2({
@@ -179887,7 +178261,7 @@ var init_dist19 = __esm({
       toJSONSchema: () => toJSONSchema2,
       toLowerCase: () => _toLowerCase2,
       toUpperCase: () => _toUpperCase2,
-      transform: () => transform3,
+      transform: () => transform2,
       treeifyError: () => treeifyError2,
       trim: () => _trim2,
       tuple: () => tuple2,
@@ -181906,7 +180280,7 @@ var init_dist19 = __esm({
             })));
           }
         }
-
+        
         if (${id}.value === undefined) {
           if (${k} in input) {
             newResult[${k}] = undefined;
@@ -181914,7 +180288,7 @@ var init_dist19 = __esm({
         } else {
           newResult[${k}] = ${id}.value;
         }
-
+        
       `);
           } else {
             doc.write(`
@@ -181924,7 +180298,7 @@ var init_dist19 = __esm({
             path: iss.path ? [${k}, ...iss.path] : [${k}]
           })));
         }
-
+        
         if (${id}.value === undefined) {
           if (${k} in input) {
             newResult[${k}] = undefined;
@@ -181932,7 +180306,7 @@ var init_dist19 = __esm({
         } else {
           newResult[${k}] = ${id}.value;
         }
-
+        
       `);
           }
         }
@@ -188933,7 +187307,7 @@ var init_dist19 = __esm({
       superRefine: () => superRefine2,
       symbol: () => symbol19,
       templateLiteral: () => templateLiteral2,
-      transform: () => transform3,
+      transform: () => transform2,
       tuple: () => tuple2,
       uint32: () => uint322,
       uint64: () => uint642,
@@ -189113,7 +187487,7 @@ var init_dist19 = __esm({
       inst.array = () => array2(inst);
       inst.or = (arg) => union2([inst, arg]);
       inst.and = (arg) => intersection2(inst, arg);
-      inst.transform = (tx) => pipe2(inst, transform3(tx));
+      inst.transform = (tx) => pipe2(inst, transform2(tx));
       inst.default = (def2) => _default22(inst, def2);
       inst.prefault = (def2) => prefault2(inst, def2);
       inst.catch = (params) => _catch22(inst, params);
@@ -190539,7 +188913,7 @@ var require_dist9 = __commonJS({
       TooManyEmbeddingValuesForCallError: () => TooManyEmbeddingValuesForCallError5,
       TypeValidationError: () => TypeValidationError5,
       UnsupportedFunctionalityError: () => UnsupportedFunctionalityError5,
-      getErrorMessage: () => getErrorMessage6,
+      getErrorMessage: () => getErrorMessage7,
       isJSONArray: () => isJSONArray,
       isJSONObject: () => isJSONObject,
       isJSONValue: () => isJSONValue
@@ -190631,7 +189005,7 @@ var require_dist9 = __commonJS({
         return AISDKError5.hasMarker(error75, marker37);
       }
     };
-    function getErrorMessage6(error75) {
+    function getErrorMessage7(error75) {
       if (error75 == null) {
         return "unknown error";
       }
@@ -190709,7 +189083,7 @@ var require_dist9 = __commonJS({
         super({
           name: name67,
           message: `JSON parsing failed: Text: ${text2}.
-Error message: ${getErrorMessage6(cause)}`,
+Error message: ${getErrorMessage7(cause)}`,
           cause
         });
         this[_a77] = true;
@@ -190838,7 +189212,7 @@ Error message: ${getErrorMessage6(cause)}`,
         super({
           name: name126,
           message: `${contextPrefix}: Value: ${JSON.stringify(value)}.
-Error message: ${getErrorMessage6(cause)}`,
+Error message: ${getErrorMessage7(cause)}`,
           cause
         });
         this[_a136] = true;
@@ -193680,7 +192054,7 @@ var require_schemas = __commonJS({
             })));
           }
         }
-
+        
         if (${id}.value === undefined) {
           if (${k} in input) {
             newResult[${k}] = undefined;
@@ -193688,7 +192062,7 @@ var require_schemas = __commonJS({
         } else {
           newResult[${k}] = ${id}.value;
         }
-
+        
       `);
           } else if (!isOptionalIn) {
             doc.write(`
@@ -193725,7 +192099,7 @@ var require_schemas = __commonJS({
             path: iss.path ? [${k}, ...iss.path] : [${k}]
           })));
         }
-
+        
         if (${id}.value === undefined) {
           if (${k} in input) {
             newResult[${k}] = undefined;
@@ -193733,7 +192107,7 @@ var require_schemas = __commonJS({
         } else {
           newResult[${k}] = ${id}.value;
         }
-
+        
       `);
           }
         }
@@ -212271,7 +210645,7 @@ var require_dist11 = __commonJS({
       executeTool: () => executeTool2,
       extractResponseHeaders: () => extractResponseHeaders5,
       generateId: () => generateId6,
-      getErrorMessage: () => getErrorMessage6,
+      getErrorMessage: () => getErrorMessage7,
       getFromApi: () => getFromApi2,
       getRuntimeEnvironmentUserAgent: () => getRuntimeEnvironmentUserAgent5,
       injectJsonInstructionIntoMessages: () => injectJsonInstructionIntoMessages,
@@ -212730,7 +211104,7 @@ var require_dist11 = __commonJS({
       return () => `${prefix}${separator}${generator()}`;
     };
     var generateId6 = createIdGenerator5();
-    function getErrorMessage6(error75) {
+    function getErrorMessage7(error75) {
       if (error75 == null) {
         return "unknown error";
       }
@@ -214896,13 +213270,13 @@ var require_dist12 = __commonJS({
     var import_provider_utils310 = require_dist11();
     var import_zod210 = require_zod();
     var import_provider_utils178 = require_dist11();
-    var import_zod174 = require_zod();
-    var qwenErrorDataSchema = import_zod174.z.object({
-      object: import_zod174.z.literal("error"),
-      message: import_zod174.z.string(),
-      type: import_zod174.z.string(),
-      param: import_zod174.z.string().nullable(),
-      code: import_zod174.z.string().nullable()
+    var import_zod175 = require_zod();
+    var qwenErrorDataSchema = import_zod175.z.object({
+      object: import_zod175.z.literal("error"),
+      message: import_zod175.z.string(),
+      type: import_zod175.z.string(),
+      param: import_zod175.z.string().nullable(),
+      code: import_zod175.z.string().nullable()
     });
     var qwenFailedResponseHandler = (0, import_provider_utils178.createJsonErrorResponseHandler)({
       errorSchema: qwenErrorDataSchema,
@@ -246036,11 +244410,28 @@ async function zipImageResolution(completeBase64, width, height) {
   const out = await (0, import_sharp2.default)(buffer).resize(width, height).toBuffer();
   return `data:image/jpeg;base64,${out.toString("base64")}`;
 }
-async function urlToBase64(url4) {
-  const res = await axios_default.get(url4, { responseType: "arraybuffer" });
-  const mime = res.headers["content-type"] || "image/jpeg";
-  const b64 = Buffer.from(res.data).toString("base64");
-  return `data:${mime};base64,${b64}`;
+async function urlToBase64(url4, retries = 4, delay2 = 1500) {
+  for (let attempt = 1; attempt <= retries; attempt += 1) {
+    try {
+      const res = await axios_default.get(url4, {
+        responseType: "arraybuffer",
+        timeout: 12e4,
+        maxContentLength: Infinity,
+        maxBodyLength: Infinity,
+        headers: {
+          Accept: "image/*,*/*",
+          "User-Agent": "Toonflow/1.0"
+        }
+      });
+      const mime = res.headers["content-type"] || "image/jpeg";
+      const b64 = Buffer.from(res.data).toString("base64");
+      return `data:${mime};base64,${b64}`;
+    } catch (e) {
+      if (attempt === retries) throw e;
+      await new Promise((resolve3) => setTimeout(resolve3, delay2 * attempt));
+    }
+  }
+  throw new Error("urlToBase64 failed");
 }
 async function pollTask(fn, interval = 3e3, timeout = 3e6) {
   const start = Date.now();
@@ -246147,6 +244538,1674 @@ var init_vm = __esm({
     import_form_data2 = __toESM(require_form_data());
     import_jsonwebtoken = __toESM(require_jsonwebtoken());
     init_utils3();
+  }
+});
+
+// src/utils/vendor.ts
+var vendor_exports = {};
+__export(vendor_exports, {
+  getCode: () => getCode,
+  getConfiguredModelList: () => getConfiguredModelList,
+  getEnabledModelList: () => getEnabledModelList,
+  getModelList: () => getModelList,
+  getVendor: () => getVendor,
+  isModelEnabled: () => isModelEnabled,
+  isVendorEnabled: () => isVendorEnabled,
+  writeCode: () => writeCode
+});
+function writeCode(id, tsCode) {
+  const rootDir = getPath_default("vendor");
+  import_fs5.default.mkdirSync(rootDir, { recursive: true });
+  if (import_fs5.default.existsSync(import_path8.default.join(rootDir, `${id}.ts`))) {
+    import_fs5.default.writeFileSync(import_path8.default.join(rootDir, `${id}.ts`), tsCode);
+  }
+  import_fs5.default.writeFileSync(import_path8.default.join(rootDir, `${id}.ts`), tsCode);
+}
+function getCode(id) {
+  const rootDir = getPath_default("vendor");
+  const targetFile = import_path8.default.join(rootDir, `${id}.ts`);
+  if (!import_fs5.default.existsSync(targetFile)) return "";
+  return import_fs5.default.readFileSync(targetFile, "utf-8");
+}
+function boolFromDb(value) {
+  return value === true || value === 1 || value === "1";
+}
+function parseModels(value) {
+  if (!value) return [];
+  if (Array.isArray(value)) return value;
+  if (typeof value !== "string") return [];
+  try {
+    const parsed = JSON.parse(value);
+    return Array.isArray(parsed) ? parsed : [];
+  } catch {
+    return [];
+  }
+}
+function isModelEnabled(model) {
+  if (boolFromDb(model.disabled)) return false;
+  const raw = model.enabled ?? model.enable;
+  if (raw === void 0 || raw === null || raw === "") return true;
+  return boolFromDb(raw);
+}
+async function getConfiguredModelList(id) {
+  const row = await db_default("o_vendorConfig").where("id", id).select("models").first();
+  return parseModels(row?.models);
+}
+async function isVendorEnabled(id) {
+  const row = await db_default("o_vendorConfig").where("id", id).select("enable").first();
+  return boolFromDb(row?.enable);
+}
+async function getModelList(id) {
+  const models = await db_default("o_vendorConfig").where("id", id).select("models").first();
+  if (!models) return [];
+  const configuredModels = parseModels(models.models);
+  const code = getCode(id);
+  if (!code.trim()) return configuredModels;
+  const jsCode = (0, import_sucrase.transform)(code, { transforms: ["typescript"] }).code;
+  const vendorData2 = runCode(jsCode);
+  if (!vendorData2 || !vendorData2.vendor || !vendorData2.vendor.models) return configuredModels;
+  const combined = [...JSON.parse(JSON.stringify(vendorData2.vendor.models)), ...configuredModels];
+  const map3 = /* @__PURE__ */ new Map();
+  for (const m of combined) {
+    const current = map3.get(m.modelName);
+    map3.set(m.modelName, current ? { ...current, ...m } : m);
+  }
+  return [...map3.values()];
+}
+async function getEnabledModelList(id) {
+  if (!await isVendorEnabled(id)) return [];
+  const allModels = await getModelList(id);
+  return allModels.filter(isModelEnabled);
+}
+function getVendor(id) {
+  const code = getCode(id);
+  const jsCode = (0, import_sucrase.transform)(code, { transforms: ["typescript"] }).code;
+  const vendorData2 = runCode(jsCode);
+  return vendorData2.vendor;
+}
+var import_sucrase, import_fs5, import_path8;
+var init_vendor2 = __esm({
+  "src/utils/vendor.ts"() {
+    "use strict";
+    import_sucrase = __toESM(require_dist8());
+    import_fs5 = __toESM(require("fs"));
+    import_path8 = __toESM(require("path"));
+    init_db();
+    init_getPath();
+    init_vm();
+  }
+});
+
+// src/utils/admin.ts
+function isLegacyAdminUser(user) {
+  return Number(user?.id) === 1 || user?.name === "admin";
+}
+function normalizeUserRole(user) {
+  const role = String(user?.role || "").trim().toLowerCase();
+  if (role) return role;
+  return isLegacyAdminUser(user) ? USER_ROLE_ADMIN : USER_ROLE_MEMBER;
+}
+function isAdminUser(user) {
+  const role = String(user?.role || "").trim().toLowerCase();
+  if (role) return role === USER_ROLE_ADMIN;
+  return isLegacyAdminUser(user);
+}
+function isAdminRequest(req) {
+  return isAdminUser(req.user);
+}
+var USER_ROLE_ADMIN, USER_ROLE_MEMBER;
+var init_admin = __esm({
+  "src/utils/admin.ts"() {
+    "use strict";
+    USER_ROLE_ADMIN = "admin";
+    USER_ROLE_MEMBER = "member";
+  }
+});
+
+// src/utils/membership.ts
+function now() {
+  return /* @__PURE__ */ new Date();
+}
+function addDays(date6, days) {
+  const next = new Date(date6);
+  next.setDate(next.getDate() + days);
+  return next;
+}
+function toNumber(value) {
+  if (value === null || value === void 0 || value === "") return 0;
+  const numberValue = Number(value);
+  return Number.isFinite(numberValue) ? numberValue : 0;
+}
+function toIso(value) {
+  if (!value) return null;
+  const date6 = value instanceof Date ? value : new Date(String(value));
+  return Number.isNaN(date6.getTime()) ? null : date6.toISOString();
+}
+function parseMetaObject(value) {
+  if (!value) return {};
+  if (typeof value === "object" && !Array.isArray(value)) return value;
+  if (typeof value !== "string") return {};
+  try {
+    const parsed = JSON.parse(value);
+    return parsed && typeof parsed === "object" && !Array.isArray(parsed) ? parsed : {};
+  } catch {
+    return {};
+  }
+}
+function parseFeatures(value) {
+  if (Array.isArray(value)) return value.filter((item) => typeof item === "string");
+  if (typeof value !== "string" || !value.trim()) return [];
+  try {
+    const parsed = JSON.parse(value);
+    return Array.isArray(parsed) ? parsed.filter((item) => typeof item === "string") : [];
+  } catch {
+    return [];
+  }
+}
+function normalizeFeatures(value) {
+  if (Array.isArray(value)) {
+    return value.map((item) => String(item).trim()).filter(Boolean);
+  }
+  if (typeof value === "string") {
+    return value.split(/\n|,/).map((item) => item.trim()).filter(Boolean);
+  }
+  return [];
+}
+function createOrderNo(prefix) {
+  return `${prefix}_${Date.now()}_${Math.random().toString(36).slice(2, 10)}`;
+}
+function getPointTransactionCategory(type, amount) {
+  if (type === "consume" || type === "shadow_consume" || type === "order_refund" || amount < 0) return "consume";
+  if (type === "recharge" || type === "points_purchase" || type === "plan_purchase" || type === "membership_grant") return "purchase";
+  return "earn";
+}
+function getModelBillingTaskLabel(taskType) {
+  const type = String(taskType || "");
+  return {
+    agent_memory_retrieval: "Agent\u8BB0\u5FC6\u68C0\u7D22",
+    agent_memory_summary: "Agent\u8BB0\u5FC6\u6458\u8981",
+    art_style_prompt_extraction: "\u753B\u98CE\u63D0\u793A\u8BCD\u63D0\u53D6",
+    asset_audio_binding: "\u8D44\u4EA7\u97F3\u9891\u5339\u914D",
+    asset_center_image_generation: "\u8D44\u4EA7\u4E2D\u5FC3\u56FE\u7247\u751F\u6210",
+    asset_image_generation: "\u8D44\u4EA7\u56FE\u7247\u751F\u6210",
+    asset_prompt_polish: "\u8D44\u4EA7\u63D0\u793A\u8BCD\u6DA6\u8272",
+    novel_event_extraction: "\u5C0F\u8BF4\u4E8B\u4EF6\u5206\u6790",
+    production_agent_call: "\u5236\u7247Agent\u8C03\u7528",
+    script_agent_call: "\u5267\u672CAgent\u8C03\u7528",
+    script_asset_extraction: "\u5267\u672C\u8D44\u4EA7\u63D0\u53D6",
+    script_regex_detection: "\u5267\u672C\u6B63\u5219\u8BC6\u522B",
+    storyboard_image_generation: "\u5206\u955C\u56FE\u7247\u751F\u6210",
+    video_generation: "\u89C6\u9891\u751F\u6210",
+    video_prompt_generation: "\u89C6\u9891\u63D0\u793A\u8BCD\u751F\u6210",
+    workflow_image_generation: "\u5DE5\u4F5C\u6D41\u56FE\u7247\u751F\u6210"
+  }[type] || type;
+}
+function normalizePlan(plan) {
+  return {
+    key: String(plan.key || ""),
+    name: String(plan.name || ""),
+    levelKey: String(plan.levelKey || "free"),
+    levelName: String(plan.levelName || "\u514D\u8D39\u4F1A\u5458"),
+    billingPeriod: String(plan.billingPeriod || "free"),
+    priceCny: toNumber(plan.priceCny),
+    originalPriceCny: plan.originalPriceCny === null || plan.originalPriceCny === void 0 ? null : toNumber(plan.originalPriceCny),
+    yearlyDiscountLabel: plan.yearlyDiscountLabel ? String(plan.yearlyDiscountLabel) : null,
+    points: toNumber(plan.points),
+    pointValidityDays: toNumber(plan.pointValidityDays || 365),
+    maxShots: plan.maxShots === null || plan.maxShots === void 0 ? null : toNumber(plan.maxShots),
+    maxSeries: plan.maxSeries === null || plan.maxSeries === void 0 ? null : toNumber(plan.maxSeries),
+    features: parseFeatures(plan.features),
+    enabled: Boolean(plan.enabled),
+    popular: Boolean(plan.popular),
+    sortOrder: toNumber(plan.sortOrder)
+  };
+}
+function normalizePackage(pkg) {
+  return {
+    key: String(pkg.key || ""),
+    points: toNumber(pkg.points),
+    priceCny: toNumber(pkg.priceCny),
+    description: pkg.description ? String(pkg.description) : "",
+    validityDays: toNumber(pkg.validityDays || 730),
+    enabled: Boolean(pkg.enabled),
+    sortOrder: toNumber(pkg.sortOrder)
+  };
+}
+async function insertTransaction(params) {
+  if (params.idempotencyKey) {
+    const existing = await db_default("balance_transactions").where("idempotencyKey", params.idempotencyKey).first();
+    if (existing) return;
+  }
+  await db_default("balance_transactions").insert({
+    id: v4_default(),
+    userId: params.userId,
+    type: params.type,
+    amount: params.amount,
+    balanceAfter: params.balanceAfter,
+    description: params.description,
+    relatedId: params.relatedId || null,
+    operatorId: params.operatorId || null,
+    externalOrderId: params.externalOrderId || null,
+    idempotencyKey: params.idempotencyKey || null,
+    createdAt: now()
+  });
+}
+async function ensureMembershipCatalog() {
+  for (const plan of DEFAULT_MEMBERSHIP_PLANS) {
+    const exists = await db_default("membership_plans").where("key", plan.key).first();
+    if (exists) continue;
+    await db_default("membership_plans").insert({
+      id: v4_default(),
+      ...plan,
+      originalPriceCny: plan.originalPriceCny ?? null,
+      yearlyDiscountLabel: plan.yearlyDiscountLabel ?? null,
+      maxShots: plan.maxShots ?? null,
+      maxSeries: plan.maxSeries ?? null,
+      features: JSON.stringify(plan.features),
+      enabled: true,
+      popular: Boolean(plan.popular),
+      createdAt: now(),
+      updatedAt: now()
+    });
+  }
+  for (const pkg of DEFAULT_POINTS_PACKAGES) {
+    const exists = await db_default("points_packages").where("key", pkg.key).first();
+    if (exists) continue;
+    await db_default("points_packages").insert({
+      id: v4_default(),
+      ...pkg,
+      enabled: true,
+      createdAt: now(),
+      updatedAt: now()
+    });
+  }
+}
+async function ensureUserMembership(userId, grantWelcome = true) {
+  await ensureMembershipCatalog();
+  const balance = await db_default("user_balances").where("userId", userId).first();
+  if (!balance) {
+    await db_default("user_balances").insert({
+      id: v4_default(),
+      userId,
+      balance: 0,
+      frozenAmount: 0,
+      totalSpent: 0,
+      membershipPoints: 0,
+      rechargePoints: 0,
+      bonusPoints: 0,
+      createdAt: now(),
+      updatedAt: now()
+    });
+  }
+  const membership = await db_default("user_memberships").where("userId", userId).first();
+  if (!membership) {
+    await db_default("user_memberships").insert({
+      id: v4_default(),
+      userId,
+      ...FREE_LEVEL,
+      planKey: "free",
+      status: "active",
+      autoRenew: false,
+      startedAt: now(),
+      createdAt: now(),
+      updatedAt: now()
+    });
+  }
+  if (grantWelcome) await grantWelcomePoints(userId);
+}
+async function grantWelcomePoints(userId, amount = 50) {
+  if (!Number.isFinite(amount) || amount <= 0) return;
+  const idempotencyKey = `welcome:${userId}`;
+  const existing = await db_default("balance_transactions").where("idempotencyKey", idempotencyKey).first();
+  if (existing) return;
+  const current = await db_default("user_balances").where("userId", userId).first();
+  if (!current) {
+    await ensureUserMembership(userId, false);
+  }
+  const balance = await db_default("user_balances").where("userId", userId).first();
+  const nextBalance = toNumber(balance?.balance) + amount;
+  await db_default("user_balances").where("userId", userId).update({
+    balance: nextBalance,
+    bonusPoints: toNumber(balance?.bonusPoints) + amount,
+    updatedAt: now()
+  });
+  await insertTransaction({
+    userId,
+    type: "bonus",
+    amount,
+    balanceAfter: nextBalance,
+    description: `\u65B0\u4EBA\u8D60\u9001\u79EF\u5206 +${amount}`,
+    idempotencyKey
+  });
+}
+async function getMembershipProfile(userId) {
+  await ensureUserMembership(userId);
+  const [user, balance, membership, plansRaw, packagesRaw, transactionsRaw, ordersRaw] = await Promise.all([
+    db_default("o_user").where("id", userId).first(),
+    db_default("user_balances").where("userId", userId).first(),
+    db_default("user_memberships").where("userId", userId).first(),
+    db_default("membership_plans").where("enabled", true).orderBy("sortOrder", "asc").orderBy("priceCny", "asc"),
+    db_default("points_packages").where("enabled", true).orderBy("sortOrder", "asc").orderBy("points", "asc"),
+    db_default("balance_transactions").where("userId", userId).orderBy("createdAt", "desc").limit(50),
+    db_default("subscription_orders").where("userId", userId).orderBy("createdAt", "desc").limit(30)
+  ]);
+  const plans = plansRaw.map(normalizePlan);
+  const pointPackages = packagesRaw.map(normalizePackage);
+  const frozenAmount = toNumber(balance?.frozenAmount);
+  const balanceAmount = toNumber(balance?.balance);
+  const pointSummary = {
+    remaining: Math.max(0, balanceAmount - frozenAmount),
+    frozen: frozenAmount,
+    spent: toNumber(balance?.totalSpent),
+    membership: toNumber(balance?.membershipPoints),
+    recharge: toNumber(balance?.rechargePoints),
+    bonus: toNumber(balance?.bonusPoints),
+    pointsExpireAt: toIso(balance?.pointsExpireAt)
+  };
+  return {
+    user: user ? {
+      id: String(user.id),
+      name: user.name || "",
+      realName: user.realName || user.name || "",
+      avatar: user.avatar || ""
+    } : null,
+    membership: membership ? {
+      levelKey: membership.levelKey || FREE_LEVEL.levelKey,
+      levelName: membership.levelName || FREE_LEVEL.levelName,
+      planKey: membership.planKey || "free",
+      status: membership.status || "active",
+      autoRenew: Boolean(membership.autoRenew),
+      startedAt: toIso(membership.startedAt),
+      expiresAt: toIso(membership.expiresAt)
+    } : {
+      ...FREE_LEVEL,
+      planKey: "free",
+      status: "active",
+      autoRenew: false,
+      startedAt: now().toISOString(),
+      expiresAt: null
+    },
+    pointSummary,
+    plans: {
+      all: plans,
+      monthly: plans.filter((plan) => ["free", "monthly", "enterprise"].includes(plan.billingPeriod)),
+      yearly: plans.filter((plan) => ["free", "yearly", "enterprise"].includes(plan.billingPeriod))
+    },
+    pointPackages,
+    transactions: transactionsRaw.map((item) => {
+      const amount = toNumber(item.amount);
+      return {
+        id: item.id,
+        type: item.type,
+        category: getPointTransactionCategory(item.type, amount),
+        amount,
+        balanceAfter: toNumber(item.balanceAfter),
+        description: item.description || item.type,
+        createdAt: toIso(item.createdAt) || now().toISOString()
+      };
+    }),
+    orders: ordersRaw.map(normalizeUserOrder)
+  };
+}
+function normalizeUserOrder(order) {
+  return {
+    id: order.id,
+    orderNo: order.orderNo,
+    kind: order.kind,
+    planKey: order.planKey,
+    pointsPackageKey: order.pointsPackageKey,
+    amountCny: toNumber(order.amountCny),
+    points: toNumber(order.points),
+    status: order.status,
+    paymentMethod: order.paymentMethod,
+    createdAt: toIso(order.createdAt) || now().toISOString(),
+    paidAt: toIso(order.paidAt)
+  };
+}
+async function getMembershipOrderStatus(userId, orderNo) {
+  await ensureUserMembership(userId);
+  const order = await db_default("subscription_orders").where({ userId, orderNo }).first();
+  if (!order) throw new Error("\u8BA2\u5355\u4E0D\u5B58\u5728");
+  return {
+    order: normalizeUserOrder(order),
+    profile: await getMembershipProfile(userId)
+  };
+}
+async function getMembershipOrderForPayment(userId, orderNo) {
+  await ensureUserMembership(userId);
+  const order = await db_default("subscription_orders").where({ userId, orderNo }).first();
+  if (!order) throw new Error("\u8BA2\u5355\u4E0D\u5B58\u5728");
+  if (order.status === "paid") return order;
+  if (order.status !== "pending") throw new Error("\u5F53\u524D\u8BA2\u5355\u72B6\u6001\u4E0D\u53EF\u7EE7\u7EED\u652F\u4ED8");
+  return order;
+}
+async function addPoints(params) {
+  await ensureUserMembership(params.userId, false);
+  const current = await db_default("user_balances").where("userId", params.userId).first();
+  const nextBalance = toNumber(current?.balance) + params.amount;
+  const bucketColumn = params.bucket === "membership" ? "membershipPoints" : params.bucket === "recharge" ? "rechargePoints" : "bonusPoints";
+  await db_default("user_balances").where("userId", params.userId).update({
+    balance: nextBalance,
+    [bucketColumn]: toNumber(current?.[bucketColumn]) + params.amount,
+    pointsExpireAt: params.expireAt || current?.pointsExpireAt || null,
+    updatedAt: now()
+  });
+  await insertTransaction({
+    userId: params.userId,
+    type: params.type,
+    amount: params.amount,
+    balanceAfter: nextBalance,
+    description: params.description,
+    relatedId: params.relatedId,
+    operatorId: params.operatorId,
+    externalOrderId: params.externalOrderId
+  });
+}
+async function settleOrder(order, operatorId) {
+  const userId = String(order.userId);
+  const paidAt = now();
+  if (order.kind === "plan" && order.planKey) {
+    const plan = await db_default("membership_plans").where("key", order.planKey).first();
+    if (!plan) throw new Error("\u4F1A\u5458\u5957\u9910\u4E0D\u5B58\u5728");
+    const normalized = normalizePlan(plan);
+    const expiresAt = normalized.billingPeriod === "monthly" ? addDays(paidAt, 31) : normalized.billingPeriod === "yearly" ? addDays(paidAt, 365) : null;
+    await db_default("user_memberships").where("userId", userId).update({
+      levelKey: normalized.levelKey,
+      levelName: normalized.levelName,
+      planKey: normalized.key,
+      status: "active",
+      startedAt: paidAt,
+      expiresAt,
+      sourceOrderId: order.id,
+      updatedAt: paidAt
+    });
+    if (normalized.points > 0) {
+      await addPoints({
+        userId,
+        amount: normalized.points,
+        bucket: "membership",
+        type: "membership_grant",
+        description: `${normalized.name}\u8D60\u9001\u79EF\u5206 +${normalized.points}`,
+        relatedId: order.id,
+        operatorId,
+        externalOrderId: order.orderNo,
+        expireAt: addDays(paidAt, normalized.pointValidityDays)
+      });
+    }
+    return;
+  }
+  if (order.kind === "points" && order.pointsPackageKey) {
+    const pkg = await db_default("points_packages").where("key", order.pointsPackageKey).first();
+    if (!pkg) throw new Error("\u79EF\u5206\u5305\u4E0D\u5B58\u5728");
+    const normalized = normalizePackage(pkg);
+    await addPoints({
+      userId,
+      amount: normalized.points,
+      bucket: "recharge",
+      type: "points_purchase",
+      description: `\u8D2D\u4E70\u79EF\u5206 +${normalized.points}`,
+      relatedId: order.id,
+      operatorId,
+      externalOrderId: order.orderNo,
+      expireAt: addDays(paidAt, normalized.validityDays)
+    });
+  }
+}
+function parseOrderMetadata(value) {
+  if (!value || typeof value !== "string") return {};
+  try {
+    const parsed = JSON.parse(value);
+    return parsed && typeof parsed === "object" && !Array.isArray(parsed) ? parsed : {};
+  } catch {
+    return {};
+  }
+}
+async function createMembershipOrder(userId, input, paymentMethod = "manual_checkout") {
+  await ensureUserMembership(userId);
+  const orderNo = createOrderNo(input.kind === "plan" ? "sub" : "pts");
+  const timestamp = now();
+  if (input.kind === "plan") {
+    const plan = await db_default("membership_plans").where("key", input.planKey).first();
+    if (!plan || !plan.enabled) throw new Error("\u4F1A\u5458\u5957\u9910\u4E0D\u5B58\u5728\u6216\u5DF2\u505C\u7528");
+    const normalized2 = normalizePlan(plan);
+    if (normalized2.billingPeriod === "enterprise") throw new Error("\u4F01\u4E1A\u4F1A\u5458\u8BF7\u8054\u7CFB\u7BA1\u7406\u5458\u5F00\u901A");
+    const order2 = {
+      id: v4_default(),
+      orderNo,
+      userId,
+      kind: "plan",
+      planKey: normalized2.key,
+      pointsPackageKey: null,
+      amountCny: normalized2.priceCny,
+      points: normalized2.points,
+      status: normalized2.priceCny > 0 ? "pending" : "paid",
+      paymentMethod,
+      paidAt: normalized2.priceCny > 0 ? null : timestamp,
+      createdAt: timestamp,
+      updatedAt: timestamp
+    };
+    await db_default("subscription_orders").insert(order2);
+    if (order2.status === "paid") await settleOrder(order2);
+    return order2;
+  }
+  const pkg = await db_default("points_packages").where("key", input.pointsPackageKey).first();
+  if (!pkg || !pkg.enabled) throw new Error("\u79EF\u5206\u5305\u4E0D\u5B58\u5728\u6216\u5DF2\u505C\u7528");
+  const normalized = normalizePackage(pkg);
+  const order = {
+    id: v4_default(),
+    orderNo,
+    userId,
+    kind: "points",
+    planKey: null,
+    pointsPackageKey: normalized.key,
+    amountCny: normalized.priceCny,
+    points: normalized.points,
+    status: normalized.priceCny > 0 ? "pending" : "paid",
+    paymentMethod,
+    paidAt: normalized.priceCny > 0 ? null : timestamp,
+    createdAt: timestamp,
+    updatedAt: timestamp
+  };
+  await db_default("subscription_orders").insert(order);
+  if (order.status === "paid") await settleOrder(order);
+  return order;
+}
+async function markMembershipOrderPaidByOrderNo(params) {
+  const order = await db_default("subscription_orders").where("orderNo", params.orderNo).first();
+  if (!order) throw new Error("\u8BA2\u5355\u4E0D\u5B58\u5728");
+  const orderAmount = toNumber(order.amountCny);
+  if (params.amountCny !== void 0 && Math.round(orderAmount * 100) !== Math.round(params.amountCny * 100)) {
+    throw new Error("\u652F\u4ED8\u91D1\u989D\u4E0E\u8BA2\u5355\u91D1\u989D\u4E0D\u4E00\u81F4");
+  }
+  const mergedMetadata = {
+    ...parseOrderMetadata(order.metadata),
+    ...params.metadata || {},
+    externalTradeNo: params.externalTradeNo || void 0,
+    paidBy: params.paymentMethod
+  };
+  if (order.status === "paid") {
+    await db_default("subscription_orders").where("id", order.id).update({
+      metadata: JSON.stringify(mergedMetadata),
+      paymentMethod: params.paymentMethod,
+      updatedAt: now()
+    });
+    return order;
+  }
+  await db_default("subscription_orders").where("id", order.id).update({
+    status: "paid",
+    paidAt: now(),
+    paymentMethod: params.paymentMethod,
+    metadata: JSON.stringify(mergedMetadata),
+    updatedAt: now()
+  });
+  await settleOrder(order);
+  return {
+    ...order,
+    status: "paid",
+    paymentMethod: params.paymentMethod
+  };
+}
+function deductBuckets(current, amount, preferredBucket) {
+  const values = {
+    membershipPoints: toNumber(current.membershipPoints),
+    rechargePoints: toNumber(current.rechargePoints),
+    bonusPoints: toNumber(current.bonusPoints)
+  };
+  const orderedColumns = [
+    preferredBucket === "membership" ? "membershipPoints" : preferredBucket === "recharge" ? "rechargePoints" : "bonusPoints",
+    "bonusPoints",
+    "rechargePoints",
+    "membershipPoints"
+  ].filter((item, index, list2) => list2.indexOf(item) === index);
+  let remaining = amount;
+  for (const column of orderedColumns) {
+    const used = Math.min(values[column], remaining);
+    values[column] -= used;
+    remaining -= used;
+    if (remaining <= 0) break;
+  }
+  return values;
+}
+async function adjustUserPoints(params) {
+  const amount = Number(params.amount);
+  if (!Number.isFinite(amount) || amount === 0) throw new Error("\u79EF\u5206\u8C03\u6574\u6570\u91CF\u65E0\u6548");
+  await ensureUserMembership(params.userId, false);
+  const current = await db_default("user_balances").where("userId", params.userId).first();
+  if (!current) throw new Error("\u7528\u6237\u79EF\u5206\u8D26\u6237\u4E0D\u5B58\u5728");
+  const bucket = params.bucket || "bonus";
+  const currentBalance = toNumber(current.balance);
+  if (amount < 0 && currentBalance < Math.abs(amount)) throw new Error("\u7528\u6237\u79EF\u5206\u4E0D\u8DB3");
+  const nextBreakdown = amount < 0 ? deductBuckets(current, Math.abs(amount), bucket) : {
+    membershipPoints: toNumber(current.membershipPoints) + (bucket === "membership" ? amount : 0),
+    rechargePoints: toNumber(current.rechargePoints) + (bucket === "recharge" ? amount : 0),
+    bonusPoints: toNumber(current.bonusPoints) + (bucket === "bonus" ? amount : 0)
+  };
+  const nextBalance = nextBreakdown.membershipPoints + nextBreakdown.rechargePoints + nextBreakdown.bonusPoints;
+  await db_default("user_balances").where("userId", params.userId).update({
+    balance: nextBalance,
+    membershipPoints: nextBreakdown.membershipPoints,
+    rechargePoints: nextBreakdown.rechargePoints,
+    bonusPoints: nextBreakdown.bonusPoints,
+    totalSpent: toNumber(current.totalSpent) + (amount < 0 ? Math.abs(amount) : 0),
+    updatedAt: now()
+  });
+  await insertTransaction({
+    userId: params.userId,
+    type: "admin_adjust",
+    amount,
+    balanceAfter: nextBalance,
+    description: params.description || `\u540E\u53F0\u8C03\u6574\u79EF\u5206 ${amount > 0 ? "+" : ""}${amount}`,
+    operatorId: params.operatorId
+  });
+}
+async function updateUserMembership(params) {
+  await ensureUserMembership(params.userId, false);
+  const startedAt = now();
+  await db_default("user_memberships").where("userId", params.userId).update({
+    levelKey: params.levelKey,
+    levelName: params.levelName,
+    planKey: params.planKey || null,
+    status: params.status,
+    autoRenew: Boolean(params.autoRenew),
+    startedAt,
+    expiresAt: params.expiresAt ? new Date(params.expiresAt) : null,
+    updatedAt: startedAt
+  });
+  await insertTransaction({
+    userId: params.userId,
+    type: "membership_admin_update",
+    amount: 0,
+    balanceAfter: toNumber((await db_default("user_balances").where("userId", params.userId).first())?.balance),
+    description: `\u540E\u53F0\u8C03\u6574\u4F1A\u5458\uFF1A${params.levelName}`,
+    operatorId: params.operatorId
+  });
+}
+async function getAdminMembershipOverview() {
+  await ensureMembershipCatalog();
+  const [userCount, memberCountRow, balanceRow, paidOrdersRow, plans, pointPackages] = await Promise.all([
+    db_default("o_user").count({ count: "*" }),
+    db_default("user_memberships").whereNot("levelKey", "free").where("status", "active").count({ count: "*" }),
+    db_default("user_balances").sum({
+      balance: "balance",
+      frozen: "frozenAmount",
+      spent: "totalSpent"
+    }),
+    db_default("subscription_orders").where("status", "paid").count({ count: "*" }),
+    db_default("membership_plans").orderBy("sortOrder", "asc").orderBy("priceCny", "asc"),
+    db_default("points_packages").orderBy("sortOrder", "asc").orderBy("points", "asc")
+  ]);
+  return {
+    totals: {
+      users: toNumber(userCount[0]?.count),
+      activeMembers: toNumber(memberCountRow[0]?.count),
+      balance: toNumber(balanceRow[0]?.balance),
+      frozenBalance: toNumber(balanceRow[0]?.frozen),
+      totalSpent: toNumber(balanceRow[0]?.spent),
+      paidOrders: toNumber(paidOrdersRow[0]?.count)
+    },
+    plans: plans.map(normalizePlan),
+    pointPackages: pointPackages.map(normalizePackage)
+  };
+}
+async function getAdminMembershipCatalog() {
+  await ensureMembershipCatalog();
+  const [plans, pointPackages] = await Promise.all([
+    db_default("membership_plans").orderBy("sortOrder", "asc").orderBy("priceCny", "asc"),
+    db_default("points_packages").orderBy("sortOrder", "asc").orderBy("points", "asc")
+  ]);
+  return {
+    plans: plans.map(normalizePlan),
+    pointPackages: pointPackages.map(normalizePackage)
+  };
+}
+async function saveMembershipPlan(input) {
+  await ensureMembershipCatalog();
+  const key = String(input.key || "").trim();
+  if (!key) throw new Error("\u5957\u9910\u6807\u8BC6\u4E0D\u80FD\u4E3A\u7A7A");
+  const timestamp = now();
+  const payload = {
+    key,
+    name: String(input.name || "").trim() || key,
+    levelKey: String(input.levelKey || "free").trim(),
+    levelName: String(input.levelName || input.name || "\u514D\u8D39\u4F1A\u5458").trim(),
+    billingPeriod: String(input.billingPeriod || "monthly").trim(),
+    priceCny: toNumber(input.priceCny),
+    originalPriceCny: input.originalPriceCny === null || input.originalPriceCny === void 0 ? null : toNumber(input.originalPriceCny),
+    yearlyDiscountLabel: input.yearlyDiscountLabel ? String(input.yearlyDiscountLabel).trim() : null,
+    points: Math.max(0, Math.round(toNumber(input.points))),
+    pointValidityDays: Math.max(1, Math.round(toNumber(input.pointValidityDays || 365))),
+    maxShots: input.maxShots === null || input.maxShots === void 0 ? null : Math.max(0, Math.round(toNumber(input.maxShots))),
+    maxSeries: input.maxSeries === null || input.maxSeries === void 0 ? null : Math.max(0, Math.round(toNumber(input.maxSeries))),
+    features: JSON.stringify(normalizeFeatures(input.features)),
+    enabled: input.enabled !== false,
+    popular: Boolean(input.popular),
+    sortOrder: Math.round(toNumber(input.sortOrder)),
+    updatedAt: timestamp
+  };
+  const existing = await db_default("membership_plans").where("key", key).first();
+  if (existing) {
+    await db_default("membership_plans").where("key", key).update(payload);
+  } else {
+    await db_default("membership_plans").insert({
+      id: v4_default(),
+      ...payload,
+      createdAt: timestamp
+    });
+  }
+  return getAdminMembershipCatalog();
+}
+async function savePointsPackage(input) {
+  await ensureMembershipCatalog();
+  const key = String(input.key || "").trim();
+  if (!key) throw new Error("\u79EF\u5206\u5305\u6807\u8BC6\u4E0D\u80FD\u4E3A\u7A7A");
+  const timestamp = now();
+  const payload = {
+    key,
+    points: Math.max(1, Math.round(toNumber(input.points))),
+    priceCny: toNumber(input.priceCny),
+    description: String(input.description || "").trim(),
+    validityDays: Math.max(1, Math.round(toNumber(input.validityDays || 730))),
+    enabled: input.enabled !== false,
+    sortOrder: Math.round(toNumber(input.sortOrder)),
+    updatedAt: timestamp
+  };
+  const existing = await db_default("points_packages").where("key", key).first();
+  if (existing) {
+    await db_default("points_packages").where("key", key).update(payload);
+  } else {
+    await db_default("points_packages").insert({
+      id: v4_default(),
+      ...payload,
+      createdAt: timestamp
+    });
+  }
+  return getAdminMembershipCatalog();
+}
+async function getAdminMembershipUsers(params) {
+  const page = Math.max(1, Number(params.page || 1));
+  const pageSize = Math.min(100, Math.max(1, Number(params.pageSize || 20)));
+  const keyword = String(params.keyword || "").trim();
+  const base = db_default("o_user").leftJoin("user_balances", "user_balances.userId", "o_user.id").leftJoin("user_memberships", "user_memberships.userId", "o_user.id").where((builder) => builder.where("o_user.role", USER_ROLE_MEMBER).orWhereNull("o_user.role").orWhere("o_user.role", "")).whereNot("o_user.id", 1).where((builder) => builder.whereNull("o_user.name").orWhereNot("o_user.name", "admin"));
+  if (keyword) {
+    base.where((builder) => {
+      builder.where("o_user.name", "like", `%${keyword}%`).orWhere("o_user.id", keyword);
+    });
+  }
+  const countQuery = base.clone().clearSelect().clearOrder().count({ count: "o_user.id" });
+  const rowsQuery = base.clone().select(
+    "o_user.id",
+    "o_user.name",
+    "o_user.realName",
+    "o_user.avatar",
+    "user_balances.balance",
+    "user_balances.frozenAmount",
+    "user_balances.totalSpent",
+    "user_balances.membershipPoints",
+    "user_balances.rechargePoints",
+    "user_balances.bonusPoints",
+    "user_memberships.levelKey",
+    "user_memberships.levelName",
+    "user_memberships.planKey",
+    "user_memberships.status",
+    "user_memberships.autoRenew",
+    "user_memberships.expiresAt"
+  ).orderBy("o_user.id", "desc").limit(pageSize).offset((page - 1) * pageSize);
+  const [countRows, rows] = await Promise.all([countQuery, rowsQuery]);
+  return {
+    list: rows.map((row) => ({
+      userId: String(row.id),
+      name: row.realName || row.name || `\u7528\u6237 ${row.id}`,
+      username: row.name || "",
+      avatar: row.avatar || "",
+      membership: {
+        levelKey: row.levelKey || "free",
+        levelName: row.levelName || "\u514D\u8D39\u4F1A\u5458",
+        planKey: row.planKey || "free",
+        status: row.status || "active",
+        autoRenew: Boolean(row.autoRenew),
+        expiresAt: toIso(row.expiresAt)
+      },
+      points: {
+        remaining: Math.max(0, toNumber(row.balance) - toNumber(row.frozenAmount)),
+        frozen: toNumber(row.frozenAmount),
+        spent: toNumber(row.totalSpent),
+        membership: toNumber(row.membershipPoints),
+        recharge: toNumber(row.rechargePoints),
+        bonus: toNumber(row.bonusPoints)
+      }
+    })),
+    page,
+    pageSize,
+    total: toNumber(countRows[0]?.count)
+  };
+}
+async function getAdminMembershipTransactions(params) {
+  const page = Math.max(1, Number(params.page || 1));
+  const pageSize = Math.min(100, Math.max(1, Number(params.pageSize || 20)));
+  const query = db_default("balance_transactions").leftJoin("o_user", "o_user.id", "balance_transactions.userId");
+  if (params.userId) query.where("balance_transactions.userId", String(params.userId));
+  if (params.type && params.type !== "all") query.where("balance_transactions.type", params.type);
+  const [countRows, rows] = await Promise.all([
+    query.clone().clearSelect().clearOrder().count({ count: "balance_transactions.id" }),
+    query.clone().select("balance_transactions.*", "o_user.name as userName").orderBy("balance_transactions.createdAt", "desc").limit(pageSize).offset((page - 1) * pageSize)
+  ]);
+  return {
+    list: rows.map((row) => {
+      const billingMeta = parseMetaObject(row.billingMeta);
+      return {
+        id: row.id,
+        userId: String(row.userId),
+        userName: row.userName || "",
+        type: row.type,
+        category: getPointTransactionCategory(row.type, toNumber(row.amount)),
+        amount: toNumber(row.amount),
+        balanceAfter: toNumber(row.balanceAfter),
+        description: row.description || "",
+        operatorId: row.operatorId || "",
+        createdAt: toIso(row.createdAt),
+        billingMeta,
+        episodeId: row.episodeId || "",
+        freezeId: row.freezeId || "",
+        projectId: row.projectId || "",
+        relatedId: row.relatedId || "",
+        taskType: row.taskType || "",
+        taskTypeLabel: getModelBillingTaskLabel(row.taskType)
+      };
+    }),
+    page,
+    pageSize,
+    total: toNumber(countRows[0]?.count)
+  };
+}
+async function getAdminMembershipOrders(params) {
+  const page = Math.max(1, Number(params.page || 1));
+  const pageSize = Math.min(100, Math.max(1, Number(params.pageSize || 20)));
+  const keyword = String(params.keyword || "").trim();
+  const query = db_default("subscription_orders").leftJoin("o_user", "o_user.id", "subscription_orders.userId");
+  if (params.userId) query.where("subscription_orders.userId", String(params.userId));
+  if (params.status && params.status !== "all") query.where("subscription_orders.status", params.status);
+  if (keyword) {
+    query.where((builder) => {
+      builder.where("subscription_orders.orderNo", "like", `%${keyword}%`).orWhere("subscription_orders.planKey", "like", `%${keyword}%`).orWhere("subscription_orders.pointsPackageKey", "like", `%${keyword}%`).orWhere("o_user.name", "like", `%${keyword}%`);
+    });
+  }
+  const [countRows, rows] = await Promise.all([
+    query.clone().clearSelect().clearOrder().count({ count: "subscription_orders.id" }),
+    query.clone().select("subscription_orders.*", "o_user.name as userName").orderBy("subscription_orders.createdAt", "desc").limit(pageSize).offset((page - 1) * pageSize)
+  ]);
+  return {
+    list: rows.map((row) => ({
+      id: row.id,
+      orderNo: row.orderNo,
+      userId: String(row.userId),
+      userName: row.userName || "",
+      kind: row.kind,
+      planKey: row.planKey || "",
+      pointsPackageKey: row.pointsPackageKey || "",
+      amountCny: toNumber(row.amountCny),
+      points: toNumber(row.points),
+      status: row.status,
+      paymentMethod: row.paymentMethod || "",
+      createdAt: toIso(row.createdAt),
+      paidAt: toIso(row.paidAt)
+    })),
+    page,
+    pageSize,
+    total: toNumber(countRows[0]?.count)
+  };
+}
+async function deductRefundPoints(params) {
+  const amount = Math.max(0, Math.round(toNumber(params.amount)));
+  if (amount <= 0) return;
+  await ensureUserMembership(params.userId, false);
+  const current = await db_default("user_balances").where("userId", params.userId).first();
+  if (!current) throw new Error("\u7528\u6237\u79EF\u5206\u8D26\u6237\u4E0D\u5B58\u5728");
+  if (toNumber(current.balance) < amount) throw new Error("\u7528\u6237\u5269\u4F59\u79EF\u5206\u4E0D\u8DB3\uFF0C\u65E0\u6CD5\u81EA\u52A8\u9000\u6B3E\u6263\u56DE");
+  const nextBreakdown = deductBuckets(current, amount, params.bucket);
+  const nextBalance = nextBreakdown.membershipPoints + nextBreakdown.rechargePoints + nextBreakdown.bonusPoints;
+  await db_default("user_balances").where("userId", params.userId).update({
+    balance: nextBalance,
+    membershipPoints: nextBreakdown.membershipPoints,
+    rechargePoints: nextBreakdown.rechargePoints,
+    bonusPoints: nextBreakdown.bonusPoints,
+    updatedAt: now()
+  });
+  await insertTransaction({
+    userId: params.userId,
+    type: "order_refund",
+    amount: -amount,
+    balanceAfter: nextBalance,
+    description: params.description,
+    relatedId: params.orderId,
+    operatorId: params.operatorId,
+    externalOrderId: params.orderNo
+  });
+}
+async function refundSettledOrder(order, operatorId) {
+  const userId = String(order.userId);
+  if (order.kind === "plan") {
+    await deductRefundPoints({
+      userId,
+      amount: toNumber(order.points),
+      bucket: "membership",
+      description: `\u4F1A\u5458\u8BA2\u5355\u9000\u6B3E\u6263\u56DE\u79EF\u5206 -${Math.round(toNumber(order.points))}`,
+      orderId: order.id,
+      orderNo: order.orderNo,
+      operatorId
+    });
+    const membership = await db_default("user_memberships").where("userId", userId).first();
+    if (membership?.sourceOrderId === order.id) {
+      await db_default("user_memberships").where("userId", userId).update({
+        levelKey: FREE_LEVEL.levelKey,
+        levelName: FREE_LEVEL.levelName,
+        planKey: "free",
+        status: "active",
+        autoRenew: false,
+        startedAt: now(),
+        expiresAt: null,
+        sourceOrderId: null,
+        updatedAt: now()
+      });
+      await insertTransaction({
+        userId,
+        type: "membership_refund",
+        amount: 0,
+        balanceAfter: toNumber((await db_default("user_balances").where("userId", userId).first())?.balance),
+        description: "\u4F1A\u5458\u8BA2\u5355\u9000\u6B3E\uFF0C\u4F1A\u5458\u6743\u76CA\u6062\u590D\u4E3A\u514D\u8D39\u4F1A\u5458",
+        relatedId: order.id,
+        operatorId,
+        externalOrderId: order.orderNo
+      });
+    }
+    return;
+  }
+  if (order.kind === "points") {
+    await deductRefundPoints({
+      userId,
+      amount: toNumber(order.points),
+      bucket: "recharge",
+      description: `\u79EF\u5206\u5305\u8BA2\u5355\u9000\u6B3E\u6263\u56DE\u79EF\u5206 -${Math.round(toNumber(order.points))}`,
+      orderId: order.id,
+      orderNo: order.orderNo,
+      operatorId
+    });
+  }
+}
+async function updateOrderStatus(params) {
+  const order = await db_default("subscription_orders").where("id", params.id).first();
+  if (!order) throw new Error("\u8BA2\u5355\u4E0D\u5B58\u5728");
+  const currentStatus = String(order.status || "");
+  if (currentStatus === params.status) return;
+  if (params.status === "paid") {
+    if (["canceled", "refunded"].includes(currentStatus)) throw new Error("\u5DF2\u53D6\u6D88\u6216\u5DF2\u9000\u6B3E\u8BA2\u5355\u4E0D\u80FD\u6807\u8BB0\u652F\u4ED8");
+    await db_default("subscription_orders").where("id", params.id).update({
+      status: "paid",
+      paidAt: now(),
+      paymentMethod: order.paymentMethod || "manual",
+      updatedAt: now()
+    });
+    await settleOrder(order, params.operatorId);
+    return;
+  }
+  if (params.status === "canceled" && currentStatus === "paid") throw new Error("\u5DF2\u652F\u4ED8\u8BA2\u5355\u8BF7\u4F7F\u7528\u9000\u6B3E\u64CD\u4F5C");
+  if (params.status === "pending" && ["paid", "refunded"].includes(currentStatus)) throw new Error("\u5DF2\u652F\u4ED8\u6216\u5DF2\u9000\u6B3E\u8BA2\u5355\u4E0D\u80FD\u6062\u590D\u5F85\u652F\u4ED8");
+  if (params.status === "refunded") {
+    if (currentStatus !== "paid") throw new Error("\u53EA\u6709\u5DF2\u652F\u4ED8\u8BA2\u5355\u53EF\u4EE5\u9000\u6B3E");
+    await refundSettledOrder(order, params.operatorId);
+  }
+  await db_default("subscription_orders").where("id", params.id).update({
+    status: params.status,
+    updatedAt: now()
+  });
+}
+var FREE_LEVEL, DEFAULT_MEMBERSHIP_PLANS, DEFAULT_POINTS_PACKAGES;
+var init_membership = __esm({
+  "src/utils/membership.ts"() {
+    "use strict";
+    init_dist_node();
+    init_db();
+    init_admin();
+    FREE_LEVEL = {
+      levelKey: "free",
+      levelName: "\u514D\u8D39\u4F1A\u5458"
+    };
+    DEFAULT_MEMBERSHIP_PLANS = [
+      {
+        key: "free",
+        name: "\u514D\u8D39\u4F1A\u5458",
+        levelKey: "free",
+        levelName: "\u514D\u8D39\u4F1A\u5458",
+        billingPeriod: "free",
+        priceCny: 0,
+        points: 0,
+        pointValidityDays: 365,
+        maxShots: 30,
+        maxSeries: 1,
+        sortOrder: 0,
+        features: ["\u6BCF\u65E5\u767B\u5F55\u8D60\u9001\u79EF\u5206", "\u652F\u6301\u57FA\u7840\u77ED\u5267\u9879\u76EE\u521B\u4F5C", "\u4FDD\u7559\u57FA\u7840\u9879\u76EE\u8D44\u4EA7"]
+      },
+      {
+        key: "standard_monthly",
+        name: "\u6807\u51C6\u4F1A\u5458",
+        levelKey: "standard",
+        levelName: "\u6807\u51C6\u4F1A\u5458",
+        billingPeriod: "monthly",
+        priceCny: 60,
+        points: 500,
+        pointValidityDays: 31,
+        maxShots: 50,
+        maxSeries: 10,
+        sortOrder: 10,
+        features: ["\u6BCF\u6708 500 \u79EF\u5206", "\u652F\u6301\u9AD8\u6E05\u89C6\u9891\u751F\u6210", "\u4E0B\u8F7D\u53BB\u6C34\u5370", "\u57FA\u7840\u961F\u5217\u4F18\u5148\u7EA7"]
+      },
+      {
+        key: "advanced_monthly",
+        name: "\u9AD8\u7EA7\u4F1A\u5458",
+        levelKey: "advanced",
+        levelName: "\u9AD8\u7EA7\u4F1A\u5458",
+        billingPeriod: "monthly",
+        priceCny: 300,
+        points: 3e3,
+        pointValidityDays: 31,
+        maxShots: 80,
+        maxSeries: 50,
+        popular: true,
+        sortOrder: 20,
+        features: ["\u6BCF\u6708 3000 \u79EF\u5206", "\u9AD8\u5CF0\u961F\u5217\u4F18\u5148\u7EA7", "\u6279\u91CF\u4EFB\u52A1\u989D\u5EA6\u63D0\u5347", "\u4E0B\u8F7D\u53BB\u6C34\u5370"]
+      },
+      {
+        key: "standard_yearly",
+        name: "\u6807\u51C6\u5E74\u5361",
+        levelKey: "standard",
+        levelName: "\u6807\u51C6\u4F1A\u5458",
+        billingPeriod: "yearly",
+        priceCny: 576,
+        originalPriceCny: 720,
+        yearlyDiscountLabel: "8\u6298",
+        points: 6e3,
+        pointValidityDays: 365,
+        maxShots: 50,
+        maxSeries: 10,
+        sortOrder: 10,
+        features: ["\u6BCF\u5E74 6000 \u79EF\u5206", "\u542B 2 \u4E2A\u6708\u6298\u6263", "\u652F\u6301\u9AD8\u6E05\u89C6\u9891\u751F\u6210", "\u4E0B\u8F7D\u53BB\u6C34\u5370"]
+      },
+      {
+        key: "advanced_yearly",
+        name: "\u9AD8\u7EA7\u5E74\u5361",
+        levelKey: "advanced",
+        levelName: "\u9AD8\u7EA7\u4F1A\u5458",
+        billingPeriod: "yearly",
+        priceCny: 2880,
+        originalPriceCny: 3600,
+        yearlyDiscountLabel: "8\u6298",
+        points: 36e3,
+        pointValidityDays: 365,
+        maxShots: 80,
+        maxSeries: 50,
+        popular: true,
+        sortOrder: 20,
+        features: ["\u6BCF\u5E74 36000 \u79EF\u5206", "\u9AD8\u5CF0\u961F\u5217\u4F18\u5148\u7EA7", "\u6279\u91CF\u4EFB\u52A1\u989D\u5EA6\u63D0\u5347", "\u4E0B\u8F7D\u53BB\u6C34\u5370"]
+      }
+    ];
+    DEFAULT_POINTS_PACKAGES = [
+      { key: "points_500", points: 500, priceCny: 60, description: "\u7EA6\u751F\u6210 50 \u4E2A\u89C6\u9891\u7247\u6BB5\u6216 500 \u5F20\u56FE\u7247", validityDays: 730, sortOrder: 10 },
+      { key: "points_1000", points: 1e3, priceCny: 120, description: "\u7EA6\u751F\u6210 100 \u4E2A\u89C6\u9891\u7247\u6BB5\u6216 1000 \u5F20\u56FE\u7247", validityDays: 730, sortOrder: 20 },
+      { key: "points_1500", points: 1500, priceCny: 180, description: "\u7EA6\u751F\u6210 150 \u4E2A\u89C6\u9891\u7247\u6BB5\u6216 1500 \u5F20\u56FE\u7247", validityDays: 730, sortOrder: 30 },
+      { key: "points_3000", points: 3e3, priceCny: 360, description: "\u7EA6\u751F\u6210 300 \u4E2A\u89C6\u9891\u7247\u6BB5\u6216 3000 \u5F20\u56FE\u7247", validityDays: 730, sortOrder: 40 },
+      { key: "points_5000", points: 5e3, priceCny: 600, description: "\u7EA6\u751F\u6210 500 \u4E2A\u89C6\u9891\u7247\u6BB5\u6216 5000 \u5F20\u56FE\u7247", validityDays: 730, sortOrder: 50 }
+    ];
+  }
+});
+
+// src/utils/modelBilling.ts
+function now2() {
+  return /* @__PURE__ */ new Date();
+}
+function toNumber2(value) {
+  if (value === null || value === void 0 || value === "") return 0;
+  const numberValue = Number(value);
+  return Number.isFinite(numberValue) ? numberValue : 0;
+}
+function roundPoints(value) {
+  if (!Number.isFinite(value)) return 0;
+  return Math.max(0, Math.round(value * 1e6) / 1e6);
+}
+function normalizeCount(value) {
+  if (value === null || value === void 0 || value === "") return 1;
+  const count = Math.floor(toNumber2(value));
+  return Number.isFinite(count) ? Math.max(0, count) : 0;
+}
+function splitModelId(model) {
+  const value = String(model || "");
+  const separatorIndex = value.indexOf(":");
+  if (separatorIndex <= 0 || separatorIndex === value.length - 1) throw new Error("\u6A21\u578B\u53C2\u6570\u65E0\u6548");
+  return {
+    modelName: value.slice(separatorIndex + 1),
+    vendorId: value.slice(0, separatorIndex)
+  };
+}
+function boolFromDb2(value) {
+  return value === true || value === 1 || value === "1";
+}
+function stringifyMeta(value) {
+  if (value === null || value === void 0 || value === "") return null;
+  if (typeof value === "string") return value;
+  return JSON.stringify(value);
+}
+function parseMetaObject2(value) {
+  if (!value) return {};
+  if (typeof value === "object" && !Array.isArray(value)) return value;
+  if (typeof value !== "string") return {};
+  try {
+    const parsed = JSON.parse(value);
+    return parsed && typeof parsed === "object" && !Array.isArray(parsed) ? parsed : {};
+  } catch {
+    return {};
+  }
+}
+function mergeMeta(existing, patch) {
+  const patchData = parseMetaObject2(patch);
+  if (!Object.keys(patchData).length) return stringifyMeta(existing);
+  return stringifyMeta({
+    ...parseMetaObject2(existing),
+    ...patchData
+  });
+}
+function normalizeUsageNumber(value) {
+  const numberValue = Number(value);
+  return Number.isFinite(numberValue) ? numberValue : void 0;
+}
+async function resolveUsage(value) {
+  if (!value) return null;
+  const awaited = typeof value?.then === "function" ? await value : value;
+  const source = awaited?.totalUsage || awaited?.usage || awaited;
+  const usage = typeof source?.then === "function" ? await source : source;
+  if (!usage || typeof usage !== "object") return null;
+  const promptTokens = normalizeUsageNumber(usage.promptTokens ?? usage.prompt_tokens ?? usage.inputTokens ?? usage.input_tokens);
+  const completionTokens = normalizeUsageNumber(usage.completionTokens ?? usage.completion_tokens ?? usage.outputTokens ?? usage.output_tokens);
+  const reasoningTokens = normalizeUsageNumber(usage.reasoningTokens ?? usage.reasoning_tokens ?? usage.outputTokenDetails?.reasoningTokens);
+  const cachedInputTokens = normalizeUsageNumber(usage.cachedInputTokens ?? usage.cached_input_tokens ?? usage.inputTokenDetails?.cacheReadTokens);
+  const totalTokens = normalizeUsageNumber(usage.totalTokens ?? usage.total_tokens) ?? (promptTokens !== void 0 || completionTokens !== void 0 ? roundPoints((promptTokens || 0) + (completionTokens || 0) + (reasoningTokens || 0)) : void 0);
+  if (promptTokens === void 0 && completionTokens === void 0 && reasoningTokens === void 0 && totalTokens === void 0 && cachedInputTokens === void 0) return null;
+  return {
+    cachedInputTokens,
+    completionTokens,
+    promptTokens,
+    reasoningTokens,
+    totalTokens
+  };
+}
+function deductBuckets2(current, amount) {
+  const values = {
+    bonusPoints: toNumber2(current.bonusPoints),
+    membershipPoints: toNumber2(current.membershipPoints),
+    rechargePoints: toNumber2(current.rechargePoints)
+  };
+  const orderedColumns = ["bonusPoints", "rechargePoints", "membershipPoints"];
+  let remaining = amount;
+  for (const column of orderedColumns) {
+    const used = Math.min(values[column], remaining);
+    values[column] = roundPoints(values[column] - used);
+    remaining = roundPoints(remaining - used);
+    if (remaining <= 0) break;
+  }
+  if (remaining > 0) throw new Error("\u7528\u6237\u79EF\u5206\u4E0D\u8DB3");
+  return values;
+}
+async function updatePointHoldBillingMeta(holdId, patch) {
+  if (!holdId || patch === null || patch === void 0) return;
+  const current = await pointHoldsTable().select("billingMeta").where("id", holdId).first();
+  if (!current) return;
+  await pointHoldsTable().where("id", holdId).update({
+    billingMeta: mergeMeta(current.billingMeta, patch),
+    updatedAt: now2()
+  });
+}
+async function recordPointHoldModelUsage(holdId, result, extraMeta) {
+  const tokenUsage = await resolveUsage(result);
+  if (!tokenUsage) return;
+  await updatePointHoldBillingMeta(holdId, {
+    ...extraMeta || {},
+    tokenUsage,
+    usage: tokenUsage,
+    usageRecordedAt: now2().toISOString(),
+    usageSource: "ai-sdk"
+  });
+}
+async function resolveModelBillingKey(modelKey) {
+  const key = String(modelKey || "").trim();
+  if (!logicalAiTypes.has(key)) return key;
+  const agentUseModeVal = await db_default("o_setting").where("key", "agentUseMode").first();
+  if (agentUseModeVal?.value === "1") {
+    const agentDeployData2 = await db_default("o_agentDeploy").where("key", key).first();
+    if (!agentDeployData2?.modelName) throw new Error(`\u9AD8\u7EA7\u914D\u7F6E\u6A21\u5F0F\u4E0B\uFF0C\u672A\u627E\u5230\u5BF9\u5E94\u7684\u6A21\u578B\u914D\u7F6E ${key}`);
+    return String(agentDeployData2.modelName);
+  }
+  if (agentUseModeVal?.value === "0") {
+    const [mainly2] = key.split(/:(.+)/);
+    const mainlyData2 = await db_default("o_agentDeploy").where("key", mainly2).first();
+    if (!mainlyData2?.modelName) throw new Error(`\u7B80\u6613\u914D\u7F6E\u6A21\u5F0F\u4E0B\uFF0C\u672A\u627E\u5230\u90E8\u7F72\u914D\u7F6E ${key}`);
+    return String(mainlyData2.modelName);
+  }
+  const agentDeployData = await db_default("o_agentDeploy").where("key", key).first();
+  if (agentDeployData?.modelName) return String(agentDeployData.modelName);
+  const [mainly] = key.split(/:(.+)/);
+  const mainlyData = await db_default("o_agentDeploy").where("key", mainly).first();
+  if (!mainlyData?.modelName) throw new Error(`\u672A\u627E\u5230\u90E8\u7F72\u914D\u7F6E ${key}`);
+  return String(mainlyData.modelName);
+}
+async function listModelBillingRules() {
+  const vendorRows = await db_default("o_vendorConfig").select("id", "enable").where("enable", 1).orderBy("id", "asc");
+  const rules = await billingRulesTable().select("*");
+  const ruleMap = /* @__PURE__ */ new Map();
+  for (const rule of rules) {
+    ruleMap.set(`${rule.vendorId}:${rule.modelName}`, rule);
+  }
+  const models = [];
+  for (const row of vendorRows) {
+    let vendorName = String(row.id);
+    let modelList = [];
+    try {
+      const vendorData2 = getVendor(String(row.id));
+      vendorName = vendorData2?.name || vendorName;
+      modelList = await getEnabledModelList(String(row.id));
+    } catch {
+      modelList = [];
+    }
+    for (const model of modelList) {
+      const rule = ruleMap.get(`${row.id}:${model.modelName}`);
+      models.push({
+        enabled: rule ? boolFromDb2(rule.enabled) : false,
+        model: `${row.id}:${model.modelName}`,
+        modelLabel: rule?.modelLabel || model.name || model.modelName,
+        modelName: model.modelName,
+        modelType: rule?.modelType || model.type || "text",
+        pointsPerCall: rule ? toNumber2(rule.pointsPerCall) : 0,
+        pricingMeta: rule?.pricingMeta || null,
+        ruleId: rule?.id || null,
+        vendorEnabled: boolFromDb2(row.enable),
+        vendorId: String(row.id),
+        vendorName
+      });
+    }
+  }
+  return {
+    models,
+    summary: {
+      billableModels: models.filter((item) => item.enabled && item.pointsPerCall > 0).length,
+      models: models.length,
+      vendors: new Set(models.map((item) => item.vendorId)).size
+    }
+  };
+}
+async function saveModelBillingRules(rules) {
+  const currentTime = now2();
+  for (const input of rules) {
+    const vendorId = String(input.vendorId || "").trim();
+    const modelName = String(input.modelName || "").trim();
+    if (!vendorId || !modelName) throw new Error("\u6A21\u578B\u8BA1\u8D39\u89C4\u5219\u7F3A\u5C11\u6A21\u578B\u6807\u8BC6");
+    const payload = {
+      enabled: input.enabled !== false,
+      modelLabel: input.modelLabel ? String(input.modelLabel) : modelName,
+      modelName,
+      modelType: input.modelType ? String(input.modelType) : "text",
+      pointsPerCall: roundPoints(toNumber2(input.pointsPerCall)),
+      pricingMeta: stringifyMeta(input.pricingMeta),
+      updatedAt: currentTime,
+      vendorId
+    };
+    const existing = await billingRulesTable().where({ vendorId, modelName }).first();
+    if (existing) {
+      await billingRulesTable().where({ id: existing.id }).update(payload);
+    } else {
+      await billingRulesTable().insert({
+        id: v4_default(),
+        ...payload,
+        createdAt: currentTime
+      });
+    }
+  }
+  return listModelBillingRules();
+}
+async function getRuleMapForCalls(calls) {
+  const keys = calls.map((call) => splitModelId(call.model));
+  const rules = await billingRulesTable().where((builder) => {
+    keys.forEach(({ vendorId, modelName }, index) => {
+      const method = index === 0 ? "where" : "orWhere";
+      builder[method]({ vendorId, modelName });
+    });
+  });
+  const ruleMap = /* @__PURE__ */ new Map();
+  for (const rule of rules) {
+    ruleMap.set(`${rule.vendorId}:${rule.modelName}`, rule);
+  }
+  return ruleMap;
+}
+async function resolveActiveModel(modelId) {
+  const { vendorId, modelName } = splitModelId(modelId);
+  const vendorRow = await db_default("o_vendorConfig").select("id", "enable").where("id", vendorId).first();
+  if (!vendorRow || !boolFromDb2(vendorRow.enable)) throw new Error("\u6A21\u578B\u4F9B\u5E94\u5546\u4E0D\u5B58\u5728\u6216\u672A\u542F\u7528");
+  let vendorName = vendorId;
+  let modelList = [];
+  try {
+    const vendorData2 = getVendor(vendorId);
+    vendorName = vendorData2?.name || vendorName;
+    modelList = await getEnabledModelList(vendorId);
+  } catch {
+    throw new Error("\u6A21\u578B\u4F9B\u5E94\u5546\u914D\u7F6E\u4E0D\u53EF\u7528");
+  }
+  const model = modelList.find((item) => item?.modelName === modelName);
+  if (!model) throw new Error("\u6A21\u578B\u4E0D\u5B58\u5728\u6216\u672A\u542F\u7528");
+  return {
+    model,
+    modelName,
+    vendorId,
+    vendorName
+  };
+}
+async function quoteModelCalls(userId, calls) {
+  const normalizedCalls = calls.filter((call) => normalizeCount(call?.count) > 0);
+  for (const call of normalizedCalls) {
+    if (!String(call?.model || "").trim()) throw new Error("\u6A21\u578B\u53C2\u6570\u65E0\u6548");
+  }
+  const ruleMap = normalizedCalls.length ? await getRuleMapForCalls(normalizedCalls) : /* @__PURE__ */ new Map();
+  const items = [];
+  for (const call of normalizedCalls) {
+    const { model, modelName, vendorId, vendorName } = await resolveActiveModel(call.model);
+    const rule = ruleMap.get(`${vendorId}:${modelName}`);
+    const count = normalizeCount(call.count);
+    const pointsPerCall = rule && boolFromDb2(rule.enabled) ? roundPoints(toNumber2(rule.pointsPerCall)) : 0;
+    items.push({
+      count,
+      enabled: rule ? boolFromDb2(rule.enabled) : false,
+      model: call.model,
+      modelLabel: rule?.modelLabel || model.name || modelName,
+      modelName,
+      modelType: rule?.modelType || model.type || call.modelType || "text",
+      pointsPerCall,
+      requiredPoints: roundPoints(pointsPerCall * count),
+      vendorId,
+      vendorName
+    });
+  }
+  let totalPoints = 0;
+  let frozenPoints = 0;
+  if (userId) {
+    await ensureUserMembership(String(userId), false);
+    const balance = await userBalancesTable().where("userId", String(userId)).first();
+    totalPoints = toNumber2(balance?.balance);
+    frozenPoints = toNumber2(balance?.frozenAmount);
+  }
+  const requiredPoints = roundPoints(items.reduce((sum, item) => sum + item.requiredPoints, 0));
+  const availablePoints = Math.max(0, roundPoints(totalPoints - frozenPoints));
+  return {
+    availablePoints,
+    enough: requiredPoints <= availablePoints,
+    frozenPoints,
+    items,
+    requiredPoints,
+    totalPoints
+  };
+}
+async function reserveModelCallPoints(params) {
+  const amount = roundPoints(params.quote.requiredPoints);
+  if (amount <= 0) return null;
+  await ensureUserMembership(params.userId, false);
+  return await db.transaction(async (trx) => {
+    const existing = await pointHoldsTable(trx).where("idempotencyKey", params.idempotencyKey).first();
+    if (existing) {
+      const status = String(existing.status || "");
+      if (status === "frozen" || status === "settled") return existing;
+      throw new Error("\u8BE5\u6A21\u578B\u8C03\u7528\u51BB\u7ED3\u8BB0\u5F55\u5DF2\u91CA\u653E\uFF0C\u8BF7\u91CD\u65B0\u53D1\u8D77\u751F\u6210");
+    }
+    const current = await userBalancesTable(trx).where("userId", params.userId).forUpdate().first();
+    if (!current) throw new Error("\u7528\u6237\u79EF\u5206\u8D26\u6237\u4E0D\u5B58\u5728");
+    const balance = toNumber2(current.balance);
+    const frozen = toNumber2(current.frozenAmount);
+    const available = roundPoints(balance - frozen);
+    if (available < amount) {
+      throw new Error(`\u79EF\u5206\u4E0D\u8DB3\uFF0C\u9700\u8981 ${amount} \u79EF\u5206\uFF0C\u5F53\u524D\u53EF\u7528 ${Math.max(0, available)} \u79EF\u5206`);
+    }
+    const hold = {
+      amount,
+      billingMeta: stringifyMeta(params.billingMeta ?? params.quote),
+      description: params.description || `\u6A21\u578B\u8C03\u7528\u51BB\u7ED3 ${amount} \u79EF\u5206`,
+      episodeId: params.episodeId === null || params.episodeId === void 0 ? null : String(params.episodeId),
+      id: v4_default(),
+      idempotencyKey: params.idempotencyKey,
+      projectId: params.projectId === null || params.projectId === void 0 ? null : String(params.projectId),
+      relatedId: params.relatedId === null || params.relatedId === void 0 ? null : String(params.relatedId),
+      status: "frozen",
+      taskType: params.taskType || null,
+      userId: params.userId
+    };
+    await userBalancesTable(trx).where("userId", params.userId).update({
+      frozenAmount: roundPoints(frozen + amount),
+      updatedAt: now2()
+    });
+    await pointHoldsTable(trx).insert({
+      ...hold,
+      createdAt: now2(),
+      releasedAt: null,
+      settledAt: null,
+      updatedAt: now2()
+    });
+    return hold;
+  });
+}
+async function settlePointHold(holdId, billingMetaPatch) {
+  if (!holdId) return;
+  await db.transaction(async (trx) => {
+    const hold = await pointHoldsTable(trx).where("id", holdId).forUpdate().first();
+    if (!hold || hold.status !== "frozen") return;
+    const current = await userBalancesTable(trx).where("userId", hold.userId).forUpdate().first();
+    if (!current) throw new Error("\u7528\u6237\u79EF\u5206\u8D26\u6237\u4E0D\u5B58\u5728");
+    const amount = roundPoints(toNumber2(hold.amount));
+    const frozen = toNumber2(current.frozenAmount);
+    const nextBreakdown = deductBuckets2(current, amount);
+    const nextBalance = roundPoints(nextBreakdown.membershipPoints + nextBreakdown.rechargePoints + nextBreakdown.bonusPoints);
+    const bucketDeductions = {
+      bonus: roundPoints(toNumber2(current.bonusPoints) - nextBreakdown.bonusPoints),
+      membership: roundPoints(toNumber2(current.membershipPoints) - nextBreakdown.membershipPoints),
+      recharge: roundPoints(toNumber2(current.rechargePoints) - nextBreakdown.rechargePoints)
+    };
+    const billingMeta = mergeMeta(hold.billingMeta, {
+      ...parseMetaObject2(billingMetaPatch),
+      pointDeduction: {
+        balanceAfter: nextBalance,
+        balanceBefore: toNumber2(current.balance),
+        bucketDeductions
+      }
+    });
+    await userBalancesTable(trx).where("userId", hold.userId).update({
+      balance: nextBalance,
+      bonusPoints: nextBreakdown.bonusPoints,
+      frozenAmount: Math.max(0, roundPoints(frozen - amount)),
+      membershipPoints: nextBreakdown.membershipPoints,
+      rechargePoints: nextBreakdown.rechargePoints,
+      totalSpent: roundPoints(toNumber2(current.totalSpent) + amount),
+      updatedAt: now2()
+    });
+    await balanceTransactionsTable(trx).insert({
+      amount: -amount,
+      balanceAfter: nextBalance,
+      billingMeta,
+      createdAt: now2(),
+      description: hold.description || `\u6A21\u578B\u8C03\u7528\u6D88\u8017 ${amount} \u79EF\u5206`,
+      episodeId: hold.episodeId || null,
+      freezeId: hold.id,
+      id: v4_default(),
+      idempotencyKey: `consume:${hold.id}`,
+      projectId: hold.projectId || null,
+      relatedId: hold.relatedId || null,
+      taskType: hold.taskType || null,
+      type: "model_consume",
+      userId: hold.userId
+    });
+    await pointHoldsTable(trx).where("id", hold.id).update({
+      billingMeta,
+      settledAt: now2(),
+      status: "settled",
+      updatedAt: now2()
+    });
+  });
+}
+async function settlePointHoldWithModelUsage(holdId, result, extraMeta) {
+  await recordPointHoldModelUsage(holdId, result, extraMeta);
+  await settlePointHold(holdId);
+}
+async function releasePointHold(holdId) {
+  if (!holdId) return;
+  await db.transaction(async (trx) => {
+    const hold = await pointHoldsTable(trx).where("id", holdId).forUpdate().first();
+    if (!hold || hold.status !== "frozen") return;
+    const current = await userBalancesTable(trx).where("userId", hold.userId).forUpdate().first();
+    if (current) {
+      await userBalancesTable(trx).where("userId", hold.userId).update({
+        frozenAmount: Math.max(0, roundPoints(toNumber2(current.frozenAmount) - toNumber2(hold.amount))),
+        updatedAt: now2()
+      });
+    }
+    await pointHoldsTable(trx).where("id", hold.id).update({
+      releasedAt: now2(),
+      status: "released",
+      updatedAt: now2()
+    });
+  });
+}
+async function releasePointHoldsByRelatedId(params) {
+  const relatedId = String(params.relatedId);
+  const query = pointHoldsTable().select("id").where({ relatedId, status: "frozen" });
+  if (params.taskTypes?.length) query.whereIn("taskType", params.taskTypes);
+  if (params.userId !== null && params.userId !== void 0 && params.userId !== "") query.where("userId", String(params.userId));
+  const holds = await query;
+  await Promise.all(holds.map((hold) => releasePointHold(hold.id)));
+  return holds.length;
+}
+var logicalAiTypes, billingRulesTable, pointHoldsTable, balanceTransactionsTable, userBalancesTable;
+var init_modelBilling = __esm({
+  "src/utils/modelBilling.ts"() {
+    "use strict";
+    init_dist_node();
+    init_db();
+    init_vendor2();
+    init_membership();
+    logicalAiTypes = /* @__PURE__ */ new Set([
+      "scriptAgent",
+      "productionAgent",
+      "universalAi",
+      "scriptAgent:decisionAgent",
+      "scriptAgent:supervisionAgent",
+      "scriptAgent:storySkeletonAgent",
+      "scriptAgent:adaptationStrategyAgent",
+      "scriptAgent:scriptAgent",
+      "productionAgent:decisionAgent",
+      "productionAgent:supervisionAgent",
+      "productionAgent:deriveAssetsAgent",
+      "productionAgent:generateAssetsAgent",
+      "productionAgent:directorPlanAgent",
+      "productionAgent:storyboardGenAgent",
+      "productionAgent:storyboardPanelAgent",
+      "productionAgent:storyboardTableAgent"
+    ]);
+    billingRulesTable = (trx = db_default) => trx("model_billing_rules");
+    pointHoldsTable = (trx = db_default) => trx("point_holds");
+    balanceTransactionsTable = (trx = db_default) => trx("balance_transactions");
+    userBalancesTable = (trx = db_default) => trx("user_balances");
+  }
+});
+
+// src/utils/cleanNovel.ts
+var import_events5, CleanNovel, cleanNovel_default;
+var init_cleanNovel = __esm({
+  "src/utils/cleanNovel.ts"() {
+    "use strict";
+    import_events5 = require("events");
+    init_utils3();
+    init_stripThink();
+    init_modelBilling();
+    CleanNovel = class {
+      emitter;
+      /** 最大并发数 */
+      concurrency;
+      billing;
+      constructor(concurrency = 5, billing = {}) {
+        this.emitter = new import_events5.EventEmitter();
+        this.concurrency = concurrency;
+        this.billing = billing;
+      }
+      async processChapter(novel) {
+        let billingHold = null;
+        try {
+          if (this.billing.userId && this.billing.quote) {
+            const pointsPerCall = this.billing.quote.items[0]?.pointsPerCall || 0;
+            const itemQuote = {
+              ...this.billing.quote,
+              enough: true,
+              items: this.billing.quote.items[0] ? [{ ...this.billing.quote.items[0], count: 1, requiredPoints: pointsPerCall }] : [],
+              requiredPoints: pointsPerCall
+            };
+            billingHold = await reserveModelCallPoints({
+              billingMeta: itemQuote,
+              description: `\u5C0F\u8BF4\u4E8B\u4EF6\u63D0\u53D6\uFF1A${this.billing.quote.items[0]?.modelLabel || "universalAi"}`,
+              episodeId: novel.chapterIndex,
+              idempotencyKey: `model-call:${this.billing.taskType || "novel_event_extraction"}:${novel.id}:${this.billing.attemptId || utils_default.uuid()}`,
+              projectId: novel.projectId,
+              quote: itemQuote,
+              relatedId: novel.id,
+              taskType: this.billing.taskType || "novel_event_extraction",
+              userId: this.billing.userId
+            });
+          }
+          const prompt = await utils_default.getPrompts("event");
+          const promptData = await utils_default.db("o_prompt").where("type", "eventExtraction").first();
+          let eventExtraction = "";
+          if (promptData && promptData.useData) {
+            eventExtraction = promptData.useData;
+          } else {
+            eventExtraction = promptData?.data ?? void 0;
+          }
+          const resData = await utils_default.Ai.Text("universalAi").invoke({
+            system: eventExtraction ? JSON.stringify(eventExtraction) : prompt,
+            messages: [
+              {
+                role: "user",
+                content: "\u8BF7\u6839\u636E\u4EE5\u4E0B\u5C0F\u8BF4\u7AE0\u8282\u6570\uFF1A" + novel.chapterIndex + "\u5C0F\u8BF4\u7AE0\u8282\u5238\uFF1A" + novel.reel + "\u5C0F\u8BF4\u7AE0\u8282\u540D\u79F0\uFF1A" + novel.chapter + "\u3001\u5C0F\u8BF4\u7AE0\u8282\u5185\u5BB9\u751F\u6210\u4E8B\u4EF6\u6458\u8981\uFF1A\n" + novel.chapterData
+              }
+            ]
+          });
+          const preData = stripThink(resData.text);
+          if (!preData.trim()) throw new Error("AI \u672A\u8FD4\u56DE\u4E8B\u4EF6\u6458\u8981");
+          this.emitter.emit("item", { id: novel.id, event: preData });
+          await settlePointHoldWithModelUsage(billingHold?.id, resData);
+          return { id: novel.id, event: preData };
+        } catch (e) {
+          await releasePointHold(billingHold?.id);
+          this.emitter.emit("item", { id: novel.id, event: null, errorReason: utils_default.error(e).message });
+          return null;
+        }
+      }
+      async start(allChapters, projectId) {
+        const totalEvent = [];
+        let running = 0;
+        let index = 0;
+        const results = [];
+        const runNext = () => {
+          if (index >= allChapters.length) return Promise.resolve();
+          const novel = allChapters[index++];
+          running++;
+          return this.processChapter(novel).then((result) => {
+            if (result) totalEvent.push(result);
+            running--;
+            return runNext();
+          });
+        };
+        const workers = Array.from({ length: Math.min(this.concurrency, allChapters.length) }, () => runNext());
+        await Promise.all(workers);
+        return totalEvent;
+      }
+    };
+    cleanNovel_default = CleanNovel;
   }
 });
 
@@ -258043,9 +258102,15 @@ var init_negativePrompt = __esm({
       "\u955C\u5934\u6296\u52A8",
       "\u4EBA\u7269\u53D8\u5F62",
       "\u8EAB\u4EFD\u6F02\u79FB",
+      "\u670D\u88C5\u6F02\u79FB",
+      "\u573A\u666F\u6F02\u79FB",
       "\u524D\u540E\u5E27\u4E0D\u8FDE\u7EED",
       "\u7578\u5F62\u80A2\u4F53",
       "\u9519\u4E71\u624B\u6307",
+      "\u591A\u4F59\u624B\u6307",
+      "\u817F\u90E8\u6216\u8EAB\u4F53\u957F\u51FA\u624B\u6307",
+      "\u591A\u4F59\u624B\u81C2",
+      "\u624B\u638C\u878D\u5408",
       "\u91CD\u590D\u4EBA\u7269",
       "\u5B57\u5E55",
       "\u6C34\u5370",
@@ -258076,9 +258141,15 @@ var init_negativePrompt = __esm({
       "camera jitter",
       "morphing body",
       "identity drift",
+      "clothing drift",
+      "scene drift",
       "temporal inconsistency",
       "deformed anatomy",
       "bad hands",
+      "extra fingers",
+      "fingers growing from legs or body",
+      "extra arms",
+      "fused hands",
       "duplicated subjects",
       "subtitles",
       "watermark",
@@ -258142,13 +258213,13 @@ async function getModelConfig(value) {
   }
   return null;
 }
-async function getVendorTemplateFn(fnName, modelName) {
+async function getVendorRuntime(modelName) {
   const [id, name28] = modelName.split(/:(.+)/);
   const vendorConfigData = await utils_default.db("o_vendorConfig").where("id", id).first();
   if (!vendorConfigData) throw new Error(`\u672A\u627E\u5230\u4F9B\u5E94\u5546\u914D\u7F6E id=${id}`);
-  const modelList = await utils_default.vendor.getModelList(id);
+  const modelList = await utils_default.vendor.getEnabledModelList(id);
   const selectedModel = modelList.find((i) => i.modelName == name28);
-  if (!selectedModel) throw new Error(`\u672A\u627E\u5230\u6A21\u578B ${name28} id=${id}`);
+  if (!selectedModel) throw new Error(`\u6A21\u578B\u4E0D\u5B58\u5728\u6216\u672A\u542F\u7528 ${name28} id=${id}`);
   const code = utils_default.vendor.getCode(id);
   const jsCode = (0, import_sucrase2.transform)(code, { transforms: ["typescript"] }).code;
   const running = utils_default.vm(jsCode);
@@ -258156,6 +258227,10 @@ async function getVendorTemplateFn(fnName, modelName) {
     Object.assign(running.vendor.inputValues, JSON.parse(vendorConfigData.inputValues ?? "{}"));
     running.vendor.models = modelList;
   }
+  return { id, running, selectedModel };
+}
+async function getVendorTemplateFn(fnName, modelName) {
+  const { id, running, selectedModel } = await getVendorRuntime(modelName);
   const fn = running[fnName];
   if (!fn) throw new Error(`\u672A\u627E\u5230\u4F9B\u5E94\u5546\u914D\u7F6E\u4E2D\u7684\u51FD\u6570 ${fnName} id=${id}`);
   if (fnName == "textRequest")
@@ -258164,6 +258239,11 @@ async function getVendorTemplateFn(fnName, modelName) {
       return fn(selectedModel, effectiveThink, thinkLevel);
     };
   else return (input) => fn(input, selectedModel);
+}
+async function getOptionalVendorTemplateFn(fnName, modelName) {
+  const { running, selectedModel } = await getVendorRuntime(modelName);
+  const fn = running[fnName];
+  return fn ? (input) => fn(input, selectedModel) : null;
 }
 async function withTaskRecord(modelKey, taskClass, describe4, relatedObjects, projectId, fn, generationDetails) {
   const modelName = await resolveModelName(modelKey);
@@ -258187,7 +258267,16 @@ async function withTaskRecord(modelKey, taskClass, describe4, relatedObjects, pr
 async function urlToBase642(url4, retries = 3, delay2 = 1e3) {
   for (let attempt = 1; attempt <= retries; attempt++) {
     try {
-      const res = await axios_default.get(url4, { responseType: "arraybuffer" });
+      const res = await axios_default.get(url4, {
+        responseType: "arraybuffer",
+        timeout: 12e4,
+        maxContentLength: Infinity,
+        maxBodyLength: Infinity,
+        headers: {
+          Accept: "image/*,*/*",
+          "User-Agent": "Toonflow/1.0"
+        }
+      });
       const base644 = Buffer.from(res.data).toString("base64");
       return `${base644}`;
     } catch (e) {
@@ -258293,6 +258382,10 @@ var init_ai = __esm({
         const exec = async (mn) => {
           const fn = await getVendorTemplateFn("imageRequest", mn);
           const requestInput = withNegativePrompt(input, { mediaType: "image", modelKey: mn });
+          requestInput.onTaskId = async (task) => {
+            if (!task?.taskId) return;
+            await taskRecord2?.onProviderTask?.(task);
+          };
           await referenceList2imageBase642(mn.split(/:(.+)/)[0], requestInput);
           this.result = await fn(requestInput);
           if (this.result.startsWith("http")) this.result = await urlToBase642(this.result);
@@ -258312,6 +258405,20 @@ var init_ai = __esm({
         }
         await exec(modelName);
         return this;
+      }
+      async queryTask(input) {
+        const modelName = await resolveModelName(this.key);
+        const fn = await getOptionalVendorTemplateFn("imageResultRequest", modelName);
+        if (!fn) {
+          return {
+            status: "unsupported",
+            message: "\u8BE5\u4F9B\u5E94\u5546\u9002\u914D\u5668\u672A\u63D0\u4F9B\u56FE\u7247\u7ED3\u679C\u67E5\u8BE2\u63A5\u53E3"
+          };
+        }
+        const result = await fn(input);
+        const normalized = typeof result === "string" ? { status: "completed", data: result } : result;
+        if (normalized.status === "completed" && normalized.data?.startsWith("http")) normalized.data = await urlToBase642(normalized.data);
+        return normalized;
       }
       async save(path32, storageProvider = utils_default.oss.getStorageProvider()) {
         await utils_default.oss.writeFile(path32, this.result, storageProvider);
@@ -262847,6 +262954,39 @@ var init_getMaterialData = __esm({
   }
 });
 
+// src/utils/imageGenerationState.ts
+function getErrorMessage6(error75) {
+  if (typeof error75 === "string") return error75;
+  if (error75 && typeof error75 === "object" && "message" in error75) return String(error75.message || "");
+  return String(error75 || "");
+}
+function isAmbiguousImageGenerationError(error75) {
+  const message = getErrorMessage6(error75);
+  return /socket hang up|ECONNRESET|ECONNABORTED|ETIMEDOUT|timeout|network error/i.test(message);
+}
+function toPendingImageGenerationReason(error75) {
+  const message = getErrorMessage6(error75) || "\u8FDE\u63A5\u4E2D\u65AD";
+  if (message.includes(IMAGE_RESULT_PENDING_STATE) || message.includes("\u8BF7\u52FF\u76F4\u63A5\u91CD\u590D\u751F\u6210")) return message;
+  return `\u56FE\u7247\u751F\u6210${IMAGE_RESULT_PENDING_STATE}\uFF1A\u4F9B\u5E94\u5546\u8BF7\u6C42\u8FDE\u63A5\u4E2D\u65AD\uFF08${message}\uFF09\u3002\u4F9B\u5E94\u5546\u53EF\u80FD\u5DF2\u7EE7\u7EED\u6267\u884C\u5E76\u8BA1\u8D39\uFF0C\u8BF7\u5148\u5237\u65B0\u6216\u5230\u4F9B\u5E94\u5546\u5E73\u53F0\u786E\u8BA4\u7ED3\u679C\uFF0C\u907F\u514D\u76F4\u63A5\u91CD\u590D\u751F\u6210\u3002`;
+}
+function normalizeAmbiguousImageState(row) {
+  if (row?.state === "\u751F\u6210\u5931\u8D25" && isAmbiguousImageGenerationError(row.errorReason || "")) {
+    return {
+      ...row,
+      state: IMAGE_RESULT_PENDING_STATE,
+      errorReason: toPendingImageGenerationReason(row.errorReason || "")
+    };
+  }
+  return row;
+}
+var IMAGE_RESULT_PENDING_STATE;
+var init_imageGenerationState = __esm({
+  "src/utils/imageGenerationState.ts"() {
+    "use strict";
+    IMAGE_RESULT_PENDING_STATE = "\u7ED3\u679C\u5F85\u786E\u8BA4";
+  }
+});
+
 // src/routes/assets/pollingImageAssets.ts
 var import_express40, router40, pollingImageAssets_default;
 var init_pollingImageAssets = __esm({
@@ -262857,6 +262997,7 @@ var init_pollingImageAssets = __esm({
     init_zod();
     init_responseFormat();
     init_middleware();
+    init_imageGenerationState();
     router40 = import_express40.default.Router();
     pollingImageAssets_default = router40.post(
       "/",
@@ -262865,12 +263006,15 @@ var init_pollingImageAssets = __esm({
       }),
       async (req, res) => {
         const { ids } = req.body;
-        const data2 = await utils_default.db("o_assets").leftJoin("o_image", "o_assets.imageId", "o_image.id").whereIn("o_assets.id", ids).whereNot("o_image.state", "\u751F\u6210\u4E2D").select("o_image.state", "o_assets.id", "o_image.filePath");
+        const data2 = await utils_default.db("o_assets").leftJoin("o_image", "o_assets.imageId", "o_image.id").whereIn("o_assets.id", ids).whereNot("o_image.state", "\u751F\u6210\u4E2D").select("o_image.state", "o_assets.id", "o_image.filePath", "o_image.errorReason");
         const result = await Promise.all(
-          data2.map(async (item) => ({
-            ...item,
-            filePath: item.filePath ? await utils_default.oss.getSmallImageUrl(item.filePath) : null
-          }))
+          data2.map(async (item) => {
+            const normalized = normalizeAmbiguousImageState(item);
+            return {
+              ...normalized,
+              filePath: normalized.filePath ? await utils_default.oss.getSmallImageUrl(normalized.filePath) : null
+            };
+          })
         );
         res.status(200).send(success3(result));
       }
@@ -263359,6 +263503,7 @@ var init_batchGenerateImageAssets = __esm({
     init_dist_node();
     init_responseFormat();
     init_middleware();
+    init_imageGenerationState();
     init_negativePrompt();
     init_modelBilling();
     router46 = import_express46.default.Router();
@@ -263515,7 +263660,14 @@ var init_batchGenerateImageAssets = __esm({
                 taskClass: cfg.taskClass,
                 describe: describe4,
                 projectId,
-                relatedObjects: JSON.stringify(relatedObjects)
+                relatedObjects: JSON.stringify(relatedObjects),
+                onProviderTask: async (task) => {
+                  await utils_default.db("o_image").where("id", imageId).update({
+                    providerTaskId: task.taskId,
+                    providerTaskType: task.taskType || null,
+                    providerPayload: task.payload ? JSON.stringify(task.payload) : null
+                  });
+                }
               }
             );
             await aiImage.save(imagePath, storageProvider);
@@ -263537,8 +263689,11 @@ var init_batchGenerateImageAssets = __esm({
             });
             await utils_default.db("o_assets").where("id", item.id).update({ imageId });
           } catch (e) {
+            const normalized = utils_default.error(e);
+            const pendingConfirmation = isAmbiguousImageGenerationError(normalized.message);
+            const errorReason = pendingConfirmation ? toPendingImageGenerationReason(normalized.message) : normalized.message;
             await releasePointHold(billingHold?.id);
-            await utils_default.db("o_image").where("id", imageId).update({ state: "\u751F\u6210\u5931\u8D25", errorReason: utils_default.error(e).message });
+            await utils_default.db("o_image").where("id", imageId).update({ state: pendingConfirmation ? IMAGE_RESULT_PENDING_STATE : "\u751F\u6210\u5931\u8D25", errorReason });
           }
         })
       );
@@ -263774,6 +263929,7 @@ var init_generateAssets = __esm({
     init_dist_node();
     init_responseFormat();
     init_middleware();
+    init_imageGenerationState();
     init_negativePrompt();
     init_modelBilling();
     router49 = import_express49.default.Router();
@@ -263893,7 +264049,14 @@ var init_generateAssets = __esm({
             taskClass: cfg.taskClass,
             describe: describe4,
             projectId,
-            relatedObjects: JSON.stringify(relatedObjects)
+            relatedObjects: JSON.stringify(relatedObjects),
+            onProviderTask: async (task) => {
+              await utils_default.db("o_image").where("id", imageId).update({
+                providerTaskId: task.taskId,
+                providerTaskType: task.taskType || null,
+                providerPayload: task.payload ? JSON.stringify(task.payload) : null
+              });
+            }
           }
         );
         await aiImage.save(imagePath, storageProvider);
@@ -263921,9 +264084,13 @@ var init_generateAssets = __esm({
         await utils_default.db("o_assets").where("id", id).update({ imageId });
         return res.status(200).send(success3({ path: path32, assetsId: id }));
       } catch (e) {
+        const normalized = utils_default.error(e);
+        const pendingConfirmation = isAmbiguousImageGenerationError(normalized.message);
+        const errorReason = pendingConfirmation ? toPendingImageGenerationReason(normalized.message) : normalized.message;
         await releasePointHold(billingHold?.id);
-        await utils_default.db("o_image").where("id", imageId).update({ state: "\u751F\u6210\u5931\u8D25", errorReason: utils_default.error(e).message });
-        return res.status(400).send(error53(utils_default.error(e).message || "\u56FE\u7247\u751F\u6210\u5931\u8D25"));
+        await utils_default.db("o_image").where("id", imageId).update({ state: pendingConfirmation ? IMAGE_RESULT_PENDING_STATE : "\u751F\u6210\u5931\u8D25", errorReason });
+        if (pendingConfirmation) return res.status(202).send(success3({ pending: true, message: errorReason, assetsId: id }));
+        return res.status(400).send(error53(errorReason || "\u56FE\u7247\u751F\u6210\u5931\u8D25"));
       }
     });
   }
@@ -264050,16 +264217,139 @@ var init_polishAssetsPrompt = __esm({
   }
 });
 
+// src/routes/assetsGenerate/recoverImageResult.ts
+function parseProviderPayload(value) {
+  if (!value || typeof value !== "string") return null;
+  try {
+    return JSON.parse(value);
+  } catch {
+    return null;
+  }
+}
+async function resolveModelKey(params) {
+  if (params.model?.includes(":")) return params.model;
+  const storedModel = params.storedModel || params.model || "";
+  if (params.projectImageModel?.includes(":")) {
+    const [, projectModel] = params.projectImageModel.split(/:(.+)/);
+    if (!storedModel || projectModel === storedModel) return params.projectImageModel;
+  }
+  if (!storedModel) return null;
+  const vendors = await utils_default.db("o_vendorConfig").where("enable", 1).select("id");
+  for (const row of vendors) {
+    const models = await utils_default.vendor.getEnabledModelList(row.id);
+    if (models.some((item) => item.modelName === storedModel)) return `${row.id}:${storedModel}`;
+  }
+  return null;
+}
+var import_express51, router51, assetDirByType, recoverImageResult_default;
+var init_recoverImageResult = __esm({
+  "src/routes/assetsGenerate/recoverImageResult.ts"() {
+    "use strict";
+    import_express51 = __toESM(require_express2());
+    init_utils3();
+    init_zod();
+    init_dist_node();
+    init_responseFormat();
+    init_middleware();
+    router51 = import_express51.default.Router();
+    assetDirByType = {
+      role: "role",
+      scene: "scene",
+      tool: "props"
+    };
+    recoverImageResult_default = router51.post(
+      "/",
+      validateFields({
+        id: external_exports.number(),
+        model: external_exports.string().optional(),
+        projectId: external_exports.number()
+      }),
+      async (req, res) => {
+        const { id, model, projectId } = req.body;
+        const asset = await utils_default.db("o_assets").leftJoin("o_image", "o_assets.imageId", "o_image.id").leftJoin("o_project", "o_assets.projectId", "o_project.id").where("o_assets.id", id).andWhere("o_assets.projectId", projectId).select(
+          "o_assets.id",
+          "o_assets.type",
+          "o_assets.imageId",
+          "o_project.imageModel as projectImageModel",
+          "o_image.filePath",
+          "o_image.model",
+          "o_image.providerPayload",
+          "o_image.providerTaskId",
+          "o_image.providerTaskType",
+          "o_image.resolution",
+          "o_image.state"
+        ).first();
+        if (!asset?.imageId) return res.status(404).send(error53("\u672A\u627E\u5230\u56FE\u7247\u8BB0\u5F55"));
+        if (asset.filePath && asset.state === "\u5DF2\u5B8C\u6210") {
+          return res.status(200).send(
+            success3({
+              filePath: await utils_default.oss.getSmallImageUrl(asset.filePath),
+              status: "completed"
+            })
+          );
+        }
+        if (!asset.providerTaskId) {
+          return res.status(200).send(
+            success3({
+              status: "unavailable",
+              message: "\u8FD9\u6761\u8BB0\u5F55\u6CA1\u6709\u4F9B\u5E94\u5546\u4EFB\u52A1ID\uFF0C\u65E0\u6CD5\u901A\u8FC7\u4F9B\u5E94\u5546\u67E5\u8BE2\u63A5\u53E3\u56DE\u635E\u7ED3\u679C\uFF1B\u53EA\u80FD\u4EBA\u5DE5\u786E\u8BA4\u540E\u91CD\u65B0\u63D0\u4EA4\u751F\u6210\u3002"
+            })
+          );
+        }
+        const modelKey = await resolveModelKey({ model, projectImageModel: asset.projectImageModel, storedModel: asset.model });
+        if (!modelKey) {
+          return res.status(200).send(
+            success3({
+              status: "unsupported",
+              message: "\u65E0\u6CD5\u786E\u5B9A\u8BE5\u56FE\u7247\u5BF9\u5E94\u7684\u4F9B\u5E94\u5546\u6A21\u578B\uFF0C\u4E0D\u80FD\u67E5\u8BE2\u4F9B\u5E94\u5546\u7ED3\u679C\u3002"
+            })
+          );
+        }
+        const queryResult = await utils_default.Ai.Image(modelKey).queryTask({
+          payload: parseProviderPayload(asset.providerPayload),
+          taskId: asset.providerTaskId,
+          taskType: asset.providerTaskType
+        });
+        if (queryResult.status === "processing") return res.status(200).send(success3(queryResult));
+        if (queryResult.status === "unsupported") return res.status(200).send(success3(queryResult));
+        if (queryResult.status === "failed") {
+          await utils_default.db("o_image").where("id", asset.imageId).update({
+            errorReason: queryResult.error || queryResult.message || "\u4F9B\u5E94\u5546\u4EFB\u52A1\u5931\u8D25",
+            state: "\u751F\u6210\u5931\u8D25"
+          });
+          return res.status(200).send(success3(queryResult));
+        }
+        if (!queryResult.data) return res.status(200).send(success3({ status: "processing", message: "\u4F9B\u5E94\u5546\u6682\u672A\u8FD4\u56DE\u56FE\u7247\u7ED3\u679C" }));
+        const imagePath = `/${projectId}/${assetDirByType[asset.type] || "props"}/${v4_default()}.jpg`;
+        const storageProvider = utils_default.oss.getStorageProvider();
+        await utils_default.oss.writeFile(imagePath, queryResult.data, storageProvider);
+        await utils_default.db("o_image").where("id", asset.imageId).update({
+          errorReason: null,
+          filePath: imagePath,
+          storageProvider,
+          state: "\u5DF2\u5B8C\u6210"
+        });
+        return res.status(200).send(
+          success3({
+            filePath: await utils_default.oss.getSmallImageUrl(imagePath),
+            status: "completed"
+          })
+        );
+      }
+    );
+  }
+});
+
 // src/routes/auth/codes.ts
-var import_express51, router51, codes_default;
+var import_express52, router52, codes_default;
 var init_codes = __esm({
   "src/routes/auth/codes.ts"() {
     "use strict";
-    import_express51 = __toESM(require_express2());
+    import_express52 = __toESM(require_express2());
     init_responseFormat();
     init_admin();
-    router51 = import_express51.default.Router();
-    codes_default = router51.get("/", async (req, res) => {
+    router52 = import_express52.default.Router();
+    codes_default = router52.get("/", async (req, res) => {
       if (!isAdminRequest(req)) return res.status(403).send(error53("\u4F1A\u5458\u8D26\u53F7\u53EA\u80FD\u767B\u5F55 Web \u7AEF"));
       res.status(200).send(success3(["admin", "super", "*"]));
     });
@@ -264073,11 +264363,11 @@ function setToken(payload, expiresIn, secret) {
   }
   return import_jsonwebtoken4.default.sign(payload, secret, { expiresIn });
 }
-var import_express52, import_jsonwebtoken4, router52, login_default;
+var import_express53, import_jsonwebtoken4, router53, login_default;
 var init_login = __esm({
   "src/routes/login/login.ts"() {
     "use strict";
-    import_express52 = __toESM(require_express2());
+    import_express53 = __toESM(require_express2());
     init_utils3();
     import_jsonwebtoken4 = __toESM(require_jsonwebtoken());
     init_responseFormat();
@@ -264085,8 +264375,8 @@ var init_login = __esm({
     init_zod();
     init_password();
     init_admin();
-    router52 = import_express52.default.Router();
-    login_default = router52.post(
+    router53 = import_express53.default.Router();
+    login_default = router53.post(
       "/",
       validateFields({
         username: external_exports.string(),
@@ -264122,11 +264412,11 @@ var init_login = __esm({
 });
 
 // src/routes/auth/login.ts
-var import_express53, router53, login_default2;
+var import_express54, router54, login_default2;
 var init_login2 = __esm({
   "src/routes/auth/login.ts"() {
     "use strict";
-    import_express53 = __toESM(require_express2());
+    import_express54 = __toESM(require_express2());
     init_utils3();
     init_responseFormat();
     init_middleware();
@@ -264134,8 +264424,8 @@ var init_login2 = __esm({
     init_login();
     init_admin();
     init_zod();
-    router53 = import_express53.default.Router();
-    login_default2 = router53.post(
+    router54 = import_express54.default.Router();
+    login_default2 = router54.post(
       "/",
       validateFields({
         username: external_exports.string(),
@@ -264180,31 +264470,31 @@ var init_login2 = __esm({
 });
 
 // src/routes/auth/logout.ts
-var import_express54, router54, logout_default;
+var import_express55, router55, logout_default;
 var init_logout = __esm({
   "src/routes/auth/logout.ts"() {
     "use strict";
-    import_express54 = __toESM(require_express2());
+    import_express55 = __toESM(require_express2());
     init_responseFormat();
-    router54 = import_express54.default.Router();
-    logout_default = router54.post("/", async (_req, res) => {
+    router55 = import_express55.default.Router();
+    logout_default = router55.post("/", async (_req, res) => {
       res.status(200).send(success3(null, "\u9000\u51FA\u6210\u529F"));
     });
   }
 });
 
 // src/routes/auth/refresh.ts
-var import_express55, router55, refresh_default;
+var import_express56, router56, refresh_default;
 var init_refresh = __esm({
   "src/routes/auth/refresh.ts"() {
     "use strict";
-    import_express55 = __toESM(require_express2());
+    import_express56 = __toESM(require_express2());
     init_utils3();
     init_responseFormat();
     init_login();
     init_admin();
-    router55 = import_express55.default.Router();
-    refresh_default = router55.post("/", async (req, res) => {
+    router56 = import_express56.default.Router();
+    refresh_default = router56.post("/", async (req, res) => {
       const tokenUser = req.user;
       if (!tokenUser?.id) return res.status(401).send(error53("\u672A\u63D0\u4F9Btoken"));
       const user = await utils_default.db("o_user").where("id", tokenUser.id).first();
@@ -264227,15 +264517,15 @@ var init_refresh = __esm({
 });
 
 // src/routes/billing/quote.ts
-var import_express56, router56, quoteCallSchema, quoteBodySchema, quote_default;
+var import_express57, router57, quoteCallSchema, quoteBodySchema, quote_default;
 var init_quote = __esm({
   "src/routes/billing/quote.ts"() {
     "use strict";
-    import_express56 = __toESM(require_express2());
+    import_express57 = __toESM(require_express2());
     init_zod();
     init_responseFormat();
     init_modelBilling();
-    router56 = import_express56.default.Router();
+    router57 = import_express57.default.Router();
     quoteCallSchema = external_exports.object({
       audio: external_exports.boolean().optional(),
       count: external_exports.number().optional(),
@@ -264251,7 +264541,7 @@ var init_quote = __esm({
       }),
       quoteCallSchema
     ]);
-    quote_default = router56.post("/", async (req, res) => {
+    quote_default = router57.post("/", async (req, res) => {
       const userId = String(req.user?.id || "");
       if (!userId) return res.status(401).send(error53("\u672A\u63D0\u4F9Btoken"));
       const parseResult = quoteBodySchema.safeParse(req.body);
@@ -264271,17 +264561,17 @@ var init_quote = __esm({
 });
 
 // src/routes/common/getBigImage.ts
-var import_express57, router57, getBigImage_default;
+var import_express58, router58, getBigImage_default;
 var init_getBigImage = __esm({
   "src/routes/common/getBigImage.ts"() {
     "use strict";
-    import_express57 = __toESM(require_express2());
+    import_express58 = __toESM(require_express2());
     init_utils3();
     init_responseFormat();
     init_zod();
     init_middleware();
-    router57 = import_express57.default.Router();
-    getBigImage_default = router57.post(
+    router58 = import_express58.default.Router();
+    getBigImage_default = router58.post(
       "/",
       validateFields({
         url: external_exports.string()
@@ -264300,19 +264590,19 @@ var init_getBigImage = __esm({
 });
 
 // src/routes/cornerScape/batchBindAudio.ts
-var import_express58, router58, batchBindAudio_default;
+var import_express59, router59, batchBindAudio_default;
 var init_batchBindAudio = __esm({
   "src/routes/cornerScape/batchBindAudio.ts"() {
     "use strict";
-    import_express58 = __toESM(require_express2());
+    import_express59 = __toESM(require_express2());
     init_utils3();
     init_zod();
     init_responseFormat();
     init_middleware();
     init_dist30();
     init_modelBilling();
-    router58 = import_express58.default.Router();
-    batchBindAudio_default = router58.post(
+    router59 = import_express59.default.Router();
+    batchBindAudio_default = router59.post(
       "/",
       validateFields({
         projectId: external_exports.number(),
@@ -264447,17 +264737,18 @@ var init_batchBindAudio = __esm({
 });
 
 // src/routes/cornerScape/getAllAssets.ts
-var import_express59, router59, getAllAssets_default;
+var import_express60, router60, getAllAssets_default;
 var init_getAllAssets = __esm({
   "src/routes/cornerScape/getAllAssets.ts"() {
     "use strict";
-    import_express59 = __toESM(require_express2());
+    import_express60 = __toESM(require_express2());
     init_utils3();
     init_zod();
     init_responseFormat();
     init_middleware();
-    router59 = import_express59.default.Router();
-    getAllAssets_default = router59.post(
+    init_imageGenerationState();
+    router60 = import_express60.default.Router();
+    getAllAssets_default = router60.post(
       "/",
       validateFields({
         projectId: external_exports.number(),
@@ -264494,8 +264785,9 @@ var init_getAllAssets = __esm({
                 filePath: img.filePath && await utils_default.oss.getSmallImageUrl(img.filePath)
               }))
             );
+            const normalized = normalizeAmbiguousImageState(parent);
             return {
-              ...parent,
+              ...normalized,
               filePath: parent.filePath && await utils_default.oss.getSmallImageUrl(parent.filePath),
               historyImages: historyImagesWithUrl,
               relepedAudio: repleAssets[parent.id] ?? []
@@ -264509,17 +264801,17 @@ var init_getAllAssets = __esm({
 });
 
 // src/routes/cornerScape/pollingAudio.ts
-var import_express60, router60, pollingAudio_default;
+var import_express61, router61, pollingAudio_default;
 var init_pollingAudio = __esm({
   "src/routes/cornerScape/pollingAudio.ts"() {
     "use strict";
-    import_express60 = __toESM(require_express2());
+    import_express61 = __toESM(require_express2());
     init_utils3();
     init_zod();
     init_responseFormat();
     init_middleware();
-    router60 = import_express60.default.Router();
-    pollingAudio_default = router60.post(
+    router61 = import_express61.default.Router();
+    pollingAudio_default = router61.post(
       "/",
       validateFields({
         ids: external_exports.array(external_exports.number())
@@ -264534,17 +264826,17 @@ var init_pollingAudio = __esm({
 });
 
 // src/routes/cornerScape/updateAssetsAudio.ts
-var import_express61, router61, updateAssetsAudio_default;
+var import_express62, router62, updateAssetsAudio_default;
 var init_updateAssetsAudio = __esm({
   "src/routes/cornerScape/updateAssetsAudio.ts"() {
     "use strict";
-    import_express61 = __toESM(require_express2());
+    import_express62 = __toESM(require_express2());
     init_utils3();
     init_zod();
     init_responseFormat();
     init_middleware();
-    router61 = import_express61.default.Router();
-    updateAssetsAudio_default = router61.post(
+    router62 = import_express62.default.Router();
+    updateAssetsAudio_default = router62.post(
       "/",
       validateFields({
         assetsId: external_exports.number(),
@@ -264564,17 +264856,17 @@ var init_updateAssetsAudio = __esm({
 });
 
 // src/routes/general/generalStatistics.ts
-var import_express62, router62, generalStatistics_default;
+var import_express63, router63, generalStatistics_default;
 var init_generalStatistics = __esm({
   "src/routes/general/generalStatistics.ts"() {
     "use strict";
-    import_express62 = __toESM(require_express2());
+    import_express63 = __toESM(require_express2());
     init_utils3();
     init_zod();
     init_responseFormat();
     init_middleware();
-    router62 = import_express62.default.Router();
-    generalStatistics_default = router62.post(
+    router63 = import_express63.default.Router();
+    generalStatistics_default = router63.post(
       "/",
       validateFields({
         projectId: external_exports.number()
@@ -264600,17 +264892,17 @@ var init_generalStatistics = __esm({
 });
 
 // src/routes/general/getSingleProject.ts
-var import_express63, router63, getSingleProject_default;
+var import_express64, router64, getSingleProject_default;
 var init_getSingleProject = __esm({
   "src/routes/general/getSingleProject.ts"() {
     "use strict";
-    import_express63 = __toESM(require_express2());
+    import_express64 = __toESM(require_express2());
     init_utils3();
     init_zod();
     init_responseFormat();
     init_middleware();
-    router63 = import_express63.default.Router();
-    getSingleProject_default = router63.post(
+    router64 = import_express64.default.Router();
+    getSingleProject_default = router64.post(
       "/",
       validateFields({
         id: external_exports.number()
@@ -264627,17 +264919,17 @@ var init_getSingleProject = __esm({
 });
 
 // src/routes/general/updateProject.ts
-var import_express64, router64, updateProject_default;
+var import_express65, router65, updateProject_default;
 var init_updateProject = __esm({
   "src/routes/general/updateProject.ts"() {
     "use strict";
-    import_express64 = __toESM(require_express2());
+    import_express65 = __toESM(require_express2());
     init_utils3();
     init_zod();
     init_responseFormat();
     init_middleware();
-    router64 = import_express64.default.Router();
-    updateProject_default = router64.post(
+    router65 = import_express65.default.Router();
+    updateProject_default = router65.post(
       "/",
       validateFields({
         id: external_exports.number(),
@@ -264665,15 +264957,15 @@ var init_updateProject = __esm({
 });
 
 // src/routes/invite/generate.ts
-var import_express65, router65, generate_default;
+var import_express66, router66, generate_default;
 var init_generate = __esm({
   "src/routes/invite/generate.ts"() {
     "use strict";
-    import_express65 = __toESM(require_express2());
+    import_express66 = __toESM(require_express2());
     init_responseFormat();
     init_invite();
-    router65 = import_express65.default.Router();
-    generate_default = router65.post("/", async (req, res) => {
+    router66 = import_express66.default.Router();
+    generate_default = router66.post("/", async (req, res) => {
       const userId = String(req.user?.id || "");
       if (!userId) return res.status(401).send(error53("\u672A\u63D0\u4F9Btoken"));
       try {
@@ -264686,15 +264978,15 @@ var init_generate = __esm({
 });
 
 // src/routes/invite/my.ts
-var import_express66, router66, my_default;
+var import_express67, router67, my_default;
 var init_my = __esm({
   "src/routes/invite/my.ts"() {
     "use strict";
-    import_express66 = __toESM(require_express2());
+    import_express67 = __toESM(require_express2());
     init_responseFormat();
     init_invite();
-    router66 = import_express66.default.Router();
-    my_default = router66.get("/", async (req, res) => {
+    router67 = import_express67.default.Router();
+    my_default = router67.get("/", async (req, res) => {
       const userId = String(req.user?.id || "");
       if (!userId) return res.status(401).send(error53("\u672A\u63D0\u4F9Btoken"));
       try {
@@ -264707,17 +264999,17 @@ var init_my = __esm({
 });
 
 // src/routes/invite/request.ts
-var import_express67, router67, request_default;
+var import_express68, router68, request_default;
 var init_request = __esm({
   "src/routes/invite/request.ts"() {
     "use strict";
-    import_express67 = __toESM(require_express2());
+    import_express68 = __toESM(require_express2());
     init_zod();
     init_responseFormat();
     init_middleware();
     init_invite();
-    router67 = import_express67.default.Router();
-    request_default = router67.post(
+    router68 = import_express68.default.Router();
+    request_default = router68.post(
       "/",
       validateFields({
         reason: external_exports.string().max(500).optional()
@@ -264737,11 +265029,11 @@ var init_request = __esm({
 });
 
 // src/routes/login/register.ts
-var import_express68, router68, register_default;
+var import_express69, router69, register_default;
 var init_register = __esm({
   "src/routes/login/register.ts"() {
     "use strict";
-    import_express68 = __toESM(require_express2());
+    import_express69 = __toESM(require_express2());
     init_utils3();
     init_responseFormat();
     init_middleware();
@@ -264751,8 +265043,8 @@ var init_register = __esm({
     init_admin();
     init_invite();
     init_db();
-    router68 = import_express68.default.Router();
-    register_default = router68.post(
+    router69 = import_express69.default.Router();
+    register_default = router69.post(
       "/",
       validateFields({
         username: external_exports.string(),
@@ -264810,15 +265102,15 @@ var init_register = __esm({
 });
 
 // src/routes/membership/me.ts
-var import_express69, router69, me_default;
+var import_express70, router70, me_default;
 var init_me = __esm({
   "src/routes/membership/me.ts"() {
     "use strict";
-    import_express69 = __toESM(require_express2());
+    import_express70 = __toESM(require_express2());
     init_responseFormat();
     init_membership();
-    router69 = import_express69.default.Router();
-    me_default = router69.get("/", async (req, res) => {
+    router70 = import_express70.default.Router();
+    me_default = router70.get("/", async (req, res) => {
       const userId = String(req.user?.id || "");
       if (!userId) return res.status(401).send(error53("\u672A\u63D0\u4F9Btoken"));
       try {
@@ -264831,18 +265123,18 @@ var init_me = __esm({
 });
 
 // src/routes/membership/orders.ts
-var import_express70, router70, orders_default2;
+var import_express71, router71, orders_default2;
 var init_orders2 = __esm({
   "src/routes/membership/orders.ts"() {
     "use strict";
-    import_express70 = __toESM(require_express2());
+    import_express71 = __toESM(require_express2());
     init_zod();
     init_responseFormat();
     init_middleware();
     init_membership();
     init_payment();
-    router70 = import_express70.default.Router();
-    router70.post(
+    router71 = import_express71.default.Router();
+    router71.post(
       "/:orderNo/pay",
       validateFields({
         paymentProvider: external_exports.enum(["alipay", "wechat"]).optional()
@@ -264864,7 +265156,7 @@ var init_orders2 = __esm({
         }
       }
     );
-    router70.get("/:orderNo", async (req, res) => {
+    router71.get("/:orderNo", async (req, res) => {
       const userId = String(req.user?.id || "");
       if (!userId) return res.status(401).send(error53("\u672A\u63D0\u4F9Btoken"));
       try {
@@ -264874,7 +265166,7 @@ var init_orders2 = __esm({
         return res.status(404).send(error53(err?.message || "\u8BA2\u5355\u4E0D\u5B58\u5728"));
       }
     });
-    router70.post(
+    router71.post(
       "/",
       validateFields({
         kind: external_exports.enum(["plan", "points"]),
@@ -264905,19 +265197,19 @@ var init_orders2 = __esm({
         }
       }
     );
-    orders_default2 = router70;
+    orders_default2 = router71;
   }
 });
 
 // src/routes/menu/all.ts
-var import_express71, router71, dashboardMenus, adminSettingsMenus, adminMembershipMenus, adminAccountMenus, all_default;
+var import_express72, router72, dashboardMenus, adminSettingsMenus, adminMembershipMenus, adminAccountMenus, all_default;
 var init_all = __esm({
   "src/routes/menu/all.ts"() {
     "use strict";
-    import_express71 = __toESM(require_express2());
+    import_express72 = __toESM(require_express2());
     init_responseFormat();
     init_admin();
-    router71 = import_express71.default.Router();
+    router72 = import_express72.default.Router();
     dashboardMenus = [
       {
         component: "BasicLayout",
@@ -265149,25 +265441,24 @@ var init_all = __esm({
         path: "/admin/users"
       }
     ];
-    all_default = router71.get("/", async (req, res) => {
+    all_default = router72.get("/", async (req, res) => {
       res.status(200).send(success3(isAdminRequest(req) ? [...dashboardMenus, ...adminMembershipMenus, ...adminAccountMenus, ...adminSettingsMenus] : dashboardMenus));
     });
   }
 });
 
 // src/routes/modelSelect/getModelDetail.ts
-var import_express72, router72, getModelDetail_default;
+var import_express73, router73, getModelDetail_default;
 var init_getModelDetail = __esm({
   "src/routes/modelSelect/getModelDetail.ts"() {
     "use strict";
-    import_express72 = __toESM(require_express2());
+    import_express73 = __toESM(require_express2());
     init_utils3();
     init_zod();
     init_responseFormat();
     init_middleware();
-    init_modelBilling();
-    router72 = import_express72.default.Router();
-    getModelDetail_default = router72.post(
+    router73 = import_express73.default.Router();
+    getModelDetail_default = router73.post(
       "/",
       validateFields({
         modelId: external_exports.string()
@@ -265175,10 +265466,8 @@ var init_getModelDetail = __esm({
       async (req, res) => {
         const { modelId } = req.body;
         const [id, name28] = modelId.split(/:(.+)/);
-        const vendorRow = await utils_default.db("o_vendorConfig").select("enable").where("id", id).first();
-        if (!vendorRow || Number(vendorRow.enable || 0) !== 1) return res.status(404).send(error53("\u6A21\u578B\u672A\u627E\u5230"));
-        const models = await utils_default.vendor.getModelList(id);
-        const findData = models.find((i) => i.modelName == name28 && isVendorModelEnabled(i));
+        const models = await utils_default.vendor.getEnabledModelList(id);
+        const findData = models.find((i) => i.modelName == name28);
         if (!findData) return res.status(404).send(error53("\u6A21\u578B\u672A\u627E\u5230"));
         res.status(200).send(success3(findData));
       }
@@ -265187,18 +265476,17 @@ var init_getModelDetail = __esm({
 });
 
 // src/routes/modelSelect/getModelList.ts
-var import_express73, router73, getModelList_default;
+var import_express74, router74, getModelList_default;
 var init_getModelList = __esm({
   "src/routes/modelSelect/getModelList.ts"() {
     "use strict";
-    import_express73 = __toESM(require_express2());
+    import_express74 = __toESM(require_express2());
     init_utils3();
     init_zod();
     init_responseFormat();
     init_middleware();
-    init_modelBilling();
-    router73 = import_express73.default.Router();
-    getModelList_default = router73.post(
+    router74 = import_express74.default.Router();
+    getModelList_default = router74.post(
       "/",
       validateFields({
         type: external_exports.enum(["text", "image", "video", "all"])
@@ -265209,12 +265497,12 @@ var init_getModelList = __esm({
         if (!dataList || dataList.length === 0) {
           return res.status(404).send({ error: "\u6A21\u578B\u672A\u627E\u5230" });
         }
-        const modelList = await Promise.all(dataList.map((i) => utils_default.vendor.getModelList(i.id)));
+        const modelList = await Promise.all(dataList.map((i) => utils_default.vendor.getEnabledModelList(i.id)));
         const result = await Promise.all(
           dataList.map(async (data2, index) => {
             const vendorData2 = await utils_default.vendor.getVendor(data2.id);
             const models = modelList[index];
-            const filtered = type === "all" ? models.filter((item) => item.type !== "video" && isVendorModelEnabled(item)) : models.filter((item) => item.type === type && isVendorModelEnabled(item));
+            const filtered = type === "all" ? models.filter((item) => item.type !== "video") : models.filter((item) => item.type === type);
             return filtered.map((item) => ({
               id: data2.id,
               label: item.name,
@@ -265231,18 +265519,18 @@ var init_getModelList = __esm({
 });
 
 // src/routes/novel/addNovel.ts
-var import_express74, router74, addNovel_default;
+var import_express75, router75, addNovel_default;
 var init_addNovel = __esm({
   "src/routes/novel/addNovel.ts"() {
     "use strict";
-    import_express74 = __toESM(require_express2());
+    import_express75 = __toESM(require_express2());
     init_utils3();
     init_zod();
     init_responseFormat();
     init_middleware();
     init_modelBilling();
-    router74 = import_express74.default.Router();
-    addNovel_default = router74.post(
+    router75 = import_express75.default.Router();
+    addNovel_default = router75.post(
       "/",
       validateFields({
         projectId: external_exports.number(),
@@ -265310,17 +265598,17 @@ var init_addNovel = __esm({
 });
 
 // src/routes/novel/batchDeleteNovel.ts
-var import_express75, router75, batchDeleteNovel_default;
+var import_express76, router76, batchDeleteNovel_default;
 var init_batchDeleteNovel = __esm({
   "src/routes/novel/batchDeleteNovel.ts"() {
     "use strict";
-    import_express75 = __toESM(require_express2());
+    import_express76 = __toESM(require_express2());
     init_utils3();
     init_zod();
     init_responseFormat();
     init_middleware();
-    router75 = import_express75.default.Router();
-    batchDeleteNovel_default = router75.post(
+    router76 = import_express76.default.Router();
+    batchDeleteNovel_default = router76.post(
       "/",
       validateFields({
         ids: external_exports.array(external_exports.number())
@@ -265342,17 +265630,17 @@ var init_batchDeleteNovel = __esm({
 });
 
 // src/routes/novel/delNovel.ts
-var import_express76, router76, delNovel_default;
+var import_express77, router77, delNovel_default;
 var init_delNovel = __esm({
   "src/routes/novel/delNovel.ts"() {
     "use strict";
-    import_express76 = __toESM(require_express2());
+    import_express77 = __toESM(require_express2());
     init_utils3();
     init_zod();
     init_responseFormat();
     init_middleware();
-    router76 = import_express76.default.Router();
-    delNovel_default = router76.post(
+    router77 = import_express77.default.Router();
+    delNovel_default = router77.post(
       "/",
       validateFields({
         id: external_exports.number()
@@ -265371,17 +265659,17 @@ var init_delNovel = __esm({
 });
 
 // src/routes/novel/event/batchDeleteEvent.ts
-var import_express77, router77, batchDeleteEvent_default;
+var import_express78, router78, batchDeleteEvent_default;
 var init_batchDeleteEvent = __esm({
   "src/routes/novel/event/batchDeleteEvent.ts"() {
     "use strict";
-    import_express77 = __toESM(require_express2());
+    import_express78 = __toESM(require_express2());
     init_utils3();
     init_zod();
     init_responseFormat();
     init_middleware();
-    router77 = import_express77.default.Router();
-    batchDeleteEvent_default = router77.post(
+    router78 = import_express78.default.Router();
+    batchDeleteEvent_default = router78.post(
       "/",
       validateFields({
         ids: external_exports.array(external_exports.number())
@@ -265397,17 +265685,17 @@ var init_batchDeleteEvent = __esm({
 });
 
 // src/routes/novel/event/deletEvent.ts
-var import_express78, router78, deletEvent_default;
+var import_express79, router79, deletEvent_default;
 var init_deletEvent = __esm({
   "src/routes/novel/event/deletEvent.ts"() {
     "use strict";
-    import_express78 = __toESM(require_express2());
+    import_express79 = __toESM(require_express2());
     init_utils3();
     init_zod();
     init_responseFormat();
     init_middleware();
-    router78 = import_express78.default.Router();
-    deletEvent_default = router78.post(
+    router79 = import_express79.default.Router();
+    deletEvent_default = router79.post(
       "/",
       validateFields({
         id: external_exports.number()
@@ -265423,18 +265711,18 @@ var init_deletEvent = __esm({
 });
 
 // src/routes/novel/event/generateEvents.ts
-var import_express79, router79, generateEvents_default;
+var import_express80, router80, generateEvents_default;
 var init_generateEvents = __esm({
   "src/routes/novel/event/generateEvents.ts"() {
     "use strict";
-    import_express79 = __toESM(require_express2());
+    import_express80 = __toESM(require_express2());
     init_utils3();
     init_zod();
     init_responseFormat();
     init_middleware();
     init_modelBilling();
-    router79 = import_express79.default.Router();
-    generateEvents_default = router79.post(
+    router80 = import_express80.default.Router();
+    generateEvents_default = router80.post(
       "/",
       validateFields({
         projectId: external_exports.number(),
@@ -265485,18 +265773,18 @@ var init_generateEvents = __esm({
 });
 
 // src/routes/novel/event/getEvent.ts
-var import_express80, router80, getEvent_default;
+var import_express81, router81, getEvent_default;
 var init_getEvent = __esm({
   "src/routes/novel/event/getEvent.ts"() {
     "use strict";
-    import_express80 = __toESM(require_express2());
+    import_express81 = __toESM(require_express2());
     init_utils3();
     init_db();
     init_zod();
     init_responseFormat();
     init_middleware();
-    router80 = import_express80.default.Router();
-    getEvent_default = router80.post(
+    router81 = import_express81.default.Router();
+    getEvent_default = router81.post(
       "/",
       validateFields({
         projectId: external_exports.number(),
@@ -265530,17 +265818,17 @@ var init_getEvent = __esm({
 });
 
 // src/routes/novel/getNovel.ts
-var import_express81, router81, getNovel_default;
+var import_express82, router82, getNovel_default;
 var init_getNovel = __esm({
   "src/routes/novel/getNovel.ts"() {
     "use strict";
-    import_express81 = __toESM(require_express2());
+    import_express82 = __toESM(require_express2());
     init_utils3();
     init_zod();
     init_responseFormat();
     init_middleware();
-    router81 = import_express81.default.Router();
-    getNovel_default = router81.post(
+    router82 = import_express82.default.Router();
+    getNovel_default = router82.post(
       "/",
       validateFields({
         projectId: external_exports.number(),
@@ -265568,17 +265856,17 @@ var init_getNovel = __esm({
 });
 
 // src/routes/novel/getNovelData.ts
-var import_express82, router82, getNovelData_default;
+var import_express83, router83, getNovelData_default;
 var init_getNovelData = __esm({
   "src/routes/novel/getNovelData.ts"() {
     "use strict";
-    import_express82 = __toESM(require_express2());
+    import_express83 = __toESM(require_express2());
     init_utils3();
     init_zod();
     init_responseFormat();
     init_middleware();
-    router82 = import_express82.default.Router();
-    getNovelData_default = router82.post(
+    router83 = import_express83.default.Router();
+    getNovelData_default = router83.post(
       "/",
       validateFields({
         projectId: external_exports.number()
@@ -265593,17 +265881,17 @@ var init_getNovelData = __esm({
 });
 
 // src/routes/novel/getNovelEventState.ts
-var import_express83, router83, getNovelEventState_default;
+var import_express84, router84, getNovelEventState_default;
 var init_getNovelEventState = __esm({
   "src/routes/novel/getNovelEventState.ts"() {
     "use strict";
-    import_express83 = __toESM(require_express2());
+    import_express84 = __toESM(require_express2());
     init_utils3();
     init_zod();
     init_responseFormat();
     init_middleware();
-    router83 = import_express83.default.Router();
-    getNovelEventState_default = router83.post(
+    router84 = import_express84.default.Router();
+    getNovelEventState_default = router84.post(
       "/",
       validateFields({
         ids: external_exports.array(external_exports.number())
@@ -265618,17 +265906,17 @@ var init_getNovelEventState = __esm({
 });
 
 // src/routes/novel/getNovelIndex.ts
-var import_express84, router84, getNovelIndex_default;
+var import_express85, router85, getNovelIndex_default;
 var init_getNovelIndex = __esm({
   "src/routes/novel/getNovelIndex.ts"() {
     "use strict";
-    import_express84 = __toESM(require_express2());
+    import_express85 = __toESM(require_express2());
     init_utils3();
     init_zod();
     init_responseFormat();
     init_middleware();
-    router84 = import_express84.default.Router();
-    getNovelIndex_default = router84.post(
+    router85 = import_express85.default.Router();
+    getNovelIndex_default = router85.post(
       "/",
       validateFields({
         projectId: external_exports.number()
@@ -265643,17 +265931,17 @@ var init_getNovelIndex = __esm({
 });
 
 // src/routes/novel/updateNovel.ts
-var import_express85, router85, updateNovel_default;
+var import_express86, router86, updateNovel_default;
 var init_updateNovel = __esm({
   "src/routes/novel/updateNovel.ts"() {
     "use strict";
-    import_express85 = __toESM(require_express2());
+    import_express86 = __toESM(require_express2());
     init_utils3();
     init_zod();
     init_responseFormat();
     init_middleware();
-    router85 = import_express85.default.Router();
-    updateNovel_default = router85.post(
+    router86 = import_express86.default.Router();
+    updateNovel_default = router86.post(
       "/",
       validateFields({
         id: external_exports.number(),
@@ -265679,16 +265967,16 @@ var init_updateNovel = __esm({
 });
 
 // src/routes/other/deleteAllData.ts
-var import_express86, router86, deleteAllData_default;
+var import_express87, router87, deleteAllData_default;
 var init_deleteAllData = __esm({
   "src/routes/other/deleteAllData.ts"() {
     "use strict";
-    import_express86 = __toESM(require_express2());
+    import_express87 = __toESM(require_express2());
     init_initDB();
     init_db();
     init_responseFormat();
-    router86 = import_express86.default.Router();
-    deleteAllData_default = router86.post(
+    router87 = import_express87.default.Router();
+    deleteAllData_default = router87.post(
       "/",
       async (req, res) => {
         await initDB_default(db, true);
@@ -265699,15 +265987,15 @@ var init_deleteAllData = __esm({
 });
 
 // src/routes/other/getVersion.ts
-var import_express87, router87, getVersion_default;
+var import_express88, router88, getVersion_default;
 var init_getVersion = __esm({
   "src/routes/other/getVersion.ts"() {
     "use strict";
-    import_express87 = __toESM(require_express2());
+    import_express88 = __toESM(require_express2());
     init_responseFormat();
     init_writeVersion();
-    router87 = import_express87.default.Router();
-    getVersion_default = router87.get("/", async (req, res) => {
+    router88 = import_express88.default.Router();
+    getVersion_default = router88.get("/", async (req, res) => {
       const version3 = await getVersion();
       res.status(200).send(success3(version3));
     });
@@ -265715,14 +266003,14 @@ var init_getVersion = __esm({
 });
 
 // src/routes/payment/alipay/notify.ts
-var import_express88, router88, notify_default;
+var import_express89, router89, notify_default;
 var init_notify = __esm({
   "src/routes/payment/alipay/notify.ts"() {
     "use strict";
-    import_express88 = __toESM(require_express2());
+    import_express89 = __toESM(require_express2());
     init_payment();
-    router88 = import_express88.default.Router();
-    notify_default = router88.post("/", async (req, res) => {
+    router89 = import_express89.default.Router();
+    notify_default = router89.post("/", async (req, res) => {
       try {
         await handleAlipayNotify(req.body || {});
         return res.status(200).type("text/plain").send("success");
@@ -265735,14 +266023,14 @@ var init_notify = __esm({
 });
 
 // src/routes/payment/alipay/return.ts
-var import_express89, router89, return_default;
+var import_express90, router90, return_default;
 var init_return = __esm({
   "src/routes/payment/alipay/return.ts"() {
     "use strict";
-    import_express89 = __toESM(require_express2());
+    import_express90 = __toESM(require_express2());
     init_payment();
-    router89 = import_express89.default.Router();
-    return_default = router89.get("/", async (req, res) => {
+    router90 = import_express90.default.Router();
+    return_default = router90.get("/", async (req, res) => {
       try {
         const result = await handleAlipayReturn(req.query || {});
         const paid = ["TRADE_SUCCESS", "TRADE_FINISHED"].includes(String(result.trade_status || ""));
@@ -265761,15 +266049,15 @@ var init_return = __esm({
 });
 
 // src/routes/payment/options.ts
-var import_express90, router90, options_default3;
+var import_express91, router91, options_default3;
 var init_options3 = __esm({
   "src/routes/payment/options.ts"() {
     "use strict";
-    import_express90 = __toESM(require_express2());
+    import_express91 = __toESM(require_express2());
     init_responseFormat();
     init_payment();
-    router90 = import_express90.default.Router();
-    options_default3 = router90.get("/", async (_req, res) => {
+    router91 = import_express91.default.Router();
+    options_default3 = router91.get("/", async (_req, res) => {
       try {
         return res.status(200).send(success3(getEnabledPaymentOptions(await getPaymentConfig())));
       } catch (err) {
@@ -265780,14 +266068,14 @@ var init_options3 = __esm({
 });
 
 // src/routes/payment/wechat/notify.ts
-var import_express91, router91, notify_default2;
+var import_express92, router92, notify_default2;
 var init_notify2 = __esm({
   "src/routes/payment/wechat/notify.ts"() {
     "use strict";
-    import_express91 = __toESM(require_express2());
+    import_express92 = __toESM(require_express2());
     init_payment();
-    router91 = import_express91.default.Router();
-    notify_default2 = router91.post("/", async (req, res) => {
+    router92 = import_express92.default.Router();
+    notify_default2 = router92.post("/", async (req, res) => {
       try {
         await handleWechatNotify(req.rawBody || JSON.stringify(req.body || {}), req.headers);
         return res.status(200).send({ code: "SUCCESS", message: "\u6210\u529F" });
@@ -265800,19 +266088,19 @@ var init_notify2 = __esm({
 });
 
 // src/routes/production/assets/batchGenerateAssetsImage.ts
-var import_express92, router92, batchGenerateAssetsImage_default;
+var import_express93, router93, batchGenerateAssetsImage_default;
 var init_batchGenerateAssetsImage = __esm({
   "src/routes/production/assets/batchGenerateAssetsImage.ts"() {
     "use strict";
-    import_express92 = __toESM(require_express2());
+    import_express93 = __toESM(require_express2());
     init_utils3();
     init_zod();
     init_responseFormat();
     init_middleware();
     init_negativePrompt();
     init_modelBilling();
-    router92 = import_express92.default.Router();
-    batchGenerateAssetsImage_default = router92.post(
+    router93 = import_express93.default.Router();
+    batchGenerateAssetsImage_default = router93.post(
       "/",
       validateFields({
         assetIds: external_exports.array(external_exports.number()),
@@ -265997,17 +266285,17 @@ var init_batchGenerateAssetsImage = __esm({
 });
 
 // src/routes/production/assets/deleteAssetsDireve.ts
-var import_express93, router93, deleteAssetsDireve_default;
+var import_express94, router94, deleteAssetsDireve_default;
 var init_deleteAssetsDireve = __esm({
   "src/routes/production/assets/deleteAssetsDireve.ts"() {
     "use strict";
-    import_express93 = __toESM(require_express2());
+    import_express94 = __toESM(require_express2());
     init_utils3();
     init_zod();
     init_responseFormat();
     init_middleware();
-    router93 = import_express93.default.Router();
-    deleteAssetsDireve_default = router93.post(
+    router94 = import_express94.default.Router();
+    deleteAssetsDireve_default = router94.post(
       "/",
       validateFields({
         id: external_exports.number(),
@@ -266029,17 +266317,17 @@ var init_deleteAssetsDireve = __esm({
 });
 
 // src/routes/production/assets/pollingImage.ts
-var import_express94, router94, pollingImage_default;
+var import_express95, router95, pollingImage_default;
 var init_pollingImage = __esm({
   "src/routes/production/assets/pollingImage.ts"() {
     "use strict";
-    import_express94 = __toESM(require_express2());
+    import_express95 = __toESM(require_express2());
     init_utils3();
     init_zod();
     init_responseFormat();
     init_middleware();
-    router94 = import_express94.default.Router();
-    pollingImage_default = router94.post(
+    router95 = import_express95.default.Router();
+    pollingImage_default = router95.post(
       "/",
       validateFields({
         ids: external_exports.array(external_exports.number())
@@ -266060,17 +266348,17 @@ var init_pollingImage = __esm({
 });
 
 // src/routes/production/assets/updateAssetsUrl.ts
-var import_express95, router95, updateAssetsUrl_default;
+var import_express96, router96, updateAssetsUrl_default;
 var init_updateAssetsUrl = __esm({
   "src/routes/production/assets/updateAssetsUrl.ts"() {
     "use strict";
-    import_express95 = __toESM(require_express2());
+    import_express96 = __toESM(require_express2());
     init_utils3();
     init_zod();
     init_responseFormat();
     init_middleware();
-    router95 = import_express95.default.Router();
-    updateAssetsUrl_default = router95.post(
+    router96 = import_express96.default.Router();
+    updateAssetsUrl_default = router96.post(
       "/",
       validateFields({
         id: external_exports.number(),
@@ -266114,19 +266402,19 @@ async function urlToBase643(imageUrl) {
   const base644 = Buffer.from(response.data, "binary").toString("base64");
   return `data:${contentType};base64,${base644}`;
 }
-var import_express96, router96, generateFlowImage_default;
+var import_express97, router97, generateFlowImage_default;
 var init_generateFlowImage = __esm({
   "src/routes/production/editImage/generateFlowImage.ts"() {
     "use strict";
-    import_express96 = __toESM(require_express2());
+    import_express97 = __toESM(require_express2());
     init_utils3();
     init_zod();
     init_responseFormat();
     init_middleware();
     init_axios2();
     init_modelBilling();
-    router96 = import_express96.default.Router();
-    generateFlowImage_default = router96.post(
+    router97 = import_express97.default.Router();
+    generateFlowImage_default = router97.post(
       "/",
       validateFields({
         model: external_exports.string(),
@@ -266223,17 +266511,17 @@ var init_generateFlowImage = __esm({
 });
 
 // src/routes/production/editImage/getImageDefaultModle.ts
-var import_express97, router97, getImageDefaultModle_default;
+var import_express98, router98, getImageDefaultModle_default;
 var init_getImageDefaultModle = __esm({
   "src/routes/production/editImage/getImageDefaultModle.ts"() {
     "use strict";
-    import_express97 = __toESM(require_express2());
+    import_express98 = __toESM(require_express2());
     init_utils3();
     init_zod();
     init_responseFormat();
     init_middleware();
-    router97 = import_express97.default.Router();
-    getImageDefaultModle_default = router97.post(
+    router98 = import_express98.default.Router();
+    getImageDefaultModle_default = router98.post(
       "/",
       validateFields({
         projectId: external_exports.number()
@@ -266248,17 +266536,17 @@ var init_getImageDefaultModle = __esm({
 });
 
 // src/routes/production/editImage/getImageFlow.ts
-var import_express98, router98, getImageFlow_default;
+var import_express99, router99, getImageFlow_default;
 var init_getImageFlow = __esm({
   "src/routes/production/editImage/getImageFlow.ts"() {
     "use strict";
-    import_express98 = __toESM(require_express2());
+    import_express99 = __toESM(require_express2());
     init_utils3();
     init_zod();
     init_responseFormat();
     init_middleware();
-    router98 = import_express98.default.Router();
-    getImageFlow_default = router98.post(
+    router99 = import_express99.default.Router();
+    getImageFlow_default = router99.post(
       "/",
       validateFields({
         id: external_exports.number(),
@@ -266292,17 +266580,17 @@ var init_getImageFlow = __esm({
 });
 
 // src/routes/production/editImage/saveImageFlow.ts
-var import_express99, router99, saveImageFlow_default;
+var import_express100, router100, saveImageFlow_default;
 var init_saveImageFlow = __esm({
   "src/routes/production/editImage/saveImageFlow.ts"() {
     "use strict";
-    import_express99 = __toESM(require_express2());
+    import_express100 = __toESM(require_express2());
     init_utils3();
     init_zod();
     init_responseFormat();
     init_middleware();
-    router99 = import_express99.default.Router();
-    saveImageFlow_default = router99.post(
+    router100 = import_express100.default.Router();
+    saveImageFlow_default = router100.post(
       "/",
       validateFields({
         edges: external_exports.any(),
@@ -266333,17 +266621,17 @@ var init_saveImageFlow = __esm({
 });
 
 // src/routes/production/editImage/updateImageFlow.ts
-var import_express100, router100, updateImageFlow_default;
+var import_express101, router101, updateImageFlow_default;
 var init_updateImageFlow = __esm({
   "src/routes/production/editImage/updateImageFlow.ts"() {
     "use strict";
-    import_express100 = __toESM(require_express2());
+    import_express101 = __toESM(require_express2());
     init_utils3();
     init_zod();
     init_responseFormat();
     init_middleware();
-    router100 = import_express100.default.Router();
-    updateImageFlow_default = router100.post(
+    router101 = import_express101.default.Router();
+    updateImageFlow_default = router101.post(
       "/",
       validateFields({
         edges: external_exports.any(),
@@ -266374,18 +266662,18 @@ var init_updateImageFlow = __esm({
 });
 
 // src/routes/production/editImage/uploadImage.ts
-var import_express101, router101, uploadImage_default;
+var import_express102, router102, uploadImage_default;
 var init_uploadImage = __esm({
   "src/routes/production/editImage/uploadImage.ts"() {
     "use strict";
-    import_express101 = __toESM(require_express2());
+    import_express102 = __toESM(require_express2());
     init_utils3();
     init_responseFormat();
     init_middleware();
     init_zod();
     init_dist_node();
-    router101 = import_express101.default.Router();
-    uploadImage_default = router101.post(
+    router102 = import_express102.default.Router();
+    uploadImage_default = router102.post(
       "/",
       validateFields({
         projectId: external_exports.number(),
@@ -266425,17 +266713,17 @@ var init_uploadImage = __esm({
 });
 
 // src/routes/production/getFlowData.ts
-var import_express102, router102, getFlowData_default;
+var import_express103, router103, getFlowData_default;
 var init_getFlowData = __esm({
   "src/routes/production/getFlowData.ts"() {
     "use strict";
-    import_express102 = __toESM(require_express2());
+    import_express103 = __toESM(require_express2());
     init_utils3();
     init_zod();
     init_responseFormat();
     init_middleware();
-    router102 = import_express102.default.Router();
-    getFlowData_default = router102.post(
+    router103 = import_express103.default.Router();
+    getFlowData_default = router103.post(
       "/",
       validateFields({
         projectId: external_exports.number(),
@@ -266564,17 +266852,17 @@ var init_getFlowData = __esm({
 });
 
 // src/routes/production/getStoryboardData.ts
-var import_express103, router103, getStoryboardData_default;
+var import_express104, router104, getStoryboardData_default;
 var init_getStoryboardData = __esm({
   "src/routes/production/getStoryboardData.ts"() {
     "use strict";
-    import_express103 = __toESM(require_express2());
+    import_express104 = __toESM(require_express2());
     init_utils3();
     init_zod();
     init_responseFormat();
     init_middleware();
-    router103 = import_express103.default.Router();
-    getStoryboardData_default = router103.post(
+    router104 = import_express104.default.Router();
+    getStoryboardData_default = router104.post(
       "/",
       validateFields({
         scriptId: external_exports.number()
@@ -266636,17 +266924,17 @@ var init_getStoryboardData = __esm({
 });
 
 // src/routes/production/saveFlowData.ts
-var import_express104, router104, saveFlowData_default;
+var import_express105, router105, saveFlowData_default;
 var init_saveFlowData = __esm({
   "src/routes/production/saveFlowData.ts"() {
     "use strict";
-    import_express104 = __toESM(require_express2());
+    import_express105 = __toESM(require_express2());
     init_utils3();
     init_zod();
     init_responseFormat();
     init_middleware();
-    router104 = import_express104.default.Router();
-    saveFlowData_default = router104.post(
+    router105 = import_express105.default.Router();
+    saveFlowData_default = router105.post(
       "/",
       validateFields({
         projectId: external_exports.number(),
@@ -266693,17 +266981,17 @@ var init_saveFlowData = __esm({
 });
 
 // src/routes/production/storyboard/addStoryboard.ts
-var import_express105, router105, addStoryboard_default;
+var import_express106, router106, addStoryboard_default;
 var init_addStoryboard = __esm({
   "src/routes/production/storyboard/addStoryboard.ts"() {
     "use strict";
-    import_express105 = __toESM(require_express2());
+    import_express106 = __toESM(require_express2());
     init_utils3();
     init_zod();
     init_responseFormat();
     init_middleware();
-    router105 = import_express105.default.Router();
-    addStoryboard_default = router105.post(
+    router106 = import_express106.default.Router();
+    addStoryboard_default = router106.post(
       "/",
       validateFields({
         prompt: external_exports.string(),
@@ -266743,17 +267031,17 @@ var init_addStoryboard = __esm({
 });
 
 // src/routes/production/storyboard/batchAddStoryboardInfo.ts
-var import_express106, router106, batchAddStoryboardInfo_default;
+var import_express107, router107, batchAddStoryboardInfo_default;
 var init_batchAddStoryboardInfo = __esm({
   "src/routes/production/storyboard/batchAddStoryboardInfo.ts"() {
     "use strict";
-    import_express106 = __toESM(require_express2());
+    import_express107 = __toESM(require_express2());
     init_utils3();
     init_zod();
     init_responseFormat();
     init_middleware();
-    router106 = import_express106.default.Router();
-    batchAddStoryboardInfo_default = router106.post(
+    router107 = import_express107.default.Router();
+    batchAddStoryboardInfo_default = router107.post(
       "/",
       validateFields({
         data: external_exports.array(
@@ -266849,17 +267137,17 @@ var init_batchAddStoryboardInfo = __esm({
 });
 
 // src/routes/production/storyboard/batchDelete.ts
-var import_express107, router107, batchDelete_default3;
+var import_express108, router108, batchDelete_default3;
 var init_batchDelete3 = __esm({
   "src/routes/production/storyboard/batchDelete.ts"() {
     "use strict";
-    import_express107 = __toESM(require_express2());
+    import_express108 = __toESM(require_express2());
     init_utils3();
     init_zod();
     init_responseFormat();
     init_middleware();
-    router107 = import_express107.default.Router();
-    batchDelete_default3 = router107.post(
+    router108 = import_express108.default.Router();
+    batchDelete_default3 = router108.post(
       "/",
       validateFields({
         ids: external_exports.array(external_exports.number()),
@@ -266905,19 +267193,19 @@ async function getAssetsImageBase64(imageIds) {
   );
   return imageUrls.filter(Boolean).map((url4) => ({ type: "image", base64: url4 }));
 }
-var import_express108, router108, batchGenerateImage_default;
+var import_express109, router109, batchGenerateImage_default;
 var init_batchGenerateImage = __esm({
   "src/routes/production/storyboard/batchGenerateImage.ts"() {
     "use strict";
-    import_express108 = __toESM(require_express2());
+    import_express109 = __toESM(require_express2());
     init_utils3();
     init_zod();
     init_responseFormat();
     init_middleware();
     init_negativePrompt();
     init_modelBilling();
-    router108 = import_express108.default.Router();
-    batchGenerateImage_default = router108.post(
+    router109 = import_express109.default.Router();
+    batchGenerateImage_default = router109.post(
       "/",
       validateFields({
         storyboardIds: external_exports.array(external_exports.number()),
@@ -267090,17 +267378,17 @@ var init_batchGenerateImage = __esm({
 });
 
 // src/routes/production/storyboard/downPreviewImage.ts
-var import_express109, import_sharp3, router109, downPreviewImage_default;
+var import_express110, import_sharp3, router110, downPreviewImage_default;
 var init_downPreviewImage = __esm({
   "src/routes/production/storyboard/downPreviewImage.ts"() {
     "use strict";
-    import_express109 = __toESM(require_express2());
+    import_express110 = __toESM(require_express2());
     init_utils3();
     init_zod();
     import_sharp3 = __toESM(require("sharp"));
     init_middleware();
-    router109 = import_express109.default.Router();
-    downPreviewImage_default = router109.post(
+    router110 = import_express110.default.Router();
+    downPreviewImage_default = router110.post(
       "/",
       validateFields({
         storyboardIds: external_exports.array(external_exports.number())
@@ -267186,17 +267474,17 @@ var init_downPreviewImage = __esm({
 });
 
 // src/routes/production/storyboard/editStoryboardInfo.ts
-var import_express110, router110, editStoryboardInfo_default;
+var import_express111, router111, editStoryboardInfo_default;
 var init_editStoryboardInfo = __esm({
   "src/routes/production/storyboard/editStoryboardInfo.ts"() {
     "use strict";
-    import_express110 = __toESM(require_express2());
+    import_express111 = __toESM(require_express2());
     init_utils3();
     init_zod();
     init_responseFormat();
     init_middleware();
-    router110 = import_express110.default.Router();
-    editStoryboardInfo_default = router110.post(
+    router111 = import_express111.default.Router();
+    editStoryboardInfo_default = router111.post(
       "/",
       validateFields({
         id: external_exports.number(),
@@ -267216,17 +267504,17 @@ var init_editStoryboardInfo = __esm({
 });
 
 // src/routes/production/storyboard/getStoryboardData.ts
-var import_express111, router111, getStoryboardData_default2;
+var import_express112, router112, getStoryboardData_default2;
 var init_getStoryboardData2 = __esm({
   "src/routes/production/storyboard/getStoryboardData.ts"() {
     "use strict";
-    import_express111 = __toESM(require_express2());
+    import_express112 = __toESM(require_express2());
     init_utils3();
     init_zod();
     init_responseFormat();
     init_middleware();
-    router111 = import_express111.default.Router();
-    getStoryboardData_default2 = router111.post(
+    router112 = import_express112.default.Router();
+    getStoryboardData_default2 = router112.post(
       "/",
       validateFields({
         scriptId: external_exports.number(),
@@ -267264,17 +267552,17 @@ var init_getStoryboardData2 = __esm({
 });
 
 // src/routes/production/storyboard/pollingImage.ts
-var import_express112, router112, pollingImage_default2;
+var import_express113, router113, pollingImage_default2;
 var init_pollingImage2 = __esm({
   "src/routes/production/storyboard/pollingImage.ts"() {
     "use strict";
-    import_express112 = __toESM(require_express2());
+    import_express113 = __toESM(require_express2());
     init_utils3();
     init_zod();
     init_responseFormat();
     init_middleware();
-    router112 = import_express112.default.Router();
-    pollingImage_default2 = router112.post(
+    router113 = import_express113.default.Router();
+    pollingImage_default2 = router113.post(
       "/",
       validateFields({
         ids: external_exports.array(external_exports.number())
@@ -267295,18 +267583,18 @@ var init_pollingImage2 = __esm({
 });
 
 // src/routes/production/storyboard/previewImage.ts
-var import_express113, import_sharp4, router113, previewImage_default;
+var import_express114, import_sharp4, router114, previewImage_default;
 var init_previewImage = __esm({
   "src/routes/production/storyboard/previewImage.ts"() {
     "use strict";
-    import_express113 = __toESM(require_express2());
+    import_express114 = __toESM(require_express2());
     init_utils3();
     init_zod();
     import_sharp4 = __toESM(require("sharp"));
     init_responseFormat();
     init_middleware();
-    router113 = import_express113.default.Router();
-    previewImage_default = router113.post(
+    router114 = import_express114.default.Router();
+    previewImage_default = router114.post(
       "/",
       validateFields({
         storyboardIds: external_exports.array(external_exports.number())
@@ -267403,17 +267691,17 @@ var init_previewImage = __esm({
 });
 
 // src/routes/production/storyboard/removeFrame.ts
-var import_express114, router114, removeFrame_default;
+var import_express115, router115, removeFrame_default;
 var init_removeFrame = __esm({
   "src/routes/production/storyboard/removeFrame.ts"() {
     "use strict";
-    import_express114 = __toESM(require_express2());
+    import_express115 = __toESM(require_express2());
     init_utils3();
     init_zod();
     init_responseFormat();
     init_middleware();
-    router114 = import_express114.default.Router();
-    removeFrame_default = router114.post(
+    router115 = import_express115.default.Router();
+    removeFrame_default = router115.post(
       "/",
       validateFields({
         id: external_exports.number()
@@ -267434,17 +267722,17 @@ var init_removeFrame = __esm({
 });
 
 // src/routes/production/storyboard/updateStoryboardUrl.ts
-var import_express115, router115, updateStoryboardUrl_default;
+var import_express116, router116, updateStoryboardUrl_default;
 var init_updateStoryboardUrl = __esm({
   "src/routes/production/storyboard/updateStoryboardUrl.ts"() {
     "use strict";
-    import_express115 = __toESM(require_express2());
+    import_express116 = __toESM(require_express2());
     init_utils3();
     init_zod();
     init_responseFormat();
     init_middleware();
-    router115 = import_express115.default.Router();
-    updateStoryboardUrl_default = router115.post(
+    router116 = import_express116.default.Router();
+    updateStoryboardUrl_default = router116.post(
       "/",
       validateFields({
         id: external_exports.number(),
@@ -267468,17 +267756,17 @@ var init_updateStoryboardUrl = __esm({
 });
 
 // src/routes/production/workbench/addTrack.ts
-var import_express116, router116, addTrack_default;
+var import_express117, router117, addTrack_default;
 var init_addTrack = __esm({
   "src/routes/production/workbench/addTrack.ts"() {
     "use strict";
-    import_express116 = __toESM(require_express2());
+    import_express117 = __toESM(require_express2());
     init_utils3();
     init_zod();
     init_responseFormat();
     init_middleware();
-    router116 = import_express116.default.Router();
-    addTrack_default = router116.post(
+    router117 = import_express117.default.Router();
+    addTrack_default = router117.post(
       "/",
       validateFields({
         projectId: external_exports.number(),
@@ -267488,8 +267776,10 @@ var init_addTrack = __esm({
       async (req, res) => {
         const { projectId, scriptId, duration: duration4 } = req.body;
         const data2 = await utils_default.db("o_project").where("id", projectId).first();
-        const video = data2?.videoModel?.split(":");
-        const vemdor = await utils_default.vendor.getModelList(video?.[0]);
+        const video = data2?.videoModel?.split(/:(.+)/);
+        const modelList = await utils_default.vendor.getEnabledModelList(video?.[0]);
+        const model = modelList.find((item) => item.modelName === video?.[1]);
+        if (!model) return res.status(400).send(error53("\u9879\u76EE\u89C6\u9891\u6A21\u578B\u4E0D\u5B58\u5728\u6216\u672A\u542F\u7528"));
         const trackId = Date.now();
         await utils_default.db("o_videoTrack").insert({
           id: trackId,
@@ -267503,19 +267793,274 @@ var init_addTrack = __esm({
   }
 });
 
+// src/utils/videoPromptContext.ts
+function compactText(value, maxLength = 500) {
+  return String(value ?? "").replace(/\s+/g, " ").trim().slice(0, maxLength);
+}
+function attr(value) {
+  return compactText(value, 1e3).replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/'/g, "&apos;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+}
+function formatAssetSummary(asset, audioAssetId) {
+  return `[${asset.id},${asset.type ?? "unknown"},${asset.name ?? ""}${audioAssetId ? ` audio:${audioAssetId}` : ""}]`;
+}
+function formatAssetDetail(asset, audioAssetId) {
+  const details = [
+    `id='${attr(asset.id)}'`,
+    `type='${attr(asset.type ?? "unknown")}'`,
+    `name='${attr(asset.name ?? "")}'`,
+    audioAssetId ? `audioAssetId='${attr(audioAssetId)}'` : "",
+    asset.describe ? `describe='${attr(asset.describe)}'` : "",
+    asset.prompt ? `visualPrompt='${attr(asset.prompt)}'` : ""
+  ].filter(Boolean);
+  return `<asset ${details.join(" ")}></asset>`;
+}
+function formatStoryboardItem(item) {
+  const linkedAssets = item.associateAssets.map((asset) => `${asset.id}:${asset.type ?? "unknown"}:${compactText(asset.name, 80)}`).join("; ");
+  return `<storyboardItem
+  id='${attr(item.id)}'
+  index='${attr(item.index)}'
+  videoDesc='${attr(item.videoDesc)}'
+  prompt='${attr(item.prompt)}'
+  track='${attr(item.track)}'
+  trackId='${attr(item.trackId)}'
+  duration='${attr(item.duration)}'
+  associateAssetsIds='${attr(JSON.stringify(item.associateAssetsIds))}'
+  associateAssets='${attr(linkedAssets)}'
+  shouldGenerateImage='${attr(item.shouldGenerateImage ?? true)}'
+></storyboardItem>`;
+}
+function formatSequenceItem(item) {
+  return `<sequenceItem
+  relation='${attr(item.relation)}'
+  id='${attr(item.id)}'
+  index='${attr(item.index)}'
+  track='${attr(item.track)}'
+  trackId='${attr(item.trackId)}'
+  duration='${attr(item.duration)}'
+  videoDesc='${attr(item.videoDesc)}'
+  prompt='${attr(item.prompt)}'
+></sequenceItem>`;
+}
+async function loadAssetsByIds(ids) {
+  if (!ids.length) return [];
+  const rows = await utils_default.db("o_assets").leftJoin("o_image", "o_image.id", "o_assets.imageId").whereIn("o_assets.id", ids).select(
+    "o_assets.id",
+    "o_assets.assetsId",
+    "o_assets.type",
+    "o_assets.name",
+    "o_assets.describe",
+    "o_assets.prompt",
+    "o_image.filePath"
+  );
+  const byId = /* @__PURE__ */ new Map();
+  rows.forEach((row) => byId.set(Number(row.id), row));
+  return ids.map((id) => byId.get(id)).filter(Boolean);
+}
+async function loadAudioAssetMap(assets) {
+  const audioIds = assets.filter((asset) => asset.type === "audio").map((asset) => asset.id);
+  if (!audioIds.length) return {};
+  const rows = await utils_default.db("o_assets").whereIn("o_assets.id", audioIds).join("o_assetsRole2Audio", "o_assetsRole2Audio.assetsAudioId", "o_assets.assetsId").select("o_assets.id", "o_assetsRole2Audio.assetsRoleId");
+  const record3 = {};
+  rows.forEach((row) => {
+    if (row.assetsRoleId && row.id) record3[row.assetsRoleId] = row.id;
+  });
+  return record3;
+}
+async function loadVideoPromptContext(info) {
+  const items = await Promise.all(
+    info.map(async (item) => {
+      if (item.sources === "storyboard") {
+        const storyboard2 = await utils_default.db("o_storyboard").where("o_storyboard.id", item.id).select("id", "scriptId", "projectId", "videoDesc", "prompt", "track", "trackId", "duration", "shouldGenerateImage", "index").first();
+        if (!storyboard2) return null;
+        const assetRows = await utils_default.db("o_assets2Storyboard").where("storyboardId", item.id).orderBy("sort", "asc").orderBy("assetId", "asc").select("assetId");
+        const associateAssetsIds = assetRows.map((row) => row.assetId).filter(Boolean);
+        const associateAssets = await loadAssetsByIds(associateAssetsIds);
+        return {
+          ...storyboard2,
+          id: Number(storyboard2.id ?? item.id),
+          associateAssets,
+          associateAssetsIds,
+          _type: "storyboard"
+        };
+      }
+      if (item.sources === "assets") {
+        const [asset] = await loadAssetsByIds([item.id]);
+        return asset ? { ...asset, _type: "assets" } : null;
+      }
+      return null;
+    })
+  );
+  const assets = [];
+  const storyboard = [];
+  for (const item of items) {
+    if (!item) continue;
+    if (item._type === "assets") assets.push(item);
+    if (item._type === "storyboard") storyboard.push(item);
+  }
+  return { assets, sequence: await loadStoryboardSequence(storyboard), storyboard };
+}
+async function loadStoryboardSequence(selectedStoryboards) {
+  const anchors = selectedStoryboards.filter((item) => item.projectId != null && item.scriptId != null);
+  if (!anchors.length) return [];
+  const sequenceMap = /* @__PURE__ */ new Map();
+  function addSequenceItem(row, relation) {
+    if (!row?.id) return;
+    const id = Number(row.id);
+    const existing = sequenceMap.get(id);
+    if (existing) {
+      existing.relations.add(relation);
+      existing.relation = [...existing.relations].join(",");
+      return;
+    }
+    sequenceMap.set(id, {
+      duration: row.duration,
+      id,
+      index: row.index,
+      prompt: row.prompt,
+      relation,
+      relations: /* @__PURE__ */ new Set([relation]),
+      shouldGenerateImage: row.shouldGenerateImage,
+      track: row.track,
+      trackId: row.trackId,
+      videoDesc: row.videoDesc
+    });
+  }
+  const groups = /* @__PURE__ */ new Map();
+  anchors.forEach((item) => {
+    const key = `${item.projectId}:${item.scriptId}`;
+    const group = groups.get(key) ?? [];
+    group.push(item);
+    groups.set(key, group);
+  });
+  for (const group of groups.values()) {
+    const first = group[0];
+    if (!first) continue;
+    const rows = await utils_default.db("o_storyboard").where({ projectId: first.projectId, scriptId: first.scriptId }).select("id", "index", "track", "trackId", "duration", "videoDesc", "prompt", "shouldGenerateImage").orderBy("index", "asc").orderBy("id", "asc");
+    const selectedIds = new Set(group.map((item) => item.id));
+    const selectedTrackIds = new Set(group.map((item) => item.trackId).filter((trackId) => trackId != null));
+    rows.forEach((row, position) => {
+      const id = Number(row.id);
+      if (selectedIds.has(id)) {
+        addSequenceItem(row, "current");
+        addSequenceItem(rows[position - 1], "previous");
+        addSequenceItem(rows[position + 1], "next");
+      }
+      if (row.trackId != null && selectedTrackIds.has(Number(row.trackId))) addSequenceItem(row, "sameTrack");
+    });
+  }
+  return [...sequenceMap.values()].map(({ relations, ...item }) => item).sort((a, b2) => Number(a.index ?? 0) - Number(b2.index ?? 0) || a.id - b2.id);
+}
+async function buildVideoPromptInput(context2, modelName) {
+  const assets = collectPromptAssets(context2);
+  const audioAssetMap = await loadAudioAssetMap(context2.assets);
+  const assetSummary = assets.filter((asset) => asset.filePath).map((asset) => formatAssetSummary(asset, audioAssetMap[asset.id])).join("\uFF0C");
+  const assetDetails = assets.map((asset) => formatAssetDetail(asset, audioAssetMap[asset.id])).join("\n");
+  const storyboardItems = context2.storyboard.map(formatStoryboardItem).join("\n");
+  const sequenceItems = context2.sequence.map(formatSequenceItem).join("\n");
+  return `
+          **\u6A21\u578B\u540D\u79F0**\uFF1A${modelName},
+
+          **\u8D44\u4EA7\u4FE1\u606F**\uFF08\u89D2\u8272\u3001\u573A\u666F\u3001\u9053\u5177\u3001\u97F3\u9891):${assetSummary},
+
+          **\u8D44\u4EA7\u7EC6\u8282**\uFF1A
+${assetDetails || "\u65E0"}
+
+          **\u5206\u955C\u4FE1\u606F**\uFF1A
+${storyboardItems || "\u65E0"}
+
+          **\u5206\u955C\u8FDE\u7EED\u6027\u4E0A\u4E0B\u6587**\uFF08previous/next \u662F\u5168\u7247\u76F8\u90BB\u5206\u955C\uFF0CsameTrack \u662F\u540C\u4E00\u89C6\u9891\u8F68\u9053\u5185\u7684\u5206\u955C\uFF09\uFF1A
+${sequenceItems || "\u65E0"}
+
+          **\u4E00\u81F4\u6027\u8981\u6C42**\uFF1A
+- \u89D2\u8272\u53C2\u8003\u56FE\u662F\u8EAB\u4EFD\u786C\u7EA6\u675F\uFF1A\u540C\u4E00\u89D2\u8272\u7684\u8138\u578B\u3001\u4E94\u5B98\u3001\u53D1\u578B\u3001\u4F53\u578B\u3001\u670D\u9970\u989C\u8272\u3001\u914D\u9970\u5FC5\u987B\u524D\u540E\u4FDD\u6301\u4E00\u81F4\u3002
+- \u573A\u666F\u53C2\u8003\u56FE\u662F\u7A7A\u95F4\u786C\u7EA6\u675F\uFF1A\u623F\u95F4\u5E03\u5C40\u3001\u5899\u9762\u6750\u8D28\u3001\u5BB6\u5177\u4F4D\u7F6E\u3001\u5149\u6E90\u65B9\u5411\u3001\u8272\u8C03\u5FC5\u987B\u4FDD\u6301\u4E00\u81F4\u3002
+- \u5206\u955C\u4E4B\u95F4\u5FC5\u987B\u627F\u63A5\u4E0A\u4E00\u955C\u7684\u89D2\u8272\u59FF\u6001\u3001\u60C5\u7EEA\u72B6\u6001\u3001\u7A7A\u95F4\u4F4D\u7F6E\u3001\u5149\u7EBF\u65B9\u5411\u4E0E\u73AF\u5883\u7269\u4EF6\uFF1B\u4E0D\u5F97\u6BCF\u4E2A\u5206\u955C\u91CD\u65B0\u62BD\u4E00\u5957\u4EBA\u7269\u548C\u573A\u666F\u3002
+- \u540C\u4E00\u89C6\u9891\u8F68\u9053\u5185\u7684\u5206\u955C\u662F\u4E00\u6BB5\u8FDE\u7EED\u52A8\u4F5C\uFF1A\u53EA\u5141\u8BB8 videoDesc \u660E\u786E\u63CF\u8FF0\u7684\u52A8\u4F5C\u3001\u666F\u522B\u3001\u8FD0\u955C\u53D1\u751F\u53D8\u5316\uFF0C\u5176\u4ED6\u8EAB\u4EFD\u548C\u7A7A\u95F4\u951A\u70B9\u4FDD\u6301\u4E0D\u53D8\u3002
+- \u4E0D\u5F97\u65B0\u589E\u672A\u5217\u51FA\u7684\u89D2\u8272\u3001\u624B\u3001\u624B\u81C2\u3001\u817F\u3001\u9053\u5177\u6216\u573A\u666F\u5143\u7D20\uFF1B\u4E0D\u5F97\u8BA9\u4EBA\u7269\u8863\u670D\u3001\u5E74\u9F84\u3001\u53D1\u578B\u3001\u8138\u578B\u8DE8\u955C\u5934\u6F02\u79FB\u3002
+- \u80A2\u4F53\u5FC5\u987B\u81EA\u7136\u53EF\u4FE1\uFF1A\u7981\u6B62\u591A\u4F59\u624B\u6307\u3001\u624B\u6307\u4ECE\u817F\u90E8\u6216\u8EAB\u4F53\u957F\u51FA\u3001\u624B\u638C\u878D\u5408\u3001\u624B\u81C2\u91CD\u590D\u3001\u5173\u8282\u53CD\u6298\u3001\u8EAB\u4F53\u5C40\u90E8\u878D\u5316\u3002
+- \u8FD0\u955C\u4EE5 videoDesc \u4E3A\u51C6\uFF1B\u9664\u975E videoDesc \u660E\u786E\u8981\u6C42\u5207\u6362\uFF0C\u8F93\u51FA\u5E94\u4FDD\u6301\u5355\u4E00\u8FDE\u8D2F\u955C\u5934\u548C\u7A33\u5B9A\u65F6\u5E8F\u3002
+          `;
+}
+function collectPromptAssets(context2) {
+  const byId = /* @__PURE__ */ new Map();
+  const add = (asset) => {
+    if (!asset?.id) return;
+    const existing = byId.get(asset.id);
+    byId.set(asset.id, {
+      ...asset,
+      ...existing,
+      describe: existing?.describe || asset.describe,
+      filePath: existing?.filePath || asset.filePath,
+      name: existing?.name || asset.name,
+      prompt: existing?.prompt || asset.prompt,
+      type: existing?.type || asset.type
+    });
+  };
+  context2.assets.forEach(add);
+  context2.storyboard.forEach((storyboard) => storyboard.associateAssets.forEach(add));
+  return [...byId.values()];
+}
+function uniqueNamedAssets(context2, type) {
+  const names = /* @__PURE__ */ new Set();
+  for (const asset of context2.assets) {
+    if (asset.type === type && asset.name) names.add(compactText(asset.name, 80));
+  }
+  for (const storyboard of context2.storyboard) {
+    for (const asset of storyboard.associateAssets) {
+      if (asset.type === type && asset.name) names.add(compactText(asset.name, 80));
+    }
+  }
+  return [...names];
+}
+function appendVideoConsistencyGuard(prompt, context2) {
+  const trimmed = prompt.trim();
+  if (!trimmed || trimmed.includes("[Consistency lock]") || trimmed.includes("\u3010\u4E00\u81F4\u6027\u9501\u5B9A\u3011")) return prompt;
+  const roleNames = uniqueNamedAssets(context2, "role");
+  const sceneNames = uniqueNamedAssets(context2, "scene");
+  const sequenceBrief = context2.sequence.slice(0, 8).map((item) => `${item.relation}#${item.index ?? item.id}:${compactText(item.videoDesc, 120)}`).join(" | ");
+  const useChinese = CJK_RE2.test(trimmed);
+  const guard = useChinese ? [
+    "\u3010\u4E00\u81F4\u6027\u9501\u5B9A\u3011",
+    `\u89D2\u8272\uFF1A${roleNames.length ? roleNames.join("\u3001") : "\u6240\u6709\u53C2\u8003\u89D2\u8272"}\u3002\u5FC5\u987B\u9501\u5B9A\u540C\u4E00\u8EAB\u4EFD\u3001\u540C\u4E00\u8138\u578B\u3001\u540C\u4E00\u53D1\u578B\u3001\u540C\u4E00\u4F53\u578B\u3001\u540C\u4E00\u670D\u9970\u548C\u914D\u9970\u3002`,
+    `\u573A\u666F\uFF1A${sceneNames.length ? sceneNames.join("\u3001") : "\u6240\u6709\u53C2\u8003\u573A\u666F"}\u3002\u5FC5\u987B\u9501\u5B9A\u540C\u4E00\u7A7A\u95F4\u5E03\u5C40\u3001\u5899\u9762\u6750\u8D28\u3001\u5BB6\u5177\u4F4D\u7F6E\u3001\u5149\u6E90\u65B9\u5411\u548C\u8272\u8C03\u3002`,
+    sequenceBrief ? `\u5206\u955C\u8FDE\u7EED\u6027\uFF1A${sequenceBrief}\u3002\u5F53\u524D\u955C\u5934\u5FC5\u987B\u627F\u63A5\u76F8\u90BB\u5206\u955C\u7684\u4EBA\u7269\u59FF\u6001\u3001\u60C5\u7EEA\u3001\u7A7A\u95F4\u4F4D\u7F6E\u3001\u5149\u7EBF\u65B9\u5411\uFF0C\u4E0D\u5F97\u91CD\u7F6E\u753B\u9762\u3002` : "",
+    "\u53EA\u5141\u8BB8 videoDesc \u4E2D\u6307\u5B9A\u7684\u52A8\u4F5C\u548C\u8FD0\u955C\uFF1B\u4E0D\u5F97\u7A81\u7136\u6362\u623F\u95F4\u3001\u6362\u670D\u88C5\u3001\u6362\u5E74\u9F84\u3001\u6362\u8138\u3001\u6362\u53D1\u578B\u6216\u65B0\u589E\u4EBA\u7269\u3002",
+    "\u80A2\u4F53\u81EA\u7136\u53EF\u4FE1\uFF1A\u7981\u6B62\u591A\u4F59\u624B\u6307\u3001\u817F\u90E8\u6216\u8EAB\u4F53\u957F\u51FA\u624B\u6307\u3001\u591A\u4F59\u624B\u81C2\u3001\u624B\u638C\u878D\u5408\u3001\u5173\u8282\u53CD\u6298\u3001\u8EAB\u4F53\u5C40\u90E8\u878D\u5316\u3002"
+  ].filter(Boolean) : [
+    "[Consistency lock]",
+    `Characters: ${roleNames.length ? roleNames.join(", ") : "all referenced characters"}. Keep the same identity, face, hairstyle, body shape, outfit colors, and accessories throughout the shot.`,
+    `Scenes: ${sceneNames.length ? sceneNames.join(", ") : "all referenced scenes"}. Keep the same room layout, wall texture, furniture positions, lighting direction, and color palette.`,
+    sequenceBrief ? `Storyboard continuity: ${sequenceBrief}. Continue the adjacent shots' pose, emotion, spatial position, lighting direction, and environment. Do not reset the image between shots.` : "",
+    "Only perform the action and camera movement described in videoDesc. Do not suddenly change rooms, clothing, age, face, hairstyle, or introduce extra people.",
+    "Natural anatomy only: no extra fingers, no fingers growing from legs or body, no extra arms, no fused hands, no broken joints, no melting body parts."
+  ].filter(Boolean);
+  return `${trimmed}
+
+${guard.join("\n")}`;
+}
+var CJK_RE2;
+var init_videoPromptContext = __esm({
+  "src/utils/videoPromptContext.ts"() {
+    "use strict";
+    init_utils3();
+    CJK_RE2 = /[\u3400-\u9fff]/;
+  }
+});
+
 // src/routes/production/workbench/batchGeneratePrompt.ts
-var import_express117, router117, batchGeneratePrompt_default;
+var import_express118, router118, batchGeneratePrompt_default;
 var init_batchGeneratePrompt = __esm({
   "src/routes/production/workbench/batchGeneratePrompt.ts"() {
     "use strict";
-    import_express117 = __toESM(require_express2());
+    import_express118 = __toESM(require_express2());
     init_utils3();
     init_zod();
     init_responseFormat();
     init_middleware();
     init_modelBilling();
-    router117 = import_express117.default.Router();
-    batchGeneratePrompt_default = router117.post(
+    init_videoPromptContext();
+    router118 = import_express118.default.Router();
+    batchGeneratePrompt_default = router118.post(
       "/",
       validateFields({
         projectId: external_exports.number(),
@@ -267584,60 +268129,8 @@ var init_batchGeneratePrompt = __esm({
               taskType: "video_prompt_generation",
               userId
             });
-            const images = await Promise.all(
-              trackItem.info.map(async (item) => {
-                if (item.sources === "storyboard") {
-                  const storyboard2 = await utils_default.db("o_storyboard").where("o_storyboard.id", item.id).select("videoDesc", "prompt", "track", "duration", "shouldGenerateImage").first();
-                  const assetRows = await utils_default.db("o_assets2Storyboard").where("storyboardId", item.id).orderBy("sort", "asc").orderBy("assetId", "asc").select("assetId");
-                  const associateAssetsIds = assetRows.map((row) => row.assetId);
-                  return {
-                    ...storyboard2,
-                    associateAssetsIds,
-                    _type: "storyboard"
-                    // 标记类型，便于后续区分
-                  };
-                }
-                if (item.sources === "assets") {
-                  const assetsData = await utils_default.db("o_assets").leftJoin("o_image", "o_image.id", "o_assets.imageId").where("o_assets.id", item.id).select("o_assets.id", "o_assets.type", "o_assets.name", "o_image.filePath").first();
-                  return {
-                    ...assetsData,
-                    _type: "assets"
-                    // 标记类型
-                  };
-                }
-              })
-            );
-            const assets = [];
-            const storyboard = [];
-            for (const item of images) {
-              if (!item) continue;
-              if (item._type === "assets")
-                assets.push({
-                  id: item.id,
-                  type: item.type,
-                  name: item.name,
-                  filePath: item.filePath
-                });
-              if (item._type === "storyboard")
-                storyboard.push({
-                  videoDesc: item.videoDesc,
-                  prompt: item.prompt,
-                  track: item.track,
-                  duration: item.duration,
-                  associateAssetsIds: item.associateAssetsIds,
-                  shouldGenerateImage: item.shouldGenerateImage
-                });
-            }
-            const content = `
-          **\u6A21\u578B\u540D\u79F0**\uFF1A${modelData},
-          **\u8D44\u4EA7\u4FE1\u606F**\uFF08\u89D2\u8272\u3001\u573A\u666F\u3001\u9053\u5177\u3001\u97F3\u9891):${assets.filter((i) => i.filePath).map((i) => `[${i.id},${i.type},${i.name}]`).join("\uFF0C")},
-          **\u5206\u955C\u4FE1\u606F**\uFF1A${storyboard.map(
-              (i) => `<storyboardItem
-  videoDesc='${i.videoDesc}'
-  duration='${i.duration}'
-></storyboardItem>`
-            )},
-          `;
+            const promptContext = await loadVideoPromptContext(trackItem.info);
+            const content = await buildVideoPromptInput(promptContext, modelData);
             const { text: text2 } = await utils_default.Ai.Text("universalAi").invoke({
               system: videoPromptGeneration,
               messages: [
@@ -267670,11 +268163,11 @@ var init_batchGeneratePrompt = __esm({
 });
 
 // src/routes/production/workbench/batchGenerateVideo.ts
-var import_express118, router118, batchGenerateVideo_default;
+var import_express119, router119, batchGenerateVideo_default;
 var init_batchGenerateVideo = __esm({
   "src/routes/production/workbench/batchGenerateVideo.ts"() {
     "use strict";
-    import_express118 = __toESM(require_express2());
+    import_express119 = __toESM(require_express2());
     init_utils3();
     init_zod();
     init_dist_node();
@@ -267682,8 +268175,9 @@ var init_batchGenerateVideo = __esm({
     init_middleware();
     init_negativePrompt();
     init_modelBilling();
-    router118 = import_express118.default.Router();
-    batchGenerateVideo_default = router118.post(
+    init_videoPromptContext();
+    router119 = import_express119.default.Router();
+    batchGenerateVideo_default = router119.post(
       "/",
       validateFields({
         projectId: external_exports.number(),
@@ -267755,13 +268249,15 @@ var init_batchGenerateVideo = __esm({
             );
             const videoPath = `/${projectId}/video/${v4_default()}.mp4`;
             const storageProvider = utils_default.oss.getStorageProvider();
-            const negativePrompt = resolveNegativePrompt({ prompt, negativePromptSource }, { mediaType: "video", modelKey: model });
+            const promptContext = await loadVideoPromptContext(uploadData);
+            const requestPrompt = appendVideoConsistencyGuard(prompt, promptContext);
+            const negativePrompt = resolveNegativePrompt({ prompt: requestPrompt, negativePromptSource }, { mediaType: "video", modelKey: model });
             const [videoId] = await utils_default.db("o_video").insert({
               filePath: videoPath,
               storageProvider,
               time: Date.now(),
               state: "\u751F\u6210\u4E2D",
-              prompt,
+              prompt: requestPrompt,
               negativePrompt,
               scriptId,
               projectId,
@@ -267787,7 +268283,7 @@ var init_batchGenerateVideo = __esm({
               userId
             });
             reservedHolds.push(billingHold);
-            tasks.push({ billingHold, duration: duration4, images, negativePrompt, prompt, storageProvider, trackId, videoId, videoPath });
+            tasks.push({ billingHold, duration: duration4, images, negativePrompt, prompt: requestPrompt, storageProvider, trackId, videoId, videoPath });
           }
         } catch (err) {
           await Promise.all(reservedHolds.map((hold) => releasePointHold(hold?.id)));
@@ -267846,17 +268342,17 @@ var init_batchGenerateVideo = __esm({
 });
 
 // src/routes/production/workbench/checkVideoStateList.ts
-var import_express119, router119, checkVideoStateList_default;
+var import_express120, router120, checkVideoStateList_default;
 var init_checkVideoStateList = __esm({
   "src/routes/production/workbench/checkVideoStateList.ts"() {
     "use strict";
-    import_express119 = __toESM(require_express2());
+    import_express120 = __toESM(require_express2());
     init_utils3();
     init_zod();
     init_responseFormat();
     init_middleware();
-    router119 = import_express119.default.Router();
-    checkVideoStateList_default = router119.post(
+    router120 = import_express120.default.Router();
+    checkVideoStateList_default = router120.post(
       "/",
       validateFields({
         projectId: external_exports.number(),
@@ -267882,17 +268378,17 @@ var init_checkVideoStateList = __esm({
 });
 
 // src/routes/production/workbench/deleteTrack.ts
-var import_express120, router120, deleteTrack_default;
+var import_express121, router121, deleteTrack_default;
 var init_deleteTrack = __esm({
   "src/routes/production/workbench/deleteTrack.ts"() {
     "use strict";
-    import_express120 = __toESM(require_express2());
+    import_express121 = __toESM(require_express2());
     init_utils3();
     init_zod();
     init_responseFormat();
     init_middleware();
-    router120 = import_express120.default.Router();
-    deleteTrack_default = router120.post(
+    router121 = import_express121.default.Router();
+    deleteTrack_default = router121.post(
       "/",
       validateFields({
         id: external_exports.number()
@@ -267910,17 +268406,17 @@ var init_deleteTrack = __esm({
 });
 
 // src/routes/production/workbench/delVideo.ts
-var import_express121, router121, delVideo_default;
+var import_express122, router122, delVideo_default;
 var init_delVideo = __esm({
   "src/routes/production/workbench/delVideo.ts"() {
     "use strict";
-    import_express121 = __toESM(require_express2());
+    import_express122 = __toESM(require_express2());
     init_utils3();
     init_zod();
     init_responseFormat();
     init_middleware();
-    router121 = import_express121.default.Router();
-    delVideo_default = router121.post(
+    router122 = import_express122.default.Router();
+    delVideo_default = router122.post(
       "/",
       validateFields({
         id: external_exports.number()
@@ -267938,11 +268434,11 @@ var init_delVideo = __esm({
 });
 
 // src/routes/production/workbench/generateVideo.ts
-var import_express122, router122, generateVideo_default;
+var import_express123, router123, generateVideo_default;
 var init_generateVideo = __esm({
   "src/routes/production/workbench/generateVideo.ts"() {
     "use strict";
-    import_express122 = __toESM(require_express2());
+    import_express123 = __toESM(require_express2());
     init_utils3();
     init_zod();
     init_dist_node();
@@ -267950,8 +268446,9 @@ var init_generateVideo = __esm({
     init_middleware();
     init_negativePrompt();
     init_modelBilling();
-    router122 = import_express122.default.Router();
-    generateVideo_default = router122.post(
+    init_videoPromptContext();
+    router123 = import_express123.default.Router();
+    generateVideo_default = router123.post(
       "/",
       validateFields({
         projectId: external_exports.number(),
@@ -268001,7 +268498,9 @@ var init_generateVideo = __esm({
         }
         const project = await utils_default.db("o_project").select("videoRatio", "artStyle").where("id", projectId).first();
         const negativePromptSource = utils_default.getArtPrompt(project?.artStyle ?? "", "art_skills", "director_storyboard");
-        const negativePrompt = resolveNegativePrompt({ prompt, negativePromptSource }, { mediaType: "video", modelKey: model });
+        const promptContext = await loadVideoPromptContext(uploadData);
+        const requestPrompt = appendVideoConsistencyGuard(prompt, promptContext);
+        const negativePrompt = resolveNegativePrompt({ prompt: requestPrompt, negativePromptSource }, { mediaType: "video", modelKey: model });
         const videoPath = `/${projectId}/video/${v4_default()}.mp4`;
         const storageProvider = utils_default.oss.getStorageProvider();
         const images = await Promise.all(
@@ -268027,7 +268526,7 @@ var init_generateVideo = __esm({
           storageProvider,
           time: Date.now(),
           state: "\u751F\u6210\u4E2D",
-          prompt,
+          prompt: requestPrompt,
           negativePrompt,
           scriptId,
           projectId,
@@ -268063,13 +268562,13 @@ var init_generateVideo = __esm({
           videoId,
           scriptId,
           type: "\u89C6\u9891",
-          prompt,
+          prompt: requestPrompt,
           negativePrompt
         };
         const aiVideo = utils_default.Ai.Video(model);
         aiVideo.run(
           {
-            prompt,
+            prompt: requestPrompt,
             negativePrompt,
             negativePromptSource,
             referenceList: base644.filter(Boolean),
@@ -268098,11 +268597,11 @@ var init_generateVideo = __esm({
 });
 
 // src/routes/production/workbench/generateVideoPrompt.ts
-var import_express123, import_promises4, import_path14, router123, generateVideoPrompt_default;
+var import_express124, import_promises4, import_path14, router124, generateVideoPrompt_default;
 var init_generateVideoPrompt = __esm({
   "src/routes/production/workbench/generateVideoPrompt.ts"() {
     "use strict";
-    import_express123 = __toESM(require_express2());
+    import_express124 = __toESM(require_express2());
     init_utils3();
     init_zod();
     init_responseFormat();
@@ -268110,8 +268609,9 @@ var init_generateVideoPrompt = __esm({
     import_promises4 = __toESM(require("fs/promises"));
     import_path14 = __toESM(require("path"));
     init_modelBilling();
-    router123 = import_express123.default.Router();
-    generateVideoPrompt_default = router123.post(
+    init_videoPromptContext();
+    router124 = import_express124.default.Router();
+    generateVideoPrompt_default = router124.post(
       "/",
       validateFields({
         trackId: external_exports.number(),
@@ -268129,56 +268629,6 @@ var init_generateVideoPrompt = __esm({
         const { trackId, projectId, info, model, mode } = req.body;
         const userId = String(req.user?.id || "");
         if (!userId) return res.status(401).send(error53("\u672A\u63D0\u4F9Btoken"));
-        const images = await Promise.all(
-          info.map(async (item) => {
-            if (item.sources === "storyboard") {
-              const storyboard2 = await utils_default.db("o_storyboard").where("o_storyboard.id", item.id).select("videoDesc", "prompt", "track", "duration", "shouldGenerateImage").first();
-              const assetRows = await utils_default.db("o_assets2Storyboard").where("storyboardId", item.id).orderBy("sort", "asc").orderBy("assetId", "asc").select("assetId");
-              const associateAssetsIds = assetRows.map((row) => row.assetId);
-              return {
-                ...storyboard2,
-                associateAssetsIds,
-                _type: "storyboard"
-                // 标记类型，便于后续区分
-              };
-            }
-            if (item.sources === "assets") {
-              const assetsData = await utils_default.db("o_assets").leftJoin("o_image", "o_image.id", "o_assets.imageId").where("o_assets.id", item.id).select("o_assets.id", "o_assets.type", "o_assets.name", "o_image.filePath").first();
-              return {
-                ...assetsData,
-                _type: "assets"
-                // 标记类型
-              };
-            }
-          })
-        );
-        const assets = [];
-        const storyboard = [];
-        for (const item of images) {
-          if (!item) continue;
-          if (item._type === "assets")
-            assets.push({
-              id: item.id,
-              type: item.type,
-              name: item.name,
-              filePath: item.filePath
-            });
-          if (item._type === "storyboard")
-            storyboard.push({
-              videoDesc: item.videoDesc,
-              prompt: item.prompt,
-              track: item.track,
-              duration: item.duration,
-              associateAssetsIds: item.associateAssetsIds,
-              shouldGenerateImage: item.shouldGenerateImage
-            });
-        }
-        const assetsNotAudioIds = assets.filter((i) => i.type == "audio").map((i) => i.id);
-        const assets2Audio = await utils_default.db("o_assets").whereIn("o_assets.id", assetsNotAudioIds).join("o_assetsRole2Audio", "o_assetsRole2Audio.assetsAudioId", "o_assets.assetsId").select("o_assets.assetsId", "o_assets.id", "o_assetsRole2Audio.assetsAudioId", "o_assetsRole2Audio.assetsRoleId");
-        const assetsAudioRecord = {};
-        assets2Audio.forEach((i) => {
-          assetsAudioRecord[i.assetsRoleId] = i.id;
-        });
         const [id, modelData] = model.split(/:(.+)/);
         const projectData = await utils_default.db("o_project").select("*").where({ id: projectId }).first();
         const videoPrompt = await utils_default.db("o_prompt").where("type", "videoPromptGeneration").first();
@@ -268223,20 +268673,9 @@ var init_generateVideoPrompt = __esm({
           }
         }
         const artStyle = projectData?.artStyle || "\u65E0";
-        console.log("%c Line:158 \u{1F362}", "background:#ffdd4d", assets);
         const visualManual = utils_default.getArtPrompt(artStyle, "art_skills", "art_storyboard_video");
-        const content = `
-          **\u6A21\u578B\u540D\u79F0**\uFF1A${modelData},
-
-          **\u8D44\u4EA7\u4FE1\u606F**\uFF08\u89D2\u8272\u3001\u573A\u666F\u3001\u9053\u5177\u3001\u97F3\u9891):${assets.filter((i) => i.filePath).map((i) => `[${i.id},${i.type},${i.name} ${assetsAudioRecord[i.id] ? `audio:${assetsAudioRecord[i.id]}` : ""} ] `).join("\uFF0C")},
-          **\u5206\u955C\u4FE1\u606F**\uFF1A${storyboard.map(
-          (i) => `<storyboardItem
-  videoDesc='${i.videoDesc}'
-  duration='${i.duration}'
-></storyboardItem>`
-        )},
-          `;
-        console.log("%c Line:156 \u{1F36C} content", "background:#4fff4B", content);
+        const promptContext = await loadVideoPromptContext(info);
+        const content = await buildVideoPromptInput(promptContext, modelData);
         let quote;
         try {
           const billingModel = await resolveModelBillingKey("universalAi");
@@ -268301,17 +268740,17 @@ var init_generateVideoPrompt = __esm({
 });
 
 // src/routes/production/workbench/getAudioBindAssetsList.ts
-var import_express124, router124, getAudioBindAssetsList_default;
+var import_express125, router125, getAudioBindAssetsList_default;
 var init_getAudioBindAssetsList = __esm({
   "src/routes/production/workbench/getAudioBindAssetsList.ts"() {
     "use strict";
-    import_express124 = __toESM(require_express2());
+    import_express125 = __toESM(require_express2());
     init_utils3();
     init_zod();
     init_responseFormat();
     init_middleware();
-    router124 = import_express124.default.Router();
-    getAudioBindAssetsList_default = router124.post(
+    router125 = import_express125.default.Router();
+    getAudioBindAssetsList_default = router125.post(
       "/",
       validateFields({
         assetsIds: external_exports.array(external_exports.number())
@@ -268345,17 +268784,17 @@ var init_getAudioBindAssetsList = __esm({
 });
 
 // src/routes/production/workbench/getFileUrl.ts
-var import_express125, router125, getFileUrl_default;
+var import_express126, router126, getFileUrl_default;
 var init_getFileUrl = __esm({
   "src/routes/production/workbench/getFileUrl.ts"() {
     "use strict";
-    import_express125 = __toESM(require_express2());
+    import_express126 = __toESM(require_express2());
     init_utils3();
     init_zod();
     init_responseFormat();
     init_middleware();
-    router125 = import_express125.default.Router();
-    getFileUrl_default = router125.post(
+    router126 = import_express126.default.Router();
+    getFileUrl_default = router126.post(
       "/",
       validateFields({
         items: external_exports.array(external_exports.object({
@@ -268375,6 +268814,17 @@ var init_getFileUrl = __esm({
         const assetsIds = items.filter((item) => item.sources == "assets").map((item) => item.id);
         if (assetsIds.length) {
           const assetsPaths = await utils_default.db("o_assets").leftJoin("o_image", "o_image.id", "o_assets.imageId").whereIn("o_assets.id", assetsIds).select("o_assets.id", "o_image.filePath");
+          const missingAssetIds = assetsPaths.filter((item) => !item.filePath).map((item) => item.id).filter(Boolean);
+          if (missingAssetIds.length) {
+            const fallbackImages = await utils_default.db("o_image").whereIn("assetsId", missingAssetIds).andWhere("state", "\u5DF2\u5B8C\u6210").whereNotNull("filePath").select("assetsId", "filePath").orderBy("id", "desc");
+            const fallbackMap = /* @__PURE__ */ new Map();
+            fallbackImages.forEach((item) => {
+              if (item.assetsId != null && item.filePath && !fallbackMap.has(item.assetsId)) fallbackMap.set(item.assetsId, item.filePath);
+            });
+            assetsPaths.forEach((item) => {
+              if (!item.filePath && fallbackMap.has(item.id)) item.filePath = fallbackMap.get(item.id);
+            });
+          }
           totalFilePaths.push(...assetsPaths.map((i) => ({ id: i.id, filePath: i.filePath, sources: "assets" })));
         }
         await Promise.all(
@@ -268389,17 +268839,17 @@ var init_getFileUrl = __esm({
 });
 
 // src/routes/production/workbench/getGenerateData.ts
-var import_express126, router126, getGenerateData_default;
+var import_express127, router127, getGenerateData_default;
 var init_getGenerateData = __esm({
   "src/routes/production/workbench/getGenerateData.ts"() {
     "use strict";
-    import_express126 = __toESM(require_express2());
+    import_express127 = __toESM(require_express2());
     init_utils3();
     init_zod();
     init_responseFormat();
     init_middleware();
-    router126 = import_express126.default.Router();
-    getGenerateData_default = router126.post(
+    router127 = import_express127.default.Router();
+    getGenerateData_default = router127.post(
       "/",
       validateFields({
         projectId: external_exports.number(),
@@ -268431,7 +268881,7 @@ var init_getGenerateData = __esm({
               src: i.filePath,
               fileType: "image",
               sources: "storyboard",
-              ...i.prompt != null ? { prompt: i.videoDesc } : {},
+              ...i.videoDesc != null ? { prompt: i.videoDesc } : {},
               ...i.id != null ? { id: i.id } : {},
               index: i.index
             });
@@ -268441,7 +268891,7 @@ var init_getGenerateData = __esm({
                 src: i.filePath,
                 fileType: "image",
                 sources: "storyboard",
-                ...i.prompt != null ? { prompt: i.videoDesc } : {},
+                ...i.videoDesc != null ? { prompt: i.videoDesc } : {},
                 ...i.id != null ? { id: i.id } : {},
                 index: i.index
               }
@@ -268456,36 +268906,38 @@ var init_getGenerateData = __esm({
           const num = parseInt(item.split(":")[1], 10);
           return isNaN(num) ? 0 : num;
         })();
-        if (isRef) {
-          const storyIds = storyboardList.map((s) => s.id);
-          const assetDatas = await utils_default.db("o_assets2Storyboard").leftJoin("o_assets", "o_assets2Storyboard.assetId", "o_assets.id").leftJoin("o_image", "o_image.id", "o_assets.imageId").whereIn("o_assets2Storyboard.storyboardId", storyIds).select("o_assets.*", "o_image.filePath", "o_assets2Storyboard.storyboardId");
-          const queryAudioIds = [...assetDatas.map((i) => i.id), ...assetDatas.map((i) => i.assetsId)].filter(Boolean);
-          const assets2AudioData = await utils_default.db("o_assetsRole2Audio").leftJoin("o_assets", "o_assets.assetsId", "o_assetsRole2Audio.assetsAudioId").leftJoin("o_image", "o_image.id", "o_assets.imageId").whereIn("o_assetsRole2Audio.assetsRoleId", queryAudioIds).select(
-            "o_assets.id",
-            "o_assets.name",
-            "o_assetsRole2Audio.assetsRoleId",
-            "o_assets.describe",
-            "o_assets.type",
-            "o_assets.prompt",
-            "o_image.filePath"
-          );
+        const storyIds = storyboardList.map((s) => s.id).filter(Boolean);
+        if (storyIds.length) {
+          const assetDatas = await utils_default.db("o_assets2Storyboard").leftJoin("o_assets", "o_assets2Storyboard.assetId", "o_assets.id").leftJoin("o_image", "o_image.id", "o_assets.imageId").whereIn("o_assets2Storyboard.storyboardId", storyIds).select("o_assets.*", "o_image.filePath", "o_assets2Storyboard.storyboardId", "o_assets2Storyboard.sort").orderBy("o_assets2Storyboard.storyboardId", "asc").orderBy("o_assets2Storyboard.sort", "asc").orderBy("o_assets2Storyboard.assetId", "asc");
           const audioRecord = {};
-          await Promise.all(
-            assets2AudioData.map(async (i) => {
-              if (!audioRecord[i.assetsRoleId]) audioRecord[i.assetsRoleId] = [];
-              audioRecord[i.assetsRoleId].push({
-                id: i.id,
-                name: i.name,
-                describe: i.describe,
-                type: i.type,
-                fileType: "audio",
-                sources: "assets",
-                prompt: i.prompt,
-                src: i.filePath ? await utils_default.oss.getFileUrl(i.filePath) : ""
-              });
-            })
-          );
-          await Promise.all(
+          if (isRef) {
+            const queryAudioIds = [...assetDatas.map((i) => i.id), ...assetDatas.map((i) => i.assetsId)].filter(Boolean);
+            const assets2AudioData = await utils_default.db("o_assetsRole2Audio").leftJoin("o_assets", "o_assets.assetsId", "o_assetsRole2Audio.assetsAudioId").leftJoin("o_image", "o_image.id", "o_assets.imageId").whereIn("o_assetsRole2Audio.assetsRoleId", queryAudioIds).select(
+              "o_assets.id",
+              "o_assets.name",
+              "o_assetsRole2Audio.assetsRoleId",
+              "o_assets.describe",
+              "o_assets.type",
+              "o_assets.prompt",
+              "o_image.filePath"
+            );
+            await Promise.all(
+              assets2AudioData.map(async (i) => {
+                if (!audioRecord[i.assetsRoleId]) audioRecord[i.assetsRoleId] = [];
+                audioRecord[i.assetsRoleId].push({
+                  id: i.id,
+                  name: i.name,
+                  describe: i.describe,
+                  type: i.type,
+                  fileType: "audio",
+                  sources: "assets",
+                  prompt: i.prompt,
+                  src: i.filePath ? await utils_default.oss.getFileUrl(i.filePath) : ""
+                });
+              })
+            );
+          }
+          const orderedAssetItems = await Promise.all(
             assetDatas.map(async (i) => {
               const item = {
                 id: i.id,
@@ -268497,12 +268949,31 @@ var init_getGenerateData = __esm({
                 src: i.filePath ? await utils_default.oss.getSmallImageUrl(i.filePath) : ""
               };
               const sid = i.storyboardId;
-              if (!otherDataMap[sid]) otherDataMap[sid] = [];
-              otherDataMap[sid].push(item);
-              if (audioRecord[i.id]) otherDataMap[sid].push(...audioRecord[i.id]);
-              if (audioRecord[i.assetsId]) otherDataMap[sid].push(...audioRecord[i.assetsId]);
+              return { asset: i, item, sid };
             })
           );
+          orderedAssetItems.forEach(({ asset, item, sid }) => {
+            if (!otherDataMap[sid]) otherDataMap[sid] = [];
+            otherDataMap[sid].push(item);
+            if (audioRecord[asset.id]) otherDataMap[sid].push(...audioRecord[asset.id]);
+            if (audioRecord[asset.assetsId]) otherDataMap[sid].push(...audioRecord[asset.assetsId]);
+          });
+        }
+        function buildPromptReferences(storyboardMedias) {
+          const seen = /* @__PURE__ */ new Set();
+          const references = [];
+          const add = (item) => {
+            if (item.id == null) return;
+            const key = `${item.sources ?? ""}:${item.id}`;
+            if (seen.has(key)) return;
+            seen.add(key);
+            references.push(item);
+          };
+          storyboardMedias.forEach((storyboard) => {
+            (otherDataMap[storyboard.id] ?? []).forEach(add);
+          });
+          storyboardMedias.forEach(add);
+          return references;
         }
         const trackData = await utils_default.db("o_videoTrack").where({ projectId, scriptId });
         const videoList = await utils_default.db("o_video").whereIn(
@@ -268522,6 +268993,7 @@ var init_getGenerateData = __esm({
             selectVideoId: Number(item?.videoId),
             medias: (() => {
               const storyboardMedias = storyboardTrackRecord[trackId] ?? [];
+              if (!isRef) return storyboardMedias;
               const assetMedias = storyboardMedias.flatMap((s) => otherDataMap[s.id] ?? []);
               const seenAssetIds = /* @__PURE__ */ new Set();
               const uniqueAssets = assetMedias.filter((a) => {
@@ -268541,6 +269013,7 @@ var init_getGenerateData = __esm({
               const notHasImageAssetData = filteredAssets.filter((i) => !i.src);
               return [...hasImageAssetData, ...storyboardMedias, ...notHasImageAssetData];
             })(),
+            promptReferences: buildPromptReferences(storyboardTrackRecord[trackId] ?? []),
             videoList: await Promise.all(
               videoList.filter((v) => v.videoTrackId === trackId).map(async (v) => ({
                 id: v.id,
@@ -268568,17 +269041,17 @@ var init_getGenerateData = __esm({
 });
 
 // src/routes/production/workbench/getVideoList.ts
-var import_express127, router127, getVideoList_default;
+var import_express128, router128, getVideoList_default;
 var init_getVideoList = __esm({
   "src/routes/production/workbench/getVideoList.ts"() {
     "use strict";
-    import_express127 = __toESM(require_express2());
+    import_express128 = __toESM(require_express2());
     init_utils3();
     init_zod();
     init_responseFormat();
     init_middleware();
-    router127 = import_express127.default.Router();
-    getVideoList_default = router127.post(
+    router128 = import_express128.default.Router();
+    getVideoList_default = router128.post(
       "/",
       validateFields({
         projectId: external_exports.number(),
@@ -268607,17 +269080,17 @@ var init_getVideoList = __esm({
 });
 
 // src/routes/production/workbench/selectVideo.ts
-var import_express128, router128, selectVideo_default;
+var import_express129, router129, selectVideo_default;
 var init_selectVideo = __esm({
   "src/routes/production/workbench/selectVideo.ts"() {
     "use strict";
-    import_express128 = __toESM(require_express2());
+    import_express129 = __toESM(require_express2());
     init_utils3();
     init_zod();
     init_responseFormat();
     init_middleware();
-    router128 = import_express128.default.Router();
-    selectVideo_default = router128.post(
+    router129 = import_express129.default.Router();
+    selectVideo_default = router129.post(
       "/",
       validateFields({
         trackId: external_exports.number(),
@@ -268635,17 +269108,17 @@ var init_selectVideo = __esm({
 });
 
 // src/routes/production/workbench/updateVideoDuration.ts
-var import_express129, router129, updateVideoDuration_default;
+var import_express130, router130, updateVideoDuration_default;
 var init_updateVideoDuration = __esm({
   "src/routes/production/workbench/updateVideoDuration.ts"() {
     "use strict";
-    import_express129 = __toESM(require_express2());
+    import_express130 = __toESM(require_express2());
     init_utils3();
     init_zod();
     init_responseFormat();
     init_middleware();
-    router129 = import_express129.default.Router();
-    updateVideoDuration_default = router129.post(
+    router130 = import_express130.default.Router();
+    updateVideoDuration_default = router130.post(
       "/",
       validateFields({
         id: external_exports.number(),
@@ -268663,17 +269136,17 @@ var init_updateVideoDuration = __esm({
 });
 
 // src/routes/production/workbench/updateVideoPrompt.ts
-var import_express130, router130, updateVideoPrompt_default;
+var import_express131, router131, updateVideoPrompt_default;
 var init_updateVideoPrompt = __esm({
   "src/routes/production/workbench/updateVideoPrompt.ts"() {
     "use strict";
-    import_express130 = __toESM(require_express2());
+    import_express131 = __toESM(require_express2());
     init_utils3();
     init_zod();
     init_responseFormat();
     init_middleware();
-    router130 = import_express130.default.Router();
-    updateVideoPrompt_default = router130.post(
+    router131 = import_express131.default.Router();
+    updateVideoPrompt_default = router131.post(
       "/",
       validateFields({
         id: external_exports.number(),
@@ -268691,19 +269164,19 @@ var init_updateVideoPrompt = __esm({
 });
 
 // src/routes/project/addDirectorManual.ts
-var import_express131, import_fs8, import_path15, router131, addDirectorManual_default;
+var import_express132, import_fs8, import_path15, router132, addDirectorManual_default;
 var init_addDirectorManual = __esm({
   "src/routes/project/addDirectorManual.ts"() {
     "use strict";
-    import_express131 = __toESM(require_express2());
+    import_express132 = __toESM(require_express2());
     init_utils3();
     init_responseFormat();
     import_fs8 = __toESM(require("fs"));
     import_path15 = __toESM(require("path"));
     init_middleware();
     init_zod();
-    router131 = import_express131.default.Router();
-    addDirectorManual_default = router131.post(
+    router132 = import_express132.default.Router();
+    addDirectorManual_default = router132.post(
       "/",
       validateFields({
         name: external_exports.string(),
@@ -268781,17 +269254,17 @@ var init_addDirectorManual = __esm({
 });
 
 // src/routes/project/addProject.ts
-var import_express132, router132, addProject_default;
+var import_express133, router133, addProject_default;
 var init_addProject = __esm({
   "src/routes/project/addProject.ts"() {
     "use strict";
-    import_express132 = __toESM(require_express2());
+    import_express133 = __toESM(require_express2());
     init_utils3();
     init_zod();
     init_responseFormat();
     init_middleware();
-    router132 = import_express132.default.Router();
-    addProject_default = router132.post(
+    router133 = import_express133.default.Router();
+    addProject_default = router133.post(
       "/",
       validateFields({
         projectType: external_exports.string(),
@@ -268833,19 +269306,19 @@ var init_addProject = __esm({
 });
 
 // src/routes/project/addVisualManual.ts
-var import_express133, import_fs9, import_path16, router133, addVisualManual_default;
+var import_express134, import_fs9, import_path16, router134, addVisualManual_default;
 var init_addVisualManual = __esm({
   "src/routes/project/addVisualManual.ts"() {
     "use strict";
-    import_express133 = __toESM(require_express2());
+    import_express134 = __toESM(require_express2());
     init_utils3();
     init_responseFormat();
     import_fs9 = __toESM(require("fs"));
     import_path16 = __toESM(require("path"));
     init_middleware();
     init_zod();
-    router133 = import_express133.default.Router();
-    addVisualManual_default = router133.post(
+    router134 = import_express134.default.Router();
+    addVisualManual_default = router134.post(
       "/",
       validateFields({
         name: external_exports.string(),
@@ -268932,18 +269405,18 @@ var init_addVisualManual = __esm({
 });
 
 // src/routes/project/deleteDirectorManual.ts
-var import_express134, import_promises5, router134, deleteDirectorManual_default;
+var import_express135, import_promises5, router135, deleteDirectorManual_default;
 var init_deleteDirectorManual = __esm({
   "src/routes/project/deleteDirectorManual.ts"() {
     "use strict";
-    import_express134 = __toESM(require_express2());
+    import_express135 = __toESM(require_express2());
     init_utils3();
     import_promises5 = __toESM(require("node:fs/promises"));
     init_zod();
     init_responseFormat();
     init_middleware();
-    router134 = import_express134.default.Router();
-    deleteDirectorManual_default = router134.post(
+    router135 = import_express135.default.Router();
+    deleteDirectorManual_default = router135.post(
       "/",
       validateFields({
         name: external_exports.string()
@@ -268975,18 +269448,18 @@ var init_deleteDirectorManual = __esm({
 });
 
 // src/routes/project/deleteVisualManual.ts
-var import_express135, import_promises6, router135, deleteVisualManual_default;
+var import_express136, import_promises6, router136, deleteVisualManual_default;
 var init_deleteVisualManual = __esm({
   "src/routes/project/deleteVisualManual.ts"() {
     "use strict";
-    import_express135 = __toESM(require_express2());
+    import_express136 = __toESM(require_express2());
     init_utils3();
     import_promises6 = __toESM(require("node:fs/promises"));
     init_zod();
     init_responseFormat();
     init_middleware();
-    router135 = import_express135.default.Router();
-    deleteVisualManual_default = router135.post(
+    router136 = import_express136.default.Router();
+    deleteVisualManual_default = router136.post(
       "/",
       validateFields({
         name: external_exports.string()
@@ -269018,17 +269491,17 @@ var init_deleteVisualManual = __esm({
 });
 
 // src/routes/project/delProject.ts
-var import_express136, router136, delProject_default;
+var import_express137, router137, delProject_default;
 var init_delProject = __esm({
   "src/routes/project/delProject.ts"() {
     "use strict";
-    import_express136 = __toESM(require_express2());
+    import_express137 = __toESM(require_express2());
     init_utils3();
     init_zod();
     init_responseFormat();
     init_middleware();
-    router136 = import_express136.default.Router();
-    delProject_default = router136.post(
+    router137 = import_express137.default.Router();
+    delProject_default = router137.post(
       "/",
       validateFields({
         id: external_exports.number()
@@ -269076,19 +269549,19 @@ var init_delProject = __esm({
 });
 
 // src/routes/project/editDirectorlManual.ts
-var import_express137, import_fs10, import_path17, router137, editDirectorlManual_default;
+var import_express138, import_fs10, import_path17, router138, editDirectorlManual_default;
 var init_editDirectorlManual = __esm({
   "src/routes/project/editDirectorlManual.ts"() {
     "use strict";
-    import_express137 = __toESM(require_express2());
+    import_express138 = __toESM(require_express2());
     init_utils3();
     init_responseFormat();
     import_fs10 = __toESM(require("fs"));
     import_path17 = __toESM(require("path"));
     init_middleware();
     init_zod();
-    router137 = import_express137.default.Router();
-    editDirectorlManual_default = router137.post(
+    router138 = import_express138.default.Router();
+    editDirectorlManual_default = router138.post(
       "/",
       validateFields({
         name: external_exports.string(),
@@ -269168,17 +269641,17 @@ ${item.data}` : item.data;
 });
 
 // src/routes/project/editProject.ts
-var import_express138, router138, editProject_default;
+var import_express139, router139, editProject_default;
 var init_editProject = __esm({
   "src/routes/project/editProject.ts"() {
     "use strict";
-    import_express138 = __toESM(require_express2());
+    import_express139 = __toESM(require_express2());
     init_utils3();
     init_zod();
     init_responseFormat();
     init_middleware();
-    router138 = import_express138.default.Router();
-    editProject_default = router138.post(
+    router139 = import_express139.default.Router();
+    editProject_default = router139.post(
       "/",
       validateFields({
         id: external_exports.number(),
@@ -269218,19 +269691,19 @@ var init_editProject = __esm({
 });
 
 // src/routes/project/editVisualManual.ts
-var import_express139, import_fs11, import_path18, router139, editVisualManual_default;
+var import_express140, import_fs11, import_path18, router140, editVisualManual_default;
 var init_editVisualManual = __esm({
   "src/routes/project/editVisualManual.ts"() {
     "use strict";
-    import_express139 = __toESM(require_express2());
+    import_express140 = __toESM(require_express2());
     init_utils3();
     init_responseFormat();
     import_fs11 = __toESM(require("fs"));
     import_path18 = __toESM(require("path"));
     init_middleware();
     init_zod();
-    router139 = import_express139.default.Router();
-    editVisualManual_default = router139.post(
+    router140 = import_express140.default.Router();
+    editVisualManual_default = router140.post(
       "/",
       validateFields({
         name: external_exports.string(),
@@ -269319,17 +269792,17 @@ ${item.data}` : item.data;
 });
 
 // src/routes/project/getModelDetails.ts
-var import_express140, router140, getModelDetails_default;
+var import_express141, router141, getModelDetails_default;
 var init_getModelDetails = __esm({
   "src/routes/project/getModelDetails.ts"() {
     "use strict";
-    import_express140 = __toESM(require_express2());
+    import_express141 = __toESM(require_express2());
     init_responseFormat();
     init_utils3();
     init_zod();
     init_middleware();
-    router140 = import_express140.default.Router();
-    getModelDetails_default = router140.post(
+    router141 = import_express141.default.Router();
+    getModelDetails_default = router141.post(
       "/",
       validateFields({
         key: external_exports.enum(["scriptAgent", "productionAgent"])
@@ -269338,7 +269811,7 @@ var init_getModelDetails = __esm({
         const { key } = req.body;
         const data2 = await utils_default.db("o_agentDeploy").select("o_agentDeploy.*").where("o_agentDeploy.key", key).first();
         const [id, modelName] = data2 ? data2.modelName.split(/:(.+)/) : [];
-        const models = await utils_default.vendor.getModelList(id);
+        const models = await utils_default.vendor.getEnabledModelList(id);
         const model = models.find((m) => m.modelName === modelName);
         if (!model) return res.status(400).send(error53("\u672A\u627E\u5230\u6A21\u578B"));
         res.status(200).send(success3(model));
@@ -269348,15 +269821,15 @@ var init_getModelDetails = __esm({
 });
 
 // src/routes/project/getProject.ts
-var import_express141, router141, getProject_default;
+var import_express142, router142, getProject_default;
 var init_getProject = __esm({
   "src/routes/project/getProject.ts"() {
     "use strict";
-    import_express141 = __toESM(require_express2());
+    import_express142 = __toESM(require_express2());
     init_utils3();
     init_responseFormat();
-    router141 = import_express141.default.Router();
-    getProject_default = router141.post("/", async (req, res) => {
+    router142 = import_express142.default.Router();
+    getProject_default = router142.post("/", async (req, res) => {
       const userId = String(req.user?.id || "");
       if (!userId) return res.status(401).send({ message: "\u672A\u63D0\u4F9Btoken" });
       const data2 = await utils_default.db("o_project").where("userId", userId).select("*");
@@ -269387,16 +269860,16 @@ async function readAllImages(imagesDir) {
     return [];
   }
 }
-var import_express142, import_fs12, import_path19, router142, DATA_MAP, getVisualManual_default;
+var import_express143, import_fs12, import_path19, router143, DATA_MAP, getVisualManual_default;
 var init_getVisualManual = __esm({
   "src/routes/project/getVisualManual.ts"() {
     "use strict";
-    import_express142 = __toESM(require_express2());
+    import_express143 = __toESM(require_express2());
     init_utils3();
     init_responseFormat();
     import_fs12 = __toESM(require("fs"));
     import_path19 = __toESM(require("path"));
-    router142 = import_express142.default.Router();
+    router143 = import_express143.default.Router();
     DATA_MAP = [
       { label: "README", value: "README" },
       { label: "\u524D\u7F00", value: "prefix" },
@@ -269411,7 +269884,7 @@ var init_getVisualManual = __esm({
       { label: "\u6280\u6CD5-\u5BFC\u6F14\u89C4\u5212", value: "director_planning_style", subDir: "driector_skills" },
       { label: "\u6280\u6CD5-\u5206\u955C\u8868\u8BBE\u8BA1", value: "director_storyboard_table_style", subDir: "driector_skills" }
     ];
-    getVisualManual_default = router142.post("/", async (req, res) => {
+    getVisualManual_default = router143.post("/", async (req, res) => {
       try {
         const artPromptsDir = utils_default.getPath(["skills", "art_skills"]);
         const styleDirs = import_fs12.default.readdirSync(artPromptsDir, { withFileTypes: true }).filter((d) => d.isDirectory()).map((d) => d.name);
@@ -269473,22 +269946,22 @@ async function readAllImages2(imagesDir) {
     return [];
   }
 }
-var import_express143, import_fs13, import_path20, router143, DATA_MAP2, queryDirectorManual_default;
+var import_express144, import_fs13, import_path20, router144, DATA_MAP2, queryDirectorManual_default;
 var init_queryDirectorManual = __esm({
   "src/routes/project/queryDirectorManual.ts"() {
     "use strict";
-    import_express143 = __toESM(require_express2());
+    import_express144 = __toESM(require_express2());
     init_utils3();
     init_responseFormat();
     import_fs13 = __toESM(require("fs"));
     import_path20 = __toESM(require("path"));
-    router143 = import_express143.default.Router();
+    router144 = import_express144.default.Router();
     DATA_MAP2 = [
       { label: "README", value: "README" },
       { label: "\u5BFC\u6F14\u89C4\u5212", value: "director_planning_narrative", subDir: "driector_skills" },
       { label: "\u5206\u955C\u8868", value: "director_storyboard_table_narrative", subDir: "driector_skills" }
     ];
-    queryDirectorManual_default = router143.post("/", async (req, res) => {
+    queryDirectorManual_default = router144.post("/", async (req, res) => {
       try {
         const artPromptsDir = utils_default.getPath(["skills", "story_skills"]);
         const styleDirs = import_fs13.default.readdirSync(artPromptsDir, { withFileTypes: true }).filter((d) => d.isDirectory()).map((d) => d.name);
@@ -269529,19 +270002,19 @@ var init_queryDirectorManual = __esm({
 });
 
 // src/routes/project/visualManual.ts
-var import_express144, import_fs14, import_path21, router144, visualManual_default;
+var import_express145, import_fs14, import_path21, router145, visualManual_default;
 var init_visualManual = __esm({
   "src/routes/project/visualManual.ts"() {
     "use strict";
-    import_express144 = __toESM(require_express2());
+    import_express145 = __toESM(require_express2());
     init_zod();
     init_responseFormat();
     init_middleware();
     init_getPath();
     import_fs14 = __toESM(require("fs"));
     import_path21 = __toESM(require("path"));
-    router144 = import_express144.default.Router();
-    visualManual_default = router144.post(
+    router145 = import_express145.default.Router();
+    visualManual_default = router145.post(
       "/",
       validateFields({
         type: external_exports.string()
@@ -269575,17 +270048,17 @@ var init_visualManual = __esm({
 });
 
 // src/routes/script/addScript.ts
-var import_express145, router145, addScript_default;
+var import_express146, router146, addScript_default;
 var init_addScript = __esm({
   "src/routes/script/addScript.ts"() {
     "use strict";
-    import_express145 = __toESM(require_express2());
+    import_express146 = __toESM(require_express2());
     init_utils3();
     init_zod();
     init_responseFormat();
     init_middleware();
-    router145 = import_express145.default.Router();
-    addScript_default = router145.post(
+    router146 = import_express146.default.Router();
+    addScript_default = router146.post(
       "/",
       validateFields({
         name: external_exports.string(),
@@ -269621,17 +270094,17 @@ var init_addScript = __esm({
 });
 
 // src/routes/script/batchAddScript.ts
-var import_express146, router146, batchAddScript_default;
+var import_express147, router147, batchAddScript_default;
 var init_batchAddScript = __esm({
   "src/routes/script/batchAddScript.ts"() {
     "use strict";
-    import_express146 = __toESM(require_express2());
+    import_express147 = __toESM(require_express2());
     init_utils3();
     init_zod();
     init_responseFormat();
     init_middleware();
-    router146 = import_express146.default.Router();
-    batchAddScript_default = router146.post(
+    router147 = import_express147.default.Router();
+    batchAddScript_default = router147.post(
       "/",
       validateFields({
         data: external_exports.array(
@@ -269661,17 +270134,17 @@ var init_batchAddScript = __esm({
 });
 
 // src/routes/script/delScript.ts
-var import_express147, router147, delScript_default;
+var import_express148, router148, delScript_default;
 var init_delScript = __esm({
   "src/routes/script/delScript.ts"() {
     "use strict";
-    import_express147 = __toESM(require_express2());
+    import_express148 = __toESM(require_express2());
     init_utils3();
     init_zod();
     init_responseFormat();
     init_middleware();
-    router147 = import_express147.default.Router();
-    delScript_default = router147.post(
+    router148 = import_express148.default.Router();
+    delScript_default = router148.post(
       "/",
       validateFields({
         ids: external_exports.array(external_exports.number())
@@ -278492,7 +278965,7 @@ var require_dbcs_data3 = __commonJS({
       // == Japanese/ShiftJIS ====================================================
       // All japanese encodings are based on JIS X set of standards:
       // JIS X 0201 - Single-byte encoding of ASCII + ¥ + Kana chars at 0xA1-0xDF.
-      // JIS X 0208 - Main set of 6879 characters, placed in 94x94 plane, to be encoded by 2 bytes.
+      // JIS X 0208 - Main set of 6879 characters, placed in 94x94 plane, to be encoded by 2 bytes. 
       //              Has several variations in 1978, 1983, 1990 and 1997.
       // JIS X 0212 - Supplementary plane of 6067 chars in 94x94 plane. 1990. Effectively dead.
       // JIS X 0213 - Extension and modern replacement of 0208 and 0212. Total chars: 11233.
@@ -278509,7 +278982,7 @@ var require_dbcs_data3 = __commonJS({
       //               0x8F, (0xA1-0xFE)x2 - 0212 plane (94x94).
       //  * JIS X 208: 7-bit, direct encoding of 0208. Byte ranges: 0x21-0x7E (94 values). Uncommon.
       //               Used as-is in ISO2022 family.
-      //  * ISO2022-JP: Stateful encoding, with escape sequences to switch between ASCII,
+      //  * ISO2022-JP: Stateful encoding, with escape sequences to switch between ASCII, 
       //                0201-1976 Roman, 0208-1978, 0208-1983.
       //  * ISO2022-JP-1: Adds esc seq for 0212-1990.
       //  * ISO2022-JP-2: Adds esc seq for GB2313-1980, KSX1001-1992, ISO8859-1, ISO8859-7.
@@ -278620,7 +279093,7 @@ var require_dbcs_data3 = __commonJS({
       //  * Windows CP 951: Microsoft variant of Big5-HKSCS-2001. Seems to be never public. http://me.abelcheung.org/articles/research/what-is-cp951/
       //  * Big5-2003 (Taiwan standard) almost superset of cp950.
       //  * Unicode-at-on (UAO) / Mozilla 1.8. Falling out of use on the Web. Not supported by other browsers.
-      //  * Big5-HKSCS (-2001, -2004, -2008). Hong Kong standard.
+      //  * Big5-HKSCS (-2001, -2004, -2008). Hong Kong standard. 
       //    many unicode code points moved from PUA to Supplementary plane (U+2XXXX) over the years.
       //    Plus, it has 4 combining sequences.
       //    Seems that Mozilla refused to support it for 10 yrs. https://bugzilla.mozilla.org/show_bug.cgi?id=162431 https://bugzilla.mozilla.org/show_bug.cgi?id=310299
@@ -278631,7 +279104,7 @@ var require_dbcs_data3 = __commonJS({
       //    In the encoder, it might make sense to support encoding old PUA mappings to Big5 bytes seq-s.
       //    Official spec: http://www.ogcio.gov.hk/en/business/tech_promotion/ccli/terms/doc/2003cmp_2008.txt
       //                   http://www.ogcio.gov.hk/tc/business/tech_promotion/ccli/terms/doc/hkscs-2008-big5-iso.txt
-      //
+      // 
       // Current understanding of how to deal with Big5(-HKSCS) is in the Encoding Standard, http://encoding.spec.whatwg.org/#big5-encoder
       // Unicode mapping (http://www.unicode.org/Public/MAPPINGS/OBSOLETE/EASTASIA/OTHER/BIG5.TXT) is said to be wrong.
       "windows950": "cp950",
@@ -279066,15 +279539,15 @@ var require_uncompress_stream = __commonJS({
     var STRIP_NAME = /* @__PURE__ */ Symbol("ZipUncompressStream#stripName");
     var DEFAULTS2 = { lazyEntries: true, decodeStrings: false };
     function modeFromEntry(entry) {
-      const attr = entry.externalFileAttributes >> 16 || 33188;
+      const attr2 = entry.externalFileAttributes >> 16 || 33188;
       return [
         448,
         56,
         7
         /* S_IRWXO */
-      ].map((mask) => attr & mask).reduce(
+      ].map((mask) => attr2 & mask).reduce(
         (a, b2) => a + b2,
-        attr & 61440
+        attr2 & 61440
         /* S_IFMT */
       );
     }
@@ -279617,17 +280090,17 @@ var require_compressing = __commonJS({
 });
 
 // src/routes/script/exportScript.ts
-var import_express148, import_compressing, router148, exportScript_default;
+var import_express149, import_compressing, router149, exportScript_default;
 var init_exportScript = __esm({
   "src/routes/script/exportScript.ts"() {
     "use strict";
-    import_express148 = __toESM(require_express2());
+    import_express149 = __toESM(require_express2());
     init_utils3();
     init_zod();
     import_compressing = __toESM(require_compressing());
     init_middleware();
-    router148 = import_express148.default.Router();
-    exportScript_default = router148.post(
+    router149 = import_express149.default.Router();
+    exportScript_default = router149.post(
       "/",
       validateFields({
         id: external_exports.array(external_exports.number())
@@ -279660,18 +280133,18 @@ function chunkArray(arr, groupSize) {
   }
   return groupChunks;
 }
-var import_express149, router149, NewAssetSchema, ExistingAssetRefSchema, AssetSchema, extractAssets_default;
+var import_express150, router150, NewAssetSchema, ExistingAssetRefSchema, AssetSchema, extractAssets_default;
 var init_extractAssets = __esm({
   "src/routes/script/extractAssets.ts"() {
     "use strict";
-    import_express149 = __toESM(require_express2());
+    import_express150 = __toESM(require_express2());
     init_utils3();
     init_zod();
     init_responseFormat();
     init_middleware();
     init_dist30();
     init_modelBilling();
-    router149 = import_express149.default.Router();
+    router150 = import_express150.default.Router();
     NewAssetSchema = external_exports.object({
       name: external_exports.string().describe("\u8D44\u4EA7\u540D\u79F0,\u4EC5\u4E3A\u540D\u79F0\u4E0D\u505A\u5176\u4ED6\u4EFB\u4F55\u8868\u8FF0"),
       desc: external_exports.string().describe("\u8D44\u4EA7\u63CF\u8FF0"),
@@ -279687,7 +280160,7 @@ var init_extractAssets = __esm({
       desc: external_exports.string().describe("\u8D44\u4EA7\u63CF\u8FF0"),
       type: external_exports.enum(["role", "tool", "scene"]).describe("\u8D44\u4EA7\u7C7B\u578B")
     });
-    extractAssets_default = router149.post(
+    extractAssets_default = router150.post(
       "/",
       validateFields({
         scriptIds: external_exports.array(external_exports.number()),
@@ -279893,18 +280366,18 @@ ${scriptsContent}`
 });
 
 // src/routes/script/getAiRegex.ts
-var import_express150, router150, getAiRegex_default;
+var import_express151, router151, getAiRegex_default;
 var init_getAiRegex = __esm({
   "src/routes/script/getAiRegex.ts"() {
     "use strict";
-    import_express150 = __toESM(require_express2());
+    import_express151 = __toESM(require_express2());
     init_utils3();
     init_zod();
     init_responseFormat();
     init_middleware();
     init_modelBilling();
-    router150 = import_express150.default.Router();
-    getAiRegex_default = router150.post(
+    router151 = import_express151.default.Router();
+    getAiRegex_default = router151.post(
       "/",
       validateFields({
         content: external_exports.string()
@@ -279968,17 +280441,17 @@ var init_getAiRegex = __esm({
 });
 
 // src/routes/script/getScrptApi.ts
-var import_express151, router151, getScrptApi_default;
+var import_express152, router152, getScrptApi_default;
 var init_getScrptApi = __esm({
   "src/routes/script/getScrptApi.ts"() {
     "use strict";
-    import_express151 = __toESM(require_express2());
+    import_express152 = __toESM(require_express2());
     init_utils3();
     init_zod();
     init_responseFormat();
     init_middleware();
-    router151 = import_express151.default.Router();
-    getScrptApi_default = router151.post(
+    router152 = import_express152.default.Router();
+    getScrptApi_default = router152.post(
       "/",
       validateFields({
         projectId: external_exports.number(),
@@ -280019,17 +280492,17 @@ var init_getScrptApi = __esm({
 });
 
 // src/routes/script/pollScriptAssets.ts
-var import_express152, router152, pollScriptAssets_default;
+var import_express153, router153, pollScriptAssets_default;
 var init_pollScriptAssets = __esm({
   "src/routes/script/pollScriptAssets.ts"() {
     "use strict";
-    import_express152 = __toESM(require_express2());
+    import_express153 = __toESM(require_express2());
     init_utils3();
     init_zod();
     init_responseFormat();
     init_middleware();
-    router152 = import_express152.default.Router();
-    pollScriptAssets_default = router152.post(
+    router153 = import_express153.default.Router();
+    pollScriptAssets_default = router153.post(
       "/",
       validateFields({
         ids: external_exports.array(external_exports.number())
@@ -280044,17 +280517,17 @@ var init_pollScriptAssets = __esm({
 });
 
 // src/routes/script/updateScript.ts
-var import_express153, router153, updateScript_default;
+var import_express154, router154, updateScript_default;
 var init_updateScript = __esm({
   "src/routes/script/updateScript.ts"() {
     "use strict";
-    import_express153 = __toESM(require_express2());
+    import_express154 = __toESM(require_express2());
     init_utils3();
     init_zod();
     init_responseFormat();
     init_middleware();
-    router153 = import_express153.default.Router();
-    updateScript_default = router153.post(
+    router154 = import_express154.default.Router();
+    updateScript_default = router154.post(
       "/",
       validateFields({
         id: external_exports.number(),
@@ -280088,17 +280561,17 @@ var init_updateScript = __esm({
 });
 
 // src/routes/scriptAgent/getPlanData.ts
-var import_express154, router154, getPlanData_default;
+var import_express155, router155, getPlanData_default;
 var init_getPlanData = __esm({
   "src/routes/scriptAgent/getPlanData.ts"() {
     "use strict";
-    import_express154 = __toESM(require_express2());
+    import_express155 = __toESM(require_express2());
     init_responseFormat();
     init_utils3();
     init_zod();
     init_middleware();
-    router154 = import_express154.default.Router();
-    getPlanData_default = router154.post(
+    router155 = import_express155.default.Router();
+    getPlanData_default = router155.post(
       "/",
       validateFields({
         projectId: external_exports.number(),
@@ -280135,17 +280608,17 @@ var init_getPlanData = __esm({
 });
 
 // src/routes/scriptAgent/setPlanData.ts
-var import_express155, router155, setPlanData_default;
+var import_express156, router156, setPlanData_default;
 var init_setPlanData = __esm({
   "src/routes/scriptAgent/setPlanData.ts"() {
     "use strict";
-    import_express155 = __toESM(require_express2());
+    import_express156 = __toESM(require_express2());
     init_responseFormat();
     init_utils3();
     init_zod();
     init_middleware();
-    router155 = import_express155.default.Router();
-    setPlanData_default = router155.post(
+    router156 = import_express156.default.Router();
+    setPlanData_default = router156.post(
       "/",
       validateFields({
         projectId: external_exports.number(),
@@ -280178,17 +280651,17 @@ var init_setPlanData = __esm({
 });
 
 // src/routes/scriptAgent/updateData.ts
-var import_express156, router156, updateData_default;
+var import_express157, router157, updateData_default;
 var init_updateData = __esm({
   "src/routes/scriptAgent/updateData.ts"() {
     "use strict";
-    import_express156 = __toESM(require_express2());
+    import_express157 = __toESM(require_express2());
     init_responseFormat();
     init_utils3();
     init_zod();
     init_middleware();
-    router156 = import_express156.default.Router();
-    updateData_default = router156.post(
+    router157 = import_express157.default.Router();
+    updateData_default = router157.post(
       "/",
       validateFields({
         id: external_exports.number(),
@@ -280215,15 +280688,15 @@ var init_updateData = __esm({
 });
 
 // src/routes/service/status.ts
-var import_express157, router157, status_default2;
+var import_express158, router158, status_default2;
 var init_status3 = __esm({
   "src/routes/service/status.ts"() {
     "use strict";
-    import_express157 = __toESM(require_express2());
+    import_express158 = __toESM(require_express2());
     init_responseFormat();
     init_serviceStatus();
-    router157 = import_express157.default.Router();
-    status_default2 = router157.get("/", async (_req, res) => {
+    router158 = import_express158.default.Router();
+    status_default2 = router158.get("/", async (_req, res) => {
       try {
         return res.status(200).send(success3(await getServiceStatus("web")));
       } catch (err) {
@@ -280234,11 +280707,11 @@ var init_status3 = __esm({
 });
 
 // src/routes/setting/about/downloadApp.ts
-var import_express158, import_fs15, import_compressing2, router158, downloadApp_default;
+var import_express159, import_fs15, import_compressing2, router159, downloadApp_default;
 var init_downloadApp = __esm({
   "src/routes/setting/about/downloadApp.ts"() {
     "use strict";
-    import_express158 = __toESM(require_express2());
+    import_express159 = __toESM(require_express2());
     init_zod();
     init_middleware();
     init_utils3();
@@ -280246,8 +280719,8 @@ var init_downloadApp = __esm({
     init_axios2();
     import_compressing2 = __toESM(require_compressing());
     init_responseFormat();
-    router158 = import_express158.default.Router();
-    downloadApp_default = router158.post(
+    router159 = import_express159.default.Router();
+    downloadApp_default = router159.post(
       "/",
       validateFields({
         url: zod_default.url(),
@@ -280275,17 +280748,17 @@ var init_downloadApp = __esm({
 });
 
 // src/routes/setting/agentDeploy/agentSetKey.ts
-var import_express159, router159, agentSetKey_default;
+var import_express160, router160, agentSetKey_default;
 var init_agentSetKey = __esm({
   "src/routes/setting/agentDeploy/agentSetKey.ts"() {
     "use strict";
-    import_express159 = __toESM(require_express2());
+    import_express160 = __toESM(require_express2());
     init_responseFormat();
     init_utils3();
     init_zod();
     init_middleware();
-    router159 = import_express159.default.Router();
-    agentSetKey_default = router159.post(
+    router160 = import_express160.default.Router();
+    agentSetKey_default = router160.post(
       "/",
       validateFields({
         key: external_exports.string().optional()
@@ -280334,17 +280807,17 @@ var init_agentSetKey = __esm({
 });
 
 // src/routes/setting/agentDeploy/deployAgentModel.ts
-var import_express160, router160, deployAgentModel_default;
+var import_express161, router161, deployAgentModel_default;
 var init_deployAgentModel = __esm({
   "src/routes/setting/agentDeploy/deployAgentModel.ts"() {
     "use strict";
-    import_express160 = __toESM(require_express2());
+    import_express161 = __toESM(require_express2());
     init_responseFormat();
     init_utils3();
     init_zod();
     init_middleware();
-    router160 = import_express160.default.Router();
-    deployAgentModel_default = router160.post(
+    router161 = import_express161.default.Router();
+    deployAgentModel_default = router161.post(
       "/",
       validateFields({
         id: external_exports.number(),
@@ -280366,15 +280839,15 @@ var init_deployAgentModel = __esm({
 });
 
 // src/routes/setting/agentDeploy/getAgentDeploy.ts
-var import_express161, router161, getAgentDeploy_default;
+var import_express162, router162, getAgentDeploy_default;
 var init_getAgentDeploy = __esm({
   "src/routes/setting/agentDeploy/getAgentDeploy.ts"() {
     "use strict";
-    import_express161 = __toESM(require_express2());
+    import_express162 = __toESM(require_express2());
     init_responseFormat();
     init_utils3();
-    router161 = import_express161.default.Router();
-    getAgentDeploy_default = router161.post("/", async (req, res) => {
+    router162 = import_express162.default.Router();
+    getAgentDeploy_default = router162.post("/", async (req, res) => {
       const allData = await utils_default.db("o_agentDeploy").leftJoin("o_vendorConfig", "o_vendorConfig.id", "o_agentDeploy.vendorId").select("o_agentDeploy.*");
       const qrdinaryData = allData.filter((item) => !item.key?.includes(":"));
       const advancedData = allData.filter((item) => item.key?.includes(":"));
@@ -280384,15 +280857,15 @@ var init_getAgentDeploy = __esm({
 });
 
 // src/routes/setting/agentDeploy/getAgentUseMode.ts
-var import_express162, router162, getAgentUseMode_default;
+var import_express163, router163, getAgentUseMode_default;
 var init_getAgentUseMode = __esm({
   "src/routes/setting/agentDeploy/getAgentUseMode.ts"() {
     "use strict";
-    import_express162 = __toESM(require_express2());
+    import_express163 = __toESM(require_express2());
     init_responseFormat();
     init_utils3();
-    router162 = import_express162.default.Router();
-    getAgentUseMode_default = router162.get("/", async (req, res) => {
+    router163 = import_express163.default.Router();
+    getAgentUseMode_default = router163.get("/", async (req, res) => {
       const useMode = await utils_default.db("o_setting").where("key", "agentUseMode").first();
       console.log("%c Line:9 \u{1F353} useMode", "background:#33a5ff", useMode);
       res.status(200).send(success3(useMode?.value || "0"));
@@ -280401,17 +280874,17 @@ var init_getAgentUseMode = __esm({
 });
 
 // src/routes/setting/agentDeploy/updateUseMode.ts
-var import_express163, router163, updateUseMode_default;
+var import_express164, router164, updateUseMode_default;
 var init_updateUseMode = __esm({
   "src/routes/setting/agentDeploy/updateUseMode.ts"() {
     "use strict";
-    import_express163 = __toESM(require_express2());
+    import_express164 = __toESM(require_express2());
     init_utils3();
     init_zod();
     init_responseFormat();
     init_middleware();
-    router163 = import_express163.default.Router();
-    updateUseMode_default = router163.post(
+    router164 = import_express164.default.Router();
+    updateUseMode_default = router164.post(
       "/",
       validateFields({
         agentUseMode: external_exports.string()
@@ -280428,17 +280901,17 @@ var init_updateUseMode = __esm({
 });
 
 // src/routes/setting/dbConfig/clearData.ts
-var import_express164, router164, clearData_default;
+var import_express165, router165, clearData_default;
 var init_clearData = __esm({
   "src/routes/setting/dbConfig/clearData.ts"() {
     "use strict";
-    import_express164 = __toESM(require_express2());
+    import_express165 = __toESM(require_express2());
     init_responseFormat();
     init_db();
     init_initDB();
     init_dbDialect();
-    router164 = import_express164.default.Router();
-    clearData_default = router164.get("/", async (req, res) => {
+    router165 = import_express165.default.Router();
+    clearData_default = router165.get("/", async (req, res) => {
       try {
         const tables = await listUserTables(db);
         await withForeignKeyChecksDisabled(db, async () => {
@@ -280456,16 +280929,16 @@ var init_clearData = __esm({
 });
 
 // src/routes/setting/dbConfig/clearTable.ts
-var import_express165, router165, clearTable_default;
+var import_express166, router166, clearTable_default;
 var init_clearTable = __esm({
   "src/routes/setting/dbConfig/clearTable.ts"() {
     "use strict";
-    import_express165 = __toESM(require_express2());
+    import_express166 = __toESM(require_express2());
     init_responseFormat();
     init_db();
     init_dbDialect();
-    router165 = import_express165.default.Router();
-    clearTable_default = router165.post("/", async (req, res) => {
+    router166 = import_express166.default.Router();
+    clearTable_default = router166.post("/", async (req, res) => {
       try {
         const { tableName } = req.body;
         if (!tableName || typeof tableName !== "string") {
@@ -280487,16 +280960,16 @@ var init_clearTable = __esm({
 });
 
 // src/routes/setting/dbConfig/dbInfo.ts
-var import_express166, router166, dbInfo_default;
+var import_express167, router167, dbInfo_default;
 var init_dbInfo = __esm({
   "src/routes/setting/dbConfig/dbInfo.ts"() {
     "use strict";
-    import_express166 = __toESM(require_express2());
+    import_express167 = __toESM(require_express2());
     init_responseFormat();
     init_db();
     init_dbDialect();
-    router166 = import_express166.default.Router();
-    dbInfo_default = router166.get("/", async (req, res) => {
+    router167 = import_express167.default.Router();
+    dbInfo_default = router167.get("/", async (req, res) => {
       try {
         const tables = await listUserTables(db);
         const tableInfo = [];
@@ -280516,16 +280989,16 @@ var init_dbInfo = __esm({
 });
 
 // src/routes/setting/dbConfig/exportData.ts
-var import_express167, router167, exportData_default;
+var import_express168, router168, exportData_default;
 var init_exportData = __esm({
   "src/routes/setting/dbConfig/exportData.ts"() {
     "use strict";
-    import_express167 = __toESM(require_express2());
+    import_express168 = __toESM(require_express2());
     init_responseFormat();
     init_db();
     init_dbDialect();
-    router167 = import_express167.default.Router();
-    exportData_default = router167.get("/", async (req, res) => {
+    router168 = import_express168.default.Router();
+    exportData_default = router168.get("/", async (req, res) => {
       try {
         const tables = await listUserTables(db);
         const data2 = {};
@@ -280547,17 +281020,17 @@ var init_exportData = __esm({
 });
 
 // src/routes/setting/dbConfig/importData.ts
-var import_express168, router168, importData_default;
+var import_express169, router169, importData_default;
 var init_importData = __esm({
   "src/routes/setting/dbConfig/importData.ts"() {
     "use strict";
-    import_express168 = __toESM(require_express2());
+    import_express169 = __toESM(require_express2());
     init_responseFormat();
     init_db();
     init_initDB();
     init_dbDialect();
-    router168 = import_express168.default.Router();
-    importData_default = router168.post("/", async (req, res) => {
+    router169 = import_express169.default.Router();
+    importData_default = router169.post("/", async (req, res) => {
       try {
         const { tables: importTables } = req.body;
         if (!importTables || typeof importTables !== "object") {
@@ -280591,15 +281064,15 @@ var init_importData = __esm({
 });
 
 // src/routes/setting/dev/getSwitchAiDevTool.ts
-var import_express169, router169, getSwitchAiDevTool_default;
+var import_express170, router170, getSwitchAiDevTool_default;
 var init_getSwitchAiDevTool = __esm({
   "src/routes/setting/dev/getSwitchAiDevTool.ts"() {
     "use strict";
-    import_express169 = __toESM(require_express2());
+    import_express170 = __toESM(require_express2());
     init_responseFormat();
     init_utils3();
-    router169 = import_express169.default.Router();
-    getSwitchAiDevTool_default = router169.get("/", async (req, res) => {
+    router170 = import_express170.default.Router();
+    getSwitchAiDevTool_default = router170.get("/", async (req, res) => {
       const switchAiDevTool = await utils_default.db("o_setting").where("key", "switchAiDevTool").first();
       res.status(200).send(success3(switchAiDevTool?.value || "0"));
     });
@@ -280607,17 +281080,17 @@ var init_getSwitchAiDevTool = __esm({
 });
 
 // src/routes/setting/dev/updateSwitchAiDevTool.ts
-var import_express170, router170, updateSwitchAiDevTool_default;
+var import_express171, router171, updateSwitchAiDevTool_default;
 var init_updateSwitchAiDevTool = __esm({
   "src/routes/setting/dev/updateSwitchAiDevTool.ts"() {
     "use strict";
-    import_express170 = __toESM(require_express2());
+    import_express171 = __toESM(require_express2());
     init_utils3();
     init_zod();
     init_responseFormat();
     init_middleware();
-    router170 = import_express170.default.Router();
-    updateSwitchAiDevTool_default = router170.post(
+    router171 = import_express171.default.Router();
+    updateSwitchAiDevTool_default = router171.post(
       "/",
       validateFields({
         switchAiDevTool: external_exports.string()
@@ -280880,17 +281353,17 @@ var init_fileManagement = __esm({
 });
 
 // src/routes/setting/fileManagement/createFile.ts
-var import_express171, router171, createFile_default;
+var import_express172, router172, createFile_default;
 var init_createFile = __esm({
   "src/routes/setting/fileManagement/createFile.ts"() {
     "use strict";
-    import_express171 = __toESM(require_express2());
+    import_express172 = __toESM(require_express2());
     init_zod();
     init_responseFormat();
     init_middleware();
     init_fileManagement();
-    router171 = import_express171.default.Router();
-    createFile_default = router171.post(
+    router172 = import_express172.default.Router();
+    createFile_default = router172.post(
       "/",
       validateFields({
         content: external_exports.string().optional(),
@@ -280910,17 +281383,17 @@ var init_createFile = __esm({
 });
 
 // src/routes/setting/fileManagement/createFolder.ts
-var import_express172, router172, createFolder_default;
+var import_express173, router173, createFolder_default;
 var init_createFolder = __esm({
   "src/routes/setting/fileManagement/createFolder.ts"() {
     "use strict";
-    import_express172 = __toESM(require_express2());
+    import_express173 = __toESM(require_express2());
     init_zod();
     init_responseFormat();
     init_middleware();
     init_fileManagement();
-    router172 = import_express172.default.Router();
-    createFolder_default = router172.post(
+    router173 = import_express173.default.Router();
+    createFolder_default = router173.post(
       "/",
       validateFields({
         currentPath: external_exports.string().optional(),
@@ -280939,32 +281412,32 @@ var init_createFolder = __esm({
 });
 
 // src/routes/setting/fileManagement/delete.ts
-var import_express173, router173, delete_default2;
+var import_express174, router174, delete_default2;
 var init_delete2 = __esm({
   "src/routes/setting/fileManagement/delete.ts"() {
     "use strict";
-    import_express173 = __toESM(require_express2());
+    import_express174 = __toESM(require_express2());
     init_responseFormat();
-    router173 = import_express173.default.Router();
-    delete_default2 = router173.post("/", (_req, res) => {
+    router174 = import_express174.default.Router();
+    delete_default2 = router174.post("/", (_req, res) => {
       res.status(403).send(error53("Web \u7AEF\u4E0D\u5F00\u653E\u6587\u4EF6\u5220\u9664\u529F\u80FD"));
     });
   }
 });
 
 // src/routes/setting/fileManagement/download.ts
-var import_express174, import_node_path6, router174, download_default;
+var import_express175, import_node_path6, router175, download_default;
 var init_download = __esm({
   "src/routes/setting/fileManagement/download.ts"() {
     "use strict";
-    import_express174 = __toESM(require_express2());
+    import_express175 = __toESM(require_express2());
     import_node_path6 = __toESM(require("node:path"));
     init_zod();
     init_responseFormat();
     init_middleware();
     init_fileManagement();
-    router174 = import_express174.default.Router();
-    download_default = router174.post(
+    router175 = import_express175.default.Router();
+    download_default = router175.post(
       "/",
       validateFields({
         path: external_exports.string()
@@ -280989,17 +281462,17 @@ var init_download = __esm({
 });
 
 // src/routes/setting/fileManagement/list.ts
-var import_express175, router175, list_default4;
+var import_express176, router176, list_default4;
 var init_list4 = __esm({
   "src/routes/setting/fileManagement/list.ts"() {
     "use strict";
-    import_express175 = __toESM(require_express2());
+    import_express176 = __toESM(require_express2());
     init_zod();
     init_responseFormat();
     init_middleware();
     init_fileManagement();
-    router175 = import_express175.default.Router();
-    list_default4 = router175.post(
+    router176 = import_express176.default.Router();
+    list_default4 = router176.post(
       "/",
       validateFields({
         path: external_exports.string().optional()
@@ -281017,16 +281490,16 @@ var init_list4 = __esm({
 });
 
 // src/routes/setting/fileManagement/openFolder.ts
-var import_express176, router176, openFolder_default;
+var import_express177, router177, openFolder_default;
 var init_openFolder = __esm({
   "src/routes/setting/fileManagement/openFolder.ts"() {
     "use strict";
-    import_express176 = __toESM(require_express2());
+    import_express177 = __toESM(require_express2());
     init_zod();
     init_responseFormat();
     init_middleware();
-    router176 = import_express176.default.Router();
-    openFolder_default = router176.post(
+    router177 = import_express177.default.Router();
+    openFolder_default = router177.post(
       "/",
       validateFields({
         path: external_exports.string()
@@ -281039,17 +281512,17 @@ var init_openFolder = __esm({
 });
 
 // src/routes/setting/fileManagement/read.ts
-var import_express177, router177, read_default;
+var import_express178, router178, read_default;
 var init_read = __esm({
   "src/routes/setting/fileManagement/read.ts"() {
     "use strict";
-    import_express177 = __toESM(require_express2());
+    import_express178 = __toESM(require_express2());
     init_zod();
     init_responseFormat();
     init_middleware();
     init_fileManagement();
-    router177 = import_express177.default.Router();
-    read_default = router177.post(
+    router178 = import_express178.default.Router();
+    read_default = router178.post(
       "/",
       validateFields({
         path: external_exports.string()
@@ -281068,45 +281541,45 @@ var init_read = __esm({
 });
 
 // src/routes/setting/fileManagement/rename.ts
-var import_express178, router178, rename_default;
+var import_express179, router179, rename_default;
 var init_rename = __esm({
   "src/routes/setting/fileManagement/rename.ts"() {
     "use strict";
-    import_express178 = __toESM(require_express2());
+    import_express179 = __toESM(require_express2());
     init_responseFormat();
-    router178 = import_express178.default.Router();
-    rename_default = router178.post("/", (_req, res) => {
+    router179 = import_express179.default.Router();
+    rename_default = router179.post("/", (_req, res) => {
       res.status(403).send(error53("Web \u7AEF\u4E0D\u5F00\u653E\u6587\u4EF6\u91CD\u547D\u540D\u529F\u80FD"));
     });
   }
 });
 
 // src/routes/setting/fileManagement/save.ts
-var import_express179, router179, save_default2;
+var import_express180, router180, save_default2;
 var init_save2 = __esm({
   "src/routes/setting/fileManagement/save.ts"() {
     "use strict";
-    import_express179 = __toESM(require_express2());
+    import_express180 = __toESM(require_express2());
     init_responseFormat();
-    router179 = import_express179.default.Router();
-    save_default2 = router179.post("/", (_req, res) => {
+    router180 = import_express180.default.Router();
+    save_default2 = router180.post("/", (_req, res) => {
       res.status(403).send(error53("Web \u7AEF\u4E0D\u5F00\u653E\u6587\u4EF6\u7F16\u8F91\u529F\u80FD"));
     });
   }
 });
 
 // src/routes/setting/fileManagement/upload.ts
-var import_express180, router180, upload_default;
+var import_express181, router181, upload_default;
 var init_upload = __esm({
   "src/routes/setting/fileManagement/upload.ts"() {
     "use strict";
-    import_express180 = __toESM(require_express2());
+    import_express181 = __toESM(require_express2());
     init_zod();
     init_responseFormat();
     init_middleware();
     init_fileManagement();
-    router180 = import_express180.default.Router();
-    upload_default = router180.post(
+    router181 = import_express181.default.Router();
+    upload_default = router181.post(
       "/",
       validateFields({
         contentBase64: external_exports.string(),
@@ -281126,14 +281599,14 @@ var init_upload = __esm({
 });
 
 // src/routes/setting/getTextModel.ts
-var import_express181, router181, getTextModel_default;
+var import_express182, router182, getTextModel_default;
 var init_getTextModel = __esm({
   "src/routes/setting/getTextModel.ts"() {
     "use strict";
-    import_express181 = __toESM(require_express2());
+    import_express182 = __toESM(require_express2());
     init_responseFormat();
-    router181 = import_express181.default.Router();
-    getTextModel_default = router181.post(
+    router182 = import_express182.default.Router();
+    getTextModel_default = router182.post(
       "/",
       async (req, res) => {
         res.status(200).send(success3("123"));
@@ -281143,15 +281616,15 @@ var init_getTextModel = __esm({
 });
 
 // src/routes/setting/loginConfig/getUser.ts
-var import_express182, router182, getUser_default;
+var import_express183, router183, getUser_default;
 var init_getUser = __esm({
   "src/routes/setting/loginConfig/getUser.ts"() {
     "use strict";
-    import_express182 = __toESM(require_express2());
+    import_express183 = __toESM(require_express2());
     init_utils3();
     init_responseFormat();
-    router182 = import_express182.default.Router();
-    getUser_default = router182.get("/", async (req, res) => {
+    router183 = import_express183.default.Router();
+    getUser_default = router183.get("/", async (req, res) => {
       const data2 = await utils_default.db("o_user").select("*").first();
       res.status(200).send(success3(data2 ? { ...data2, password: "" } : data2));
     });
@@ -281159,18 +281632,18 @@ var init_getUser = __esm({
 });
 
 // src/routes/setting/loginConfig/updateUserPwd.ts
-var import_express183, router183, updateUserPwd_default;
+var import_express184, router184, updateUserPwd_default;
 var init_updateUserPwd = __esm({
   "src/routes/setting/loginConfig/updateUserPwd.ts"() {
     "use strict";
-    import_express183 = __toESM(require_express2());
+    import_express184 = __toESM(require_express2());
     init_utils3();
     init_zod();
     init_responseFormat();
     init_middleware();
     init_password();
-    router183 = import_express183.default.Router();
-    updateUserPwd_default = router183.post(
+    router184 = import_express184.default.Router();
+    updateUserPwd_default = router184.post(
       "/",
       validateFields({
         name: external_exports.string(),
@@ -281193,15 +281666,15 @@ var init_updateUserPwd = __esm({
 });
 
 // src/routes/setting/memoryConfig/delAllMemory.ts
-var import_express184, router184, delAllMemory_default;
+var import_express185, router185, delAllMemory_default;
 var init_delAllMemory = __esm({
   "src/routes/setting/memoryConfig/delAllMemory.ts"() {
     "use strict";
-    import_express184 = __toESM(require_express2());
+    import_express185 = __toESM(require_express2());
     init_responseFormat();
     init_utils3();
-    router184 = import_express184.default.Router();
-    delAllMemory_default = router184.post("/", async (req, res) => {
+    router185 = import_express185.default.Router();
+    delAllMemory_default = router185.post("/", async (req, res) => {
       await utils_default.db("memories").del();
       res.status(200).send(success3(true));
     });
@@ -281209,15 +281682,15 @@ var init_delAllMemory = __esm({
 });
 
 // src/routes/setting/memoryConfig/getMemory.ts
-var import_express185, router185, getMemory_default2;
+var import_express186, router186, getMemory_default2;
 var init_getMemory2 = __esm({
   "src/routes/setting/memoryConfig/getMemory.ts"() {
     "use strict";
-    import_express185 = __toESM(require_express2());
+    import_express186 = __toESM(require_express2());
     init_responseFormat();
     init_utils3();
-    router185 = import_express185.default.Router();
-    getMemory_default2 = router185.get("/", async (req, res) => {
+    router186 = import_express186.default.Router();
+    getMemory_default2 = router186.get("/", async (req, res) => {
       const settingData = await utils_default.db("o_setting").whereIn("key", [
         "messagesPerSummary",
         "shortTermLimit",
@@ -281247,17 +281720,17 @@ var init_getMemory2 = __esm({
 });
 
 // src/routes/setting/memoryConfig/sureMemory.ts
-var import_express186, router186, sureMemory_default;
+var import_express187, router187, sureMemory_default;
 var init_sureMemory = __esm({
   "src/routes/setting/memoryConfig/sureMemory.ts"() {
     "use strict";
-    import_express186 = __toESM(require_express2());
+    import_express187 = __toESM(require_express2());
     init_utils3();
     init_zod();
     init_responseFormat();
     init_middleware();
-    router186 = import_express186.default.Router();
-    sureMemory_default = router186.post(
+    router187 = import_express187.default.Router();
+    sureMemory_default = router187.post(
       "/",
       validateFields({
         messagesPerSummary: external_exports.number(),
@@ -281294,17 +281767,17 @@ var init_sureMemory = __esm({
 });
 
 // src/routes/setting/modelMap/bindingPrompt.ts
-var import_express187, router187, bindingPrompt_default;
+var import_express188, router188, bindingPrompt_default;
 var init_bindingPrompt = __esm({
   "src/routes/setting/modelMap/bindingPrompt.ts"() {
     "use strict";
-    import_express187 = __toESM(require_express2());
+    import_express188 = __toESM(require_express2());
     init_responseFormat();
     init_utils3();
     init_zod();
     init_middleware();
-    router187 = import_express187.default.Router();
-    bindingPrompt_default = router187.post(
+    router188 = import_express188.default.Router();
+    bindingPrompt_default = router188.post(
       "/",
       validateFields({
         vendorId: external_exports.string(),
@@ -281328,19 +281801,19 @@ var init_bindingPrompt = __esm({
 });
 
 // src/routes/setting/modelMap/deletePrompt.ts
-var import_express188, import_promises8, import_path22, router188, deletePrompt_default;
+var import_express189, import_promises8, import_path22, router189, deletePrompt_default;
 var init_deletePrompt = __esm({
   "src/routes/setting/modelMap/deletePrompt.ts"() {
     "use strict";
-    import_express188 = __toESM(require_express2());
+    import_express189 = __toESM(require_express2());
     init_responseFormat();
     init_utils3();
     init_zod();
     init_middleware();
     import_promises8 = __toESM(require("fs/promises"));
     import_path22 = __toESM(require("path"));
-    router188 = import_express188.default.Router();
-    deletePrompt_default = router188.post(
+    router189 = import_express189.default.Router();
+    deletePrompt_default = router189.post(
       "/",
       validateFields({
         path: external_exports.string()
@@ -281366,26 +281839,26 @@ var init_deletePrompt = __esm({
 });
 
 // src/routes/setting/modelMap/getImageAndVideoModel.ts
-var import_express189, router189, getImageAndVideoModel_default;
+var import_express190, router190, getImageAndVideoModel_default;
 var init_getImageAndVideoModel = __esm({
   "src/routes/setting/modelMap/getImageAndVideoModel.ts"() {
     "use strict";
-    import_express189 = __toESM(require_express2());
+    import_express190 = __toESM(require_express2());
     init_utils3();
     init_responseFormat();
-    router189 = import_express189.default.Router();
-    getImageAndVideoModel_default = router189.post("/", async (req, res) => {
+    router190 = import_express190.default.Router();
+    getImageAndVideoModel_default = router190.post("/", async (req, res) => {
       const dataList = await utils_default.db("o_vendorConfig").select("id").where("enable", 1);
       if (!dataList || dataList.length === 0) {
         return res.status(404).send({ error: "\u6A21\u578B\u672A\u627E\u5230" });
       }
-      const data2 = await Promise.all(
+      const data2 = (await Promise.all(
         dataList.map(async (item) => {
           const vendor = utils_default.vendor.getVendor(item.id);
           const promptList = await utils_default.db("o_modelPrompt").andWhere("vendorId", vendor.id).select("*");
           const promptMap = new Map(promptList.map((p3) => [p3.model, { fileName: p3.fileName, path: p3.path }]));
-          const models = await utils_default.vendor.getModelList(item.id);
-          const filteredModels = models.filter((m) => m.type === "video").map((m) => ({
+          const models = await utils_default.vendor.getEnabledModelList(item.id);
+          const filteredModels = models.filter((m) => ["text", "image", "video"].includes(m.type)).map((m) => ({
             name: m.name,
             type: m.type,
             model: m.modelName,
@@ -281397,25 +281870,25 @@ var init_getImageAndVideoModel = __esm({
             promptList: filteredModels
           };
         })
-      );
+      )).filter((item) => item.promptList.length > 0);
       res.status(200).send(success3(data2));
     });
   }
 });
 
 // src/routes/setting/modelMap/getPromptList.ts
-var import_express190, import_fast_glob3, import_promises9, import_path23, router190, getPromptList_default;
+var import_express191, import_fast_glob3, import_promises9, import_path23, router191, getPromptList_default;
 var init_getPromptList = __esm({
   "src/routes/setting/modelMap/getPromptList.ts"() {
     "use strict";
-    import_express190 = __toESM(require_express2());
+    import_express191 = __toESM(require_express2());
     init_responseFormat();
     init_utils3();
     import_fast_glob3 = __toESM(require_out4());
     import_promises9 = __toESM(require("fs/promises"));
     import_path23 = __toESM(require("path"));
-    router190 = import_express190.default.Router();
-    getPromptList_default = router190.get("/", async (req, res) => {
+    router191 = import_express191.default.Router();
+    getPromptList_default = router191.get("/", async (req, res) => {
       const modelPromptRoot = utils_default.getPath(["modelPrompt"]);
       const entries = await (0, import_fast_glob3.default)("**/*.md", {
         cwd: modelPromptRoot.replace(/\\/g, "/"),
@@ -281436,24 +281909,24 @@ var init_getPromptList = __esm({
 });
 
 // src/routes/setting/modelMap/savePrompt.ts
-var import_express191, import_promises10, import_path24, router191, savePrompt_default;
+var import_express192, import_promises10, import_path24, router192, savePrompt_default;
 var init_savePrompt = __esm({
   "src/routes/setting/modelMap/savePrompt.ts"() {
     "use strict";
-    import_express191 = __toESM(require_express2());
+    import_express192 = __toESM(require_express2());
     init_responseFormat();
     init_utils3();
     init_zod();
     init_middleware();
     import_promises10 = __toESM(require("fs/promises"));
     import_path24 = __toESM(require("path"));
-    router191 = import_express191.default.Router();
-    savePrompt_default = router191.post(
+    router192 = import_express192.default.Router();
+    savePrompt_default = router192.post(
       "/",
       validateFields({
         name: external_exports.string().min(1),
         data: external_exports.string(),
-        type: external_exports.enum(["image", "video"])
+        type: external_exports.enum(["text", "image", "video"])
       }),
       async (req, res) => {
         const { name: name28, data: data2, type } = req.body;
@@ -281469,24 +281942,24 @@ var init_savePrompt = __esm({
 });
 
 // src/routes/setting/modelMap/updatePrompt.ts
-var import_express192, import_promises11, import_path25, router192, updatePrompt_default;
+var import_express193, import_promises11, import_path25, router193, updatePrompt_default;
 var init_updatePrompt = __esm({
   "src/routes/setting/modelMap/updatePrompt.ts"() {
     "use strict";
-    import_express192 = __toESM(require_express2());
+    import_express193 = __toESM(require_express2());
     init_responseFormat();
     init_utils3();
     init_zod();
     init_middleware();
     import_promises11 = __toESM(require("fs/promises"));
     import_path25 = __toESM(require("path"));
-    router192 = import_express192.default.Router();
-    updatePrompt_default = router192.post(
+    router193 = import_express193.default.Router();
+    updatePrompt_default = router193.post(
       "/",
       validateFields({
         name: external_exports.string().min(1),
         data: external_exports.string(),
-        type: external_exports.enum(["image", "video"])
+        type: external_exports.enum(["text", "image", "video"])
       }),
       async (req, res) => {
         const { name: name28, data: data2, type } = req.body;
@@ -281510,15 +281983,15 @@ var init_updatePrompt = __esm({
 });
 
 // src/routes/setting/ossConfig/getConfig.ts
-var import_express193, router193, getConfig_default;
+var import_express194, router194, getConfig_default;
 var init_getConfig2 = __esm({
   "src/routes/setting/ossConfig/getConfig.ts"() {
     "use strict";
-    import_express193 = __toESM(require_express2());
+    import_express194 = __toESM(require_express2());
     init_responseFormat();
     init_utils3();
-    router193 = import_express193.default.Router();
-    getConfig_default = router193.get("/", async (_req, res) => {
+    router194 = import_express194.default.Router();
+    getConfig_default = router194.get("/", async (_req, res) => {
       try {
         res.status(200).send(success3(await utils_default.oss.getAdminConfig()));
       } catch (err) {
@@ -281529,15 +282002,15 @@ var init_getConfig2 = __esm({
 });
 
 // src/routes/setting/ossConfig/saveConfig.ts
-var import_express194, router194, saveConfig_default;
+var import_express195, router195, saveConfig_default;
 var init_saveConfig = __esm({
   "src/routes/setting/ossConfig/saveConfig.ts"() {
     "use strict";
-    import_express194 = __toESM(require_express2());
+    import_express195 = __toESM(require_express2());
     init_responseFormat();
     init_utils3();
-    router194 = import_express194.default.Router();
-    saveConfig_default = router194.post("/", async (req, res) => {
+    router195 = import_express195.default.Router();
+    saveConfig_default = router195.post("/", async (req, res) => {
       try {
         res.status(200).send(success3(await utils_default.oss.saveAdminConfig(req.body), "OSS \u914D\u7F6E\u5DF2\u4FDD\u5B58"));
       } catch (err) {
@@ -281548,15 +282021,15 @@ var init_saveConfig = __esm({
 });
 
 // src/routes/setting/ossConfig/testConfig.ts
-var import_express195, router195, testConfig_default;
+var import_express196, router196, testConfig_default;
 var init_testConfig = __esm({
   "src/routes/setting/ossConfig/testConfig.ts"() {
     "use strict";
-    import_express195 = __toESM(require_express2());
+    import_express196 = __toESM(require_express2());
     init_responseFormat();
     init_utils3();
-    router195 = import_express195.default.Router();
-    testConfig_default = router195.post("/", async (req, res) => {
+    router196 = import_express196.default.Router();
+    testConfig_default = router196.post("/", async (req, res) => {
       try {
         res.status(200).send(success3(await utils_default.oss.testAdminConfig(req.body), "OSS \u8FDE\u63A5\u6D4B\u8BD5\u6210\u529F"));
       } catch (err) {
@@ -281567,15 +282040,15 @@ var init_testConfig = __esm({
 });
 
 // src/routes/setting/paymentConfig/getPaymentConfig.ts
-var import_express196, router196, getPaymentConfig_default;
+var import_express197, router197, getPaymentConfig_default;
 var init_getPaymentConfig = __esm({
   "src/routes/setting/paymentConfig/getPaymentConfig.ts"() {
     "use strict";
-    import_express196 = __toESM(require_express2());
+    import_express197 = __toESM(require_express2());
     init_responseFormat();
     init_payment();
-    router196 = import_express196.default.Router();
-    getPaymentConfig_default = router196.get("/", async (_req, res) => {
+    router197 = import_express197.default.Router();
+    getPaymentConfig_default = router197.get("/", async (_req, res) => {
       try {
         const config3 = await getPaymentConfig();
         return res.status(200).send(
@@ -281592,15 +282065,15 @@ var init_getPaymentConfig = __esm({
 });
 
 // src/routes/setting/paymentConfig/savePaymentConfig.ts
-var import_express197, router197, savePaymentConfig_default;
+var import_express198, router198, savePaymentConfig_default;
 var init_savePaymentConfig = __esm({
   "src/routes/setting/paymentConfig/savePaymentConfig.ts"() {
     "use strict";
-    import_express197 = __toESM(require_express2());
+    import_express198 = __toESM(require_express2());
     init_responseFormat();
     init_payment();
-    router197 = import_express197.default.Router();
-    savePaymentConfig_default = router197.post("/", async (req, res) => {
+    router198 = import_express198.default.Router();
+    savePaymentConfig_default = router198.post("/", async (req, res) => {
       try {
         const config3 = await savePaymentConfig(req.body || {});
         return res.status(200).send(
@@ -281620,15 +282093,15 @@ var init_savePaymentConfig = __esm({
 });
 
 // src/routes/setting/promptManage/getPrompt.ts
-var import_express198, router198, getPrompt_default;
+var import_express199, router199, getPrompt_default;
 var init_getPrompt = __esm({
   "src/routes/setting/promptManage/getPrompt.ts"() {
     "use strict";
-    import_express198 = __toESM(require_express2());
+    import_express199 = __toESM(require_express2());
     init_utils3();
     init_responseFormat();
-    router198 = import_express198.default.Router();
-    getPrompt_default = router198.post("/", async (req, res) => {
+    router199 = import_express199.default.Router();
+    getPrompt_default = router199.post("/", async (req, res) => {
       const list2 = await utils_default.db("o_prompt").select("*");
       const data2 = await Promise.all(
         list2.map(async (item) => {
@@ -281644,17 +282117,17 @@ var init_getPrompt = __esm({
 });
 
 // src/routes/setting/promptManage/updatePrompt.ts
-var import_express199, router199, updatePrompt_default2;
+var import_express200, router200, updatePrompt_default2;
 var init_updatePrompt2 = __esm({
   "src/routes/setting/promptManage/updatePrompt.ts"() {
     "use strict";
-    import_express199 = __toESM(require_express2());
+    import_express200 = __toESM(require_express2());
     init_utils3();
     init_zod();
     init_responseFormat();
     init_middleware();
-    router199 = import_express199.default.Router();
-    updatePrompt_default2 = router199.post(
+    router200 = import_express200.default.Router();
+    updatePrompt_default2 = router200.post(
       "/",
       validateFields({
         id: external_exports.number()
@@ -281671,11 +282144,11 @@ var init_updatePrompt2 = __esm({
 });
 
 // src/routes/setting/skillManagement/getSkillContent.ts
-var import_express200, import_path26, fs27, router200, getSkillContent_default;
+var import_express201, import_path26, fs27, router201, getSkillContent_default;
 var init_getSkillContent = __esm({
   "src/routes/setting/skillManagement/getSkillContent.ts"() {
     "use strict";
-    import_express200 = __toESM(require_express2());
+    import_express201 = __toESM(require_express2());
     init_responseFormat();
     init_middleware();
     init_zod();
@@ -281683,8 +282156,8 @@ var init_getSkillContent = __esm({
     init_utils3();
     import_path26 = __toESM(require("path"));
     fs27 = __toESM(require("fs"));
-    router200 = import_express200.default.Router();
-    getSkillContent_default = router200.post(
+    router201 = import_express201.default.Router();
+    getSkillContent_default = router201.post(
       "/",
       validateFields({
         path: external_exports.string()
@@ -281704,16 +282177,16 @@ var init_getSkillContent = __esm({
 });
 
 // src/routes/setting/skillManagement/getSkillList.ts
-var import_express201, import_fast_glob4, router201, getSkillList_default;
+var import_express202, import_fast_glob4, router202, getSkillList_default;
 var init_getSkillList = __esm({
   "src/routes/setting/skillManagement/getSkillList.ts"() {
     "use strict";
-    import_express201 = __toESM(require_express2());
+    import_express202 = __toESM(require_express2());
     init_responseFormat();
     import_fast_glob4 = __toESM(require_out4());
     init_utils3();
-    router201 = import_express201.default.Router();
-    getSkillList_default = router201.post("/", async (req, res) => {
+    router202 = import_express202.default.Router();
+    getSkillList_default = router202.post("/", async (req, res) => {
       const skillsRoot = utils_default.getPath(["skills"]);
       const entries = await (0, import_fast_glob4.default)("**/*.md", {
         cwd: skillsRoot.replace(/\\/g, "/"),
@@ -281725,11 +282198,11 @@ var init_getSkillList = __esm({
 });
 
 // src/routes/setting/skillManagement/saveSkillContent.ts
-var import_express202, import_path27, fs28, router202, saveSkillContent_default;
+var import_express203, import_path27, fs28, router203, saveSkillContent_default;
 var init_saveSkillContent = __esm({
   "src/routes/setting/skillManagement/saveSkillContent.ts"() {
     "use strict";
-    import_express202 = __toESM(require_express2());
+    import_express203 = __toESM(require_express2());
     init_responseFormat();
     init_middleware();
     init_zod();
@@ -281737,8 +282210,8 @@ var init_saveSkillContent = __esm({
     init_utils3();
     import_path27 = __toESM(require("path"));
     fs28 = __toESM(require("fs"));
-    router202 = import_express202.default.Router();
-    saveSkillContent_default = router202.post(
+    router203 = import_express203.default.Router();
+    saveSkillContent_default = router203.post(
       "/",
       validateFields({
         path: external_exports.string(),
@@ -281762,17 +282235,17 @@ var init_saveSkillContent = __esm({
 });
 
 // src/routes/setting/vendorConfig/addVendor.ts
-var import_express203, import_sucrase3, router203, vendorConfigSchema, addVendor_default;
+var import_express204, import_sucrase3, router204, vendorConfigSchema, addVendor_default;
 var init_addVendor = __esm({
   "src/routes/setting/vendorConfig/addVendor.ts"() {
     "use strict";
-    import_express203 = __toESM(require_express2());
+    import_express204 = __toESM(require_express2());
     init_responseFormat();
     init_middleware();
     init_utils3();
     init_zod();
     import_sucrase3 = __toESM(require_dist8());
-    router203 = import_express203.default.Router();
+    router204 = import_express204.default.Router();
     vendorConfigSchema = external_exports.object({
       id: external_exports.string(),
       author: external_exports.string(),
@@ -281824,7 +282297,7 @@ var init_addVendor = __esm({
         ])
       )
     });
-    addVendor_default = router203.post(
+    addVendor_default = router204.post(
       "/",
       validateFields({
         tsCode: external_exports.string()
@@ -281876,17 +282349,17 @@ ${issueLines.join("\n")}`));
 });
 
 // src/routes/setting/vendorConfig/addVendorModel.ts
-var import_express204, router204, addVendorModel_default;
+var import_express205, router205, addVendorModel_default;
 var init_addVendorModel = __esm({
   "src/routes/setting/vendorConfig/addVendorModel.ts"() {
     "use strict";
-    import_express204 = __toESM(require_express2());
+    import_express205 = __toESM(require_express2());
     init_responseFormat();
     init_middleware();
     init_utils3();
     init_zod();
-    router204 = import_express204.default.Router();
-    addVendorModel_default = router204.post(
+    router205 = import_express205.default.Router();
+    addVendorModel_default = router205.post(
       "/",
       validateFields({
         id: external_exports.string(),
@@ -281940,19 +282413,19 @@ var init_addVendorModel = __esm({
 });
 
 // src/routes/setting/vendorConfig/deleteVendor.ts
-var import_express205, import_path28, import_fs16, router205, deleteVendor_default;
+var import_express206, import_path28, import_fs16, router206, deleteVendor_default;
 var init_deleteVendor = __esm({
   "src/routes/setting/vendorConfig/deleteVendor.ts"() {
     "use strict";
-    import_express205 = __toESM(require_express2());
+    import_express206 = __toESM(require_express2());
     init_responseFormat();
     init_middleware();
     import_path28 = __toESM(require("path"));
     import_fs16 = __toESM(require("fs"));
     init_utils3();
     init_zod();
-    router205 = import_express205.default.Router();
-    deleteVendor_default = router205.post(
+    router206 = import_express206.default.Router();
+    deleteVendor_default = router206.post(
       "/",
       validateFields({
         id: external_exports.string()
@@ -281972,17 +282445,17 @@ var init_deleteVendor = __esm({
 });
 
 // src/routes/setting/vendorConfig/delVendorModel.ts
-var import_express206, router206, delVendorModel_default;
+var import_express207, router207, delVendorModel_default;
 var init_delVendorModel = __esm({
   "src/routes/setting/vendorConfig/delVendorModel.ts"() {
     "use strict";
-    import_express206 = __toESM(require_express2());
+    import_express207 = __toESM(require_express2());
     init_responseFormat();
     init_middleware();
     init_utils3();
     init_zod();
-    router206 = import_express206.default.Router();
-    delVendorModel_default = router206.post(
+    router207 = import_express207.default.Router();
+    delVendorModel_default = router207.post(
       "/",
       validateFields({
         id: external_exports.string(),
@@ -282008,17 +282481,17 @@ var init_delVendorModel = __esm({
 });
 
 // src/routes/setting/vendorConfig/enableVendor.ts
-var import_express207, router207, enableVendor_default;
+var import_express208, router208, enableVendor_default;
 var init_enableVendor = __esm({
   "src/routes/setting/vendorConfig/enableVendor.ts"() {
     "use strict";
-    import_express207 = __toESM(require_express2());
+    import_express208 = __toESM(require_express2());
     init_responseFormat();
     init_middleware();
     init_utils3();
     init_zod();
-    router207 = import_express207.default.Router();
-    enableVendor_default = router207.post(
+    router208 = import_express208.default.Router();
+    enableVendor_default = router208.post(
       "/",
       validateFields({
         id: external_exports.string(),
@@ -282034,16 +282507,16 @@ var init_enableVendor = __esm({
 });
 
 // src/routes/setting/vendorConfig/getCodeByLink.ts
-var import_express208, router208, getCodeByLink_default;
+var import_express209, router209, getCodeByLink_default;
 var init_getCodeByLink = __esm({
   "src/routes/setting/vendorConfig/getCodeByLink.ts"() {
     "use strict";
-    import_express208 = __toESM(require_express2());
+    import_express209 = __toESM(require_express2());
     init_responseFormat();
     init_middleware();
     init_zod();
-    router208 = import_express208.default.Router();
-    getCodeByLink_default = router208.post(
+    router209 = import_express209.default.Router();
+    getCodeByLink_default = router209.post(
       "/",
       validateFields({
         link: external_exports.string()
@@ -282058,15 +282531,15 @@ var init_getCodeByLink = __esm({
 });
 
 // src/routes/setting/vendorConfig/getVendorList.ts
-var import_express209, router209, getVendorList_default;
+var import_express210, router210, getVendorList_default;
 var init_getVendorList = __esm({
   "src/routes/setting/vendorConfig/getVendorList.ts"() {
     "use strict";
-    import_express209 = __toESM(require_express2());
+    import_express210 = __toESM(require_express2());
     init_responseFormat();
     init_utils3();
-    router209 = import_express209.default.Router();
-    getVendorList_default = router209.post("/", async (req, res) => {
+    router210 = import_express210.default.Router();
+    getVendorList_default = router210.post("/", async (req, res) => {
       const data2 = await utils_default.db("o_vendorConfig").select("*");
       const list2 = (await Promise.all(
         data2.map(async (item) => {
@@ -282095,18 +282568,18 @@ var init_getVendorList = __esm({
 });
 
 // src/routes/setting/vendorConfig/modelTest.ts
-var import_express210, router210, modelTest_default;
+var import_express211, router211, modelTest_default;
 var init_modelTest = __esm({
   "src/routes/setting/vendorConfig/modelTest.ts"() {
     "use strict";
-    import_express210 = __toESM(require_express2());
+    import_express211 = __toESM(require_express2());
     init_responseFormat();
     init_middleware();
     init_utils3();
     init_zod();
     init_dist30();
-    router210 = import_express210.default.Router();
-    modelTest_default = router210.post(
+    router211 = import_express211.default.Router();
+    modelTest_default = router211.post(
       "/",
       validateFields({
         modelName: external_exports.string(),
@@ -282199,17 +282672,17 @@ var init_modelTest = __esm({
 });
 
 // src/routes/setting/vendorConfig/modelTest/imageTest.ts
-var import_express211, router211, imageTest_default;
+var import_express212, router212, imageTest_default;
 var init_imageTest = __esm({
   "src/routes/setting/vendorConfig/modelTest/imageTest.ts"() {
     "use strict";
-    import_express211 = __toESM(require_express2());
+    import_express212 = __toESM(require_express2());
     init_responseFormat();
     init_middleware();
     init_utils3();
     init_zod();
-    router211 = import_express211.default.Router();
-    imageTest_default = router211.post(
+    router212 = import_express212.default.Router();
+    imageTest_default = router212.post(
       "/",
       validateFields({
         modelName: external_exports.string(),
@@ -282246,18 +282719,18 @@ var init_imageTest = __esm({
 });
 
 // src/routes/setting/vendorConfig/modelTest/textTest.ts
-var import_express212, router212, textTest_default;
+var import_express213, router213, textTest_default;
 var init_textTest = __esm({
   "src/routes/setting/vendorConfig/modelTest/textTest.ts"() {
     "use strict";
-    import_express212 = __toESM(require_express2());
+    import_express213 = __toESM(require_express2());
     init_responseFormat();
     init_middleware();
     init_utils3();
     init_zod();
     init_dist30();
-    router212 = import_express212.default.Router();
-    textTest_default = router212.post(
+    router213 = import_express213.default.Router();
+    textTest_default = router213.post(
       "/",
       validateFields({
         modelName: external_exports.string(),
@@ -282309,17 +282782,17 @@ var init_textTest = __esm({
 });
 
 // src/routes/setting/vendorConfig/modelTest/videoTest.ts
-var import_express213, router213, videoTest_default;
+var import_express214, router214, videoTest_default;
 var init_videoTest = __esm({
   "src/routes/setting/vendorConfig/modelTest/videoTest.ts"() {
     "use strict";
-    import_express213 = __toESM(require_express2());
+    import_express214 = __toESM(require_express2());
     init_responseFormat();
     init_middleware();
     init_utils3();
     init_zod();
-    router213 = import_express213.default.Router();
-    videoTest_default = router213.post(
+    router214 = import_express214.default.Router();
+    videoTest_default = router214.post(
       "/",
       validateFields({
         modelName: external_exports.string(),
@@ -282385,18 +282858,18 @@ var init_videoTest = __esm({
 });
 
 // src/routes/setting/vendorConfig/updateCode.ts
-var import_express214, import_sucrase4, router214, vendorConfigSchema2, updateCode_default;
+var import_express215, import_sucrase4, router215, vendorConfigSchema2, updateCode_default;
 var init_updateCode = __esm({
   "src/routes/setting/vendorConfig/updateCode.ts"() {
     "use strict";
-    import_express214 = __toESM(require_express2());
+    import_express215 = __toESM(require_express2());
     init_serialize_error();
     init_responseFormat();
     init_middleware();
     init_utils3();
     init_zod();
     import_sucrase4 = __toESM(require_dist8());
-    router214 = import_express214.default.Router();
+    router215 = import_express215.default.Router();
     vendorConfigSchema2 = external_exports.object({
       id: external_exports.string(),
       author: external_exports.string(),
@@ -282448,7 +282921,7 @@ var init_updateCode = __esm({
         ])
       )
     });
-    updateCode_default = router214.post(
+    updateCode_default = router215.post(
       "/",
       validateFields({
         id: external_exports.string(),
@@ -282485,17 +282958,17 @@ var init_updateCode = __esm({
 });
 
 // src/routes/setting/vendorConfig/updateVendorInputs.ts
-var import_express215, router215, updateVendorInputs_default;
+var import_express216, router216, updateVendorInputs_default;
 var init_updateVendorInputs = __esm({
   "src/routes/setting/vendorConfig/updateVendorInputs.ts"() {
     "use strict";
-    import_express215 = __toESM(require_express2());
+    import_express216 = __toESM(require_express2());
     init_responseFormat();
     init_middleware();
     init_utils3();
     init_zod();
-    router215 = import_express215.default.Router();
-    updateVendorInputs_default = router215.post(
+    router216 = import_express216.default.Router();
+    updateVendorInputs_default = router216.post(
       "/",
       validateFields({
         id: external_exports.string(),
@@ -282513,17 +282986,17 @@ var init_updateVendorInputs = __esm({
 });
 
 // src/routes/setting/vendorConfig/upVendorModel.ts
-var import_express216, router216, upVendorModel_default;
+var import_express217, router217, upVendorModel_default;
 var init_upVendorModel = __esm({
   "src/routes/setting/vendorConfig/upVendorModel.ts"() {
     "use strict";
-    import_express216 = __toESM(require_express2());
+    import_express217 = __toESM(require_express2());
     init_responseFormat();
     init_middleware();
     init_utils3();
     init_zod();
-    router216 = import_express216.default.Router();
-    upVendorModel_default = router216.post(
+    router217 = import_express217.default.Router();
+    upVendorModel_default = router217.post(
       "/",
       validateFields({
         id: external_exports.string(),
@@ -282583,15 +283056,15 @@ var init_upVendorModel = __esm({
 });
 
 // src/routes/task/getProject.ts
-var import_express217, router217, getProject_default2;
+var import_express218, router218, getProject_default2;
 var init_getProject2 = __esm({
   "src/routes/task/getProject.ts"() {
     "use strict";
-    import_express217 = __toESM(require_express2());
+    import_express218 = __toESM(require_express2());
     init_utils3();
     init_responseFormat();
-    router217 = import_express217.default.Router();
-    getProject_default2 = router217.post("/", async (req, res) => {
+    router218 = import_express218.default.Router();
+    getProject_default2 = router218.post("/", async (req, res) => {
       const userId = String(req.user?.id || "");
       if (!userId) return res.status(401).send({ message: "\u672A\u63D0\u4F9Btoken" });
       const list2 = await utils_default.db("o_project").where("userId", userId).select("id", "name").groupBy("id", "name");
@@ -282602,17 +283075,17 @@ var init_getProject2 = __esm({
 });
 
 // src/routes/task/getTaskApi.ts
-var import_express218, router218, getTaskApi_default;
+var import_express219, router219, getTaskApi_default;
 var init_getTaskApi = __esm({
   "src/routes/task/getTaskApi.ts"() {
     "use strict";
-    import_express218 = __toESM(require_express2());
+    import_express219 = __toESM(require_express2());
     init_utils3();
     init_responseFormat();
     init_middleware();
     init_zod();
-    router218 = import_express218.default.Router();
-    getTaskApi_default = router218.post(
+    router219 = import_express219.default.Router();
+    getTaskApi_default = router219.post(
       "/",
       validateFields({
         state: external_exports.string().optional().nullable(),
@@ -282655,15 +283128,15 @@ var init_getTaskApi = __esm({
 });
 
 // src/routes/task/getTaskCategories.ts
-var import_express219, router219, getTaskCategories_default;
+var import_express220, router220, getTaskCategories_default;
 var init_getTaskCategories = __esm({
   "src/routes/task/getTaskCategories.ts"() {
     "use strict";
-    import_express219 = __toESM(require_express2());
+    import_express220 = __toESM(require_express2());
     init_utils3();
     init_responseFormat();
-    router219 = import_express219.default.Router();
-    getTaskCategories_default = router219.post("/", async (req, res) => {
+    router220 = import_express220.default.Router();
+    getTaskCategories_default = router220.post("/", async (req, res) => {
       const list2 = await utils_default.db("o_tasks").select("taskClass").groupBy("taskClass");
       const data2 = list2.filter((item) => item.taskClass);
       res.status(200).send(success3(data2));
@@ -282672,17 +283145,17 @@ var init_getTaskCategories = __esm({
 });
 
 // src/routes/task/taskDetails.ts
-var import_express220, router220, taskDetails_default;
+var import_express221, router221, taskDetails_default;
 var init_taskDetails = __esm({
   "src/routes/task/taskDetails.ts"() {
     "use strict";
-    import_express220 = __toESM(require_express2());
+    import_express221 = __toESM(require_express2());
     init_utils3();
     init_responseFormat();
     init_middleware();
     init_zod();
-    router220 = import_express220.default.Router();
-    taskDetails_default = router220.post(
+    router221 = import_express221.default.Router();
+    taskDetails_default = router221.post(
       "/",
       validateFields({
         taskId: external_exports.number()
@@ -282699,15 +283172,15 @@ var init_taskDetails = __esm({
 });
 
 // src/routes/test/test.ts
-var import_express221, import_fs17, router221, test_default;
+var import_express222, import_fs17, router222, test_default;
 var init_test = __esm({
   "src/routes/test/test.ts"() {
     "use strict";
-    import_express221 = __toESM(require_express2());
+    import_express222 = __toESM(require_express2());
     init_utils3();
     import_fs17 = __toESM(require("fs"));
-    router221 = import_express221.default.Router();
-    test_default = router221.get("/", async (req, res) => {
+    router222 = import_express222.default.Router();
+    test_default = router222.get("/", async (req, res) => {
       return res.send("ok");
       const test2 = await utils_default.db("o_vendorConfig").select("*");
       import_fs17.default.writeFileSync("test.json", JSON.stringify(test2, null, 2));
@@ -282763,16 +283236,16 @@ var init_userProfile = __esm({
 });
 
 // src/routes/user/info.ts
-var import_express222, router222, info_default;
+var import_express223, router223, info_default;
 var init_info = __esm({
   "src/routes/user/info.ts"() {
     "use strict";
-    import_express222 = __toESM(require_express2());
+    import_express223 = __toESM(require_express2());
     init_utils3();
     init_responseFormat();
     init_userProfile();
-    router222 = import_express222.default.Router();
-    info_default = router222.get("/", async (req, res) => {
+    router223 = import_express223.default.Router();
+    info_default = router223.get("/", async (req, res) => {
       const tokenUser = req.user;
       if (!tokenUser?.id) return res.status(401).send(error53("\u672A\u63D0\u4F9Btoken"));
       const user = await utils_default.db("o_user").where("id", tokenUser.id).first();
@@ -282783,26 +283256,26 @@ var init_info = __esm({
 });
 
 // src/routes/user/notificationSettings.ts
-var import_express223, router223, notificationFields, notificationSettings_default;
+var import_express224, router224, notificationFields, notificationSettings_default;
 var init_notificationSettings = __esm({
   "src/routes/user/notificationSettings.ts"() {
     "use strict";
-    import_express223 = __toESM(require_express2());
+    import_express224 = __toESM(require_express2());
     init_zod();
     init_responseFormat();
     init_middleware();
     init_utils3();
     init_userProfile();
-    router223 = import_express223.default.Router();
+    router224 = import_express224.default.Router();
     notificationFields = ["accountPassword", "systemMessage", "todoTask"];
-    router223.get("/", async (req, res) => {
+    router224.get("/", async (req, res) => {
       const tokenUser = req.user;
       if (!tokenUser?.id) return res.status(401).send(error53("\u672A\u63D0\u4F9Btoken"));
       const user = await utils_default.db("o_user").where("id", tokenUser.id).first();
       if (!user) return res.status(401).send(error53("\u7528\u6237\u4E0D\u5B58\u5728"));
       res.status(200).send(success3(parseNotificationSettings(user.notificationSettings)));
     });
-    router223.post(
+    router224.post(
       "/",
       validateFields({
         accountPassword: external_exports.boolean().optional(),
@@ -282822,23 +283295,23 @@ var init_notificationSettings = __esm({
         res.status(200).send(success3(settings, "\u63D0\u9192\u8BBE\u7F6E\u5DF2\u66F4\u65B0"));
       }
     );
-    notificationSettings_default = router223;
+    notificationSettings_default = router224;
   }
 });
 
 // src/routes/user/updatePassword.ts
-var import_express224, router224, updatePassword_default;
+var import_express225, router225, updatePassword_default;
 var init_updatePassword = __esm({
   "src/routes/user/updatePassword.ts"() {
     "use strict";
-    import_express224 = __toESM(require_express2());
+    import_express225 = __toESM(require_express2());
     init_zod();
     init_password();
     init_responseFormat();
     init_middleware();
     init_utils3();
-    router224 = import_express224.default.Router();
-    updatePassword_default = router224.post(
+    router225 = import_express225.default.Router();
+    updatePassword_default = router225.post(
       "/",
       validateFields({
         confirmPassword: external_exports.string(),
@@ -282867,18 +283340,18 @@ var init_updatePassword = __esm({
 });
 
 // src/routes/user/updateProfile.ts
-var import_express225, router225, updateProfile_default;
+var import_express226, router226, updateProfile_default;
 var init_updateProfile = __esm({
   "src/routes/user/updateProfile.ts"() {
     "use strict";
-    import_express225 = __toESM(require_express2());
+    import_express226 = __toESM(require_express2());
     init_zod();
     init_responseFormat();
     init_middleware();
     init_utils3();
     init_userProfile();
-    router225 = import_express225.default.Router();
-    updateProfile_default = router225.post(
+    router226 = import_express226.default.Router();
+    updateProfile_default = router226.post(
       "/",
       validateFields({
         avatar: external_exports.string().optional(),
@@ -282928,18 +283401,18 @@ function parseAvatarDataUrl(contentBase64) {
 function getBase64Size(payload) {
   return Buffer.byteLength(payload, "base64");
 }
-var import_express226, router226, MIME_EXTENSIONS, uploadAvatar_default;
+var import_express227, router227, MIME_EXTENSIONS, uploadAvatar_default;
 var init_uploadAvatar = __esm({
   "src/routes/user/uploadAvatar.ts"() {
     "use strict";
-    import_express226 = __toESM(require_express2());
+    import_express227 = __toESM(require_express2());
     init_zod();
     init_dist_node();
     init_responseFormat();
     init_middleware();
     init_utils3();
     init_userProfile();
-    router226 = import_express226.default.Router();
+    router227 = import_express227.default.Router();
     MIME_EXTENSIONS = {
       "image/gif": "gif",
       "image/jpeg": "jpg",
@@ -282947,7 +283420,7 @@ var init_uploadAvatar = __esm({
       "image/png": "png",
       "image/webp": "webp"
     };
-    uploadAvatar_default = router226.post(
+    uploadAvatar_default = router227.post(
       "/",
       validateFields({
         contentBase64: external_exports.string(),
@@ -283038,6 +283511,7 @@ var init_router = __esm({
     init_cancelGenerate();
     init_generateAssets();
     init_polishAssetsPrompt();
+    init_recoverImageResult();
     init_codes();
     init_login2();
     init_logout();
@@ -283265,6 +283739,7 @@ var init_router = __esm({
       app2.use("/api/assetsGenerate/cancelGenerate", cancelGenerate_default);
       app2.use("/api/assetsGenerate/generateAssets", generateAssets_default);
       app2.use("/api/assetsGenerate/polishAssetsPrompt", polishAssetsPrompt_default);
+      app2.use("/api/assetsGenerate/recoverImageResult", recoverImageResult_default);
       app2.use("/api/auth/codes", codes_default);
       app2.use("/api/auth/login", login_default2);
       app2.use("/api/auth/logout", logout_default);
@@ -283483,7 +283958,7 @@ process.on("uncaughtException", (error75) => {
 
 // src/app.ts
 init_env();
-var import_express227 = __toESM(require_express2());
+var import_express228 = __toESM(require_express2());
 
 // ../../node_modules/.pnpm/socket.io@4.8.3/node_modules/socket.io/wrapper.mjs
 var import_dist = __toESM(require_dist4(), 1);
@@ -284245,7 +284720,7 @@ async function runDecisionAI(ctx) {
     if (!projectInfo) throw new Error(`\u9879\u76EE\u4E0D\u5B58\u5728\uFF0CID: ${ctx.resTool.data.projectId}`);
     const [_, imageModelName] = projectInfo.imageModel.split(/:(.+)/);
     const [id, videoModelName] = projectInfo.videoModel.split(/:(.+)/);
-    const models = await utils_default.vendor.getModelList(id);
+    const models = await utils_default.vendor.getEnabledModelList(id);
     if (!models.length) throw new Error(`\u9879\u76EE\u4F7F\u7528\u7684\u6A21\u578B\u4E0D\u5B58\u5728\uFF0CID: ${projectInfo.videoModel}`);
     let videoMode = "";
     try {
@@ -284340,7 +284815,7 @@ async function createSubAgent(parentCtx) {
   const artSkills = await createArtSkills(projectInfo?.artStyle, projectInfo?.directorManual);
   const [_, imageModelName] = projectInfo.imageModel.split(/:(.+)/);
   const [id, videoModelName] = projectInfo.videoModel.split(/:(.+)/);
-  const models = await utils_default.vendor.getModelList(id);
+  const models = await utils_default.vendor.getEnabledModelList(id);
   if (!models.length) throw new Error(`\u9879\u76EE\u4F7F\u7528\u7684\u6A21\u578B\u4E0D\u5B58\u5728\uFF0CID: ${projectInfo.videoModel}`);
   let videoMode = "";
   try {
@@ -285884,6 +286359,10 @@ function collectSourceIds(items, source) {
   if (!Array.isArray(items)) return [];
   return items.filter((item) => item?.sources === source).flatMap((item) => normalizeIds(item.id));
 }
+function collectItemIdsBySource(items, source, includeUnspecified = false) {
+  if (!Array.isArray(items)) return [];
+  return items.filter((item) => item?.sources === source || includeUnspecified && item?.sources == null).flatMap((item) => normalizeIds(item.id));
+}
 function collectTrackSourceIds(trackData, source) {
   if (!Array.isArray(trackData)) return [];
   return trackData.flatMap((track) => [...collectSourceIds(track?.info, source), ...collectSourceIds(track?.uploadData, source)]);
@@ -285917,7 +286396,7 @@ async function enforceProjectDataIsolation(req, res, next) {
     if (!await requireOwnedCount(res, "\u5267\u672C", scriptIds, () => countOwnedProjectRecords("o_script", scriptIds, userId, primaryProjectId))) return;
     const assetIds = bodyIds(body, "assets", "assetsId", "assetIds", "assetsIds", "audioIds");
     if (ASSET_ID_ROUTES.has(req.path)) assetIds.push(...bodyIds(body, "id", "ids"));
-    if (Array.isArray(body.items)) assetIds.push(...body.items.flatMap((item) => normalizeIds(item?.id)));
+    assetIds.push(...collectItemIdsBySource(body.items, "assets", true));
     if (Array.isArray(body.assetsItem)) assetIds.push(...body.assetsItem.flatMap((item) => normalizeIds(item?.id)));
     assetIds.push(...collectTrackSourceIds(body.trackData, "assets"));
     if (!await requireOwnedCount(res, "\u8D44\u4EA7", assetIds, () => countOwnedProjectRecords("o_assets", assetIds, userId, primaryProjectId))) return;
@@ -285926,6 +286405,7 @@ async function enforceProjectDataIsolation(req, res, next) {
     if (!await requireOwnedCount(res, "\u539F\u6587", novelIds, () => countOwnedProjectRecords("o_novel", novelIds, userId, primaryProjectId))) return;
     const storyboardIds = bodyIds(body, "storyboardIds");
     if (STORYBOARD_ID_ROUTES.has(req.path)) storyboardIds.push(...bodyIds(body, "id", "ids"));
+    storyboardIds.push(...collectItemIdsBySource(body.items, "storyboard"));
     if (Array.isArray(body.data?.storyboard)) storyboardIds.push(...body.data.storyboard.flatMap((item) => normalizeIds(item?.id)));
     storyboardIds.push(...collectTrackSourceIds(body.trackData, "storyboard"));
     if (!await requireOwnedCount(res, "\u5206\u955C", storyboardIds, () => countOwnedProjectRecords("o_storyboard", storyboardIds, userId, primaryProjectId))) return;
@@ -285953,7 +286433,7 @@ async function enforceProjectDataIsolation(req, res, next) {
 }
 
 // src/app.ts
-var app = (0, import_express227.default)();
+var app = (0, import_express228.default)();
 var server = import_node_http.default.createServer(app);
 function resolvePort(randomPort) {
   if (randomPort) return 0;
@@ -285971,14 +286451,14 @@ async function startServe(randomPort = false) {
   app.use((0, import_morgan.default)("dev"));
   app.use((0, import_cors.default)({ origin: "*" }));
   app.use(
-    import_express227.default.json({
+    import_express228.default.json({
       limit: "100mb",
       verify: (req, _res, buf) => {
         req.rawBody = buf.toString("utf8");
       }
     })
   );
-  app.use(import_express227.default.urlencoded({ extended: true, limit: "100mb" }));
+  app.use(import_express228.default.urlencoded({ extended: true, limit: "100mb" }));
   const ossDir = utils_default.getPath("oss");
   if (!import_fs18.default.existsSync(ossDir)) {
     import_fs18.default.mkdirSync(ossDir, { recursive: true });
@@ -286011,18 +286491,18 @@ async function startServe(randomPort = false) {
     (req, res, next) => {
       /\.(jpe?g|png|gif|webp|svg|ico|bmp)$/i.test(req.path) ? next() : res.status(403).end();
     },
-    import_express227.default.static(skillsDir, { acceptRanges: false })
+    import_express228.default.static(skillsDir, { acceptRanges: false })
   );
   const assetsDir = utils_default.getPath("assets");
   if (!import_fs18.default.existsSync(assetsDir)) {
     import_fs18.default.mkdirSync(assetsDir, { recursive: true });
   }
   console.log("\u6587\u4EF6\u76EE\u5F55:", assetsDir);
-  app.use("/assets", import_express227.default.static(assetsDir, { acceptRanges: false }));
+  app.use("/assets", import_express228.default.static(assetsDir, { acceptRanges: false }));
   const webDir = utils_default.getPath("web");
   if (import_fs18.default.existsSync(webDir)) {
     console.log("\u9759\u6001\u7F51\u7AD9\u76EE\u5F55:", webDir);
-    app.use(import_express227.default.static(webDir, { acceptRanges: false }));
+    app.use(import_express228.default.static(webDir, { acceptRanges: false }));
   } else {
     console.warn("\u9759\u6001\u7F51\u7AD9\u76EE\u5F55\u4E0D\u5B58\u5728:", webDir);
   }
@@ -286071,8 +286551,8 @@ async function startServe(randomPort = false) {
     next();
   });
   app.use(enforceProjectDataIsolation);
-  const router227 = await Promise.resolve().then(() => (init_router(), router_exports));
-  await router227.default(app);
+  const router228 = await Promise.resolve().then(() => (init_router(), router_exports));
+  await router228.default(app);
   app.use((_, res, next) => {
     return res.status(404).send({ message: "API 404 Not Found" });
   });

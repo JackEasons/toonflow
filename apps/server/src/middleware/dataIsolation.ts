@@ -166,6 +166,13 @@ function collectSourceIds(items: any[] | undefined, source: string) {
   return items.filter((item) => item?.sources === source).flatMap((item) => normalizeIds(item.id));
 }
 
+function collectItemIdsBySource(items: any[] | undefined, source: string, includeUnspecified = false) {
+  if (!Array.isArray(items)) return [];
+  return items
+    .filter((item) => item?.sources === source || (includeUnspecified && item?.sources == null))
+    .flatMap((item) => normalizeIds(item.id));
+}
+
 function collectTrackSourceIds(trackData: any[] | undefined, source: string) {
   if (!Array.isArray(trackData)) return [];
   return trackData.flatMap((track) => [...collectSourceIds(track?.info, source), ...collectSourceIds(track?.uploadData, source)]);
@@ -207,7 +214,7 @@ export async function enforceProjectDataIsolation(req: Request, res: Response, n
 
     const assetIds = bodyIds(body, "assets", "assetsId", "assetIds", "assetsIds", "audioIds");
     if (ASSET_ID_ROUTES.has(req.path)) assetIds.push(...bodyIds(body, "id", "ids"));
-    if (Array.isArray(body.items)) assetIds.push(...body.items.flatMap((item: any) => normalizeIds(item?.id)));
+    assetIds.push(...collectItemIdsBySource(body.items, "assets", true));
     if (Array.isArray(body.assetsItem)) assetIds.push(...body.assetsItem.flatMap((item: any) => normalizeIds(item?.id)));
     assetIds.push(...collectTrackSourceIds(body.trackData, "assets"));
     if (!(await requireOwnedCount(res, "资产", assetIds, () => countOwnedProjectRecords("o_assets", assetIds, userId, primaryProjectId)))) return;
@@ -218,6 +225,7 @@ export async function enforceProjectDataIsolation(req: Request, res: Response, n
 
     const storyboardIds = bodyIds(body, "storyboardIds");
     if (STORYBOARD_ID_ROUTES.has(req.path)) storyboardIds.push(...bodyIds(body, "id", "ids"));
+    storyboardIds.push(...collectItemIdsBySource(body.items, "storyboard"));
     if (Array.isArray(body.data?.storyboard)) storyboardIds.push(...body.data.storyboard.flatMap((item: any) => normalizeIds(item?.id)));
     storyboardIds.push(...collectTrackSourceIds(body.trackData, "storyboard"));
     if (!(await requireOwnedCount(res, "分镜", storyboardIds, () => countOwnedProjectRecords("o_storyboard", storyboardIds, userId, primaryProjectId)))) return;
