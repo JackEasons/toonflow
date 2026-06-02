@@ -39,7 +39,7 @@
               <div class="ac" style="gap: 5px; width: 100%">
                 <modelSelect v-model="formState.videoModel" type="video" @change="changeFn" :changeConfig="true" />
                 <t-select v-model="formState.mode" class="paramSelect ml-5" :placeholder="$t('workbench.production.editImage.mode')">
-                  <t-option v-for="value in mode" :key="value.value" :value="value.value" :label="value.label" />
+                  <t-option v-for="value in mode" :key="value.value" :value="value.value" :label="value.label" :disabled="value.disabled" />
                 </t-select>
               </div>
             </t-form-item>
@@ -72,8 +72,9 @@
                         v-for="(item, index) in visualManualOptions"
                         :key="index"
                         class="gridItem"
-                        :class="{ active: formState.artStyle === item.stylePath }"
-                        @click="formState.artStyle = item.stylePath">
+                        :class="{ active: formState.artStyle === item.stylePath && !isVisualManualDisabled(item), disabled: isVisualManualDisabled(item) }"
+                        :title="isVisualManualDisabled(item) ? 'Seedance2.0 暂不支持真人视觉手册' : item.name"
+                        @click="selectVisualManual(item)">
                         <div class="imageWrapper">
                           <img :src="item.images && item.images[0]" :alt="item.name" class="artImage" loading="lazy" />
                           <div class="text">{{ item.name }}</div>
@@ -291,6 +292,14 @@ import type { ToolbarNames } from "md-editor-v3";
 import modelSelect from "#/components/modelSelect.vue";
 import type { TabValue } from "tdesign-vue-next";
 import { DialogPlugin } from "tdesign-vue-next";
+import {
+  getFirstEnabledVideoModeValue,
+  isRealPersonVisualManual,
+  isSeedance2VideoModel,
+  isVideoModeOptionDisabled,
+  withVideoModePolicy,
+  type VideoModeOption,
+} from "#/utils/videoModePolicy";
 
 const addProjectShow = defineModel<boolean>();
 const props = defineProps<{
@@ -430,6 +439,8 @@ function handleOk() {
   if (!formState.value.intro) return window.$message.warning($t("workbench.project.msg.enterProjectIntro"));
   if (!formState.value.imageQuality) return window.$message.warning($t("workbench.project.msg.enterProjectQuality"));
   if (!formState.value.mode) return window.$message.warning($t("workbench.project.msg.selectMode"));
+  if (isVideoModeOptionDisabled(formState.value.mode)) return window.$message.warning("当前视频模式已禁用，请重新选择视频模式");
+  if (isVisualManualDisabledByPolicy(formState.value.artStyle)) return window.$message.warning("Seedance2.0 暂不支持真人视觉手册，请重新选择视觉手册");
   if (isEdit.value) {
     emit("edit", {
       id: formState.value.id as unknown as string,
@@ -505,10 +516,13 @@ watch(addProjectShow, async (visible) => {
             modelId: props.projectData.videoModel,
           });
           if (data?.mode) {
-            mode.value = data.mode.map((item: any) => ({
-              label: getModeLabel(item),
-              value: modeToKey(item),
-            }));
+            mode.value = data.mode
+              .map((item: any) => ({
+                label: getModeLabel(item),
+                value: modeToKey(item),
+              }))
+              .map(withVideoModePolicy);
+            ensureCurrentModeEnabled();
           }
         } catch (e) {
           // 获取失败不影响其他功能
@@ -546,10 +560,34 @@ function fetchVisualManuals() {
           data: item.data,
         }),
       );
+      enforceVisualManualSelection();
     })
     .finally(() => {
       visualManualLoading.value = false;
     });
+}
+
+const seedance2VideoModelSelected = computed(() => isSeedance2VideoModel(formState.value.videoModel));
+
+function isVisualManualDisabled(item: VisualManualItem) {
+  return seedance2VideoModelSelected.value && isRealPersonVisualManual(item);
+}
+
+function isVisualManualDisabledByPolicy(stylePath: string) {
+  const currentManual = visualManualOptions.value.find((item) => item.stylePath === stylePath);
+  return currentManual ? isVisualManualDisabled(currentManual) : false;
+}
+
+function selectVisualManual(item: VisualManualItem) {
+  if (isVisualManualDisabled(item)) {
+    window.$message.warning("Seedance2.0 暂不支持真人视觉手册");
+    return;
+  }
+  formState.value.artStyle = item.stylePath;
+}
+
+function enforceVisualManualSelection() {
+  if (formState.value.artStyle && isVisualManualDisabledByPolicy(formState.value.artStyle)) formState.value.artStyle = "";
 }
 
 function openVisualManualDialog(item?: VisualManualItem) {
@@ -673,7 +711,7 @@ type VideoMode =
   | "startFrameOptional" //首尾帧（首帧可选）
   | "text" //文本
   | (`videoReference:${number}` | `imageReference:${number}` | `audioReference:${number}`)[]; //多参考（数字代表限制数量）
-const mode = ref<{ label: string; value: string }[]>([]);
+const mode = ref<VideoModeOption[]>([]);
 const MODE_LABEL: Record<string, string> = {
   singleImage: $t("workbench.production.generate.modeSingleImage"),
   startEndRequired: $t("workbench.production.generate.modeStartEnd"),
@@ -699,8 +737,23 @@ function changeFn(val: string, data: any) {
   mode.value = data.mode.map((item: any) => ({
     label: getModeLabel(item),
     value: modeToKey(item),
-  }));
+  })).map(withVideoModePolicy);
+  ensureCurrentModeEnabled();
+  enforceVisualManualSelection();
 }
+
+function ensureCurrentModeEnabled() {
+  if (!formState.value.mode || !mode.value.length) return;
+  const currentMode = mode.value.find((item) => item.value === formState.value.mode);
+  if (!currentMode || currentMode.disabled) {
+    formState.value.mode = getFirstEnabledVideoModeValue(mode.value);
+  }
+}
+
+watch(
+  () => formState.value.videoModel,
+  () => enforceVisualManualSelection(),
+);
 //导演手册
 interface DirectorManualItem {
   name: string;
@@ -924,6 +977,31 @@ function handleDirectorManualCoverFileChange(e: Event) {
       .preview {
         z-index: 2;
         opacity: 1;
+      }
+    }
+
+    &.disabled {
+      cursor: not-allowed;
+      opacity: 0.48;
+      filter: grayscale(0.9);
+
+      &:hover {
+        transform: none;
+      }
+
+      .imageWrapper::after {
+        content: "Seedance2.0 禁用";
+        position: absolute;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 8px;
+        background: rgba(0, 0, 0, 0.54);
+        color: #fff;
+        font-size: 12px;
+        line-height: 1.2;
+        text-align: center;
       }
     }
 

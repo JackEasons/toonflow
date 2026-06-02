@@ -5,7 +5,7 @@
         <modelSelect v-model="modelParmas.model" type="video" size="small" />
       </div>
       <t-select size="small" class="mode" :value="modelParmas.mode" :onChange="handleBeforeChange">
-        <t-option v-for="(item, index) in modeList" :key="index" :value="item.value" :label="item.label"></t-option>
+        <t-option v-for="(item, index) in modeList" :key="index" :value="item.value" :label="item.label" :disabled="item.disabled"></t-option>
       </t-select>
       <t-button
         size="small"
@@ -78,10 +78,11 @@
 <script setup lang="ts">
 import "#/views/production/components/workbench/type/type";
 import axios from "#/utils/axios";
+import { isVideoModeOptionDisabled, type VideoModeOption } from "#/utils/videoModePolicy";
 
 const props = defineProps<{
   modeOptions: VideoModel;
-  modeList: { value: string; label: string }[];
+  modeList: VideoModeOption[];
   trackId: number | undefined;
 }>();
 const modelParmas = defineModel<ModelSetting>({
@@ -95,7 +96,10 @@ const modelParmas = defineModel<ModelSetting>({
 });
 const emit = defineEmits(["modeChange"]);
 function handleBeforeChange(newVal: unknown) {
-  emit("modeChange", String(newVal));
+  const value = String(newVal);
+  const option = props.modeList.find((item) => item.value === value);
+  if (option?.disabled || isVideoModeOptionDisabled(value)) return;
+  emit("modeChange", value);
 }
 function updateDuration(newDuration: number) {
   modelParmas.value.duration = newDuration;

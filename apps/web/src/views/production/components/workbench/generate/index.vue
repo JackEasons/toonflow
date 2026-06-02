@@ -69,6 +69,12 @@ import {
   orderUploadItemsForMode,
   type PromptSourceInfo,
 } from "./utils/videoUploadSources";
+import {
+  getFirstEnabledVideoModeValue,
+  isVideoModeOptionDisabled,
+  withVideoModePolicy,
+  type VideoModeOption,
+} from "#/utils/videoModePolicy";
 
 const { project } = storeToRefs(projectStore());
 const episodesId = inject<Ref<number>>("episodesId")!;
@@ -140,6 +146,7 @@ const imageList = computed({
 });
 
 function modeChange(newVal: string) {
+  if (isVideoModeOptionDisabled(newVal)) return;
   if (newVal == modelParmas.value.mode) return;
   if ((imageList.value.length || currentTrack.value?.prompt) && modelParmas.value.mode) {
     const dialog = DialogPlugin.confirm({
@@ -158,7 +165,7 @@ function modeChange(newVal: string) {
     modelParmas.value.mode = newVal;
   }
 }
-const modeList = computed(() => {
+const modeList = computed<VideoModeOption[]>(() => {
   const modeLabelMap: Record<string, string> = {
     singleImage: "单图",
     startEndRequired: "首尾帧",
@@ -179,11 +186,13 @@ const modeList = computed(() => {
     return modeLabelMap[m] || m;
   }
   return modeOptions.value.mode
-    ? modeOptions.value.mode.map((mode) =>
-        Array.isArray(mode)
-          ? { value: JSON.stringify(mode), label: mode.map((m) => parseRefLabel(m)).join(" + ") + "参考" }
-          : { value: mode, label: modeLabelMap[mode] || mode },
-      )
+    ? modeOptions.value.mode
+        .map((mode) =>
+          Array.isArray(mode)
+            ? { value: JSON.stringify(mode), label: mode.map((m) => parseRefLabel(m)).join(" + ") + "参考" }
+            : { value: mode, label: modeLabelMap[mode] || mode },
+        )
+        .map(withVideoModePolicy)
     : [];
 });
 const currentTrack = computed({
@@ -356,18 +365,25 @@ watch(
           if (drMap[0].duration?.length) modelParmas.value.duration = clampDuration(modelParmas.value.duration);
         }
 
+        const selectableModes = data.mode.filter((m: VideoMode) => !isVideoModeOptionDisabled(modeToKey(m)));
         const currentParsed = parseMode(modelParmas.value.mode);
         const modeMatched =
           currentParsed !== null &&
-          data.mode.some((m: VideoMode) => {
+          selectableModes.some((m: VideoMode) => {
             if (Array.isArray(m) && Array.isArray(currentParsed)) {
               return JSON.stringify(m) === JSON.stringify(currentParsed);
             }
             return m == currentParsed;
           });
         if (!modeMatched) {
-          const newMode = Array.isArray(data.mode[0]) ? JSON.stringify(data.mode[0]) : data.mode[0];
-          modeChange(newMode);
+          const newMode = getFirstEnabledVideoModeValue(selectableModes.map((m: VideoMode) => withVideoModePolicy({ value: modeToKey(m), label: "" })));
+          if (isVideoModeOptionDisabled(modelParmas.value.mode)) {
+            modelParmas.value.mode = newMode;
+          } else if (newMode) {
+            modeChange(newMode);
+          } else {
+            modelParmas.value.mode = "";
+          }
         }
       })
       .catch((error) => {
@@ -393,6 +409,10 @@ function parseMode(value: string): VideoMode | null {
     return value as Exclude<VideoMode, ReferenceType[]>;
   }
   return value as Exclude<VideoMode, ReferenceType[]>;
+}
+
+function modeToKey(mode: VideoMode): string {
+  return Array.isArray(mode) ? JSON.stringify(mode) : mode;
 }
 /** uploadBox 作为 promptEditor 的引用预览 */
 const references = computed(() => {
