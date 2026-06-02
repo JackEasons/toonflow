@@ -214,7 +214,11 @@ import { storeToRefs } from "pinia";
 import { MdEditor } from "md-editor-v3";
 import type { ToolbarNames } from "md-editor-v3";
 import { MdPreview } from "md-editor-v3";
+import "md-editor-v3/lib/style.css";
+import "@tdesign-vue-next/chat/es/style/index.css";
+import "splitpanes/dist/splitpanes.css";
 import settingStore from "#/stores/setting";
+import { setupMarkdownRenderer } from "#/utils/markdownRenderer";
 const { themeSetting } = storeToRefs(settingStore());
 import { Splitpanes, Pane } from "splitpanes";
 import axios from "#/utils/axios";
@@ -233,6 +237,9 @@ const thinkLevelOptions = [
 import productionAgentStore from "#/stores/productionAgent";
 const currentTable = ref(1);
 const inputValue = ref("");
+
+void setupMarkdownRenderer();
+
 const toolbars: ToolbarNames[] = [
   "bold",
   "underline",

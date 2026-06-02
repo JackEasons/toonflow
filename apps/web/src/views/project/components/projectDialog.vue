@@ -286,7 +286,9 @@ import { storeToRefs } from "pinia";
 import { ref, watch, computed } from "vue";
 import axios from "#/utils/axios";
 import { MdEditor } from "md-editor-v3";
+import "md-editor-v3/lib/style.css";
 import settingStore from "#/stores/setting";
+import { setupMarkdownRenderer } from "#/utils/markdownRenderer";
 const { themeSetting } = storeToRefs(settingStore());
 import type { ToolbarNames } from "md-editor-v3";
 import modelSelect from "#/components/modelSelect.vue";
@@ -300,6 +302,8 @@ import {
   withVideoModePolicy,
   type VideoModeOption,
 } from "#/utils/videoModePolicy";
+
+void setupMarkdownRenderer();
 
 const addProjectShow = defineModel<boolean>();
 const props = defineProps<{

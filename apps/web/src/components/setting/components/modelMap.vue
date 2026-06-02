@@ -124,8 +124,12 @@ import type { TableProps } from "tdesign-vue-next";
 import axios from "#/utils/axios";
 import { MdEditor, MdPreview } from "md-editor-v3";
 import type { ToolbarNames } from "md-editor-v3";
+import "md-editor-v3/lib/style.css";
 import settingStore from "#/stores/setting";
+import { setupMarkdownRenderer } from "#/utils/markdownRenderer";
 const { themeSetting } = storeToRefs(settingStore());
+
+void setupMarkdownRenderer();
 
 const promptToolbars: ToolbarNames[] = [
   "bold",

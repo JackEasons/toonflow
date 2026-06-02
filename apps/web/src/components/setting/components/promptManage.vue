@@ -30,9 +30,14 @@ import { storeToRefs } from "pinia";
 import axios from "#/utils/axios";
 import { MdEditor } from "md-editor-v3";
 import type { ToolbarNames } from "md-editor-v3";
+import "md-editor-v3/lib/style.css";
 import settingStore from "#/stores/setting";
+import { setupMarkdownRenderer } from "#/utils/markdownRenderer";
 const { themeSetting } = storeToRefs(settingStore());
 import { onMounted, ref } from "vue";
+
+void setupMarkdownRenderer();
+
 onMounted(() => {
   getPrompt();
 });

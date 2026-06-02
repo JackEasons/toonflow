@@ -2,7 +2,6 @@ import { createApp } from "vue";
 import type { RouteLocationNormalizedLoaded } from "vue-router";
 
 import { install as installIconPark } from "@icon-park/vue-next/es/all";
-import { Log } from "@webav/av-cliper";
 import TDesignChat from "@tdesign-vue-next/chat";
 import { createPinia } from "pinia";
 import piniaPluginPersistedstate from "pinia-plugin-persistedstate";
@@ -15,10 +14,7 @@ import { imageOptimizer } from "#/utils/imageOptimizer";
 
 import "#/utils/global";
 import "@icon-park/vue-next/styles/index.css";
-import "@tdesign-vue-next/chat/es/style/index.css";
 import "tdesign-vue-next/es/style/index.css";
-import "md-editor-v3/lib/style.css";
-import "splitpanes/dist/splitpanes.css";
 import "./assets/main.scss";
 
 function getRouteTitle(route: RouteLocationNormalizedLoaded) {
@@ -35,8 +31,6 @@ function setupDynamicTitle() {
 }
 
 function bootstrap() {
-  Log.setLogLevel(Log.warn);
-
   const app = createApp(App);
   const pinia = createPinia();
 

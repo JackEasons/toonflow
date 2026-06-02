@@ -102,6 +102,7 @@ import { DialogPlugin } from "tdesign-vue-next";
 import { storeToRefs } from "pinia";
 import { useMousePressed, useMouse } from "@vueuse/core";
 import _ from "lodash";
+import "@tdesign-vue-next/chat/es/style/index.css";
 import axios from "#/utils/axios";
 import productionAgentStore from "#/stores/productionAgent";
 import projectStore from "#/stores/project";

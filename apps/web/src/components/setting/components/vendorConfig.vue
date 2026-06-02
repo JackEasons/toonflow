@@ -343,7 +343,9 @@ import { storeToRefs } from "pinia";
 import { MdPreview } from "md-editor-v3";
 import { CodeEditor } from "monaco-editor-vue3";
 import { DialogPlugin } from "tdesign-vue-next";
+import "md-editor-v3/lib/style.css";
 import axios from "#/utils/axios";
+import { setupMarkdownRenderer } from "#/utils/markdownRenderer";
 import VENDOR_CODE_TEMPLATE from "#/lib/vendorTemplate.ts?raw";
 import { providersLogo, modelProviderRules } from "#/utils/providersLogo";
 import type { UploadFile } from "tdesign-vue-next";
@@ -353,6 +355,8 @@ import TextModelTest from "./vendorTest/TextModelTest.vue";
 import ImageModelTest from "./vendorTest/ImageModelTest.vue";
 import VideoModelTest from "./vendorTest/VideoModelTest.vue";
 const { themeSetting } = storeToRefs(settingStore());
+
+void setupMarkdownRenderer();
 
 // ── 类型 ──
 interface TextModel {

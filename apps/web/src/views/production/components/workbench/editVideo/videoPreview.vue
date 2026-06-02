@@ -24,7 +24,7 @@
 <script setup lang="ts">
 import { computed, onMounted, onUnmounted, provide, reactive, ref, watch } from "vue";
 import { AVCanvas } from "@webav/av-canvas";
-import { MP4Clip, AudioClip, ImgClip, VisibleSprite, renderTxt2ImgBitmap } from "@webav/av-cliper";
+import { Log, MP4Clip, AudioClip, ImgClip, VisibleSprite, renderTxt2ImgBitmap } from "@webav/av-cliper";
 import { usePlaybackStore, useTracksStore } from "vue-clip-track";
 import type { Clip, MediaClip, SubtitleClip, TextClip, TransitionClip, Track } from "vue-clip-track";
 import { getTransitionRenderer } from "./utils/transitionRenderers";
@@ -37,6 +37,8 @@ import {
   applyEffectsToFrame,
 } from "./utils/filterEffect";
 import { formatTime } from "./utils/clipMeta";
+
+Log.setLogLevel(Log.warn);
 
 const props = withDefaults(
   defineProps<{

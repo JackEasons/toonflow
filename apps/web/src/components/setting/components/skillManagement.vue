@@ -58,10 +58,14 @@ import { storeToRefs } from "pinia";
 import { computed, onMounted, ref } from "vue";
 import { MdEditor, MdPreview } from "md-editor-v3";
 import type { ToolbarNames } from "md-editor-v3";
+import "md-editor-v3/lib/style.css";
 import settingStore from "#/stores/setting";
+import { setupMarkdownRenderer } from "#/utils/markdownRenderer";
 const { themeSetting } = storeToRefs(settingStore());
 import type { TreeNodeModel, TreeNodeValue, TreeOptionData } from "tdesign-vue-next";
 import axios from "#/utils/axios";
+
+void setupMarkdownRenderer();
 
 const mdToolbars: ToolbarNames[] = [
   "bold",

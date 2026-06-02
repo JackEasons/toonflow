@@ -17,11 +17,8 @@ function getPackageName(id: string) {
 function manualChunks(id: string) {
   const packageName = getPackageName(id);
   if (!packageName) return undefined;
-  if (packageName === "monaco-editor" || packageName === "monaco-editor-vue3") return "vendor-editor";
   if (packageName === "@icon-park/vue-next" || packageName === "@devui-design/icons") return "vendor-icons";
   if (packageName.startsWith("@tdesign-vue-next") || packageName === "tdesign-vue-next") return "vendor-ui";
-  if (packageName.startsWith("@vue-flow") || packageName.startsWith("@webav") || packageName === "vue-clip-track") return "vendor-workbench";
-  if (packageName === "md-editor-v3" || packageName === "mammoth" || packageName === "jszip") return "vendor-file";
   if (packageName === "vue" || packageName.startsWith("@vue/") || ["pinia", "vue-router", "vue-i18n"].includes(packageName)) return "vendor-vue";
   if (packageName.startsWith("@vueuse/") || ["lodash", "dayjs", "axios", "es-toolkit"].includes(packageName)) return "vendor-utils";
   return undefined;
