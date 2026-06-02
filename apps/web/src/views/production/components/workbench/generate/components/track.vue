@@ -77,6 +77,11 @@ import axios from "#/utils/axios";
 import projectStore from "#/stores/project";
 import imageListCacheStore from "#/stores/imageListCache";
 import JSZip from "jszip";
+import {
+  buildPromptSourceInfoForMode,
+  buildVideoReferenceInfoForMode,
+  type PromptSourceInfo,
+} from "../utils/videoUploadSources";
 
 const { project } = storeToRefs(projectStore());
 const { removeCache } = imageListCacheStore();
@@ -108,11 +113,6 @@ interface BillingQuote {
   enough: boolean;
   requiredPoints: number;
 }
-
-type PromptSourceInfo = Array<{
-  id: number | null | undefined;
-  sources: string | undefined;
-}>;
 
 /** 视频封面缓存 src -> dataURL */
 const videoCoverMap = ref<Record<string, string>>({});
@@ -273,7 +273,7 @@ function batchGenText() {
     if (props.modelParmas.mode == "text") {
       info = track?.medias.map(({ id, sources }) => ({ id, sources }));
     } else {
-      info = getTrackUploadInfo(track);
+      info = getTrackPromptInfo(track);
     }
     if (genTextLoadingMap.value[trackId]) return;
     genTextLoadingMap.value[trackId] = true;
@@ -305,19 +305,22 @@ function batchGenText() {
  * 获取指定轨道的上传数据：
  * 当前活动轨道 → uploadBox（含未保存的最新编辑）
  * 其他轨道 → uploadBoxCache（含切换前的编辑）→ 降级 track.medias
- * @param filterEmpty 是否过滤掉没有 src 的项（生成视频时需要过滤，生成提示词时不需要）
  */
-function getTrackUploadInfo(track: TrackItem, filterEmpty = false): PromptSourceInfo {
+function getTrackItems(track: TrackItem): Array<UploadItem | TrackMedia> {
   const activeTrackId = trackList.value[activeTrackIndex.value]?.id;
 
   if (track.id === activeTrackId) {
-    const items = props.imageList as UploadItem[];
-    return (filterEmpty ? items.filter((item) => Boolean(item.src)) : items).map(({ id, sources }) => ({
-      id,
-      sources: (sources ?? "storyboard") as string,
-    }));
+    return props.imageList as UploadItem[];
   }
-  return track.medias.filter((m) => !filterEmpty || Boolean(m.src)).map(({ id, sources }) => ({ id, sources: (sources ?? "storyboard") as string }));
+  return track.medias;
+}
+
+function getTrackPromptInfo(track: TrackItem): PromptSourceInfo {
+  return buildPromptSourceInfoForMode(getTrackItems(track), props.modelParmas.mode);
+}
+
+function getTrackVideoReferenceInfo(track: TrackItem): PromptSourceInfo {
+  return buildVideoReferenceInfoForMode(getTrackItems(track), props.modelParmas.mode);
 }
 const generateVideoLoad = ref(false);
 const batchQuote = ref<BillingQuote | null>(null);
@@ -500,7 +503,7 @@ function batchGenVideo() {
 
       const trackData = checkedTrackData.map((track) => {
         const trackId = track.id;
-        const uploadData = props.modelParmas.mode === "text" ? [] : getTrackUploadInfo(track, true);
+        const uploadData = props.modelParmas.mode === "text" ? [] : getTrackVideoReferenceInfo(track);
         return {
           duration: props.clampDuration(track.duration || props.modelParmas.duration),
           prompt: track.prompt,

@@ -37,6 +37,93 @@ export interface VideoPromptContext {
 }
 
 const CJK_RE = /[\u3400-\u9fff]/;
+const FRAME_VIDEO_MODES = new Set(["startEndRequired", "endFrameOptional", "startFrameOptional"]);
+
+type ParsedVideoMode = string | string[];
+
+function parseVideoMode(mode: unknown): ParsedVideoMode {
+  if (Array.isArray(mode)) return mode.map(String);
+  if (typeof mode !== "string") return "";
+  try {
+    const parsed = JSON.parse(mode);
+    if (Array.isArray(parsed)) return parsed.map(String);
+  } catch {}
+  return mode;
+}
+
+function isFrameVideoMode(mode: unknown): boolean {
+  const parsed = parseVideoMode(mode);
+  return typeof parsed === "string" && FRAME_VIDEO_MODES.has(parsed);
+}
+
+function sourceKey(item: PromptSourceInfo): string {
+  return `${item.sources}:${item.id}`;
+}
+
+function uniqueSources(items: PromptSourceInfo[]): PromptSourceInfo[] {
+  const seen = new Set<string>();
+  const result: PromptSourceInfo[] = [];
+  items.forEach((item) => {
+    const id = Number(item.id);
+    if (!Number.isFinite(id)) return;
+    const source = { id, sources: item.sources || "storyboard" };
+    const key = sourceKey(source);
+    if (seen.has(key)) return;
+    seen.add(key);
+    result.push(source);
+  });
+  return result;
+}
+
+async function loadTrackStoryboardSources(trackId?: number | null, requireFile = false): Promise<PromptSourceInfo[]> {
+  if (trackId == null) return [];
+  const query = u
+    .db("o_storyboard")
+    .where("trackId", trackId)
+    .select("id", "index")
+    .orderBy("index", "asc")
+    .orderBy("id", "asc");
+  if (requireFile) query.whereNotNull("filePath");
+  const rows = await query;
+  return rows
+    .map((row) => Number(row.id))
+    .filter((id) => Number.isFinite(id))
+    .map((id) => ({ id, sources: "storyboard" }));
+}
+
+export async function buildVideoPromptSources(
+  info: PromptSourceInfo[],
+  options: { mode?: unknown; trackId?: number | null } = {},
+): Promise<PromptSourceInfo[]> {
+  const parsedMode = parseVideoMode(options.mode);
+  const base = uniqueSources(info);
+  const trackStoryboards = await loadTrackStoryboardSources(options.trackId);
+  if (typeof parsedMode === "string" && (parsedMode === "singleImage" || FRAME_VIDEO_MODES.has(parsedMode))) {
+    return uniqueSources([...trackStoryboards, ...base]);
+  }
+  return uniqueSources([...base, ...trackStoryboards]);
+}
+
+export async function buildVideoReferenceSources(
+  info: PromptSourceInfo[],
+  options: { mode?: unknown; trackId?: number | null } = {},
+): Promise<PromptSourceInfo[]> {
+  const parsedMode = parseVideoMode(options.mode);
+  if (parsedMode === "text") return [];
+
+  const base = uniqueSources(info);
+  const trackStoryboards = await loadTrackStoryboardSources(options.trackId, true);
+  const storyboardRefs = uniqueSources([...trackStoryboards, ...base.filter((item) => item.sources === "storyboard")]);
+
+  if (parsedMode === "singleImage") return storyboardRefs[0] ? [storyboardRefs[0]] : base.slice(0, 1);
+  if (isFrameVideoMode(parsedMode)) {
+    if (storyboardRefs.length >= 2) return [storyboardRefs[0], storyboardRefs[storyboardRefs.length - 1]];
+    if (storyboardRefs.length === 1) return [storyboardRefs[0]];
+    return base.slice(0, 2);
+  }
+
+  return uniqueSources([...base, ...trackStoryboards]);
+}
 
 interface VideoPromptSequenceItem {
   duration?: string | number | null;

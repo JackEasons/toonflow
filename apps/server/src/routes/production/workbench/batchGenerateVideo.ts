@@ -7,19 +7,8 @@ import { validateFields } from "@/middleware/middleware";
 import { ReferenceList } from "@/utils/ai";
 import { resolveNegativePrompt } from "@/utils/negativePrompt";
 import { quoteModelCalls, releasePointHold, reserveModelCallPoints, settlePointHold } from "@/utils/modelBilling";
-import { appendVideoConsistencyGuard, loadVideoPromptContext } from "@/utils/videoPromptContext";
+import { appendVideoConsistencyGuard, buildVideoPromptSources, buildVideoReferenceSources, loadVideoPromptContext } from "@/utils/videoPromptContext";
 const router = express.Router();
-
-type Type = "imageReference" | "startImage" | "endImage" | "videoReference" | "audioReference";
-interface UploadItem {
-  fileType: "image" | "video" | "audio";
-  type: Type;
-  sources?: "assets" | "storyboard";
-  id?: number;
-  src?: string;
-  label?: string;
-  prompt?: string;
-}
 
 export default router.post(
   "/",
@@ -85,9 +74,12 @@ export default router.post(
       for (const track of trackData as { uploadData: { id: number; sources: string }[]; trackId: number; prompt: string; duration: number }[]) {
         const { uploadData, trackId, prompt, duration } = track;
 
+        const promptSources = await buildVideoPromptSources(uploadData, { mode, trackId });
+        const referenceSources = await buildVideoReferenceSources(uploadData, { mode, trackId });
+
         // 查询出图片数据
         const images = await Promise.all(
-          uploadData.map(async (item) => {
+          referenceSources.map(async (item) => {
             if (item.sources === "storyboard") {
               const filePath = await u.db("o_storyboard").where("id", item.id).select("filePath").first();
               return { path: filePath?.filePath, sources: "storyBoard" };
@@ -106,7 +98,7 @@ export default router.post(
 
         const videoPath = `/${projectId}/video/${uuidv4()}.mp4`;
         const storageProvider = u.oss.getStorageProvider();
-        const promptContext = await loadVideoPromptContext(uploadData);
+        const promptContext = await loadVideoPromptContext(promptSources);
         const requestPrompt = appendVideoConsistencyGuard(prompt, promptContext);
         const negativePrompt = resolveNegativePrompt({ prompt: requestPrompt, negativePromptSource }, { mediaType: "video", modelKey: model });
         const [videoId] = await u.db("o_video").insert({

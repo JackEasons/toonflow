@@ -6,7 +6,7 @@ import { validateFields } from "@/middleware/middleware";
 import fs from "fs/promises";
 import path from "path";
 import { quoteModelCalls, releasePointHold, reserveModelCallPoints, resolveModelBillingKey, settlePointHoldWithModelUsage } from "@/utils/modelBilling";
-import { buildVideoPromptInput, loadVideoPromptContext } from "@/utils/videoPromptContext";
+import { buildVideoPromptInput, buildVideoPromptSources, loadVideoPromptContext } from "@/utils/videoPromptContext";
 const router = express.Router();
 
 export default router.post(
@@ -87,7 +87,8 @@ export default router.post(
     const artStyle = projectData?.artStyle || "无";
 
     const visualManual = u.getArtPrompt(artStyle, "art_skills", "art_storyboard_video");
-    const promptContext = await loadVideoPromptContext(info);
+    const promptSources = await buildVideoPromptSources(info, { mode, trackId });
+    const promptContext = await loadVideoPromptContext(promptSources);
     const content = await buildVideoPromptInput(promptContext, modelData);
 
     let quote;

@@ -7,19 +7,8 @@ import { validateFields } from "@/middleware/middleware";
 import { ReferenceList } from "@/utils/ai";
 import { resolveNegativePrompt } from "@/utils/negativePrompt";
 import { quoteModelCalls, releasePointHold, reserveModelCallPoints, settlePointHold } from "@/utils/modelBilling";
-import { appendVideoConsistencyGuard, loadVideoPromptContext } from "@/utils/videoPromptContext";
+import { appendVideoConsistencyGuard, buildVideoPromptSources, buildVideoReferenceSources, loadVideoPromptContext } from "@/utils/videoPromptContext";
 const router = express.Router();
-
-type Type = "imageReference" | "startImage" | "endImage" | "videoReference" | "audioReference";
-interface UploadItem {
-  fileType: "image" | "video" | "audio";
-  type: Type;
-  sources?: "assets" | "storyboard";
-  id?: number;
-  src?: string;
-  label?: string;
-  prompt?: string;
-}
 
 export default router.post(
   "/",
@@ -73,14 +62,16 @@ export default router.post(
     //获取生成视频比例
     const project = await u.db("o_project").select("videoRatio", "artStyle").where("id", projectId).first();
     const negativePromptSource = u.getArtPrompt(project?.artStyle ?? "", "art_skills", "director_storyboard");
-    const promptContext = await loadVideoPromptContext(uploadData);
+    const promptSources = await buildVideoPromptSources(uploadData, { mode, trackId });
+    const referenceSources = await buildVideoReferenceSources(uploadData, { mode, trackId });
+    const promptContext = await loadVideoPromptContext(promptSources);
     const requestPrompt = appendVideoConsistencyGuard(prompt, promptContext);
     const negativePrompt = resolveNegativePrompt({ prompt: requestPrompt, negativePromptSource }, { mediaType: "video", modelKey: model });
     const videoPath = `/${projectId}/video/${uuidv4()}.mp4`; //视频保存路径
     const storageProvider = u.oss.getStorageProvider();
     //查询出图片数据
     const images = await Promise.all(
-      uploadData.map(async (item: UploadItem) => {
+      referenceSources.map(async (item) => {
         if (item.sources === "storyboard") {
           const filePath = await u.db("o_storyboard").where("id", item.id).select("filePath").first();
           return { path: filePath?.filePath, sources: "storyBoard" };

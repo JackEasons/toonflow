@@ -63,6 +63,12 @@ import axios from "#/utils/axios";
 import projectStore from "#/stores/project";
 import promptEditor from "#/components/promptEditor.vue";
 import imageListCacheStore from "#/stores/imageListCache";
+import {
+  buildPromptSourceInfoForMode,
+  buildVideoReferenceInfoForMode,
+  orderUploadItemsForMode,
+  type PromptSourceInfo,
+} from "./utils/videoUploadSources";
 
 const { project } = storeToRefs(projectStore());
 const episodesId = inject<Ref<number>>("episodesId")!;
@@ -82,11 +88,6 @@ const modeOptions = ref<VideoModel>({
 
 const trackList = ref<TrackItem[]>([]); // 轨道列表
 
-type PromptSourceInfo = Array<{
-  id: number | null | undefined;
-  sources: string | undefined;
-}>;
-
 const modelParmas = ref<ModelSetting>({
   mode: "",
   model: "",
@@ -103,12 +104,6 @@ interface BillingQuote {
 
 const storyboardList = ref<StoryboardItem[]>([]); // 分镜列表
 
-/** 排序优先级：assets有图=0，storyboard有图=1，无图=2 */
-function getImageItemPriority(item: UploadItem): number {
-  if (item.src) return item.sources === "assets" ? 0 : 1;
-  return 2;
-}
-
 const imageList = computed({
   get(): UploadItem[] {
     // 触发对 urlMap 的依赖追踪，当 warmUpUrls 更新 urlMap 后自动重新计算
@@ -122,15 +117,13 @@ const imageList = computed({
       const cached = getCache(pid, sid, trackId);
 
       if (cached?.length) {
-        cached.sort((a, b) => getImageItemPriority(a) - getImageItemPriority(b));
-        return cached;
+        return orderUploadItemsForMode(cached, modelParmas.value.mode);
       }
     }
     const medias = currentTrack.value?.medias;
     if (!medias?.length) return [];
-    (medias as UploadItem[]).sort((a, b) => getImageItemPriority(a) - getImageItemPriority(b));
 
-    return medias as UploadItem[];
+    return orderUploadItemsForMode(medias as UploadItem[], modelParmas.value.mode);
   },
   set(val: UploadItem[]) {
     if (currentTrack.value) {
@@ -479,28 +472,9 @@ async function genText() {
     window.$message.warning(`积分不足，需要 ${formatBillingPoints(singlePromptQuote.value.requiredPoints)} 积分，当前可用 ${formatBillingPoints(singlePromptQuote.value.availablePoints)} 积分`);
     return;
   }
-  let info: PromptSourceInfo = [];
   const currentTrackId = currentTrack.value.id;
   const changeTrack = currentTrack.value;
-  if (modelParmas.value.mode == "text") {
-    info = changeTrack?.medias.map(({ id, sources }) => ({ id, sources }));
-  } else {
-    info =
-      modelParmas.value.mode === "text"
-        ? []
-        : (() => {
-            const frameMode = ["startEndRequired", "endFrameOptional", "startFrameOptional"];
-            const preSliced = frameMode.includes(modelParmas.value.mode)
-              ? imageList.value.slice(0, 2)
-              : modelParmas.value.mode === "singleImage"
-                ? imageList.value.slice(0, 1)
-                : imageList.value;
-            const filtered = preSliced.filter((item) => item.id).map(({ id, sources }) => ({ id, sources }));
-            if (frameMode.includes(modelParmas.value.mode)) return filtered.slice(0, 2);
-            if (modelParmas.value.mode === "singleImage") return filtered.slice(0, 1);
-            return filtered;
-          })();
-  }
+  const info: PromptSourceInfo = buildPromptSourceInfoForMode(modelParmas.value.mode === "text" ? changeTrack.medias : imageList.value, modelParmas.value.mode);
   genTextLoadingMap.value[currentTrackId] = true;
   try {
     const { data } = await axios.post("/production/workbench/generateVideoPrompt", {
@@ -539,7 +513,7 @@ function trackChange(prevIndex?: number) {
   }
   // imageList 是基于 currentTrack.medias 的计算属性，切换轨道后自动切换数据
   if (modelParmas.value.mode == "singleImage" && imageList.value.length > 1) {
-    imageList.value = imageList.value.slice(0, 1);
+    imageList.value = orderUploadItemsForMode(imageList.value, modelParmas.value.mode).slice(0, 1);
   }
   modelParmas.value.duration = clampDuration(trackList.value?.[activeTrackIndex.value]?.duration);
 }
@@ -595,18 +569,7 @@ async function generateVideo() {
           uploadData:
             modelParmas.value.mode === "text"
               ? []
-              : (() => {
-                  const frameMode = ["startEndRequired", "endFrameOptional", "startFrameOptional"];
-                  const preSliced = frameMode.includes(modelParmas.value.mode)
-                    ? imageList.value.slice(0, 2)
-                    : modelParmas.value.mode === "singleImage"
-                      ? imageList.value.slice(0, 1)
-                      : imageList.value;
-                  const filtered = preSliced.filter((item) => Boolean(item.src) && item.id).map(({ id, sources }) => ({ id, sources }));
-                  if (frameMode.includes(modelParmas.value.mode)) return filtered.slice(0, 2);
-                  if (modelParmas.value.mode === "singleImage") return filtered.slice(0, 1);
-                  return filtered;
-                })(),
+              : buildVideoReferenceInfoForMode(imageList.value, modelParmas.value.mode),
           prompt: currentTrack.value.prompt,
           model: modelParmas.value.model,
           mode: modelParmas.value.mode,
