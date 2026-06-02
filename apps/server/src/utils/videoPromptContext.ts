@@ -415,16 +415,67 @@ function uniqueNamedAssets(context: VideoPromptContext, type: string): string[] 
   return [...names];
 }
 
+function summarizeAssetsForLock(context: VideoPromptContext): string[] {
+  return collectPromptAssets(context)
+    .filter((asset) => ["role", "scene", "tool"].includes(String(asset.type ?? "")))
+    .slice(0, 12)
+    .map((asset) => {
+      const name = compactText(asset.name || `asset-${asset.id}`, 80);
+      const detail = compactText(asset.describe || asset.prompt, 160);
+      return `${asset.type ?? "asset"}:${name}${detail ? `=${detail}` : ""}`;
+    });
+}
+
+function buildSequenceBrief(context: VideoPromptContext, maxItems = 8): string {
+  return context.sequence
+    .slice(0, maxItems)
+    .map((item) => `${item.relation}#${item.index ?? item.id}:${compactText(item.videoDesc || item.prompt, 120)}`)
+    .join(" | ");
+}
+
+export function appendStoryboardImageConsistencyGuard(prompt: string, context: VideoPromptContext): string {
+  const fallbackPrompt = context.storyboard[0]?.prompt || context.storyboard[0]?.videoDesc || "";
+  const trimmed = compactText(prompt, 4000) || compactText(fallbackPrompt, 1200);
+  if (!trimmed || trimmed.includes("[Image consistency lock]") || trimmed.includes("【图片一致性锁定】")) return prompt;
+
+  const roleNames = uniqueNamedAssets(context, "role");
+  const sceneNames = uniqueNamedAssets(context, "scene");
+  const toolNames = uniqueNamedAssets(context, "tool");
+  const assetBrief = summarizeAssetsForLock(context).join(" | ");
+  const sequenceBrief = buildSequenceBrief(context, 6);
+  const useChinese = CJK_RE.test(trimmed) || CJK_RE.test([roleNames, sceneNames, toolNames].flat().join(""));
+
+  const guard = useChinese
+    ? [
+        "【图片一致性锁定】",
+        `角色：${roleNames.length ? roleNames.join("、") : "所有关联角色"}。必须严格参考关联资产的脸型、五官、发型、体型、服饰颜色和配饰，不得换脸、换年龄、换衣服或新增人物。`,
+        `场景：${sceneNames.length ? sceneNames.join("、") : "所有关联场景"}。必须严格参考关联资产的空间布局、墙面材质、家具位置、光源方向和整体色调，不得换房间或重排环境。`,
+        `道具：${toolNames.length ? toolNames.join("、") : "所有关联道具"}。必须保持同一造型、材质、颜色、尺寸和相对位置，不得丢失、替换或新增未列出的道具。`,
+        assetBrief ? `关联资产细节：${assetBrief}。` : "",
+        sequenceBrief ? `分镜连续性：${sequenceBrief}。当前图片必须承接相邻分镜的人物姿态、情绪、空间位置、光线方向与环境物件。` : "",
+        "只允许当前分镜 prompt/videoDesc 明确描述的动作、景别和构图发生变化；身份、场景、道具作为硬约束保持稳定。",
+      ].filter(Boolean)
+    : [
+        "[Image consistency lock]",
+        `Characters: ${roleNames.length ? roleNames.join(", ") : "all linked characters"}. Preserve the linked asset identity, face, hairstyle, body shape, outfit colors, and accessories. Do not change face, age, clothing, or add people.`,
+        `Scenes: ${sceneNames.length ? sceneNames.join(", ") : "all linked scenes"}. Preserve the linked room layout, wall material, furniture positions, lighting direction, and color palette. Do not change rooms or rearrange the environment.`,
+        `Props: ${toolNames.length ? toolNames.join(", ") : "all linked props"}. Preserve the same shape, material, color, size, and relative position. Do not drop, replace, or add unlisted props.`,
+        assetBrief ? `Linked asset details: ${assetBrief}.` : "",
+        sequenceBrief ? `Storyboard continuity: ${sequenceBrief}. Continue adjacent shots' pose, emotion, spatial position, lighting direction, and environment objects.` : "",
+        "Only the action, shot size, and composition explicitly described in the current prompt/videoDesc may change. Identity, scene, and props are hard constraints.",
+      ].filter(Boolean);
+
+  return `${trimmed}\n\n${guard.join("\n")}`;
+}
+
 export function appendVideoConsistencyGuard(prompt: string, context: VideoPromptContext): string {
   const trimmed = prompt.trim();
   if (!trimmed || trimmed.includes("[Consistency lock]") || trimmed.includes("【一致性锁定】")) return prompt;
 
   const roleNames = uniqueNamedAssets(context, "role");
   const sceneNames = uniqueNamedAssets(context, "scene");
-  const sequenceBrief = context.sequence
-    .slice(0, 8)
-    .map((item) => `${item.relation}#${item.index ?? item.id}:${compactText(item.videoDesc, 120)}`)
-    .join(" | ");
+  const toolNames = uniqueNamedAssets(context, "tool");
+  const sequenceBrief = buildSequenceBrief(context);
   const useChinese = CJK_RE.test(trimmed);
 
   const guard = useChinese
@@ -432,6 +483,7 @@ export function appendVideoConsistencyGuard(prompt: string, context: VideoPrompt
         "【一致性锁定】",
         `角色：${roleNames.length ? roleNames.join("、") : "所有参考角色"}。必须锁定同一身份、同一脸型、同一发型、同一体型、同一服饰和配饰。`,
         `场景：${sceneNames.length ? sceneNames.join("、") : "所有参考场景"}。必须锁定同一空间布局、墙面材质、家具位置、光源方向和色调。`,
+        `道具：${toolNames.length ? toolNames.join("、") : "所有参考道具"}。必须锁定同一造型、材质、颜色、尺寸和相对位置，不得丢失、替换或新增未列出的道具。`,
         sequenceBrief ? `分镜连续性：${sequenceBrief}。当前镜头必须承接相邻分镜的人物姿态、情绪、空间位置、光线方向，不得重置画面。` : "",
         "只允许 videoDesc 中指定的动作和运镜；不得突然换房间、换服装、换年龄、换脸、换发型或新增人物。",
         "肢体自然可信：禁止多余手指、腿部或身体长出手指、多余手臂、手掌融合、关节反折、身体局部融化。",
@@ -440,6 +492,7 @@ export function appendVideoConsistencyGuard(prompt: string, context: VideoPrompt
         "[Consistency lock]",
         `Characters: ${roleNames.length ? roleNames.join(", ") : "all referenced characters"}. Keep the same identity, face, hairstyle, body shape, outfit colors, and accessories throughout the shot.`,
         `Scenes: ${sceneNames.length ? sceneNames.join(", ") : "all referenced scenes"}. Keep the same room layout, wall texture, furniture positions, lighting direction, and color palette.`,
+        `Props: ${toolNames.length ? toolNames.join(", ") : "all referenced props"}. Keep the same shape, material, color, size, and relative position. Do not drop, replace, or add unlisted props.`,
         sequenceBrief ? `Storyboard continuity: ${sequenceBrief}. Continue the adjacent shots' pose, emotion, spatial position, lighting direction, and environment. Do not reset the image between shots.` : "",
         "Only perform the action and camera movement described in videoDesc. Do not suddenly change rooms, clothing, age, face, hairstyle, or introduce extra people.",
         "Natural anatomy only: no extra fingers, no fingers growing from legs or body, no extra arms, no fused hands, no broken joints, no melting body parts.",

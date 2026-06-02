@@ -8,8 +8,10 @@ import { Output, tool } from "ai";
 import { assetItemSchema } from "@/agents/productionAgent/tools";
 import { resolveNegativePrompt } from "@/utils/negativePrompt";
 import { quoteModelCalls, releasePointHold, reserveModelCallPoints, settlePointHold } from "@/utils/modelBilling";
+import { appendStoryboardImageConsistencyGuard, loadVideoPromptContext } from "@/utils/videoPromptContext";
 const router = express.Router();
 export type AssetData = z.infer<typeof assetItemSchema>;
+const MAX_IMAGE_REFERENCE_COUNT = 8;
 
 export default router.post(
   "/",
@@ -145,18 +147,21 @@ export default router.post(
 
     const generateTask = async (item: (typeof storyboardData)[number]) => {
       const billingHold = holdMap.get(item.id!);
+      const promptContext = await loadVideoPromptContext([{ id: item.id!, sources: "storyboard" }]);
+      const requestPrompt = appendStoryboardImageConsistencyGuard(item.prompt || item.videoDesc || "", promptContext);
+      const negativePrompt = resolveNegativePrompt(
+        { prompt: requestPrompt, negativePromptSource: storyboardNegativePromptSource },
+        { mediaType: "image", modelKey: projectSettingData?.imageModel as `${string}:${string}` },
+      );
       const repeloadObj = {
         billingHoldId: billingHold?.id || null,
         billingRelatedId: item.id,
         billingTaskType: "storyboard_image_generation",
         projectId,
-        prompt: item.prompt!,
+        prompt: requestPrompt,
         scriptId,
         storyboardId: item.id,
-        negativePrompt: resolveNegativePrompt(
-          { prompt: item.prompt!, negativePromptSource: storyboardNegativePromptSource },
-          { mediaType: "image", modelKey: projectSettingData?.imageModel as `${string}:${string}` },
-        ),
+        negativePrompt,
         size: projectSettingData?.imageQuality as "1K" | "2K" | "4K",
         aspectRatio: projectSettingData?.videoRatio as `${number}:${number}`,
       };
@@ -166,7 +171,7 @@ export default router.post(
         });
         const imageCls = await u.Ai.Image(projectSettingData?.imageModel as `${string}:${string}`).run(
           {
-            referenceList: await getAssetsImageBase64(assetRecord[item.id!] || []),
+            referenceList: await getStoryboardImageReferenceList(item.id!, assetRecord[item.id!] || []),
             negativePromptSource: storyboardNegativePromptSource,
             ...repeloadObj,
           },
@@ -205,6 +210,77 @@ export default router.post(
     }
   },
 );
+
+async function getStoryboardImageReferenceList(storyboardId: number, assetImageIds: number[]) {
+  const assetRefs = await getAssetsImageBase64(assetImageIds.slice(0, MAX_IMAGE_REFERENCE_COUNT));
+  const remaining = MAX_IMAGE_REFERENCE_COUNT - assetRefs.length;
+  if (remaining <= 0) return assetRefs;
+
+  const continuityPaths = await getStoryboardContinuityFilePaths(storyboardId, remaining);
+  const continuityRefs = await getImageFilePathsBase64(continuityPaths);
+  return [...assetRefs, ...continuityRefs].slice(0, MAX_IMAGE_REFERENCE_COUNT);
+}
+
+async function getStoryboardContinuityFilePaths(storyboardId: number, limit: number): Promise<string[]> {
+  if (limit <= 0) return [];
+  const current = await u.db("o_storyboard").where("id", storyboardId).select("id", "projectId", "scriptId", "trackId", "index").first();
+  if (!current?.projectId || !current?.scriptId) return [];
+
+  const rows = await u
+    .db("o_storyboard")
+    .where({ projectId: current.projectId, scriptId: current.scriptId })
+    .whereNot("id", storyboardId)
+    .whereNotNull("filePath")
+    .select("id", "filePath", "trackId", "index")
+    .orderBy("index", "asc")
+    .orderBy("id", "asc");
+
+  const currentIndex = Number(current.index ?? current.id ?? 0);
+  const seen = new Set<string>();
+  const paths: string[] = [];
+  const add = (row?: { filePath?: string | null }) => {
+    const filePath = row?.filePath;
+    if (!filePath || seen.has(filePath)) return;
+    seen.add(filePath);
+    paths.push(filePath);
+  };
+
+  const withDistance = rows.map((row) => ({
+    ...row,
+    distance: Math.abs(Number(row.index ?? row.id ?? 0) - currentIndex),
+    position: Number(row.index ?? row.id ?? 0),
+  }));
+  add(
+    withDistance
+      .filter((row) => row.position < currentIndex)
+      .sort((a, b) => b.position - a.position)[0],
+  );
+  add(
+    withDistance
+      .filter((row) => row.position > currentIndex)
+      .sort((a, b) => a.position - b.position)[0],
+  );
+  withDistance
+    .filter((row) => row.trackId != null && current.trackId != null && Number(row.trackId) === Number(current.trackId))
+    .sort((a, b) => a.distance - b.distance || a.position - b.position)
+    .forEach(add);
+
+  return paths.slice(0, limit);
+}
+
+async function getImageFilePathsBase64(filePaths: string[]) {
+  const imageUrls = await Promise.all(
+    filePaths.map(async (filePath) => {
+      try {
+        return await u.oss.getImageBase64(filePath);
+      } catch {
+        return null;
+      }
+    }),
+  );
+  return (imageUrls.filter(Boolean) as string[]).map((url) => ({ type: "image" as const, base64: url }));
+}
+
 async function getAssetsImageBase64(imageIds: number[]) {
   if (!imageIds.length) return [];
 

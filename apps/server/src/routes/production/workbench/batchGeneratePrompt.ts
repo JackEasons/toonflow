@@ -3,9 +3,39 @@ import u from "@/utils";
 import { z } from "zod";
 import { success, error } from "@/lib/responseFormat";
 import { validateFields } from "@/middleware/middleware";
+import fs from "fs/promises";
+import path from "path";
 import { type ModelBillingQuote, quoteModelCalls, releasePointHold, reserveModelCallPoints, resolveModelBillingKey, settlePointHold } from "@/utils/modelBilling";
-import { buildVideoPromptInput, loadVideoPromptContext } from "@/utils/videoPromptContext";
+import { buildVideoPromptInput, buildVideoPromptSources, loadVideoPromptContext } from "@/utils/videoPromptContext";
 const router = express.Router();
+
+function selectVideoPromptTemplateFile(modelName: string | undefined, mode: unknown): string | null {
+  const modelLower = (modelName ?? "").toLowerCase();
+  if (modelLower.includes("wan") && modelLower.includes("2.6")) return "wan2.6Single-imageFirstFrameMode.md";
+  if (/seedance.*2[.\-]0/i.test(modelName ?? "")) return "seedance2Multi-parameterMode.md";
+  if (mode === "startEndRequired" || mode === "endFrameOptional" || mode === "startFrameOptional") return "universalFirstAndLastFrameMode.md";
+  if (typeof mode === "string" && mode.startsWith('["') && mode.endsWith('"]')) return "universalMulti-parameterMode.md";
+  return null;
+}
+
+async function loadModelVideoPromptTemplate(model: string, mode: unknown): Promise<string | undefined> {
+  const [vendorId, modelName] = model.split(/:(.+)/);
+  const modelPromptRoot = u.getPath(["modelPrompt"]);
+  const modelPromptData = await u.db("o_modelPrompt").where("vendorId", vendorId).where("model", modelName).first();
+  if (modelPromptData?.path) {
+    try {
+      return await fs.readFile(path.join(modelPromptRoot, modelPromptData.path), "utf-8");
+    } catch {}
+  }
+
+  const fileName = selectVideoPromptTemplateFile(modelName, mode);
+  if (!fileName) return undefined;
+  try {
+    return await fs.readFile(path.join(modelPromptRoot, "video", fileName), "utf-8");
+  } catch {
+    return undefined;
+  }
+}
 
 export default router.post(
   "/",
@@ -23,9 +53,10 @@ export default router.post(
       }),
     ),
     model: z.string(),
+    mode: z.string().optional(),
   }),
   async (req, res) => {
-    const { projectId, trackData, model } = req.body;
+    const { projectId, trackData, model, mode } = req.body;
     const userId = String((req as any).user?.id || "");
     if (!userId) return res.status(401).send(error("未提供token"));
     if (!trackData.length) return res.status(400).send(error("请选择需要生成提示词的轨道"));
@@ -48,11 +79,12 @@ export default router.post(
 
     const [, modelData] = model.split(/:(.+)/);
     const projectData = await u.db("o_project").select("*").where({ id: projectId }).first();
+    const promptMode = mode ?? projectData?.mode ?? "";
     const videoPrompt = await u.db("o_prompt").where("type", "videoPromptGeneration").first();
-    let videoPromptGeneration = "" as string | undefined;
-    if (videoPrompt && videoPrompt.useData) {
+    let videoPromptGeneration = await loadModelVideoPromptTemplate(model, promptMode);
+    if (!videoPromptGeneration && videoPrompt && videoPrompt.useData) {
       videoPromptGeneration = videoPrompt.useData;
-    } else {
+    } else if (!videoPromptGeneration) {
       videoPromptGeneration = videoPrompt?.data ?? undefined;
     }
     const artStyle = projectData?.artStyle || "无";
@@ -81,7 +113,8 @@ export default router.post(
           userId,
         });
 
-        const promptContext = await loadVideoPromptContext(trackItem.info);
+        const promptSources = await buildVideoPromptSources(trackItem.info, { mode: promptMode, trackId: trackItem.trackId });
+        const promptContext = await loadVideoPromptContext(promptSources);
         const content = await buildVideoPromptInput(promptContext, modelData);
 
         const { text } = await u.Ai.Text("universalAi").invoke({
