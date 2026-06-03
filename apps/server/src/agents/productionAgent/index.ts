@@ -9,6 +9,7 @@ import ResTool from "@/socket/resTool";
 import * as fs from "fs";
 import path from "path";
 import { quoteModelCalls, releasePointHold, reserveModelCallPoints, resolveModelBillingKey, settlePointHold } from "@/utils/modelBilling";
+import { createProgressHeartbeat, type ProgressHeartbeat } from "@/agents/progressHeartbeat";
 
 export interface AgentContext {
   socket: Socket;
@@ -71,6 +72,7 @@ export async function runDecisionAI(ctx: AgentContext) {
   const memory = new Memory("productionAgent", isolationKey, ctx.userId);
   const billingHold = await reserveAgentCall(ctx, "productionAgent:decisionAgent", "production_agent_call", "制片Agent统筹");
   let settled = false;
+  let heartbeat: ProgressHeartbeat | null = null;
 
   try {
     await memory.addBestEffort("user", text);
@@ -99,6 +101,10 @@ export async function runDecisionAI(ctx: AgentContext) {
     const mem = buildMemPrompt(await memory.getBestEffort(text));
 
     let currentMsg = ctx.msg;
+    heartbeat = createProgressHeartbeat(currentMsg, {
+      title: "正在统筹制作任务",
+      updates: ["正在准备项目、模型和工作区上下文。", "仍在等待模型或工具返回，任务没有中断。", "制作链路较长，正在继续处理。"],
+    });
     const { fullStream } = await u.Ai.Text("productionAgent:decisionAgent", ctx.thinkConfig.think, ctx.thinkConfig.thinlLevel).stream({
       messages: [
         { role: "system", content: prompt },
@@ -124,10 +130,13 @@ export async function runDecisionAI(ctx: AgentContext) {
       if (ctx.msg === currentMsg) return currentMsg;
       currentMsg.complete();
       currentMsg = ctx.msg;
+      heartbeat?.setMessage(currentMsg);
       return currentMsg;
-    });
+    }, heartbeat);
+    heartbeat.stop();
     if (!settled) await settlePointHold(billingHold?.id);
   } catch (error) {
+    heartbeat?.fail();
     if (!settled) await releasePointHold(billingHold?.id);
     throw error;
   }
@@ -157,6 +166,10 @@ async function createSubAgent(parentCtx: AgentContext) {
     const subMsg = resTool.newMessage("assistant", name);
     const billingHold = await reserveAgentCall(parentCtx, key, "production_agent_call", `制片Agent-${name}`);
     let settled = false;
+    const heartbeat = createProgressHeartbeat(subMsg, {
+      title: `${name}正在执行任务`,
+      updates: ["正在读取工作区数据和专业技能。", "正在等待模型返回执行结果。", "生成或审核任务仍在进行，请稍候。"],
+    });
 
     try {
       const { fullStream } = await u.Ai.Text(key, parentCtx.thinkConfig.think, parentCtx.thinkConfig.thinlLevel).stream({
@@ -165,7 +178,8 @@ async function createSubAgent(parentCtx: AgentContext) {
         abortSignal,
         tools: { ...extraTools, ...useTools({ resTool, msg: subMsg }) },
       });
-      const fullResponse = await consumeFullStream(fullStream, subMsg);
+      const fullResponse = await consumeFullStream(fullStream, subMsg, undefined, heartbeat);
+      heartbeat.stop();
       await settlePointHold(billingHold?.id);
       settled = true;
 
@@ -179,6 +193,7 @@ async function createSubAgent(parentCtx: AgentContext) {
       parentCtx.msg = resTool.newMessage("assistant", "视频策划");
       return fullResponse;
     } catch (error) {
+      heartbeat.fail();
       if (!settled) await releasePointHold(billingHold?.id);
       throw error;
     }
@@ -443,6 +458,7 @@ async function consumeFullStream(
   fullStream: AsyncIterable<any>,
   initialMsg: ReturnType<ResTool["newMessage"]>,
   syncMsg?: () => ReturnType<ResTool["newMessage"]>,
+  heartbeat?: ProgressHeartbeat,
 ): Promise<string> {
   let msg = initialMsg;
   let text = msg.text();
@@ -452,6 +468,7 @@ async function consumeFullStream(
 
   try {
     for await (const chunk of fullStream) {
+      heartbeat?.activity();
       await new Promise<void>((resolve) => setTimeout(() => resolve(), 1));
       if (syncMsg) {
         const newMsg = syncMsg();
@@ -479,7 +496,9 @@ async function consumeFullStream(
     }
     text.complete();
     msg.complete();
+    heartbeat?.stop();
   } catch (err: any) {
+    heartbeat?.fail();
     thinking?.complete();
     const errMsg = err?.message ?? String(err);
     text.append(errMsg);
