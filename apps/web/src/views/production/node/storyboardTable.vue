@@ -8,7 +8,7 @@
     </div>
     <div class="storyboardList">
       <t-empty v-if="!storyboardTable" style="margin-top: 16px"></t-empty>
-      <MdPreview v-else v-model="storyboardTable" :theme="themeSetting.mode === 'auto' ? undefined : themeSetting.mode" />
+      <MdPreview v-else v-model="previewStoryboardTable" :theme="themeSetting.mode === 'auto' ? undefined : themeSetting.mode" />
     </div>
   </t-card>
 
@@ -38,13 +38,14 @@
 
 <script setup lang="ts">
 import { storeToRefs } from "pinia";
-import { ref } from "vue";
+import { computed, ref } from "vue";
 import { Handle, Position } from "@vue-flow/core";
 import { MdEditor, MdPreview } from "md-editor-v3";
 import type { ToolbarNames } from "md-editor-v3";
 import "md-editor-v3/lib/style.css";
 import settingStore from "#/stores/setting";
 import { setupMarkdownRenderer } from "#/utils/markdownRenderer";
+import { normalizeStoryboardTableMarkdown } from "#/utils/storyboardTableMarkdown";
 const { themeSetting } = storeToRefs(settingStore());
 
 void setupMarkdownRenderer();
@@ -58,6 +59,12 @@ const props = defineProps<{
 }>();
 
 const storyboardTable = defineModel<string>({ required: true });
+const previewStoryboardTable = computed({
+  get: () => normalizeStoryboardTableMarkdown(storyboardTable.value ?? ""),
+  set: (value: string) => {
+    storyboardTable.value = normalizeStoryboardTableMarkdown(value ?? "");
+  },
+});
 const editContent = ref("");
 const dialogVisible = ref(false);
 
@@ -86,12 +93,12 @@ const toolbars: ToolbarNames[] = [
 ];
 
 function openEdit() {
-  editContent.value = storyboardTable.value ?? "";
+  editContent.value = normalizeStoryboardTableMarkdown(storyboardTable.value ?? "");
   dialogVisible.value = true;
 }
 
 function onConfirm() {
-  storyboardTable.value = editContent.value;
+  storyboardTable.value = normalizeStoryboardTableMarkdown(editContent.value);
   dialogVisible.value = false;
 }
 

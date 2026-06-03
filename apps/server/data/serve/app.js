@@ -355,8 +355,8 @@ var init_serialize_error = __esm({
 var require_main = __commonJS({
   "../../node_modules/.pnpm/dotenv@17.4.2/node_modules/dotenv/lib/main.js"(exports2, module2) {
     "use strict";
-    var fs32 = require("fs");
-    var path32 = require("path");
+    var fs33 = require("fs");
+    var path33 = require("path");
     var os3 = require("os");
     var crypto9 = require("crypto");
     var TIPS = [
@@ -487,7 +487,7 @@ var require_main = __commonJS({
       if (options && options.path && options.path.length > 0) {
         if (Array.isArray(options.path)) {
           for (const filepath of options.path) {
-            if (fs32.existsSync(filepath)) {
+            if (fs33.existsSync(filepath)) {
               possibleVaultPath = filepath.endsWith(".vault") ? filepath : `${filepath}.vault`;
             }
           }
@@ -495,15 +495,15 @@ var require_main = __commonJS({
           possibleVaultPath = options.path.endsWith(".vault") ? options.path : `${options.path}.vault`;
         }
       } else {
-        possibleVaultPath = path32.resolve(process.cwd(), ".env.vault");
+        possibleVaultPath = path33.resolve(process.cwd(), ".env.vault");
       }
-      if (fs32.existsSync(possibleVaultPath)) {
+      if (fs33.existsSync(possibleVaultPath)) {
         return possibleVaultPath;
       }
       return null;
     }
     function _resolveHome(envPath2) {
-      return envPath2[0] === "~" ? path32.join(os3.homedir(), envPath2.slice(1)) : envPath2;
+      return envPath2[0] === "~" ? path33.join(os3.homedir(), envPath2.slice(1)) : envPath2;
     }
     function _configVault(options) {
       const debug12 = parseBoolean(process.env.DOTENV_CONFIG_DEBUG || options && options.debug);
@@ -520,7 +520,7 @@ var require_main = __commonJS({
       return { parsed };
     }
     function configDotenv(options) {
-      const dotenvPath = path32.resolve(process.cwd(), ".env");
+      const dotenvPath = path33.resolve(process.cwd(), ".env");
       let encoding = "utf8";
       let processEnv = process.env;
       if (options && options.processEnv != null) {
@@ -548,13 +548,13 @@ var require_main = __commonJS({
       }
       let lastError;
       const parsedAll = {};
-      for (const path33 of optionPaths) {
+      for (const path34 of optionPaths) {
         try {
-          const parsed = DotenvModule.parse(fs32.readFileSync(path33, { encoding }));
+          const parsed = DotenvModule.parse(fs33.readFileSync(path34, { encoding }));
           DotenvModule.populate(parsedAll, parsed, options);
         } catch (e) {
           if (debug12) {
-            _debug(`failed to load ${path33} ${e.message}`);
+            _debug(`failed to load ${path34} ${e.message}`);
           }
           lastError = e;
         }
@@ -567,7 +567,7 @@ var require_main = __commonJS({
         const shortPaths = [];
         for (const filePath of optionPaths) {
           try {
-            const relative = path32.relative(process.cwd(), filePath);
+            const relative = path33.relative(process.cwd(), filePath);
             shortPaths.push(relative);
           } catch (e) {
             if (debug12) {
@@ -16010,11 +16010,11 @@ var require_mime_types = __commonJS({
       }
       return exts[0];
     }
-    function lookup3(path32) {
-      if (!path32 || typeof path32 !== "string") {
+    function lookup3(path33) {
+      if (!path33 || typeof path33 !== "string") {
         return false;
       }
-      var extension2 = extname("x." + path32).toLowerCase().slice(1);
+      var extension2 = extname("x." + path33).toLowerCase().slice(1);
       if (!extension2) {
         return false;
       }
@@ -19612,13 +19612,13 @@ var require_view = __commonJS({
   "../../node_modules/.pnpm/express@5.2.1/node_modules/express/lib/view.js"(exports2, module2) {
     "use strict";
     var debug12 = require_src()("express:view");
-    var path32 = require("node:path");
-    var fs32 = require("node:fs");
-    var dirname2 = path32.dirname;
-    var basename3 = path32.basename;
-    var extname = path32.extname;
-    var join = path32.join;
-    var resolve3 = path32.resolve;
+    var path33 = require("node:path");
+    var fs33 = require("node:fs");
+    var dirname2 = path33.dirname;
+    var basename3 = path33.basename;
+    var extname = path33.extname;
+    var join = path33.join;
+    var resolve3 = path33.resolve;
     module2.exports = View;
     function View(name28, options) {
       var opts = options || {};
@@ -19647,17 +19647,17 @@ var require_view = __commonJS({
       this.path = this.lookup(fileName);
     }
     View.prototype.lookup = function lookup3(name28) {
-      var path33;
+      var path34;
       var roots = [].concat(this.root);
       debug12('lookup "%s"', name28);
-      for (var i = 0; i < roots.length && !path33; i++) {
+      for (var i = 0; i < roots.length && !path34; i++) {
         var root = roots[i];
         var loc = resolve3(root, name28);
         var dir = dirname2(loc);
         var file4 = basename3(loc);
-        path33 = this.resolve(dir, file4);
+        path34 = this.resolve(dir, file4);
       }
-      return path33;
+      return path34;
     };
     View.prototype.render = function render(options, callback) {
       var sync = true;
@@ -19679,21 +19679,21 @@ var require_view = __commonJS({
     };
     View.prototype.resolve = function resolve4(dir, file4) {
       var ext = this.ext;
-      var path33 = join(dir, file4);
-      var stat = tryStat(path33);
+      var path34 = join(dir, file4);
+      var stat = tryStat(path34);
       if (stat && stat.isFile()) {
-        return path33;
+        return path34;
       }
-      path33 = join(dir, basename3(file4, ext), "index" + ext);
-      stat = tryStat(path33);
+      path34 = join(dir, basename3(file4, ext), "index" + ext);
+      stat = tryStat(path34);
       if (stat && stat.isFile()) {
-        return path33;
+        return path34;
       }
     };
-    function tryStat(path33) {
-      debug12('stat "%s"', path33);
+    function tryStat(path34) {
+      debug12('stat "%s"', path34);
       try {
-        return fs32.statSync(path33);
+        return fs33.statSync(path34);
       } catch (e) {
         return void 0;
       }
@@ -20833,15 +20833,15 @@ var require_dist2 = __commonJS({
       let index = 0;
       function consumeUntil(end) {
         const output = [];
-        let path32 = "";
+        let path33 = "";
         function writePath() {
-          if (!path32)
+          if (!path33)
             return;
           output.push({
             type: "text",
-            value: encodePath(path32)
+            value: encodePath(path33)
           });
-          path32 = "";
+          path33 = "";
         }
         while (index < chars.length) {
           const value = chars[index++];
@@ -20853,7 +20853,7 @@ var require_dist2 = __commonJS({
             if (index === chars.length) {
               throw new PathError(`Unexpected end after \\ at index ${index}`, str);
             }
-            path32 += chars[index++];
+            path33 += chars[index++];
             continue;
           }
           if (value === ":" || value === "*") {
@@ -20897,7 +20897,7 @@ var require_dist2 = __commonJS({
           if (value === "}" || value === "(" || value === ")" || value === "[" || value === "]" || value === "+" || value === "?" || value === "!") {
             throw new PathError(`Unexpected ${value} at index ${index - 1}`, str);
           }
-          path32 += value;
+          path33 += value;
         }
         if (end) {
           throw new PathError(`Unexpected end at index ${index}, expected ${end}`, str);
@@ -20907,17 +20907,17 @@ var require_dist2 = __commonJS({
       }
       return new TokenData(consumeUntil(""), str);
     }
-    function compile2(path32, options = {}) {
+    function compile2(path33, options = {}) {
       const { encode: encode6 = encodeURIComponent, delimiter = DEFAULT_DELIMITER } = options;
-      const data2 = typeof path32 === "object" ? path32 : parse4(path32, options);
+      const data2 = typeof path33 === "object" ? path33 : parse4(path33, options);
       const fn = tokensToFunction(data2.tokens, delimiter, encode6);
-      return function path33(params = {}) {
+      return function path34(params = {}) {
         const missing = [];
-        const path34 = fn(params, missing);
+        const path35 = fn(params, missing);
         if (missing.length) {
           throw new TypeError(`Missing parameters: ${missing.join(", ")}`);
         }
-        return path34;
+        return path35;
       };
     }
     function tokensToFunction(tokens, delimiter, encode6) {
@@ -20979,9 +20979,9 @@ var require_dist2 = __commonJS({
         return encodeValue(value);
       };
     }
-    function match(path32, options = {}) {
+    function match(path33, options = {}) {
       const { decode: decode4 = decodeURIComponent, delimiter = DEFAULT_DELIMITER } = options;
-      const { regexp, keys } = pathToRegexp(path32, options);
+      const { regexp, keys } = pathToRegexp(path33, options);
       const decoders = keys.map((key) => {
         if (decode4 === false)
           return NOOP_VALUE;
@@ -20993,7 +20993,7 @@ var require_dist2 = __commonJS({
         const m = regexp.exec(input);
         if (!m)
           return false;
-        const path33 = m[0];
+        const path34 = m[0];
         const params = /* @__PURE__ */ Object.create(null);
         for (let i = 1; i < m.length; i++) {
           if (m[i] === void 0)
@@ -21002,21 +21002,21 @@ var require_dist2 = __commonJS({
           const decoder2 = decoders[i - 1];
           params[key.name] = decoder2(m[i]);
         }
-        return { path: path33, params };
+        return { path: path34, params };
       };
     }
-    function pathToRegexp(path32, options = {}) {
+    function pathToRegexp(path33, options = {}) {
       const { delimiter = DEFAULT_DELIMITER, end = true, sensitive = false, trailing = true } = options;
       const keys = [];
       let source = "";
       let combinations = 0;
-      function process4(path33) {
-        if (Array.isArray(path33)) {
-          for (const p3 of path33)
+      function process4(path34) {
+        if (Array.isArray(path34)) {
+          for (const p3 of path34)
             process4(p3);
           return;
         }
-        const data2 = typeof path33 === "object" ? path33 : parse4(path33, options);
+        const data2 = typeof path34 === "object" ? path34 : parse4(path34, options);
         flatten(data2.tokens, 0, [], (tokens) => {
           if (combinations >= 256) {
             throw new PathError("Too many path combinations", data2.originalPath);
@@ -21027,7 +21027,7 @@ var require_dist2 = __commonJS({
           combinations++;
         });
       }
-      process4(path32);
+      process4(path33);
       let pattern = `^(?:${source})`;
       if (trailing)
         pattern += "(?:" + escape2(delimiter) + "$)?";
@@ -21167,18 +21167,18 @@ var require_layer = __commonJS({
     var TRAILING_SLASH_REGEXP = /\/+$/;
     var MATCHING_GROUP_REGEXP = /\((?:\?<(.*?)>)?(?!\?)/g;
     module2.exports = Layer;
-    function Layer(path32, options, fn) {
+    function Layer(path33, options, fn) {
       if (!(this instanceof Layer)) {
-        return new Layer(path32, options, fn);
+        return new Layer(path33, options, fn);
       }
-      debug12("new %o", path32);
+      debug12("new %o", path33);
       const opts = options || {};
       this.handle = fn;
       this.keys = [];
       this.name = fn.name || "<anonymous>";
       this.params = void 0;
       this.path = void 0;
-      this.slash = path32 === "/" && opts.end === false;
+      this.slash = path33 === "/" && opts.end === false;
       function matcher(_path) {
         if (_path instanceof RegExp) {
           const keys = [];
@@ -21217,7 +21217,7 @@ var require_layer = __commonJS({
           decode: decodeParam
         });
       }
-      this.matchers = Array.isArray(path32) ? path32.map(matcher) : [matcher(path32)];
+      this.matchers = Array.isArray(path33) ? path33.map(matcher) : [matcher(path33)];
     }
     Layer.prototype.handleError = function handleError(error75, req, res, next) {
       const fn = this.handle;
@@ -21257,9 +21257,9 @@ var require_layer = __commonJS({
         next(err);
       }
     };
-    Layer.prototype.match = function match(path32) {
+    Layer.prototype.match = function match(path33) {
       let match2;
-      if (path32 != null) {
+      if (path33 != null) {
         if (this.slash) {
           this.params = {};
           this.path = "";
@@ -21267,7 +21267,7 @@ var require_layer = __commonJS({
         }
         let i = 0;
         while (!match2 && i < this.matchers.length) {
-          match2 = this.matchers[i](path32);
+          match2 = this.matchers[i](path33);
           i++;
         }
       }
@@ -21295,13 +21295,13 @@ var require_layer = __commonJS({
         throw err;
       }
     }
-    function loosen(path32) {
-      if (path32 instanceof RegExp || path32 === "/") {
-        return path32;
+    function loosen(path33) {
+      if (path33 instanceof RegExp || path33 === "/") {
+        return path33;
       }
-      return Array.isArray(path32) ? path32.map(function(p3) {
+      return Array.isArray(path33) ? path33.map(function(p3) {
         return loosen(p3);
-      }) : String(path32).replace(TRAILING_SLASH_REGEXP, "");
+      }) : String(path33).replace(TRAILING_SLASH_REGEXP, "");
     }
   }
 });
@@ -21317,9 +21317,9 @@ var require_route = __commonJS({
     var flatten = Array.prototype.flat;
     var methods = METHODS.map((method) => method.toLowerCase());
     module2.exports = Route;
-    function Route(path32) {
-      debug12("new %o", path32);
-      this.path = path32;
+    function Route(path33) {
+      debug12("new %o", path33);
+      this.path = path33;
       this.stack = [];
       this.methods = /* @__PURE__ */ Object.create(null);
     }
@@ -21527,8 +21527,8 @@ var require_router = __commonJS({
         if (++sync > 100) {
           return setImmediate(next, err);
         }
-        const path32 = getPathname(req);
-        if (path32 == null) {
+        const path33 = getPathname(req);
+        if (path33 == null) {
           return done(layerError);
         }
         let layer;
@@ -21536,7 +21536,7 @@ var require_router = __commonJS({
         let route;
         while (match !== true && idx < stack.length) {
           layer = stack[idx++];
-          match = matchLayer(layer, path32);
+          match = matchLayer(layer, path33);
           route = layer.route;
           if (typeof match !== "boolean") {
             layerError = layerError || match;
@@ -21574,18 +21574,18 @@ var require_router = __commonJS({
           } else if (route) {
             layer.handleRequest(req, res, next);
           } else {
-            trimPrefix(layer, layerError, layerPath, path32);
+            trimPrefix(layer, layerError, layerPath, path33);
           }
           sync = 0;
         });
       }
-      function trimPrefix(layer, layerError, layerPath, path32) {
+      function trimPrefix(layer, layerError, layerPath, path33) {
         if (layerPath.length !== 0) {
-          if (layerPath !== path32.substring(0, layerPath.length)) {
+          if (layerPath !== path33.substring(0, layerPath.length)) {
             next(layerError);
             return;
           }
-          const c = path32[layerPath.length];
+          const c = path33[layerPath.length];
           if (c && c !== "/") {
             next(layerError);
             return;
@@ -21609,7 +21609,7 @@ var require_router = __commonJS({
     };
     Router.prototype.use = function use(handler) {
       let offset = 0;
-      let path32 = "/";
+      let path33 = "/";
       if (typeof handler !== "function") {
         let arg = handler;
         while (Array.isArray(arg) && arg.length !== 0) {
@@ -21617,7 +21617,7 @@ var require_router = __commonJS({
         }
         if (typeof arg !== "function") {
           offset = 1;
-          path32 = handler;
+          path33 = handler;
         }
       }
       const callbacks = flatten.call(slice.call(arguments, offset), Infinity);
@@ -21629,8 +21629,8 @@ var require_router = __commonJS({
         if (typeof fn !== "function") {
           throw new TypeError("argument handler must be a function");
         }
-        debug12("use %o %s", path32, fn.name || "<anonymous>");
-        const layer = new Layer(path32, {
+        debug12("use %o %s", path33, fn.name || "<anonymous>");
+        const layer = new Layer(path33, {
           sensitive: this.caseSensitive,
           strict: false,
           end: false
@@ -21640,9 +21640,9 @@ var require_router = __commonJS({
       }
       return this;
     };
-    Router.prototype.route = function route(path32) {
-      const route2 = new Route(path32);
-      const layer = new Layer(path32, {
+    Router.prototype.route = function route(path33) {
+      const route2 = new Route(path33);
+      const layer = new Layer(path33, {
         sensitive: this.caseSensitive,
         strict: this.strict,
         end: true
@@ -21655,8 +21655,8 @@ var require_router = __commonJS({
       return route2;
     };
     methods.concat("all").forEach(function(method) {
-      Router.prototype[method] = function(path32) {
-        const route = this.route(path32);
+      Router.prototype[method] = function(path33) {
+        const route = this.route(path33);
         route[method].apply(route, slice.call(arguments, 1));
         return this;
       };
@@ -21685,9 +21685,9 @@ var require_router = __commonJS({
       const fqdnIndex = url4.substring(0, pathLength).indexOf("://");
       return fqdnIndex !== -1 ? url4.substring(0, url4.indexOf("/", 3 + fqdnIndex)) : void 0;
     }
-    function matchLayer(layer, path32) {
+    function matchLayer(layer, path33) {
       try {
-        return layer.match(path32);
+        return layer.match(path33);
       } catch (err) {
         return err;
       }
@@ -21915,7 +21915,7 @@ var require_application = __commonJS({
     };
     app2.use = function use(fn) {
       var offset = 0;
-      var path32 = "/";
+      var path33 = "/";
       if (typeof fn !== "function") {
         var arg = fn;
         while (Array.isArray(arg) && arg.length !== 0) {
@@ -21923,7 +21923,7 @@ var require_application = __commonJS({
         }
         if (typeof arg !== "function") {
           offset = 1;
-          path32 = fn;
+          path33 = fn;
         }
       }
       var fns = flatten.call(slice.call(arguments, offset), Infinity);
@@ -21933,12 +21933,12 @@ var require_application = __commonJS({
       var router228 = this.router;
       fns.forEach(function(fn2) {
         if (!fn2 || !fn2.handle || !fn2.set) {
-          return router228.use(path32, fn2);
+          return router228.use(path33, fn2);
         }
-        debug12(".use app under %s", path32);
-        fn2.mountpath = path32;
+        debug12(".use app under %s", path33);
+        fn2.mountpath = path33;
         fn2.parent = this;
-        router228.use(path32, function mounted_app(req, res, next) {
+        router228.use(path33, function mounted_app(req, res, next) {
           var orig = req.app;
           fn2.handle(req, res, function(err) {
             Object.setPrototypeOf(req, orig.request);
@@ -21950,8 +21950,8 @@ var require_application = __commonJS({
       }, this);
       return this;
     };
-    app2.route = function route(path32) {
-      return this.router.route(path32);
+    app2.route = function route(path33) {
+      return this.router.route(path33);
     };
     app2.engine = function engine(ext, fn) {
       if (typeof fn !== "function") {
@@ -21994,7 +21994,7 @@ var require_application = __commonJS({
       }
       return this;
     };
-    app2.path = function path32() {
+    app2.path = function path33() {
       return this.parent ? this.parent.path() + this.mountpath : "";
     };
     app2.enabled = function enabled(setting) {
@@ -22010,17 +22010,17 @@ var require_application = __commonJS({
       return this.set(setting, false);
     };
     methods.forEach(function(method) {
-      app2[method] = function(path32) {
+      app2[method] = function(path33) {
         if (method === "get" && arguments.length === 1) {
-          return this.set(path32);
+          return this.set(path33);
         }
-        var route = this.route(path32);
+        var route = this.route(path33);
         route[method].apply(route, slice.call(arguments, 1));
         return this;
       };
     });
-    app2.all = function all3(path32) {
-      var route = this.route(path32);
+    app2.all = function all3(path33) {
+      var route = this.route(path33);
       var args = slice.call(arguments, 1);
       for (var i = 0; i < methods.length; i++) {
         route[methods[i]].apply(route, args);
@@ -22930,7 +22930,7 @@ var require_request = __commonJS({
       var subdomains2 = !isIP4(hostname4) ? hostname4.split(".").reverse() : [hostname4];
       return subdomains2.slice(offset);
     });
-    defineGetter(req, "path", function path32() {
+    defineGetter(req, "path", function path33() {
       return parse4(this).pathname;
     });
     defineGetter(req, "host", function host() {
@@ -23141,8 +23141,8 @@ var require_content_disposition = __commonJS({
       this.type = type;
       this.parameters = parameters;
     }
-    function basename3(path32) {
-      const normalized = path32.replaceAll("\\", "/");
+    function basename3(path33) {
+      const normalized = path33.replaceAll("\\", "/");
       let end = normalized.length;
       while (end > 0 && normalized[end - 1] === "/") {
         end--;
@@ -23384,32 +23384,32 @@ var require_send = __commonJS({
     var escapeHtml = require_escape_html();
     var etag = require_etag();
     var fresh = require_fresh();
-    var fs32 = require("fs");
+    var fs33 = require("fs");
     var mime = require_mime_types();
     var ms = require_ms();
     var onFinished = require_on_finished();
     var parseRange = require_range_parser();
-    var path32 = require("path");
+    var path33 = require("path");
     var statuses = require_statuses();
     var Stream = require("stream");
     var util4 = require("util");
-    var extname = path32.extname;
-    var join = path32.join;
-    var normalize = path32.normalize;
-    var resolve3 = path32.resolve;
-    var sep = path32.sep;
+    var extname = path33.extname;
+    var join = path33.join;
+    var normalize = path33.normalize;
+    var resolve3 = path33.resolve;
+    var sep = path33.sep;
     var BYTES_RANGE_REGEXP = /^ *bytes=/;
     var MAX_MAXAGE = 60 * 60 * 24 * 365 * 1e3;
     var UP_PATH_REGEXP = /(?:^|[\\/])\.\.(?:[\\/]|$)/;
     module2.exports = send;
-    function send(req, path33, options) {
-      return new SendStream(req, path33, options);
+    function send(req, path34, options) {
+      return new SendStream(req, path34, options);
     }
-    function SendStream(req, path33, options) {
+    function SendStream(req, path34, options) {
       Stream.call(this);
       var opts = options || {};
       this.options = opts;
-      this.path = path33;
+      this.path = path34;
       this.req = req;
       this._acceptRanges = opts.acceptRanges !== void 0 ? Boolean(opts.acceptRanges) : true;
       this._cacheControl = opts.cacheControl !== void 0 ? Boolean(opts.cacheControl) : true;
@@ -23523,10 +23523,10 @@ var require_send = __commonJS({
       var lastModified = this.res.getHeader("Last-Modified");
       return parseHttpDate(lastModified) <= parseHttpDate(ifRange);
     };
-    SendStream.prototype.redirect = function redirect(path33) {
+    SendStream.prototype.redirect = function redirect(path34) {
       var res = this.res;
       if (hasListeners(this, "directory")) {
-        this.emit("directory", res, path33);
+        this.emit("directory", res, path34);
         return;
       }
       if (this.hasTrailingSlash()) {
@@ -23546,38 +23546,38 @@ var require_send = __commonJS({
     SendStream.prototype.pipe = function pipe3(res) {
       var root = this._root;
       this.res = res;
-      var path33 = decode4(this.path);
-      if (path33 === -1) {
+      var path34 = decode4(this.path);
+      if (path34 === -1) {
         this.error(400);
         return res;
       }
-      if (~path33.indexOf("\0")) {
+      if (~path34.indexOf("\0")) {
         this.error(400);
         return res;
       }
       var parts;
       if (root !== null) {
-        if (path33) {
-          path33 = normalize("." + sep + path33);
+        if (path34) {
+          path34 = normalize("." + sep + path34);
         }
-        if (UP_PATH_REGEXP.test(path33)) {
-          debug12('malicious path "%s"', path33);
+        if (UP_PATH_REGEXP.test(path34)) {
+          debug12('malicious path "%s"', path34);
           this.error(403);
           return res;
         }
-        parts = path33.split(sep);
-        path33 = normalize(join(root, path33));
+        parts = path34.split(sep);
+        path34 = normalize(join(root, path34));
       } else {
-        if (UP_PATH_REGEXP.test(path33)) {
-          debug12('malicious path "%s"', path33);
+        if (UP_PATH_REGEXP.test(path34)) {
+          debug12('malicious path "%s"', path34);
           this.error(403);
           return res;
         }
-        parts = normalize(path33).split(sep);
-        path33 = resolve3(path33);
+        parts = normalize(path34).split(sep);
+        path34 = resolve3(path34);
       }
       if (containsDotFile(parts)) {
-        debug12('%s dotfile "%s"', this._dotfiles, path33);
+        debug12('%s dotfile "%s"', this._dotfiles, path34);
         switch (this._dotfiles) {
           case "allow":
             break;
@@ -23591,13 +23591,13 @@ var require_send = __commonJS({
         }
       }
       if (this._index.length && this.hasTrailingSlash()) {
-        this.sendIndex(path33);
+        this.sendIndex(path34);
         return res;
       }
-      this.sendFile(path33);
+      this.sendFile(path34);
       return res;
     };
-    SendStream.prototype.send = function send2(path33, stat) {
+    SendStream.prototype.send = function send2(path34, stat) {
       var len = stat.size;
       var options = this.options;
       var opts = {};
@@ -23609,9 +23609,9 @@ var require_send = __commonJS({
         this.headersAlreadySent();
         return;
       }
-      debug12('pipe "%s"', path33);
-      this.setHeader(path33, stat);
-      this.type(path33);
+      debug12('pipe "%s"', path34);
+      this.setHeader(path34, stat);
+      this.type(path34);
       if (this.isConditionalGET()) {
         if (this.isPreconditionFailure()) {
           this.error(412);
@@ -23660,30 +23660,30 @@ var require_send = __commonJS({
         res.end();
         return;
       }
-      this.stream(path33, opts);
+      this.stream(path34, opts);
     };
-    SendStream.prototype.sendFile = function sendFile(path33) {
+    SendStream.prototype.sendFile = function sendFile(path34) {
       var i = 0;
       var self2 = this;
-      debug12('stat "%s"', path33);
-      fs32.stat(path33, function onstat(err, stat) {
-        var pathEndsWithSep = path33[path33.length - 1] === sep;
-        if (err && err.code === "ENOENT" && !extname(path33) && !pathEndsWithSep) {
+      debug12('stat "%s"', path34);
+      fs33.stat(path34, function onstat(err, stat) {
+        var pathEndsWithSep = path34[path34.length - 1] === sep;
+        if (err && err.code === "ENOENT" && !extname(path34) && !pathEndsWithSep) {
           return next(err);
         }
         if (err) return self2.onStatError(err);
-        if (stat.isDirectory()) return self2.redirect(path33);
+        if (stat.isDirectory()) return self2.redirect(path34);
         if (pathEndsWithSep) return self2.error(404);
-        self2.emit("file", path33, stat);
-        self2.send(path33, stat);
+        self2.emit("file", path34, stat);
+        self2.send(path34, stat);
       });
       function next(err) {
         if (self2._extensions.length <= i) {
           return err ? self2.onStatError(err) : self2.error(404);
         }
-        var p3 = path33 + "." + self2._extensions[i++];
+        var p3 = path34 + "." + self2._extensions[i++];
         debug12('stat "%s"', p3);
-        fs32.stat(p3, function(err2, stat) {
+        fs33.stat(p3, function(err2, stat) {
           if (err2) return next(err2);
           if (stat.isDirectory()) return next();
           self2.emit("file", p3, stat);
@@ -23691,7 +23691,7 @@ var require_send = __commonJS({
         });
       }
     };
-    SendStream.prototype.sendIndex = function sendIndex(path33) {
+    SendStream.prototype.sendIndex = function sendIndex(path34) {
       var i = -1;
       var self2 = this;
       function next(err) {
@@ -23699,9 +23699,9 @@ var require_send = __commonJS({
           if (err) return self2.onStatError(err);
           return self2.error(404);
         }
-        var p3 = join(path33, self2._index[i]);
+        var p3 = join(path34, self2._index[i]);
         debug12('stat "%s"', p3);
-        fs32.stat(p3, function(err2, stat) {
+        fs33.stat(p3, function(err2, stat) {
           if (err2) return next(err2);
           if (stat.isDirectory()) return next();
           self2.emit("file", p3, stat);
@@ -23710,10 +23710,10 @@ var require_send = __commonJS({
       }
       next();
     };
-    SendStream.prototype.stream = function stream4(path33, options) {
+    SendStream.prototype.stream = function stream4(path34, options) {
       var self2 = this;
       var res = this.res;
-      var stream5 = fs32.createReadStream(path33, options);
+      var stream5 = fs33.createReadStream(path34, options);
       this.emit("stream", stream5);
       stream5.pipe(res);
       function cleanup() {
@@ -23728,17 +23728,17 @@ var require_send = __commonJS({
         self2.emit("end");
       });
     };
-    SendStream.prototype.type = function type(path33) {
+    SendStream.prototype.type = function type(path34) {
       var res = this.res;
       if (res.getHeader("Content-Type")) return;
-      var ext = extname(path33);
+      var ext = extname(path34);
       var type2 = mime.contentType(ext) || "application/octet-stream";
       debug12("content-type %s", type2);
       res.setHeader("Content-Type", type2);
     };
-    SendStream.prototype.setHeader = function setHeader(path33, stat) {
+    SendStream.prototype.setHeader = function setHeader(path34, stat) {
       var res = this.res;
-      this.emit("headers", res, path33, stat);
+      this.emit("headers", res, path34, stat);
       if (this._acceptRanges && !res.getHeader("Accept-Ranges")) {
         debug12("accept ranges");
         res.setHeader("Accept-Ranges", "bytes");
@@ -23796,9 +23796,9 @@ var require_send = __commonJS({
       }
       return err instanceof Error ? createError(status, err, { expose: false }) : createError(status, err);
     }
-    function decode4(path33) {
+    function decode4(path34) {
       try {
-        return decodeURIComponent(path33);
+        return decodeURIComponent(path34);
       } catch (err) {
         return -1;
       }
@@ -23942,7 +23942,7 @@ var require_response = __commonJS({
     var http6 = require("node:http");
     var onFinished = require_on_finished();
     var mime = require_mime_types();
-    var path32 = require("node:path");
+    var path33 = require("node:path");
     var pathIsAbsolute = require("node:path").isAbsolute;
     var statuses = require_statuses();
     var sign = require_cookie_signature().sign;
@@ -23951,8 +23951,8 @@ var require_response = __commonJS({
     var setCharset = require_utils3().setCharset;
     var cookie = require_cookie();
     var send = require_send();
-    var extname = path32.extname;
-    var resolve3 = path32.resolve;
+    var extname = path33.extname;
+    var resolve3 = path33.resolve;
     var vary = require_vary();
     var { Buffer: Buffer2 } = require("node:buffer");
     var res = Object.create(http6.ServerResponse.prototype);
@@ -24098,26 +24098,26 @@ var require_response = __commonJS({
       this.type("txt");
       return this.send(body);
     };
-    res.sendFile = function sendFile(path33, options, callback) {
+    res.sendFile = function sendFile(path34, options, callback) {
       var done = callback;
       var req = this.req;
       var res2 = this;
       var next = req.next;
       var opts = options || {};
-      if (!path33) {
+      if (!path34) {
         throw new TypeError("path argument is required to res.sendFile");
       }
-      if (typeof path33 !== "string") {
+      if (typeof path34 !== "string") {
         throw new TypeError("path must be a string to res.sendFile");
       }
       if (typeof options === "function") {
         done = options;
         opts = {};
       }
-      if (!opts.root && !pathIsAbsolute(path33)) {
+      if (!opts.root && !pathIsAbsolute(path34)) {
         throw new TypeError("path must be absolute or specify root to res.sendFile");
       }
-      var pathname = encodeURI(path33);
+      var pathname = encodeURI(path34);
       opts.etag = this.app.enabled("etag");
       var file4 = send(req, pathname, opts);
       sendfile(res2, file4, opts, function(err) {
@@ -24128,7 +24128,7 @@ var require_response = __commonJS({
         }
       });
     };
-    res.download = function download2(path33, filename, options, callback) {
+    res.download = function download2(path34, filename, options, callback) {
       var done = callback;
       var name28 = filename;
       var opts = options || null;
@@ -24145,7 +24145,7 @@ var require_response = __commonJS({
         opts = filename;
       }
       var headers = {
-        "Content-Disposition": contentDisposition(name28 || path33)
+        "Content-Disposition": contentDisposition(name28 || path34)
       };
       if (opts && opts.headers) {
         var keys = Object.keys(opts.headers);
@@ -24158,7 +24158,7 @@ var require_response = __commonJS({
       }
       opts = Object.create(opts);
       opts.headers = headers;
-      var fullPath = !opts.root ? resolve3(path33) : path33;
+      var fullPath = !opts.root ? resolve3(path34) : path34;
       return this.sendFile(fullPath, opts, done);
     };
     res.contentType = res.type = function contentType(type) {
@@ -24441,11 +24441,11 @@ var require_serve_static = __commonJS({
         }
         var forwardError = !fallthrough;
         var originalUrl = parseUrl2.original(req);
-        var path32 = parseUrl2(req).pathname;
-        if (path32 === "/" && originalUrl.pathname.substr(-1) !== "/") {
-          path32 = "";
+        var path33 = parseUrl2(req).pathname;
+        if (path33 === "/" && originalUrl.pathname.substr(-1) !== "/") {
+          path33 = "";
         }
-        var stream4 = send(req, path32, opts);
+        var stream4 = send(req, path33, opts);
         stream4.on("directory", onDirectory);
         if (setHeaders) {
           stream4.on("headers", setHeaders);
@@ -33637,11 +33637,11 @@ var require_mime_types2 = __commonJS({
       }
       return exts[0];
     }
-    function lookup3(path32) {
-      if (!path32 || typeof path32 !== "string") {
+    function lookup3(path33) {
+      if (!path33 || typeof path33 !== "string") {
         return false;
       }
-      var extension2 = extname("x." + path32).toLowerCase().substr(1);
+      var extension2 = extname("x." + path33).toLowerCase().substr(1);
       if (!extension2) {
         return false;
       }
@@ -39646,11 +39646,11 @@ var require_server = __commonJS({
        * @protected
        */
       _computePath(options) {
-        let path32 = (options.path || "/engine.io").replace(/\/$/, "");
+        let path33 = (options.path || "/engine.io").replace(/\/$/, "");
         if (options.addTrailingSlash !== false) {
-          path32 += "/";
+          path33 += "/";
         }
-        return path32;
+        return path33;
       }
       /**
        * Returns a list of available transports for upgrade given a certain transport.
@@ -40166,10 +40166,10 @@ var require_server = __commonJS({
        * @param {Object} options
        */
       attach(server2, options = {}) {
-        const path32 = this._computePath(options);
+        const path33 = this._computePath(options);
         const destroyUpgradeTimeout = options.destroyUpgradeTimeout || 1e3;
         function check3(req) {
-          return path32 === req.url.slice(0, path32.length);
+          return path33 === req.url.slice(0, path33.length);
         }
         const listeners = server2.listeners("request").slice(0);
         server2.removeAllListeners("request");
@@ -40177,7 +40177,7 @@ var require_server = __commonJS({
         server2.on("listening", this.init.bind(this));
         server2.on("request", (req, res) => {
           if (check3(req)) {
-            debug12('intercepting request for path "%s"', path32);
+            debug12('intercepting request for path "%s"', path33);
             this.handleRequest(req, res);
           } else {
             let i = 0;
@@ -41017,8 +41017,8 @@ var require_userver = __commonJS({
        * @param options
        */
       attach(app2, options = {}) {
-        const path32 = this._computePath(options);
-        app2.any(path32, this.handleRequest.bind(this)).ws(path32, {
+        const path33 = this._computePath(options);
+        app2.any(path33, this.handleRequest.bind(this)).ws(path33, {
           compression: options.compression,
           idleTimeout: options.idleTimeout,
           maxBackpressure: options.maxBackpressure,
@@ -45444,7 +45444,7 @@ var require_dist4 = __commonJS({
     var zlib_1 = require("zlib");
     var accepts = require_accepts2();
     var stream_1 = require("stream");
-    var path32 = require("path");
+    var path33 = require("path");
     var engine_io_1 = require_engine_io();
     var client_1 = require_client();
     var events_1 = require("events");
@@ -45639,7 +45639,7 @@ var require_dist4 = __commonJS({
             res.writeHeader("cache-control", "public, max-age=0");
             res.writeHeader("content-type", "application/" + (isMap ? "json" : "javascript") + "; charset=utf-8");
             res.writeHeader("etag", expectedEtag);
-            const filepath = path32.join(__dirname, "../client-dist/", filename);
+            const filepath = path33.join(__dirname, "../client-dist/", filename);
             (0, uws_1.serveFile)(res, filepath);
           });
         }
@@ -45721,7 +45721,7 @@ var require_dist4 = __commonJS({
        * @private
        */
       static sendFile(filename, req, res) {
-        const readStream2 = (0, fs_1.createReadStream)(path32.join(__dirname, "../client-dist/", filename));
+        const readStream2 = (0, fs_1.createReadStream)(path33.join(__dirname, "../client-dist/", filename));
         const encoding = accepts(req).encodings(["br", "gzip", "deflate"]);
         const onError = (err) => {
           if (err) {
@@ -50002,8 +50002,8 @@ var require_node2 = __commonJS({
           }
           break;
         case "FILE":
-          var fs32 = require("fs");
-          stream5 = new fs32.SyncWriteStream(fd2, { autoClose: false });
+          var fs33 = require("fs");
+          stream5 = new fs33.SyncWriteStream(fd2, { autoClose: false });
           stream5._type = "fs";
           break;
         case "PIPE":
@@ -50530,7 +50530,7 @@ var require_path = __commonJS({
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.convertPosixPathToPattern = exports2.convertWindowsPathToPattern = exports2.convertPathToPattern = exports2.escapePosixPath = exports2.escapeWindowsPath = exports2.escape = exports2.removeLeadingDotSegment = exports2.makeAbsolute = exports2.unixify = void 0;
     var os3 = require("os");
-    var path32 = require("path");
+    var path33 = require("path");
     var IS_WINDOWS_PLATFORM = os3.platform() === "win32";
     var LEADING_DOT_SEGMENT_CHARACTERS_COUNT = 2;
     var POSIX_UNESCAPED_GLOB_SYMBOLS_RE = /(\\?)([()*?[\]{|}]|^!|[!+@](?=\()|\\(?![!()*+?@[\]{|}]))/g;
@@ -50542,7 +50542,7 @@ var require_path = __commonJS({
     }
     exports2.unixify = unixify;
     function makeAbsolute(cwd, filepath) {
-      return path32.resolve(cwd, filepath);
+      return path33.resolve(cwd, filepath);
     }
     exports2.makeAbsolute = makeAbsolute;
     function removeLeadingDotSegment(entry) {
@@ -51841,7 +51841,7 @@ var require_braces = __commonJS({
 var require_constants4 = __commonJS({
   "../../node_modules/.pnpm/picomatch@2.3.2/node_modules/picomatch/lib/constants.js"(exports2, module2) {
     "use strict";
-    var path32 = require("path");
+    var path33 = require("path");
     var WIN_SLASH = "\\\\/";
     var WIN_NO_SLASH = `[^${WIN_SLASH}]`;
     var DEFAULT_MAX_EXTGLOB_RECURSION = 0;
@@ -52015,7 +52015,7 @@ var require_constants4 = __commonJS({
       /* | */
       CHAR_ZERO_WIDTH_NOBREAK_SPACE: 65279,
       /* \uFEFF */
-      SEP: path32.sep,
+      SEP: path33.sep,
       /**
        * Create EXTGLOB_CHARS
        */
@@ -52042,7 +52042,7 @@ var require_constants4 = __commonJS({
 var require_utils5 = __commonJS({
   "../../node_modules/.pnpm/picomatch@2.3.2/node_modules/picomatch/lib/utils.js"(exports2) {
     "use strict";
-    var path32 = require("path");
+    var path33 = require("path");
     var win32 = process.platform === "win32";
     var {
       REGEX_BACKSLASH,
@@ -52071,7 +52071,7 @@ var require_utils5 = __commonJS({
       if (options && typeof options.windows === "boolean") {
         return options.windows;
       }
-      return win32 === true || path32.sep === "\\";
+      return win32 === true || path33.sep === "\\";
     };
     exports2.escapeLast = (input, char, lastIdx) => {
       const idx = input.lastIndexOf(char, lastIdx);
@@ -53435,7 +53435,7 @@ var require_parse3 = __commonJS({
 var require_picomatch = __commonJS({
   "../../node_modules/.pnpm/picomatch@2.3.2/node_modules/picomatch/lib/picomatch.js"(exports2, module2) {
     "use strict";
-    var path32 = require("path");
+    var path33 = require("path");
     var scan = require_scan();
     var parse4 = require_parse3();
     var utils = require_utils5();
@@ -53520,7 +53520,7 @@ var require_picomatch = __commonJS({
     };
     picomatch.matchBase = (input, glob, options, posix = utils.isWindows(options)) => {
       const regex = glob instanceof RegExp ? glob : picomatch.makeRe(glob, options);
-      return regex.test(path32.basename(input));
+      return regex.test(path33.basename(input));
     };
     picomatch.isMatch = (str, patterns, options) => picomatch(patterns, options)(str);
     picomatch.parse = (pattern, options) => {
@@ -53747,7 +53747,7 @@ var require_pattern = __commonJS({
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.isAbsolute = exports2.partitionAbsoluteAndRelative = exports2.removeDuplicateSlashes = exports2.matchAny = exports2.convertPatternsToRe = exports2.makeRe = exports2.getPatternParts = exports2.expandBraceExpansion = exports2.expandPatternsWithBraceExpansion = exports2.isAffectDepthOfReadingPattern = exports2.endsWithSlashGlobStar = exports2.hasGlobStar = exports2.getBaseDirectory = exports2.isPatternRelatedToParentDirectory = exports2.getPatternsOutsideCurrentDirectory = exports2.getPatternsInsideCurrentDirectory = exports2.getPositivePatterns = exports2.getNegativePatterns = exports2.isPositivePattern = exports2.isNegativePattern = exports2.convertToNegativePattern = exports2.convertToPositivePattern = exports2.isDynamicPattern = exports2.isStaticPattern = void 0;
-    var path32 = require("path");
+    var path33 = require("path");
     var globParent = require_glob_parent();
     var micromatch = require_micromatch();
     var GLOBSTAR = "**";
@@ -53842,7 +53842,7 @@ var require_pattern = __commonJS({
     }
     exports2.endsWithSlashGlobStar = endsWithSlashGlobStar;
     function isAffectDepthOfReadingPattern(pattern) {
-      const basename3 = path32.basename(pattern);
+      const basename3 = path33.basename(pattern);
       return endsWithSlashGlobStar(pattern) || isStaticPattern(basename3);
     }
     exports2.isAffectDepthOfReadingPattern = isAffectDepthOfReadingPattern;
@@ -53900,7 +53900,7 @@ var require_pattern = __commonJS({
     }
     exports2.partitionAbsoluteAndRelative = partitionAbsoluteAndRelative;
     function isAbsolute(pattern) {
-      return path32.isAbsolute(pattern);
+      return path33.isAbsolute(pattern);
     }
     exports2.isAbsolute = isAbsolute;
   }
@@ -54075,10 +54075,10 @@ var require_utils6 = __commonJS({
     exports2.array = array4;
     var errno = require_errno();
     exports2.errno = errno;
-    var fs32 = require_fs();
-    exports2.fs = fs32;
-    var path32 = require_path();
-    exports2.path = path32;
+    var fs33 = require_fs();
+    exports2.fs = fs33;
+    var path33 = require_path();
+    exports2.path = path33;
     var pattern = require_pattern();
     exports2.pattern = pattern;
     var stream4 = require_stream3();
@@ -54190,8 +54190,8 @@ var require_async = __commonJS({
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.read = void 0;
-    function read(path32, settings, callback) {
-      settings.fs.lstat(path32, (lstatError, lstat) => {
+    function read(path33, settings, callback) {
+      settings.fs.lstat(path33, (lstatError, lstat) => {
         if (lstatError !== null) {
           callFailureCallback(callback, lstatError);
           return;
@@ -54200,7 +54200,7 @@ var require_async = __commonJS({
           callSuccessCallback(callback, lstat);
           return;
         }
-        settings.fs.stat(path32, (statError, stat) => {
+        settings.fs.stat(path33, (statError, stat) => {
           if (statError !== null) {
             if (settings.throwErrorOnBrokenSymbolicLink) {
               callFailureCallback(callback, statError);
@@ -54232,13 +54232,13 @@ var require_sync = __commonJS({
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.read = void 0;
-    function read(path32, settings) {
-      const lstat = settings.fs.lstatSync(path32);
+    function read(path33, settings) {
+      const lstat = settings.fs.lstatSync(path33);
       if (!lstat.isSymbolicLink() || !settings.followSymbolicLink) {
         return lstat;
       }
       try {
-        const stat = settings.fs.statSync(path32);
+        const stat = settings.fs.statSync(path33);
         if (settings.markSymbolicLink) {
           stat.isSymbolicLink = () => true;
         }
@@ -54260,12 +54260,12 @@ var require_fs2 = __commonJS({
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.createFileSystemAdapter = exports2.FILE_SYSTEM_ADAPTER = void 0;
-    var fs32 = require("fs");
+    var fs33 = require("fs");
     exports2.FILE_SYSTEM_ADAPTER = {
-      lstat: fs32.lstat,
-      stat: fs32.stat,
-      lstatSync: fs32.lstatSync,
-      statSync: fs32.statSync
+      lstat: fs33.lstat,
+      stat: fs33.stat,
+      lstatSync: fs33.lstatSync,
+      statSync: fs33.statSync
     };
     function createFileSystemAdapter(fsMethods) {
       if (fsMethods === void 0) {
@@ -54282,12 +54282,12 @@ var require_settings = __commonJS({
   "../../node_modules/.pnpm/@nodelib+fs.stat@2.0.5/node_modules/@nodelib/fs.stat/out/settings.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
-    var fs32 = require_fs2();
+    var fs33 = require_fs2();
     var Settings = class {
       constructor(_options = {}) {
         this._options = _options;
         this.followSymbolicLink = this._getValue(this._options.followSymbolicLink, true);
-        this.fs = fs32.createFileSystemAdapter(this._options.fs);
+        this.fs = fs33.createFileSystemAdapter(this._options.fs);
         this.markSymbolicLink = this._getValue(this._options.markSymbolicLink, false);
         this.throwErrorOnBrokenSymbolicLink = this._getValue(this._options.throwErrorOnBrokenSymbolicLink, true);
       }
@@ -54309,17 +54309,17 @@ var require_out = __commonJS({
     var sync = require_sync();
     var settings_1 = require_settings();
     exports2.Settings = settings_1.default;
-    function stat(path32, optionsOrSettingsOrCallback, callback) {
+    function stat(path33, optionsOrSettingsOrCallback, callback) {
       if (typeof optionsOrSettingsOrCallback === "function") {
-        async.read(path32, getSettings(), optionsOrSettingsOrCallback);
+        async.read(path33, getSettings(), optionsOrSettingsOrCallback);
         return;
       }
-      async.read(path32, getSettings(optionsOrSettingsOrCallback), callback);
+      async.read(path33, getSettings(optionsOrSettingsOrCallback), callback);
     }
     exports2.stat = stat;
-    function statSync(path32, optionsOrSettings) {
+    function statSync(path33, optionsOrSettings) {
       const settings = getSettings(optionsOrSettings);
-      return sync.read(path32, settings);
+      return sync.read(path33, settings);
     }
     exports2.statSync = statSync;
     function getSettings(settingsOrOptions = {}) {
@@ -54444,8 +54444,8 @@ var require_utils7 = __commonJS({
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.fs = void 0;
-    var fs32 = require_fs3();
-    exports2.fs = fs32;
+    var fs33 = require_fs3();
+    exports2.fs = fs33;
   }
 });
 
@@ -54537,16 +54537,16 @@ var require_async2 = __commonJS({
           return;
         }
         const tasks = names.map((name28) => {
-          const path32 = common.joinPathSegments(directory, name28, settings.pathSegmentSeparator);
+          const path33 = common.joinPathSegments(directory, name28, settings.pathSegmentSeparator);
           return (done) => {
-            fsStat.stat(path32, settings.fsStatSettings, (error75, stats) => {
+            fsStat.stat(path33, settings.fsStatSettings, (error75, stats) => {
               if (error75 !== null) {
                 done(error75);
                 return;
               }
               const entry = {
                 name: name28,
-                path: path32,
+                path: path33,
                 dirent: utils.fs.createDirentFromStats(name28, stats)
               };
               if (settings.stats) {
@@ -54640,14 +54640,14 @@ var require_fs4 = __commonJS({
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.createFileSystemAdapter = exports2.FILE_SYSTEM_ADAPTER = void 0;
-    var fs32 = require("fs");
+    var fs33 = require("fs");
     exports2.FILE_SYSTEM_ADAPTER = {
-      lstat: fs32.lstat,
-      stat: fs32.stat,
-      lstatSync: fs32.lstatSync,
-      statSync: fs32.statSync,
-      readdir: fs32.readdir,
-      readdirSync: fs32.readdirSync
+      lstat: fs33.lstat,
+      stat: fs33.stat,
+      lstatSync: fs33.lstatSync,
+      statSync: fs33.statSync,
+      readdir: fs33.readdir,
+      readdirSync: fs33.readdirSync
     };
     function createFileSystemAdapter(fsMethods) {
       if (fsMethods === void 0) {
@@ -54664,15 +54664,15 @@ var require_settings2 = __commonJS({
   "../../node_modules/.pnpm/@nodelib+fs.scandir@2.1.5/node_modules/@nodelib/fs.scandir/out/settings.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
-    var path32 = require("path");
+    var path33 = require("path");
     var fsStat = require_out();
-    var fs32 = require_fs4();
+    var fs33 = require_fs4();
     var Settings = class {
       constructor(_options = {}) {
         this._options = _options;
         this.followSymbolicLinks = this._getValue(this._options.followSymbolicLinks, false);
-        this.fs = fs32.createFileSystemAdapter(this._options.fs);
-        this.pathSegmentSeparator = this._getValue(this._options.pathSegmentSeparator, path32.sep);
+        this.fs = fs33.createFileSystemAdapter(this._options.fs);
+        this.pathSegmentSeparator = this._getValue(this._options.pathSegmentSeparator, path33.sep);
         this.stats = this._getValue(this._options.stats, false);
         this.throwErrorOnBrokenSymbolicLink = this._getValue(this._options.throwErrorOnBrokenSymbolicLink, true);
         this.fsStatSettings = new fsStat.Settings({
@@ -54699,17 +54699,17 @@ var require_out2 = __commonJS({
     var sync = require_sync2();
     var settings_1 = require_settings2();
     exports2.Settings = settings_1.default;
-    function scandir(path32, optionsOrSettingsOrCallback, callback) {
+    function scandir(path33, optionsOrSettingsOrCallback, callback) {
       if (typeof optionsOrSettingsOrCallback === "function") {
-        async.read(path32, getSettings(), optionsOrSettingsOrCallback);
+        async.read(path33, getSettings(), optionsOrSettingsOrCallback);
         return;
       }
-      async.read(path32, getSettings(optionsOrSettingsOrCallback), callback);
+      async.read(path33, getSettings(optionsOrSettingsOrCallback), callback);
     }
     exports2.scandir = scandir;
-    function scandirSync(path32, optionsOrSettings) {
+    function scandirSync(path33, optionsOrSettings) {
       const settings = getSettings(optionsOrSettings);
-      return sync.read(path32, settings);
+      return sync.read(path33, settings);
     }
     exports2.scandirSync = scandirSync;
     function getSettings(settingsOrOptions = {}) {
@@ -55356,7 +55356,7 @@ var require_settings3 = __commonJS({
   "../../node_modules/.pnpm/@nodelib+fs.walk@1.2.8/node_modules/@nodelib/fs.walk/out/settings.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
-    var path32 = require("path");
+    var path33 = require("path");
     var fsScandir = require_out2();
     var Settings = class {
       constructor(_options = {}) {
@@ -55366,7 +55366,7 @@ var require_settings3 = __commonJS({
         this.deepFilter = this._getValue(this._options.deepFilter, null);
         this.entryFilter = this._getValue(this._options.entryFilter, null);
         this.errorFilter = this._getValue(this._options.errorFilter, null);
-        this.pathSegmentSeparator = this._getValue(this._options.pathSegmentSeparator, path32.sep);
+        this.pathSegmentSeparator = this._getValue(this._options.pathSegmentSeparator, path33.sep);
         this.fsScandirSettings = new fsScandir.Settings({
           followSymbolicLinks: this._options.followSymbolicLinks,
           fs: this._options.fs,
@@ -55428,7 +55428,7 @@ var require_reader2 = __commonJS({
   "../../node_modules/.pnpm/fast-glob@3.3.3/node_modules/fast-glob/out/readers/reader.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
-    var path32 = require("path");
+    var path33 = require("path");
     var fsStat = require_out();
     var utils = require_utils6();
     var Reader = class {
@@ -55441,7 +55441,7 @@ var require_reader2 = __commonJS({
         });
       }
       _getFullEntryPath(filepath) {
-        return path32.resolve(this._settings.cwd, filepath);
+        return path33.resolve(this._settings.cwd, filepath);
       }
       _makeEntry(stats, pattern) {
         const entry = {
@@ -55857,7 +55857,7 @@ var require_provider = __commonJS({
   "../../node_modules/.pnpm/fast-glob@3.3.3/node_modules/fast-glob/out/providers/provider.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
-    var path32 = require("path");
+    var path33 = require("path");
     var deep_1 = require_deep();
     var entry_1 = require_entry();
     var error_1 = require_error();
@@ -55871,7 +55871,7 @@ var require_provider = __commonJS({
         this.entryTransformer = new entry_2.default(this._settings);
       }
       _getRootDirectory(task) {
-        return path32.resolve(this._settings.cwd, task.base);
+        return path33.resolve(this._settings.cwd, task.base);
       }
       _getReaderOptions(task) {
         const basePath = task.base === "." ? "" : task.base;
@@ -56052,16 +56052,16 @@ var require_settings4 = __commonJS({
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.DEFAULT_FILE_SYSTEM_ADAPTER = void 0;
-    var fs32 = require("fs");
+    var fs33 = require("fs");
     var os3 = require("os");
     var CPU_COUNT = Math.max(os3.cpus().length, 1);
     exports2.DEFAULT_FILE_SYSTEM_ADAPTER = {
-      lstat: fs32.lstat,
-      lstatSync: fs32.lstatSync,
-      stat: fs32.stat,
-      statSync: fs32.statSync,
-      readdir: fs32.readdir,
-      readdirSync: fs32.readdirSync
+      lstat: fs33.lstat,
+      lstatSync: fs33.lstatSync,
+      stat: fs33.stat,
+      statSync: fs33.statSync,
+      readdir: fs33.readdir,
+      readdirSync: fs33.readdirSync
     };
     var Settings = class {
       constructor(_options = {}) {
@@ -59490,7 +59490,7 @@ A medium tracking shot follows the woman from behind as she ascends and approach
             const list2 = [
               {
                 id: "4fb36012e56e395b425569987f5dab0e",
-                md5: "fca3c269c5f325a65dafa663c9bb9773",
+                md5: "866672fc69b1bd9ce44625afc729726b",
                 path: "production_agent_decision.md",
                 name: "production_agent_decision",
                 description: "",
@@ -59526,7 +59526,7 @@ A medium tracking shot follows the woman from behind as she ascends and approach
               },
               {
                 id: "50b49d8af5d364665b463c23f6a4d8bb",
-                md5: "fbba66e0df2426996277b299710c3033",
+                md5: "ec74a35c476863674c9fb89a753802e8",
                 path: "script_agent_decision.md",
                 name: "script_agent_decision",
                 description: "",
@@ -60214,1281 +60214,6 @@ A medium tracking shot follows the woman from behind as she ascends and approach
         }
       }
     };
-  }
-});
-
-// src/lib/vendor.json
-var vendor_default;
-var init_vendor = __esm({
-  "src/lib/vendor.json"() {
-    vendor_default = {
-      "atlascloud.ts": '/**\r\n * DramaStudio AI\u4F9B\u5E94\u5546\u6A21\u677F - AtlasCloud MASS\r\n * @version 0.8\r\n *\r\n * \u8BF4\u660E\uFF1A\r\n * 1) \u6587\u672C\u63A5\u53E3\u4F7F\u7528 OpenAI \u517C\u5BB9\u57FA\u5730\u5740\uFF1Ahttps://api.atlascloud.ai/v1\r\n * 2) \u56FE\u7247/\u89C6\u9891\u4F7F\u7528 Atlas Cloud \u5A92\u4F53\u63A5\u53E3\uFF1Ahttps://api.atlascloud.ai/api/v1\r\n * 3) \u56FE\u7247/\u89C6\u9891\u4E3A\u5F02\u6B65\u4EFB\u52A1\uFF1A\u63D0\u4EA4\u540E\u8F6E\u8BE2 /api/v1/model/prediction/{id}\r\n */\r\n\r\n// ============================================================\r\n// \u7C7B\u578B\u5B9A\u4E49\r\n// ============================================================\r\n\r\ntype VideoMode =\r\n  | "singleImage"\r\n  | "startEndRequired"\r\n  | "endFrameOptional"\r\n  | "startFrameOptional"\r\n  | "text"\r\n  | (`videoReference:${number}` | `imageReference:${number}` | `audioReference:${number}`)[];\r\n\r\ninterface TextModel {\r\n  name: string;\r\n  modelName: string;\r\n  type: "text";\r\n  think: boolean;\r\n}\r\n\r\ninterface ImageModel {\r\n  name: string;\r\n  modelName: string;\r\n  type: "image";\r\n  mode: ("text" | "singleImage" | "multiReference")[];\r\n  associationSkills?: string;\r\n}\r\n\r\ninterface VideoModel {\r\n  name: string;\r\n  modelName: string;\r\n  type: "video";\r\n  mode: VideoMode[];\r\n  associationSkills?: string;\r\n  audio: "optional" | false | true;\r\n  durationResolutionMap: { duration: number[]; resolution: string[] }[];\r\n}\r\n\r\ninterface TTSModel {\r\n  name: string;\r\n  modelName: string;\r\n  type: "tts";\r\n  voices: { title: string; voice: string }[];\r\n}\r\n\r\ninterface VendorConfig {\r\n  id: string;\r\n  version: string;\r\n  name: string;\r\n  author: string;\r\n  description?: string;\r\n  icon?: string;\r\n  inputs: { key: string; label: string; type: "text" | "password" | "url"; required: boolean; placeholder?: string; disabled?: boolean }[];\r\n  inputValues: Record<string, string>;\r\n  models: (TextModel | ImageModel | VideoModel | TTSModel)[];\r\n}\r\n\r\ntype ReferenceList =\r\n  | { type: "image"; sourceType: "base64"; base64: string }\r\n  | { type: "audio"; sourceType: "base64"; base64: string }\r\n  | { type: "video"; sourceType: "base64"; base64: string };\r\n\r\ninterface ImageConfig {\r\n  prompt: string;\r\n  referenceList?: Extract<ReferenceList, { type: "image" }>[];\r\n  size: "1K" | "2K" | "4K";\r\n  aspectRatio: `${number}:${number}`;\r\n}\r\n\r\ninterface VideoConfig {\r\n  duration: number;\r\n  resolution: string;\r\n  aspectRatio: "16:9" | "9:16";\r\n  prompt: string;\r\n  referenceList?: ReferenceList[];\r\n  audio?: boolean;\r\n  mode: VideoMode[];\r\n}\r\n\r\ninterface TTSConfig {\r\n  text: string;\r\n  voice: string;\r\n  speechRate: number;\r\n  pitchRate: number;\r\n  volume: number;\r\n  referenceList?: Extract<ReferenceList, { type: "audio" }>[];\r\n}\r\n\r\ninterface PollResult {\r\n  completed: boolean;\r\n  data?: string;\r\n  error?: string;\r\n}\r\n\r\ntype AtlasVideoModelKind =\r\n  | "seedanceTextToVideo"\r\n  | "seedanceReferenceToVideo"\r\n  | "seedanceImageToVideo"\r\n  | "wanReferenceToVideo"\r\n  | "generic";\r\n\r\n// ============================================================\r\n// \u5168\u5C40\u58F0\u660E\r\n// ============================================================\r\n\r\ndeclare const axios: any;\r\ndeclare const logger: (msg: string) => void;\r\ndeclare const urlToBase64: (url: string) => Promise<string>;\r\ndeclare const pollTask: (fn: () => Promise<PollResult>, interval?: number, timeout?: number) => Promise<PollResult>;\r\ndeclare const createOpenAICompatible: any;\r\ndeclare const exports: {\r\n  vendor: VendorConfig;\r\n  textRequest: (m: TextModel, t: boolean, tl: 0 | 1 | 2 | 3) => any;\r\n  imageRequest: (c: ImageConfig, m: ImageModel) => Promise<string>;\r\n  videoRequest: (c: VideoConfig, m: VideoModel) => Promise<string>;\r\n  ttsRequest: (c: TTSConfig, m: TTSModel) => Promise<string>;\r\n  checkForUpdates?: () => Promise<{ hasUpdate: boolean; latestVersion: string; notice: string }>;\r\n  updateVendor?: () => Promise<string>;\r\n};\r\n\r\n// ============================================================\r\n// \u4F9B\u5E94\u5546\u914D\u7F6E\r\n// ============================================================\r\n\r\nconst vendor: VendorConfig = {\r\n  id: "atlascloud",\r\n  version: "1.0",\r\n  author: "AtlasCloud",\r\n  name: "AtlasCloud MASS",\r\n  description: "AtlasCloud \u5168\u6A21\u6001\u5E73\u53F0\u63A5\u5165 DramaStudio\u3002\u9ED8\u8BA4\u6309\u5B98\u65B9\u6587\u6863\u586B\u5199\u6587\u672C\u3001\u56FE\u7247\u3001\u89C6\u9891\u4E0E\u4EFB\u52A1\u8F6E\u8BE2\u8DEF\u5F84\u3002",\r\n  inputs: [\r\n    { key: "apiKey", label: "API\u5BC6\u94A5", type: "password", required: true, placeholder: "AtlasCloud API Key" },\r\n    { key: "chatBaseUrl", label: "\u6587\u672C\u57FA\u5730\u5740", type: "url", required: true, placeholder: "https://api.atlascloud.ai/v1", disabled: true },\r\n    { key: "mediaBaseUrl", label: "\u5A92\u4F53\u57FA\u5730\u5740", type: "url", required: true, placeholder: "https://api.atlascloud.ai/api/v1", disabled: true },\r\n  ],\r\n  inputValues: {\r\n    apiKey: "",\r\n    chatBaseUrl: "https://api.atlascloud.ai/v1",\r\n    mediaBaseUrl: "https://api.atlascloud.ai/api/v1",\r\n  },\r\n  models: [\r\n    { name: "DeepSeek V4 Pro", modelName: "deepseek-ai/deepseek-v4-pro", type: "text", think: false },\r\n    { name: "DeepSeek V4 Flash", modelName: "deepseek-ai/deepseek-v4-flash", type: "text", think: false },\r\n    { name: "Kimi K2.6", modelName: "moonshotai/kimi-k2.6", type: "text", think: false },\r\n    { name: "GLM 5.1", modelName: "zai-org/glm-5.1", type: "text", think: false },\r\n    { name: "MiniMax M2.7", modelName: "minimaxai/minimax-m2.7", type: "text", think: false },\r\n    { name: "GPT Image 2", modelName: "openai/gpt-image-2/text-to-image", type: "image", mode: ["text", "singleImage"] },\r\n    { name: "Nano Banana Pro", modelName: "google/nano-banana-pro/text-to-image", type: "image", mode: ["text", "singleImage", "multiReference"] },\r\n    { name: "Nano Banana 2", modelName: "google/nano-banana-2/text-to-image", type: "image", mode: ["text", "singleImage", "multiReference"] },\r\n    { name: "Seedream v5", modelName: "bytedance/seedream-v5.0-lite/sequential", type: "image", mode: ["text"] },\r\n    { name: "Qwen Image 2 Pro", modelName: "qwen/qwen-image-2.0-pro/text-to-image", type: "image", mode: ["text"] },\r\n    {\r\n      name: "Seedance 2.0 Audio-Visual",\r\n      modelName: "bytedance/seedance-2.0/text-to-video",\r\n      type: "video",\r\n      mode: ["text", "startFrameOptional", ["imageReference:9", "videoReference:3", "audioReference:3"]],\r\n      audio: "optional",\r\n      durationResolutionMap: [{ duration: [4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15], resolution: ["480p", "720p"] }],\r\n    },\r\n    {\r\n      name: "Seedance 2.0 Reference-to-Video",\r\n      modelName: "bytedance/seedance-2.0/reference-to-video",\r\n      type: "video",\r\n      mode: ["singleImage"],\r\n      audio: "optional",\r\n      durationResolutionMap: [{ duration: [4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15], resolution: ["480p", "720p", "1080p"] }],\r\n    },\r\n    {\r\n      name: "Seedance 2.0 Multi-Image-to-Video",\r\n      modelName: "bytedance/seedance-2.0/image-to-video",\r\n      type: "video",\r\n      mode: ["startFrameOptional", ["imageReference:4"]],\r\n      audio: "optional",\r\n      durationResolutionMap: [{ duration: [4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15], resolution: ["480p", "720p", "1080p"] }],\r\n    },\r\n    {\r\n      name: "Seedance 2.0 Fast Audio-Visual",\r\n      modelName: "bytedance/seedance-2.0-fast/text-to-video",\r\n      type: "video",\r\n      mode: ["text", "startFrameOptional", ["imageReference:9", "videoReference:3", "audioReference:3"]],\r\n      audio: "optional",\r\n      durationResolutionMap: [{ duration: [4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15], resolution: ["480p", "720p"] }],\r\n    },\r\n    {\r\n      name: "Seedance 2.0 Fast Reference-to-Video",\r\n      modelName: "bytedance/seedance-2.0-fast/reference-to-video",\r\n      type: "video",\r\n      mode: ["singleImage"],\r\n      audio: "optional",\r\n      durationResolutionMap: [{ duration: [4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15], resolution: ["480p", "720p"] }],\r\n    },\r\n    {\r\n      name: "Wan-2.7 Reference-to-video",\r\n      modelName: "alibaba/wan-2.7/reference-to-video",\r\n      type: "video",\r\n      mode: ["singleImage"],\r\n      audio: "optional",\r\n      durationResolutionMap: [{ duration: [2, 3, 4, 5, 6, 7, 8, 9, 10], resolution: ["720p", "1080p"] }],\r\n    },\r\n  ],\r\n};\r\n\r\n// ============================================================\r\n// \u8F85\u52A9\u5DE5\u5177\r\n// ============================================================\r\n\r\nconst getChatBaseUrl = () => vendor.inputValues.chatBaseUrl.replace(/\\/+$/, "");\r\n\r\nconst getMediaBaseUrl = () => vendor.inputValues.mediaBaseUrl.replace(/\\/+$/, "");\r\n\r\nconst joinUrl = (base: string, path: string) => `${base}${path.startsWith("/") ? "" : "/"}${path}`;\r\n\r\nconst getHeaders = () => {\r\n  if (!vendor.inputValues.apiKey) throw new Error("\u7F3A\u5C11 API Key");\r\n  return {\r\n    "Content-Type": "application/json",\r\n    Authorization: `Bearer ${vendor.inputValues.apiKey.replace(/^Bearer\\s+/i, "")}`,\r\n  };\r\n};\r\n\r\nconst readByPath = (obj: any, path: string): any => {\r\n  if (!obj || !path) return undefined;\r\n  const normalizedPath = path.replace(/\\[(\\d+)\\]/g, ".$1");\r\n  return normalizedPath.split(".").reduce((acc, key) => (acc == null ? undefined : acc[key]), obj);\r\n};\r\n\r\nconst pickFirstPath = (obj: any, paths: string[]): any => {\r\n  for (const path of paths) {\r\n    const value = readByPath(obj, path);\r\n    if (value !== undefined && value !== null && value !== "") return value;\r\n  }\r\n  return undefined;\r\n};\r\n\r\nconst extractTaskId = (data: any): string | undefined => {\r\n  return pickFirstPath(data, ["id", "taskId", "task_id", "data.id", "data.taskId", "data.task_id"]);\r\n};\r\n\r\nconst extractUrl = (data: any): string | undefined => {\r\n  return (\r\n    (Array.isArray(readByPath(data, "data.outputs")) ? readByPath(data, "data.outputs")[0] : undefined) ||\r\n    (Array.isArray(readByPath(data, "outputs")) ? readByPath(data, "outputs")[0] : undefined) ||\r\n    readByPath(data, "url") ||\r\n    readByPath(data, "video_url") ||\r\n    readByPath(data, "image_url") ||\r\n    readByPath(data, "data.url") ||\r\n    readByPath(data, "data.video_url") ||\r\n    readByPath(data, "data.image_url") ||\r\n    readByPath(data, "data.output.url") ||\r\n    readByPath(data, "data.output.video_url") ||\r\n    readByPath(data, "output.url")\r\n  );\r\n};\r\n\r\nconst extractB64 = (data: any): string | undefined => {\r\n  return pickFirstPath(data, ["b64_json", "data.b64_json", "data.0.b64_json", "data[0].b64_json"]);\r\n};\r\n\r\nconst extractStatus = (data: any): string => {\r\n  const statusRaw = pickFirstPath(data, ["status", "data.status", "data.state", "state"]);\r\n  return String(statusRaw || "").toLowerCase();\r\n};\r\n\r\nconst extractError = (data: any): string | undefined => {\r\n  return pickFirstPath(data, ["error.message", "message", "msg", "data.error.message", "data.message"]);\r\n};\r\n\r\nconst isDnsOrNetworkError = (err: any): boolean => {\r\n  const msg = String(err?.message || err || "");\r\n  return /ENOTFOUND|EAI_AGAIN|ECONNRESET|ETIMEDOUT|timeout/i.test(msg);\r\n};\r\n\r\nconst withNetworkRetry = async <T>(fn: () => Promise<T>, maxRetry = 3, waitMs = 1500): Promise<T> => {\r\n  let lastErr: any;\r\n  for (let i = 0; i < maxRetry; i += 1) {\r\n    try {\r\n      return await fn();\r\n    } catch (err) {\r\n      lastErr = err;\r\n      if (!isDnsOrNetworkError(err) || i === maxRetry - 1) throw err;\r\n      await new Promise((resolve) => setTimeout(resolve, waitMs * (i + 1)));\r\n    }\r\n  }\r\n  throw lastErr;\r\n};\r\n\r\nconst resolveAtlasImageModelName = (modelName: string, hasImageRefs: boolean): string => {\r\n  if (!hasImageRefs) return modelName;\r\n\r\n  switch (modelName) {\r\n    case "google/nano-banana-pro/text-to-image":\r\n      return "google/nano-banana-pro/edit";\r\n    case "google/nano-banana-2/text-to-image":\r\n      return "google/nano-banana-2/edit";\r\n    default:\r\n      return modelName;\r\n  }\r\n};\r\n\r\nconst resolveAtlasVideoModelKind = (modelName: string): AtlasVideoModelKind => {\r\n  if (modelName === "alibaba/wan-2.7/reference-to-video") return "wanReferenceToVideo";\r\n  if (/^bytedance\\/seedance-2\\.0(?:-fast)?\\/reference-to-video$/.test(modelName)) return "seedanceReferenceToVideo";\r\n  if (/^bytedance\\/seedance-2\\.0(?:-fast)?\\/image-to-video$/.test(modelName)) return "seedanceImageToVideo";\r\n  if (/^bytedance\\/seedance-2\\.0(?:-fast)?\\/text-to-video$/.test(modelName)) return "seedanceTextToVideo";\r\n  return "generic";\r\n};\r\n\r\nconst clampNumber = (value: unknown, min: number, max: number, fallback: number): number => {\r\n  const num = Number(value);\r\n  if (!Number.isFinite(num)) return fallback;\r\n  return Math.max(min, Math.min(max, num));\r\n};\r\n\r\nconst normalizeResolution = (value: unknown, allowed: string[], fallback: string): string => {\r\n  const lower = String(value || "").toLowerCase();\r\n  const matched = allowed.find((item) => item.toLowerCase() === lower);\r\n  if (matched) return matched;\r\n  if (/1080/.test(lower)) return allowed.find((item) => /1080/i.test(item)) || fallback;\r\n  if (/720/.test(lower)) return allowed.find((item) => /720/i.test(item)) || fallback;\r\n  if (/480/.test(lower)) return allowed.find((item) => /480/i.test(item)) || fallback;\r\n  return fallback;\r\n};\r\n\r\nconst getReferenceLimit = (\r\n  modes: VideoMode[],\r\n  prefix: "imageReference" | "videoReference" | "audioReference",\r\n): number | undefined => {\r\n  for (const mode of modes) {\r\n    if (!Array.isArray(mode)) continue;\r\n    for (const entry of mode) {\r\n      if (!entry.startsWith(`${prefix}:`)) continue;\r\n      const limit = Number(entry.split(":")[1]);\r\n      if (Number.isFinite(limit) && limit > 0) return limit;\r\n    }\r\n  }\r\n  return undefined;\r\n};\r\n\r\nconst limitReferences = (refs: string[], maxCount?: number): string[] => {\r\n  if (!maxCount || maxCount < 1) return refs;\r\n  return refs.slice(0, maxCount);\r\n};\r\n\r\nconst summarizeRefCount = (usedCount: number, rawCount: number): string => {\r\n  return usedCount === rawCount ? String(usedCount) : `${usedCount}/${rawCount}`;\r\n};\r\n\r\nconst buildAtlasVideoPayload = (config: VideoConfig, model: VideoModel) => {\r\n  const rawImageRefs = (config.referenceList || []).filter((r) => r.type === "image").map((r) => r.base64).filter(Boolean);\r\n  const rawVideoRefs = (config.referenceList || []).filter((r) => r.type === "video").map((r) => r.base64).filter(Boolean);\r\n  const rawAudioRefs = (config.referenceList || []).filter((r) => r.type === "audio").map((r) => r.base64).filter(Boolean);\r\n\r\n  const imageRefs = limitReferences(rawImageRefs, getReferenceLimit(model.mode, "imageReference"));\r\n  const videoRefs = limitReferences(rawVideoRefs, getReferenceLimit(model.mode, "videoReference"));\r\n  const audioRefs = limitReferences(rawAudioRefs, getReferenceLimit(model.mode, "audioReference"));\r\n  const kind = resolveAtlasVideoModelKind(model.modelName);\r\n  const ratio = config.aspectRatio || "16:9";\r\n  const shouldGenerateAudio = model.audio === true || (model.audio === "optional" && config.audio !== false);\r\n  const body: any = {\r\n    model: model.modelName,\r\n    prompt: config.prompt || "",\r\n  };\r\n\r\n  if (kind === "wanReferenceToVideo") {\r\n    if (imageRefs.length < 1) {\r\n      throw new Error(`${model.name} \u9700\u8981\u81F3\u5C11 1 \u5F20\u53C2\u8003\u56FE`);\r\n    }\r\n    body.images = [imageRefs[0]];\r\n    body.ratio = ratio;\r\n    body.duration = clampNumber(config.duration, 2, 10, 5);\r\n    body.resolution = normalizeResolution(config.resolution, ["720P", "1080P"], "720P");\r\n    body.prompt_extend = false;\r\n    body.seed = -1;\r\n  } else if (kind === "seedanceReferenceToVideo") {\r\n    if (imageRefs.length < 1) {\r\n      throw new Error(`${model.name} \u9700\u8981\u81F3\u5C11 1 \u5F20\u53C2\u8003\u56FE`);\r\n    }\r\n    if (shouldGenerateAudio) body.generate_audio = true;\r\n    body.images = [imageRefs[0]];\r\n    body.ratio = ratio;\r\n    body.duration = clampNumber(config.duration, 4, 15, 5);\r\n    body.resolution = normalizeResolution(config.resolution, ["480p", "720p", "1080p"], "720p");\r\n    body.watermark = false;\r\n  } else if (kind === "seedanceImageToVideo") {\r\n    if (imageRefs.length < 1) {\r\n      throw new Error(`${model.name} \u9700\u8981\u81F3\u5C11 1 \u5F20\u53C2\u8003\u56FE`);\r\n    }\r\n    if (shouldGenerateAudio) body.generate_audio = true;\r\n    body.images = imageRefs;\r\n    body.ratio = ratio;\r\n    body.duration = clampNumber(config.duration, 4, 15, 5);\r\n    body.resolution = normalizeResolution(config.resolution, ["480p", "720p", "1080p"], "720p");\r\n    body.watermark = false;\r\n  } else {\r\n    if (shouldGenerateAudio) body.generate_audio = true;\r\n    if (imageRefs.length > 0) body.reference_images = imageRefs;\r\n    if (videoRefs.length > 0) body.reference_videos = videoRefs;\r\n    if (audioRefs.length > 0) body.reference_audios = audioRefs;\r\n    body.ratio = ratio;\r\n    body.duration = clampNumber(config.duration, 4, 15, 5);\r\n    body.resolution = normalizeResolution(config.resolution, ["480p", "720p"], "720p");\r\n    body.watermark = false;\r\n  }\r\n\r\n  return {\r\n    body,\r\n    summary: `kind=${kind} imageRefs=${summarizeRefCount(imageRefs.length, rawImageRefs.length)} videoRefs=${summarizeRefCount(videoRefs.length, rawVideoRefs.length)} audioRefs=${summarizeRefCount(audioRefs.length, rawAudioRefs.length)} resolution=${body.resolution} duration=${body.duration}${shouldGenerateAudio ? " audio=on" : " audio=off"}`,\r\n  };\r\n};\r\n\r\n// ============================================================\r\n// \u9002\u914D\u5668\u51FD\u6570\r\n// ============================================================\r\n\r\nconst textRequest = (model: TextModel, think: boolean, thinkLevel: 0 | 1 | 2 | 3) => {\r\n  if (!vendor.inputValues.apiKey) throw new Error("\u7F3A\u5C11 API Key");\r\n  const apiKey = vendor.inputValues.apiKey.replace(/^Bearer\\s+/i, "");\r\n  const effortMap: Record<number, string> = { 0: "minimal", 1: "low", 2: "medium", 3: "high" };\r\n\r\n  return createOpenAICompatible({\r\n    name: "atlascloud",\r\n    baseURL: getChatBaseUrl(),\r\n    apiKey,\r\n    fetch: async (url: string, options?: RequestInit) => {\r\n      const rawBody = JSON.parse((options?.body as string) ?? "{}");\r\n      const body = think\r\n        ? {\r\n          ...rawBody,\r\n          thinking: { type: "enabled" },\r\n          reasoning_effort: effortMap[thinkLevel],\r\n        }\r\n        : rawBody;\r\n      return await fetch(url, { ...options, body: JSON.stringify(body) });\r\n    },\r\n  }).chatModel(model.modelName);\r\n};\r\n\r\nconst imageRequest = async (config: ImageConfig, model: ImageModel): Promise<string> => {\r\n  const headers = getHeaders();\r\n  const url = joinUrl(getMediaBaseUrl(), "/model/generateImage");\r\n  const sizeToResolution: Record<ImageConfig["size"], string> = {\r\n    "1K": "1k",\r\n    "2K": "2k",\r\n    "4K": "4k",\r\n  };\r\n  const imageRefs = (config.referenceList || []).map((ref) => ref.base64).filter(Boolean);\r\n  const resolvedModelName = resolveAtlasImageModelName(model.modelName, imageRefs.length > 0);\r\n  const isNanoModel = /^google\\/nano-banana-(pro|2)\\//.test(resolvedModelName);\r\n  const supportsImageConditioning = /^(openai\\/gpt-image-2\\/text-to-image|google\\/nano-banana-(pro|2)\\/edit)$/.test(resolvedModelName);\r\n\r\n  const body: any = {\r\n    model: resolvedModelName,\r\n    prompt: config.prompt || "",\r\n  };\r\n  if (supportsImageConditioning && imageRefs.length > 0) {\r\n    body.images = imageRefs;\r\n  }\r\n  if (isNanoModel) {\r\n    body.aspect_ratio = config.aspectRatio || "16:9";\r\n    body.resolution = sizeToResolution[config.size || "1K"] || "1k";\r\n  }\r\n\r\n  logger(`[AtlasCloud \u56FE\u7247] \u63D0\u4EA4\u4EFB\u52A1: ${model.modelName} -> ${resolvedModelName}, refs=${imageRefs.length}`);\r\n  const submitResp = await axios.post(url, body, { headers });\r\n  const submitData = submitResp.data;\r\n\r\n  // \u540C\u6B65\u8FD4\u56DE\uFF08\u76F4\u63A5\u62FF\u56FE\uFF09\r\n  const syncB64 = extractB64(submitData);\r\n  if (syncB64) return syncB64;\r\n  const syncUrl = extractUrl(submitData);\r\n  if (syncUrl) return await urlToBase64(syncUrl);\r\n\r\n  // \u5F02\u6B65\u8FD4\u56DE\uFF08\u62FF taskId \u518D\u8F6E\u8BE2\uFF09\r\n  const taskId = extractTaskId(submitData);\r\n  if (!taskId) {\r\n    throw new Error(`\u56FE\u7247\u4EFB\u52A1\u63D0\u4EA4\u5931\u8D25\uFF1A\u672A\u83B7\u53D6\u5230\u4EFB\u52A1ID\u3002\u539F\u59CB\u54CD\u5E94\uFF1A${JSON.stringify(submitData).slice(0, 500)}`);\r\n  }\r\n\r\n  const pollResult = await pollTask(\r\n    async (): Promise<PollResult> => {\r\n      const resultUrl = joinUrl(getMediaBaseUrl(), `/model/prediction/${taskId}`);\r\n      const resultResp = await axios.get(resultUrl, { headers });\r\n      const data = resultResp.data;\r\n      const status = extractStatus(data);\r\n\r\n      if (["succeeded", "success", "done", "completed"].includes(status)) {\r\n        const b64 = extractB64(data);\r\n        if (b64) return { completed: true, data: b64 };\r\n        const mediaUrl = extractUrl(data);\r\n        if (mediaUrl) return { completed: true, data: mediaUrl };\r\n        return { completed: true, error: "\u4EFB\u52A1\u6210\u529F\u4F46\u672A\u8FD4\u56DE\u7ED3\u679C\u5730\u5740" };\r\n      }\r\n      if (["failed", "error", "cancelled", "canceled", "expired"].includes(status)) {\r\n        return { completed: true, error: extractError(data) || "\u56FE\u7247\u751F\u6210\u5931\u8D25" };\r\n      }\r\n      return { completed: false };\r\n    },\r\n    3000,\r\n    600000,\r\n  );\r\n\r\n  if (pollResult.error) throw new Error(pollResult.error);\r\n  if (!pollResult.data) throw new Error("\u56FE\u7247\u751F\u6210\u5931\u8D25\uFF1A\u8F6E\u8BE2\u672A\u8FD4\u56DE\u6570\u636E");\r\n  if (pollResult.data.startsWith("data:")) return pollResult.data;\r\n  if (pollResult.data.startsWith("http")) return await urlToBase64(pollResult.data);\r\n  return pollResult.data;\r\n};\r\n\r\nconst videoRequest = async (config: VideoConfig, model: VideoModel): Promise<string> => {\r\n  const headers = getHeaders();\r\n  const url = joinUrl(getMediaBaseUrl(), "/model/generateVideo");\r\n  const { body, summary } = buildAtlasVideoPayload(config, model);\r\n\r\n  logger(`[AtlasCloud \u89C6\u9891] \u63D0\u4EA4\u4EFB\u52A1: ${model.modelName}, ${summary}`);\r\n  const submitResp: any = await withNetworkRetry<any>(() => axios.post(url, body, { headers }), 3, 1500);\r\n  const submitData = submitResp.data;\r\n\r\n  const taskId = extractTaskId(submitData);\r\n  if (!taskId) {\r\n    const syncUrl = extractUrl(submitData);\r\n    if (syncUrl) return await urlToBase64(syncUrl);\r\n    throw new Error(`\u89C6\u9891\u4EFB\u52A1\u63D0\u4EA4\u5931\u8D25\uFF1A\u672A\u83B7\u53D6\u5230\u4EFB\u52A1ID\u3002\u539F\u59CB\u54CD\u5E94\uFF1A${JSON.stringify(submitData).slice(0, 500)}`);\r\n  }\r\n\r\n  const pollResult = await pollTask(\r\n    async (): Promise<PollResult> => {\r\n      const resultUrl = joinUrl(getMediaBaseUrl(), `/model/prediction/${taskId}`);\r\n      const resultResp: any = await withNetworkRetry<any>(() => axios.get(resultUrl, { headers }), 3, 1200);\r\n      const data = resultResp.data;\r\n      const status = extractStatus(data);\r\n\r\n      if (["succeeded", "success", "done", "completed"].includes(status)) {\r\n        const mediaUrl = extractUrl(data);\r\n        if (mediaUrl) return { completed: true, data: mediaUrl };\r\n        return { completed: true, error: "\u4EFB\u52A1\u6210\u529F\u4F46\u672A\u8FD4\u56DE\u89C6\u9891\u5730\u5740" };\r\n      }\r\n      if (["failed", "error", "cancelled", "canceled", "expired"].includes(status)) {\r\n        return { completed: true, error: extractError(data) || "\u89C6\u9891\u751F\u6210\u5931\u8D25" };\r\n      }\r\n      return { completed: false };\r\n    },\r\n    5000,\r\n    1800000,\r\n  );\r\n\r\n  if (pollResult.error) throw new Error(pollResult.error);\r\n  if (!pollResult.data) throw new Error("\u89C6\u9891\u751F\u6210\u5931\u8D25\uFF1A\u8F6E\u8BE2\u672A\u8FD4\u56DE\u6570\u636E");\r\n  return await urlToBase64(pollResult.data);\r\n};\r\n\r\nconst ttsRequest = async (_config: TTSConfig, _model: TTSModel): Promise<string> => {\r\n  // AtlasCloud \u5F53\u524D\u7248\u672C\u5148\u4E0D\u63A5 TTS\u3002\r\n  return "";\r\n};\r\n\r\nconst checkForUpdates = async (): Promise<{ hasUpdate: boolean; latestVersion: string; notice: string }> => {\r\n  return {\r\n    hasUpdate: false,\r\n    latestVersion: vendor.version,\r\n    notice: "AtlasCloud MASS \u521D\u7A3F\u3002",\r\n  };\r\n};\r\n\r\nconst updateVendor = async (): Promise<string> => {\r\n  return "";\r\n};\r\n\r\n// ============================================================\r\n// \u5BFC\u51FA\r\n// ============================================================\r\n\r\nexports.vendor = vendor;\r\nexports.textRequest = textRequest;\r\nexports.imageRequest = imageRequest;\r\nexports.videoRequest = videoRequest;\r\nexports.ttsRequest = ttsRequest;\r\nexports.checkForUpdates = checkForUpdates;\r\nexports.updateVendor = updateVendor;\r\n\r\nexport { };\r\n',
-      "deepseek.ts": '/**\r\n * DramaStudio AI\u4F9B\u5E94\u5546\u6A21\u677F - DeepSeek\r\n * @version 2.0\r\n */\r\n\r\n// ============================================================\r\n// \u7C7B\u578B\u5B9A\u4E49\r\n// ============================================================\r\n\r\ntype VideoMode =\r\n  | "singleImage"\r\n  | "startEndRequired"\r\n  | "endFrameOptional"\r\n  | "startFrameOptional"\r\n  | "text"\r\n  | (`videoReference:${number}` | `imageReference:${number}` | `audioReference:${number}`)[];\r\n\r\ninterface TextModel {\r\n  name: string;\r\n  modelName: string;\r\n  type: "text";\r\n  think: boolean;\r\n}\r\n\r\ninterface ImageModel {\r\n  name: string;\r\n  modelName: string;\r\n  type: "image";\r\n  mode: ("text" | "singleImage" | "multiReference")[];\r\n  associationSkills?: string;\r\n}\r\n\r\ninterface VideoModel {\r\n  name: string;\r\n  modelName: string;\r\n  type: "video";\r\n  mode: VideoMode[];\r\n  associationSkills?: string;\r\n  audio: "optional" | false | true;\r\n  durationResolutionMap: { duration: number[]; resolution: string[] }[];\r\n}\r\n\r\ninterface TTSModel {\r\n  name: string;\r\n  modelName: string;\r\n  type: "tts";\r\n  voices: { title: string; voice: string }[];\r\n}\r\n\r\ninterface VendorConfig {\r\n  id: string;\r\n  version: string;\r\n  name: string;\r\n  author: string;\r\n  description?: string;\r\n  icon?: string;\r\n  inputs: { key: string; label: string; type: "text" | "password" | "url"; required: boolean; placeholder?: string }[];\r\n  inputValues: Record<string, string>;\r\n  models: (TextModel | ImageModel | VideoModel | TTSModel)[];\r\n}\r\n\r\ninterface ImageConfig {\r\n  prompt: string;\r\n  imageBase64: string[];\r\n  size: "1K" | "2K" | "4K";\r\n  aspectRatio: `${number}:${number}`;\r\n}\r\n\r\ninterface VideoConfig {\r\n  duration: number;\r\n  resolution: string;\r\n  aspectRatio: "16:9" | "9:16";\r\n  prompt: string;\r\n  imageBase64?: string[];\r\n  audio?: boolean;\r\n  mode: VideoMode[];\r\n}\r\n\r\ninterface TTSConfig {\r\n  text: string;\r\n  voice: string;\r\n  speechRate: number;\r\n  pitchRate: number;\r\n  volume: number;\r\n}\r\n\r\ninterface PollResult {\r\n  completed: boolean;\r\n  data?: string;\r\n  error?: string;\r\n}\r\n\r\n// ============================================================\r\n// \u5168\u5C40\u58F0\u660E\r\n// ============================================================\r\n\r\ndeclare const axios: any;\r\ndeclare const logger: (msg: string) => void;\r\ndeclare const jsonwebtoken: any;\r\ndeclare const zipImage: (base64: string, size: number) => Promise<string>;\r\ndeclare const zipImageResolution: (base64: string, w: number, h: number) => Promise<string>;\r\ndeclare const mergeImages: (base64Arr: string[], maxSize?: string) => Promise<string>;\r\ndeclare const urlToBase64: (url: string) => Promise<string>;\r\ndeclare const pollTask: (fn: () => Promise<PollResult>, interval?: number, timeout?: number) => Promise<PollResult>;\r\ndeclare const createOpenAI: any;\r\ndeclare const createDeepSeek: any;\r\ndeclare const createZhipu: any;\r\ndeclare const createQwen: any;\r\ndeclare const createAnthropic: any;\r\ndeclare const createOpenAICompatible: any;\r\ndeclare const createXai: any;\r\ndeclare const createMinimax: any;\r\ndeclare const createGoogleGenerativeAI: any;\r\ndeclare const exports: {\r\n  vendor: VendorConfig;\r\n  textRequest: (m: TextModel, t: boolean, tl: 0 | 1 | 2 | 3) => any;\r\n  imageRequest: (c: ImageConfig, m: ImageModel) => Promise<string>;\r\n  videoRequest: (c: VideoConfig, m: VideoModel) => Promise<string>;\r\n  ttsRequest: (c: TTSConfig, m: TTSModel) => Promise<string>;\r\n  checkForUpdates?: () => Promise<{ hasUpdate: boolean; latestVersion: string; notice: string }>;\r\n  updateVendor?: () => Promise<string>;\r\n};\r\n\r\n// ============================================================\r\n// \u4F9B\u5E94\u5546\u914D\u7F6E\r\n// ============================================================\r\n\r\nconst vendor: VendorConfig = {\r\n  id: "deepseek",\r\n  version: "2.0",\r\n  author: "DramaStudio",\r\n  name: "DeepSeek",\r\n  description:\r\n    "DeepSeek \u5B98\u65B9\u63A5\u53E3\u9002\u914D\uFF0C\u652F\u6301 V4 \u7CFB\u5217\u6A21\u578B\u4E0E\u601D\u8003\u6A21\u5F0F\uFF08\u601D\u7EF4\u94FE\u8F93\u51FA\uFF09\u3002\\n\\n[\u524D\u5F80\u5E73\u53F0](https://platform.deepseek.com/)",\r\n  icon: "",\r\n  inputs: [\r\n    { key: "apiKey", label: "API\u5BC6\u94A5", type: "password", required: true },\r\n    { key: "baseUrl", label: "\u8BF7\u6C42\u5730\u5740", type: "url", required: true, placeholder: "\u793A\u4F8B\uFF1Ahttps://api.deepseek.com" },\r\n  ],\r\n  inputValues: {\r\n    apiKey: "",\r\n    baseUrl: "https://api.deepseek.com/v1",\r\n  },\r\n  models: [\r\n    { name: "DeepSeek V4 Pro", modelName: "deepseek-v4-pro", type: "text", think: true },\r\n    { name: "DeepSeek V4 Flash", modelName: "deepseek-v4-flash", type: "text", think: true },\r\n  ],\r\n};\r\n\r\n// ============================================================\r\n// \u9002\u914D\u5668\u51FD\u6570\r\n// ============================================================\r\n\r\nconst textRequest = (model: TextModel, think: boolean, thinkLevel: 0 | 1 | 2 | 3) => {\r\n  if (!vendor.inputValues.apiKey) throw new Error("\u7F3A\u5C11API Key");\r\n  const apiKey = vendor.inputValues.apiKey.replace(/^Bearer\\s+/i, "");\r\n\r\n  // DeepSeek \u601D\u8003\u5F3A\u5EA6\u4EC5\u652F\u6301 high / max\uFF08low\u3001medium \u4F1A\u88AB\u6620\u5C04\u4E3A high\uFF0Cxhigh \u4F1A\u88AB\u6620\u5C04\u4E3A max\uFF09\r\n  // thinkLevel: 0/1/2 \u2192 high, 3 \u2192 max\r\n  const effortMap: Record<0 | 1 | 2 | 3, "high" | "max"> = {\r\n    0: "high",\r\n    1: "high",\r\n    2: "high",\r\n    3: "max",\r\n  };\r\n\r\n  const enableThinking = model.think && think;\r\n  const extraBody: Record<string, any> = {\r\n    thinking: { type: enableThinking ? "enabled" : "disabled" },\r\n  };\r\n  if (enableThinking) {\r\n    extraBody.reasoning_effort = effortMap[thinkLevel];\r\n  }\r\n\r\n  return createDeepSeek({\r\n    baseURL: vendor.inputValues.baseUrl,\r\n    apiKey,\r\n    extraBody,\r\n  }).chat(model.modelName);\r\n};\r\n\r\nconst imageRequest = async (config: ImageConfig, model: ImageModel): Promise<string> => {\r\n  return "";\r\n};\r\n\r\nconst videoRequest = async (config: VideoConfig, model: VideoModel): Promise<string> => {\r\n  return "";\r\n};\r\n\r\nconst ttsRequest = async (config: TTSConfig, model: TTSModel): Promise<string> => {\r\n  return "";\r\n};\r\n\r\nconst checkForUpdates = async (): Promise<{ hasUpdate: boolean; latestVersion: string; notice: string }> => {\r\n  return { hasUpdate: false, latestVersion: "2.0", notice: "" };\r\n};\r\n\r\nconst updateVendor = async (): Promise<string> => {\r\n  return "";\r\n};\r\n\r\n// ============================================================\r\n// \u5BFC\u51FA\r\n// ============================================================\r\n\r\nexports.vendor = vendor;\r\nexports.textRequest = textRequest;\r\nexports.imageRequest = imageRequest;\r\nexports.videoRequest = videoRequest;\r\nexports.ttsRequest = ttsRequest;\r\nexports.checkForUpdates = checkForUpdates;\r\nexports.updateVendor = updateVendor;\r\n\r\nexport { };',
-      "grsai.ts": '/**\r\n * DramaStudio AI\u4F9B\u5E94\u5546\u6A21\u677F\r\n * @version 2.0\r\n */\r\n\r\n// ============================================================\r\n// \u7C7B\u578B\u5B9A\u4E49\r\n// ============================================================\r\n\r\ntype VideoMode =\r\n  | "singleImage" //\u5355\u56FE\u53C2\u8003\r\n  | "startEndRequired" //\u9996\u5C3E\u5E27\uFF08\u4E24\u5F20\u90FD\u5F97\u6709\uFF09\r\n  | "endFrameOptional" //\u9996\u5C3E\u5E27\uFF08\u5C3E\u5E27\u53EF\u9009\uFF09\r\n  | "startFrameOptional" //\u9996\u5C3E\u5E27\uFF08\u9996\u5E27\u53EF\u9009\uFF09\r\n  | "text" //\u6587\u672C\r\n  | (\r\n      | `videoReference:${number}`\r\n      | `imageReference:${number}`\r\n      | `audioReference:${number}`\r\n    )[]; //\u591A\u53C2\u8003\uFF08\u6570\u5B57\u4EE3\u8868\u9650\u5236\u6570\u91CF\uFF09\r\n\r\ninterface TextModel {\r\n  name: string;\r\n  modelName: string;\r\n  type: "text";\r\n  think: boolean;\r\n}\r\n\r\ninterface ImageModel {\r\n  name: string;\r\n  modelName: string;\r\n  type: "image";\r\n  mode: ("text" | "singleImage" | "multiReference")[];\r\n  associationSkills?: string;\r\n}\r\n\r\ninterface VideoModel {\r\n  name: string;\r\n  modelName: string;\r\n  type: "video";\r\n  mode: VideoMode[];\r\n  associationSkills?: string;\r\n  audio: "optional" | false | true;\r\n  durationResolutionMap: { duration: number[]; resolution: string[] }[];\r\n}\r\n\r\ninterface TTSModel {\r\n  name: string;\r\n  modelName: string;\r\n  type: "tts";\r\n  voices: { title: string; voice: string }[];\r\n}\r\n\r\ninterface VendorConfig {\r\n  id: string; //\u552F\u4E00ID\uFF0C\u4F5C\u4E3A\u6587\u4EF6\u540D\u5B58\u50A8\u7528\u6237\u78C1\u76D8\u4E0A\uFF0C\u7981\u6B62\u7B26\u53F7\r\n  version: string; //\u7248\u672C\u53F7\uFF0C\u683C\u5F0F\u4E3Ax.y\uFF0C\u9700\u9075\u5B88\u8BED\u4E49\u5316\u7248\u672C\u63A7\u5236\r\n  name: string; //\u4F9B\u5E94\u5546\u540D\u79F0\r\n  author: string; //\u4F5C\u8005\r\n  description?: string; //\u63CF\u8FF0\uFF0C\u652F\u6301Markdown\u683C\u5F0F\r\n  icon?: string; //\u56FE\u6807\uFF0C\u4EC5\u652F\u6301Base64\u683C\u5F0F\uFF0C\u5EFA\u8BAE\u5C3A\u5BF8\u4E3A128x128\u50CF\u7D20\r\n  inputs: {\r\n    key: string;\r\n    label: string;\r\n    type: "text" | "password" | "url";\r\n    required: boolean;\r\n    placeholder?: string;\r\n  }[];\r\n  inputValues: Record<string, string>;\r\n  models: (TextModel | ImageModel | VideoModel | TTSModel)[];\r\n}\r\n\r\ntype ReferenceList =\r\n  | { type: "image"; sourceType: "base64"; base64: string }\r\n  | { type: "audio"; sourceType: "base64"; base64: string }\r\n  | { type: "video"; sourceType: "base64"; base64: string };\r\n\r\ninterface ImageConfig {\r\n  prompt: string;\r\n  referenceList?: Extract<ReferenceList, { type: "image" }>[];\r\n  size: "1K" | "2K" | "4K";\r\n  aspectRatio: `${number}:${number}`;\r\n}\r\n\r\ninterface VideoConfig {\r\n  duration: number;\r\n  resolution: string;\r\n  aspectRatio: "16:9" | "9:16";\r\n  prompt: string;\r\n  referenceList?: ReferenceList[];\r\n  audio?: boolean;\r\n  mode: VideoMode[];\r\n}\r\n\r\ninterface TTSConfig {\r\n  text: string;\r\n  voice: string;\r\n  speechRate: number;\r\n  pitchRate: number;\r\n  volume: number;\r\n  referenceList?: Extract<ReferenceList, { type: "audio" }>[];\r\n}\r\n\r\ninterface PollResult {\r\n  completed: boolean;\r\n  data?: string;\r\n  error?: string;\r\n}\r\n\r\n// ============================================================\r\n// \u5168\u5C40\u58F0\u660E\r\n// ============================================================\r\n\r\ndeclare const axios: any; // HTTP\u8BF7\u6C42\u5E93\r\ndeclare const logger: (msg: string) => void; // \u65E5\u5FD7\u51FD\u6570\r\ndeclare const jsonwebtoken: any; // JWT\u5904\u7406\u5E93\r\ndeclare const zipImage: (base64: string, size: number) => Promise<string>; // \u56FE\u7247\u538B\u7F29\u51FD\u6570\uFF0C\u8FD4\u56DE\u6709\u5934base64\u5B57\u7B26\u4E32\r\ndeclare const zipImageResolution: (\r\n  base64: string,\r\n  w: number,\r\n  h: number,\r\n) => Promise<string>; // \u56FE\u7247\u5206\u8FA8\u7387\u8C03\u6574\u51FD\u6570\uFF0C\u8FD4\u56DE\u6709\u5934base64\u5B57\u7B26\u4E32\r\ndeclare const mergeImages: (\r\n  base64Arr: string[],\r\n  maxSize?: string,\r\n) => Promise<string>; // \u56FE\u7247\u5408\u6210\u51FD\u6570\uFF0C\u8FD4\u56DE\u6709\u5934base64\u5B57\u7B26\u4E32\r\ndeclare const urlToBase64: (url: string) => Promise<string>; // URL\u8F6CBase64\u51FD\u6570\uFF0C\u8FD4\u56DE\u6709\u5934base64\u5B57\u7B26\u4E32\r\ndeclare const pollTask: (\r\n  fn: () => Promise<PollResult>,\r\n  interval?: number,\r\n  timeout?: number,\r\n) => Promise<PollResult>; // \u8F6E\u8BE2\u51FD\u6570\uFF0Cfn\u4E3A\u5F02\u6B65\u51FD\u6570\uFF0Cinterval\u4E3A\u8F6E\u8BE2\u95F4\u9694\uFF0Ctimeout\u4E3A\u8D85\u65F6\u65F6\u95F4\uFF0C\u8FD4\u56DEfn\u7684\u7ED3\u679C\r\ndeclare const createOpenAI: any;\r\ndeclare const createDeepSeek: any;\r\ndeclare const createZhipu: any;\r\ndeclare const createQwen: any;\r\ndeclare const createAnthropic: any;\r\ndeclare const createOpenAICompatible: any;\r\ndeclare const createXai: any;\r\ndeclare const createMinimax: any;\r\ndeclare const createGoogleGenerativeAI: any;\r\ndeclare const exports: {\r\n  vendor: VendorConfig;\r\n  textRequest: (m: TextModel, t: boolean, tl: 0 | 1 | 2 | 3) => any; //\u6587\u672C\u6A21\u578B\r\n  imageRequest: (c: ImageConfig, m: ImageModel) => Promise<string>; //\u56FE\u7247\u6A21\u578B\uFF0C\u8FD4\u56DE\u6709\u5934base64\u5B57\u7B26\u4E32\r\n  videoRequest: (c: VideoConfig, m: VideoModel) => Promise<string>; //\u89C6\u9891\u6A21\u578B\uFF0C\u8FD4\u56DE\u6709\u5934base64\u5B57\u7B26\u4E32\r\n  ttsRequest: (c: TTSConfig, m: TTSModel) => Promise<string>; //\uFF08\u6682\u672A\u5F00\u653E\uFF09\u8BED\u97F3\u6A21\u578B\uFF0C\u8FD4\u56DE\u6709\u5934base64\u5B57\u7B26\u4E32\r\n  checkForUpdates?: () => Promise<{\r\n    hasUpdate: boolean;\r\n    latestVersion: string;\r\n    notice: string;\r\n  }>; //\u68C0\u67E5\u66F4\u65B0\u51FD\u6570\uFF0C\u8FD4\u56DE\u662F\u5426\u6709\u66F4\u65B0\u548C\u6700\u65B0\u7248\u672C\u53F7\u548C\u66F4\u516C\u544A\uFF08\u652F\u6301Markdown\u683C\u5F0F\uFF09\r\n  updateVendor?: () => Promise<string>; //\u66F4\u65B0\u51FD\u6570\uFF0C\u8FD4\u56DE\u6700\u65B0\u7684\u4EE3\u7801\u6587\u672C\r\n};\r\n\r\n// ============================================================\r\n// \u4F9B\u5E94\u5546\u914D\u7F6E\r\n// ============================================================\r\n\r\nconst vendor: VendorConfig = {\r\n  id: "grsai",\r\n  version: "2.1",\r\n  author: "DramaStudio",\r\n  name: "Grsai",\r\n  description:\r\n    "Grsai AI\u5E73\u53F0\u9002\u914D\uFF0C\u652F\u6301\u6587\u751F\u56FE\u3001\u56FE\u751F\u56FE\u3001\u6587\u751F\u89C6\u9891\u3001Gemini\u517C\u5BB9\u6587\u672C\u6A21\u578B \\n [\u524D\u5F80\u4E2D\u8F6C\u5E73\u53F0](https://tf.grsai.ai/zh)",\r\n  inputs: [\r\n    { key: "apiKey", label: "API\u5BC6\u94A5", type: "password", required: true },\r\n    {\r\n      key: "baseUrl",\r\n      label: "\u8BF7\u6C42\u5730\u5740",\r\n      type: "url",\r\n      required: true,\r\n      placeholder: "\u793A\u4F8B\uFF1Ahttps://grsai.dakka.com.cn",\r\n    },\r\n  ],\r\n  inputValues: { apiKey: "", baseUrl: "https://grsai.dakka.com.cn" },\r\n  models: [\r\n    {\r\n      name: "GPT Image 2",\r\n      modelName: "gpt-image-2",\r\n      type: "image",\r\n      mode: ["text", "singleImage", "multiReference"],\r\n    },\r\n    {\r\n      name: "Nano Banana Fast",\r\n      modelName: "nano-banana-fast",\r\n      type: "image",\r\n      mode: ["text", "singleImage", "multiReference"],\r\n    },\r\n    {\r\n      name: "Nano Banana 2",\r\n      modelName: "nano-banana-2",\r\n      type: "image",\r\n      mode: ["text", "singleImage", "multiReference"],\r\n    },\r\n    {\r\n      name: "Nano Banana Pro",\r\n      modelName: "nano-banana-pro",\r\n      type: "image",\r\n      mode: ["text", "singleImage", "multiReference"],\r\n    },\r\n  ],\r\n};\r\n\r\n// ============================================================\r\n// \u8F85\u52A9\u5DE5\u5177\r\n// ============================================================\r\n\r\nconst getHeaders = () => {\r\n  const apiKey = vendor.inputValues.apiKey.replace(/^Bearer\\s+/i, "");\r\n  return {\r\n    "Content-Type": "application/json",\r\n    Authorization: `Bearer ${apiKey}`,\r\n  };\r\n};\r\n\r\n// ============================================================\r\n// \u9002\u914D\u5668\u51FD\u6570\r\n// ============================================================\r\n\r\nconst textRequest = (\r\n  model: TextModel,\r\n  think: boolean,\r\n  thinkLevel: 0 | 1 | 2 | 3,\r\n) => {\r\n  if (!vendor.inputValues.apiKey) throw new Error("\u7F3A\u5C11API Key");\r\n  const apiKey = vendor.inputValues.apiKey.replace(/^Bearer\\s+/i, "");\r\n  return createGoogleGenerativeAI({\r\n    baseURL: `${vendor.inputValues.baseUrl}/v1beta`,\r\n    apiKey,\r\n  }).chat(model.modelName);\r\n};\r\n\r\nconst imageRequest = async (\r\n  config: ImageConfig,\r\n  model: ImageModel,\r\n): Promise<string> => {\r\n  if (!vendor.inputValues.apiKey) throw new Error("\u7F3A\u5C11API Key");\r\n  const baseUrl = vendor.inputValues.baseUrl;\r\n  const headers = getHeaders();\r\n\r\n  // \u6784\u9020\u8BF7\u6C42\u53C2\u6570\r\n  const requestBody: any = {\r\n    model: model.modelName,\r\n    prompt: config.prompt,\r\n    aspectRatio: config.aspectRatio,\r\n    webHook: "-1",\r\n    shutProgress: true,\r\n  };\r\n\r\n  // \u8865\u5145\u6A21\u578B\u4E13\u5C5E\u53C2\u6570\r\n  if (model.modelName.startsWith("nano-banana")) {\r\n    requestBody.imageSize = config.size;\r\n  } else {\r\n    requestBody.size = config.aspectRatio;\r\n    requestBody.variants = 1;\r\n  }\r\n\r\n  // \u5904\u7406\u53C2\u8003\u56FE\r\n  if (config.referenceList && config.referenceList.length > 0) {\r\n    requestBody.urls = config.referenceList.map((img) => img.base64);\r\n  }\r\n\r\n  // \u9009\u62E9\u63A5\u53E3\u8DEF\u5F84\r\n  const apiPath = model.modelName.startsWith("nano-banana")\r\n    ? "/v1/draw/nano-banana"\r\n    : "/v1/draw/completions";\r\n\r\n  logger(`\u5F00\u59CB\u63D0\u4EA4\u56FE\u7247\u751F\u6210\u4EFB\u52A1\uFF0C\u6A21\u578B\uFF1A${model.modelName}`);\r\n  const submitResp = await axios.post(`${baseUrl}${apiPath}`, requestBody, {\r\n    headers,\r\n  });\r\n  if (submitResp.data.code !== 0)\r\n    throw new Error(`\u4EFB\u52A1\u63D0\u4EA4\u5931\u8D25\uFF1A${submitResp.data.msg}`);\r\n\r\n  const taskId = submitResp.data.data.id;\r\n  logger(`\u56FE\u7247\u4EFB\u52A1\u63D0\u4EA4\u6210\u529F\uFF0C\u4EFB\u52A1ID\uFF1A${taskId}`);\r\n\r\n  // \u8F6E\u8BE2\u7ED3\u679C\r\n  const pollResult = await pollTask(\r\n    async () => {\r\n      const resp = await axios.post(\r\n        `${baseUrl}/v1/draw/result`,\r\n        { id: taskId },\r\n        { headers },\r\n      );\r\n      if (resp.data.code !== 0)\r\n        return { completed: true, error: resp.data.msg };\r\n\r\n      const taskData = resp.data.data;\r\n      if (taskData.status === "failed")\r\n        return {\r\n          completed: true,\r\n          error: taskData.failure_reason || taskData.error,\r\n        };\r\n      if (taskData.status === "succeeded") {\r\n        const imgUrl = taskData.results?.[0]?.url || taskData.url;\r\n        return { completed: true, data: imgUrl };\r\n      }\r\n      logger(`\u56FE\u7247\u4EFB\u52A1\u751F\u6210\u4E2D\uFF0C\u8FDB\u5EA6\uFF1A${taskData.progress}%`);\r\n      return { completed: false };\r\n    },\r\n    3000,\r\n    600000,\r\n  );\r\n\r\n  if (pollResult.error) throw new Error(pollResult.error);\r\n  logger(`\u56FE\u7247\u751F\u6210\u5B8C\u6210\uFF0C\u5F00\u59CB\u8F6C\u6362Base64`);\r\n  return await urlToBase64(pollResult.data!);\r\n};\r\n\r\nconst videoRequest = async (\r\n  config: VideoConfig,\r\n  model: VideoModel,\r\n): Promise<string> => {\r\n  if (!vendor.inputValues.apiKey) throw new Error("\u7F3A\u5C11API Key");\r\n  const baseUrl = vendor.inputValues.baseUrl;\r\n  const headers = getHeaders();\r\n\r\n  // \u6784\u9020\u8BF7\u6C42\u53C2\u6570\r\n  const requestBody: any = {\r\n    model: model.modelName,\r\n    prompt: config.prompt,\r\n    aspectRatio: config.aspectRatio,\r\n    webHook: "-1",\r\n    shutProgress: true,\r\n  };\r\n\r\n  // \u5904\u7406\u53C2\u8003\u8D44\u6E90\r\n  if (config.referenceList && config.referenceList.length > 0) {\r\n    const imageRefs = config.referenceList.filter(\r\n      (item) => item.type === "image",\r\n    ) as Extract<ReferenceList, { type: "image" }>[];\r\n    if (config.mode.includes("endFrameOptional") && imageRefs.length >= 1) {\r\n      requestBody.firstFrameUrl = imageRefs[0].base64;\r\n      if (imageRefs.length >= 2) requestBody.lastFrameUrl = imageRefs[1].base64;\r\n    } else if (\r\n      config.mode.some(\r\n        (m) => Array.isArray(m) && m.includes("imageReference:3"),\r\n      )\r\n    ) {\r\n      requestBody.urls = imageRefs.map((img) => img.base64);\r\n    }\r\n  }\r\n\r\n  logger(`\u5F00\u59CB\u63D0\u4EA4\u89C6\u9891\u751F\u6210\u4EFB\u52A1\uFF0C\u6A21\u578B\uFF1A${model.modelName}`);\r\n  const submitResp = await axios.post(`${baseUrl}/v1/video/veo`, requestBody, {\r\n    headers,\r\n  });\r\n  if (submitResp.data.code !== 0)\r\n    throw new Error(`\u4EFB\u52A1\u63D0\u4EA4\u5931\u8D25\uFF1A${submitResp.data.msg}`);\r\n\r\n  const taskId = submitResp.data.data.id;\r\n  logger(`\u89C6\u9891\u4EFB\u52A1\u63D0\u4EA4\u6210\u529F\uFF0C\u4EFB\u52A1ID\uFF1A${taskId}`);\r\n\r\n  // \u8F6E\u8BE2\u7ED3\u679C\r\n  const pollResult = await pollTask(\r\n    async () => {\r\n      const resp = await axios.post(\r\n        `${baseUrl}/v1/draw/result`,\r\n        { id: taskId },\r\n        { headers },\r\n      );\r\n      if (resp.data.code !== 0)\r\n        return { completed: true, error: resp.data.msg };\r\n\r\n      const taskData = resp.data.data;\r\n      if (taskData.status === "failed")\r\n        return {\r\n          completed: true,\r\n          error: taskData.failure_reason || taskData.error,\r\n        };\r\n      if (taskData.status === "succeeded") {\r\n        return { completed: true, data: taskData.url };\r\n      }\r\n      logger(`\u89C6\u9891\u4EFB\u52A1\u751F\u6210\u4E2D\uFF0C\u8FDB\u5EA6\uFF1A${taskData.progress}%`);\r\n      return { completed: false };\r\n    },\r\n    5000,\r\n    1800000,\r\n  );\r\n\r\n  if (pollResult.error) throw new Error(pollResult.error);\r\n  logger(`\u89C6\u9891\u751F\u6210\u5B8C\u6210\uFF0C\u5F00\u59CB\u8F6C\u6362Base64`);\r\n  return await urlToBase64(pollResult.data!);\r\n};\r\n\r\nconst ttsRequest = async (\r\n  config: TTSConfig,\r\n  model: TTSModel,\r\n): Promise<string> => {\r\n  return "";\r\n};\r\n\r\nconst checkForUpdates = async (): Promise<{\r\n  hasUpdate: boolean;\r\n  latestVersion: string;\r\n  notice: string;\r\n}> => {\r\n  return {\r\n    hasUpdate: false,\r\n    latestVersion: "1.0",\r\n    notice: "## \u65B0\u7248\u672C\u66F4\u65B0\u516C\u544A",\r\n  };\r\n};\r\n\r\nconst updateVendor = async (): Promise<string> => {\r\n  return "";\r\n};\r\n\r\n// ============================================================\r\n// \u5BFC\u51FA\r\n// ============================================================\r\n\r\nexports.vendor = vendor;\r\nexports.textRequest = textRequest;\r\nexports.imageRequest = imageRequest;\r\nexports.videoRequest = videoRequest;\r\nexports.ttsRequest = ttsRequest;\r\nexports.checkForUpdates = checkForUpdates;\r\nexports.updateVendor = updateVendor;\r\n\r\n// \u8FD9\u884C\u4EE3\u7801\u7528\u4E8E\u786E\u4FDD\u5F53\u524D\u6587\u4EF6\u88AB\u8BC6\u522B\u4E3A\u6A21\u5757\uFF0C\u907F\u514D\u5168\u5C40\u53D8\u91CF\u51B2\u7A81\r\nexport {};\r\n',
-      "klingai.ts": '/**\r\n * DramaStudio AI\u4F9B\u5E94\u5546\u6A21\u677F - \u53EF\u7075AI\r\n * @version 2.0\r\n */\r\n\r\n// ============================================================\r\n// \u7C7B\u578B\u5B9A\u4E49\r\n// ============================================================\r\n\r\ntype VideoMode =\r\n  | "singleImage"\r\n  | "startEndRequired"\r\n  | "endFrameOptional"\r\n  | "startFrameOptional"\r\n  | "text"\r\n  | (`videoReference:${number}` | `imageReference:${number}` | `audioReference:${number}`)[];\r\n\r\ninterface TextModel {\r\n  name: string;\r\n  modelName: string;\r\n  type: "text";\r\n  think: boolean;\r\n}\r\n\r\ninterface ImageModel {\r\n  name: string;\r\n  modelName: string;\r\n  type: "image";\r\n  mode: ("text" | "singleImage" | "multiReference")[];\r\n  associationSkills?: string;\r\n}\r\n\r\ninterface VideoModel {\r\n  name: string;\r\n  modelName: string;\r\n  type: "video";\r\n  mode: VideoMode[];\r\n  associationSkills?: string;\r\n  audio: "optional" | false | true;\r\n  durationResolutionMap: { duration: number[]; resolution: string[] }[];\r\n}\r\n\r\ninterface TTSModel {\r\n  name: string;\r\n  modelName: string;\r\n  type: "tts";\r\n  voices: { title: string; voice: string }[];\r\n}\r\n\r\ninterface VendorConfig {\r\n  id: string;\r\n  version: string;\r\n  name: string;\r\n  author: string;\r\n  description?: string;\r\n  icon?: string;\r\n  inputs: { key: string; label: string; type: "text" | "password" | "url"; required: boolean; placeholder?: string }[];\r\n  inputValues: Record<string, string>;\r\n  models: (TextModel | ImageModel | VideoModel | TTSModel)[];\r\n}\r\n\r\ntype ReferenceList =\r\n  | { type: "image"; sourceType: "base64"; base64: string }\r\n  | { type: "audio"; sourceType: "base64"; base64: string }\r\n  | { type: "video"; sourceType: "base64"; base64: string };\r\n\r\ninterface ImageConfig {\r\n  prompt: string;\r\n  referenceList?: Extract<ReferenceList, { type: "image" }>[];\r\n  size: "1K" | "2K" | "4K";\r\n  aspectRatio: `${number}:${number}`;\r\n}\r\n\r\ninterface VideoConfig {\r\n  duration: number;\r\n  resolution: string;\r\n  aspectRatio: "16:9" | "9:16";\r\n  prompt: string;\r\n  referenceList?: ReferenceList[];\r\n  audio?: boolean;\r\n  mode: VideoMode[];\r\n}\r\n\r\ninterface TTSConfig {\r\n  text: string;\r\n  voice: string;\r\n  speechRate: number;\r\n  pitchRate: number;\r\n  volume: number;\r\n  referenceList?: Extract<ReferenceList, { type: "audio" }>[];\r\n}\r\n\r\ninterface PollResult {\r\n  completed: boolean;\r\n  data?: string;\r\n  error?: string;\r\n}\r\n\r\n// ============================================================\r\n// \u5168\u5C40\u58F0\u660E\r\n// ============================================================\r\n\r\ndeclare const axios: any;\r\ndeclare const logger: (msg: string) => void;\r\ndeclare const jsonwebtoken: any;\r\ndeclare const zipImage: (base64: string, size: number) => Promise<string>;\r\ndeclare const zipImageResolution: (base64: string, w: number, h: number) => Promise<string>;\r\ndeclare const mergeImages: (base64Arr: string[], maxSize?: string) => Promise<string>;\r\ndeclare const urlToBase64: (url: string) => Promise<string>;\r\ndeclare const pollTask: (fn: () => Promise<PollResult>, interval?: number, timeout?: number) => Promise<PollResult>;\r\ndeclare const createOpenAI: any;\r\ndeclare const createDeepSeek: any;\r\ndeclare const createZhipu: any;\r\ndeclare const createQwen: any;\r\ndeclare const createAnthropic: any;\r\ndeclare const createOpenAICompatible: any;\r\ndeclare const createXai: any;\r\ndeclare const createMinimax: any;\r\ndeclare const createGoogleGenerativeAI: any;\r\ndeclare const exports: {\r\n  vendor: VendorConfig;\r\n  textRequest: (m: TextModel, t: boolean, tl: 0 | 1 | 2 | 3) => any;\r\n  imageRequest: (c: ImageConfig, m: ImageModel) => Promise<string>;\r\n  videoRequest: (c: VideoConfig, m: VideoModel) => Promise<string>;\r\n  ttsRequest: (c: TTSConfig, m: TTSModel) => Promise<string>;\r\n  checkForUpdates?: () => Promise<{ hasUpdate: boolean; latestVersion: string; notice: string }>;\r\n  updateVendor?: () => Promise<string>;\r\n};\r\n\r\n// ============================================================\r\n// \u4F9B\u5E94\u5546\u914D\u7F6E\r\n// ============================================================\r\n\r\nconst vendor: VendorConfig = {\r\n  id: "klingai",\r\n  version: "2.0",\r\n  author: "DramaStudio",\r\n  name: "\u53EF\u7075AI",\r\n  description:\r\n    "\u53EF\u7075AI\u89C6\u9891\u751F\u6210\\n\\n\u652F\u6301\u53EF\u7075\u5168\u7CFB\u5217\u89C6\u9891\u6A21\u578B\uFF0C\u5305\u62EC kling-video-o1\u3001kling-v3-omni\u3001kling-v3\u3001kling-v2-6\u3001kling-v2-5-turbo\u3001kling-v2-1\u3001kling-v2-master\u3001kling-v1-6\u3001kling-v1-5\u3001kling-v1 \u7B49\u3002\\n\\n\u9700\u8981\u5728[\u53EF\u7075AI\u5F00\u653E\u5E73\u53F0](https://klingai.com)\\n\\n\u83B7\u53D6 Access Key \u548C Secret Key\u3002",\r\n  inputs: [\r\n    { key: "accessKey", label: "Access Key", type: "password", required: true, placeholder: "\u8BF7\u8F93\u5165\u53EF\u7075AI\u7684Access Key" },\r\n    { key: "secretKey", label: "Secret Key", type: "password", required: true, placeholder: "\u8BF7\u8F93\u5165\u53EF\u7075AI\u7684Secret Key" },\r\n    { key: "baseUrl", label: "\u8BF7\u6C42\u5730\u5740", type: "url", required: true, placeholder: "\u9ED8\u8BA4\uFF1Ahttps://api-beijing.klingai.com" },\r\n  ],\r\n  inputValues: { accessKey: "", secretKey: "", baseUrl: "https://api-beijing.klingai.com" },\r\n  models: [\r\n    // kling-video-o1 (Omni)\r\n    {\r\n      name: "kling-video-o1 \u6807\u51C6",\r\n      modelName: "kling-video-o1:std",\r\n      type: "video",\r\n      mode: ["text", "singleImage", "startEndRequired", ["imageReference:7", "videoReference:1"]],\r\n      audio: false,\r\n      durationResolutionMap: [{ duration: [5, 10], resolution: ["720p"] }],\r\n    },\r\n    {\r\n      name: "kling-video-o1 \u4E13\u5BB6",\r\n      modelName: "kling-video-o1:pro",\r\n      type: "video",\r\n      mode: ["text", "singleImage", "startEndRequired", ["imageReference:7", "videoReference:1"]],\r\n      audio: false,\r\n      durationResolutionMap: [{ duration: [5, 10], resolution: ["720p"] }],\r\n    },\r\n    // kling-v3-omni (Omni)\r\n    {\r\n      name: "kling-v3-omni \u6807\u51C6",\r\n      modelName: "kling-v3-omni:std",\r\n      type: "video",\r\n      mode: ["text", "singleImage", "startEndRequired", ["imageReference:7", "videoReference:1"]],\r\n      audio: false,\r\n      durationResolutionMap: [{ duration: [3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15], resolution: ["720p"] }],\r\n    },\r\n    {\r\n      name: "kling-v3-omni \u4E13\u5BB6",\r\n      modelName: "kling-v3-omni:pro",\r\n      type: "video",\r\n      mode: ["text", "singleImage", "startEndRequired", ["imageReference:7", "videoReference:1"]],\r\n      audio: false,\r\n      durationResolutionMap: [{ duration: [3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15], resolution: ["720p"] }],\r\n    },\r\n    // kling-v3\r\n    {\r\n      name: "kling-v3 \u6807\u51C6",\r\n      modelName: "kling-v3:std",\r\n      type: "video",\r\n      mode: ["text", "singleImage", "startEndRequired"],\r\n      audio: false,\r\n      durationResolutionMap: [{ duration: [3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15], resolution: ["720p"] }],\r\n    },\r\n    {\r\n      name: "kling-v3 \u4E13\u5BB6",\r\n      modelName: "kling-v3:pro",\r\n      type: "video",\r\n      mode: ["text", "singleImage", "startEndRequired"],\r\n      audio: false,\r\n      durationResolutionMap: [{ duration: [3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15], resolution: ["720p"] }],\r\n    },\r\n    // kling-v2-6\r\n    {\r\n      name: "kling-v2-6 \u6807\u51C6",\r\n      modelName: "kling-v2-6:std",\r\n      type: "video",\r\n      mode: ["text", "singleImage"],\r\n      audio: false,\r\n      durationResolutionMap: [{ duration: [5, 10], resolution: ["720p"] }],\r\n    },\r\n    {\r\n      name: "kling-v2-6 \u4E13\u5BB6",\r\n      modelName: "kling-v2-6:pro",\r\n      type: "video",\r\n      mode: ["text", "singleImage", "startEndRequired"],\r\n      audio: "optional",\r\n      durationResolutionMap: [{ duration: [5, 10], resolution: ["1080p"] }],\r\n    },\r\n    // kling-v2-5-turbo\r\n    {\r\n      name: "kling-v2-5-turbo \u6807\u51C6",\r\n      modelName: "kling-v2-5-turbo:std",\r\n      type: "video",\r\n      mode: ["text", "singleImage"],\r\n      audio: false,\r\n      durationResolutionMap: [{ duration: [5, 10], resolution: ["1080p"] }],\r\n    },\r\n    {\r\n      name: "kling-v2-5-turbo \u4E13\u5BB6",\r\n      modelName: "kling-v2-5-turbo:pro",\r\n      type: "video",\r\n      mode: ["text", "singleImage", "startEndRequired"],\r\n      audio: false,\r\n      durationResolutionMap: [{ duration: [5, 10], resolution: ["1080p"] }],\r\n    },\r\n    // kling-v2-1\r\n    {\r\n      name: "kling-v2-1 \u6807\u51C6",\r\n      modelName: "kling-v2-1:std",\r\n      type: "video",\r\n      mode: ["singleImage"],\r\n      audio: false,\r\n      durationResolutionMap: [{ duration: [5, 10], resolution: ["720p"] }],\r\n    },\r\n    {\r\n      name: "kling-v2-1 \u4E13\u5BB6",\r\n      modelName: "kling-v2-1:pro",\r\n      type: "video",\r\n      mode: ["singleImage", "startEndRequired"],\r\n      audio: false,\r\n      durationResolutionMap: [{ duration: [5, 10], resolution: ["1080p"] }],\r\n    },\r\n    // kling-v2-1-master\r\n    {\r\n      name: "kling-v2-1 Master",\r\n      modelName: "kling-v2-1-master:pro",\r\n      type: "video",\r\n      mode: ["text", "singleImage"],\r\n      audio: false,\r\n      durationResolutionMap: [{ duration: [5, 10], resolution: ["1080p"] }],\r\n    },\r\n    // kling-v2-master\r\n    {\r\n      name: "kling-v2 Master",\r\n      modelName: "kling-v2-master:pro",\r\n      type: "video",\r\n      mode: ["text", "singleImage"],\r\n      audio: false,\r\n      durationResolutionMap: [{ duration: [5, 10], resolution: ["720p"] }],\r\n    },\r\n    // kling-v1-6\r\n    {\r\n      name: "kling-v1-6 \u6807\u51C6",\r\n      modelName: "kling-v1-6:std",\r\n      type: "video",\r\n      mode: ["text", "singleImage", ["imageReference:4"]],\r\n      audio: false,\r\n      durationResolutionMap: [{ duration: [5, 10], resolution: ["720p"] }],\r\n    },\r\n    {\r\n      name: "kling-v1-6 \u4E13\u5BB6",\r\n      modelName: "kling-v1-6:pro",\r\n      type: "video",\r\n      mode: ["text", "singleImage", "endFrameOptional", ["imageReference:4"]],\r\n      audio: false,\r\n      durationResolutionMap: [{ duration: [5, 10], resolution: ["1080p"] }],\r\n    },\r\n    // kling-v1-5\r\n    {\r\n      name: "kling-v1-5 \u6807\u51C6",\r\n      modelName: "kling-v1-5:std",\r\n      type: "video",\r\n      mode: ["singleImage"],\r\n      audio: false,\r\n      durationResolutionMap: [{ duration: [5, 10], resolution: ["720p"] }],\r\n    },\r\n    {\r\n      name: "kling-v1-5 \u4E13\u5BB6",\r\n      modelName: "kling-v1-5:pro",\r\n      type: "video",\r\n      mode: ["singleImage", "endFrameOptional"],\r\n      audio: false,\r\n      durationResolutionMap: [{ duration: [5, 10], resolution: ["1080p"] }],\r\n    },\r\n    // kling-v1\r\n    {\r\n      name: "kling-v1 \u6807\u51C6",\r\n      modelName: "kling-v1:std",\r\n      type: "video",\r\n      mode: ["text", "singleImage", "startEndRequired"],\r\n      audio: false,\r\n      durationResolutionMap: [{ duration: [5, 10], resolution: ["720p"] }],\r\n    },\r\n    {\r\n      name: "kling-v1 \u4E13\u5BB6",\r\n      modelName: "kling-v1:pro",\r\n      type: "video",\r\n      mode: ["text", "singleImage", "startEndRequired"],\r\n      audio: false,\r\n      durationResolutionMap: [{ duration: [5, 10], resolution: ["720p"] }],\r\n    },\r\n  ],\r\n};\r\n\r\n// ============================================================\r\n// \u8F85\u52A9\u5DE5\u5177\r\n// ============================================================\r\n\r\n/**\r\n * \u751F\u6210\u53EF\u7075AI\u7684JWT\u9274\u6743Token\r\n */\r\nconst generateAuthToken = (): string => {\r\n  const now = Math.floor(Date.now() / 1000);\r\n  const payload = {\r\n    iss: vendor.inputValues.accessKey,\r\n    exp: now + 1800,\r\n    nbf: now - 5,\r\n  };\r\n  return jsonwebtoken.sign(payload, vendor.inputValues.secretKey, {\r\n    algorithm: "HS256",\r\n    header: { alg: "HS256", typ: "JWT" },\r\n  });\r\n};\r\n\r\n/**\r\n * \u83B7\u53D6\u57FA\u7840\u8BF7\u6C42\u5730\u5740\r\n */\r\nconst getBaseUrl = (): string => {\r\n  return vendor.inputValues.baseUrl || "https://api-beijing.klingai.com";\r\n};\r\n\r\n/**\r\n * \u4ECE ReferenceList \u6761\u76EE\u4E2D\u63D0\u53D6\u53EF\u7528\u7684\u6570\u636E\u5B57\u7B26\u4E32\r\n * \u5BF9\u4E8E url \u7C7B\u578B\u8FD4\u56DE url\uFF0C\u5BF9\u4E8E base64 \u7C7B\u578B\u8FD4\u56DE\u7EAF base64\uFF08\u53BB\u6389 data: \u524D\u7F00\uFF09\r\n */\r\nconst extractRawBase64 = (ref: ReferenceList): string => {\r\n  return ref.base64.replace(/^data:[^;]+;base64,/, "");\r\n};\r\n\r\n/**\r\n * \u4ECE ReferenceList \u6761\u76EE\u4E2D\u63D0\u53D6\u5E26\u5934\u7684 base64 \u6216 url\r\n * \u7528\u4E8E omni-video \u63A5\u53E3\uFF0C\u8BE5\u63A5\u53E3\u7684 image_url \u652F\u6301\u5E26\u524D\u7F00\u7684 base64 \u548C url\r\n */\r\nconst extractImageUrl = (ref: ReferenceList): string => {\r\n  return ref.base64.startsWith("data:") ? ref.base64 : `data:image/jpeg;base64,${ref.base64}`;\r\n};\r\n\r\n/**\r\n * \u63D0\u4EA4\u4EFB\u52A1\u5E76\u8F6E\u8BE2\u83B7\u53D6\u7ED3\u679C\u7684\u901A\u7528\u51FD\u6570\r\n */\r\nconst submitAndPoll = async (submitUrl: string, queryUrlBase: string, requestBody: any): Promise<string> => {\r\n  const token = generateAuthToken();\r\n\r\n  logger(`\u5F00\u59CB\u63D0\u4EA4\u53EF\u7075AI\u89C6\u9891\u751F\u6210\u4EFB\u52A1: ${submitUrl}`);\r\n  logger(\r\n    `\u8BF7\u6C42\u53C2\u6570: ${JSON.stringify({\r\n      ...requestBody,\r\n      image: requestBody.image ? "[BASE64]" : undefined,\r\n      image_tail: requestBody.image_tail ? "[BASE64]" : undefined,\r\n      image_list: requestBody.image_list ? "[IMAGES]" : undefined,\r\n    })}`,\r\n  );\r\n\r\n  const submitResp = await axios.post(submitUrl, requestBody, {\r\n    headers: {\r\n      "Content-Type": "application/json",\r\n      Authorization: `Bearer ${token}`,\r\n    },\r\n  });\r\n\r\n  if (submitResp.data.code !== 0) {\r\n    throw new Error(`\u63D0\u4EA4\u4EFB\u52A1\u5931\u8D25: ${submitResp.data.message || JSON.stringify(submitResp.data)}`);\r\n  }\r\n\r\n  const taskId = submitResp.data.data.task_id;\r\n  logger(`\u4EFB\u52A1\u5DF2\u63D0\u4EA4\uFF0C\u4EFB\u52A1ID: ${taskId}`);\r\n\r\n  const result = await pollTask(\r\n    async () => {\r\n      const freshToken = generateAuthToken();\r\n      const queryResp = await axios.get(`${queryUrlBase}/${taskId}`, {\r\n        headers: {\r\n          Authorization: `Bearer ${freshToken}`,\r\n        },\r\n      });\r\n\r\n      if (queryResp.data.code !== 0) {\r\n        return { completed: true, error: `\u67E5\u8BE2\u4EFB\u52A1\u5931\u8D25: ${queryResp.data.message}` };\r\n      }\r\n\r\n      const taskData = queryResp.data.data;\r\n      const status = taskData.task_status;\r\n      logger(`\u8F6E\u8BE2\u4E2D... \u4EFB\u52A1\u72B6\u6001: ${status}`);\r\n\r\n      if (status === "succeed") {\r\n        const videoUrl = taskData.task_result?.videos?.[0]?.url;\r\n        if (!videoUrl) {\r\n          return { completed: true, error: "\u4EFB\u52A1\u5B8C\u6210\u4F46\u672A\u83B7\u53D6\u5230\u89C6\u9891URL" };\r\n        }\r\n        return { completed: true, data: videoUrl };\r\n      }\r\n\r\n      if (status === "failed") {\r\n        return { completed: true, error: `\u89C6\u9891\u751F\u6210\u5931\u8D25: ${taskData.task_status_msg || "\u672A\u77E5\u9519\u8BEF"}` };\r\n      }\r\n\r\n      return { completed: false };\r\n    },\r\n    5000,\r\n    600000,\r\n  );\r\n\r\n  if (result.error) throw new Error(result.error);\r\n  logger(`\u89C6\u9891\u751F\u6210\u5B8C\u6210\uFF0C\u6B63\u5728\u8F6C\u6362\u4E3ABase64...`);\r\n  return await urlToBase64(result.data!);\r\n};\r\n\r\n// ============================================================\r\n// \u9002\u914D\u5668\u51FD\u6570\r\n// ============================================================\r\n\r\nconst textRequest = (model: TextModel, think: boolean, thinkLevel: 0 | 1 | 2 | 3) => {\r\n  throw new Error("\u53EF\u7075AI\u4E0D\u652F\u6301\u6587\u672C\u6A21\u578B");\r\n};\r\n\r\nconst imageRequest = async (config: ImageConfig, model: ImageModel): Promise<string> => {\r\n  throw new Error("\u53EF\u7075AI\u4E0D\u652F\u6301\u56FE\u7247\u6A21\u578B");\r\n};\r\n\r\nconst videoRequest = async (config: VideoConfig, model: VideoModel): Promise<string> => {\r\n  if (!vendor.inputValues.accessKey) throw new Error("\u7F3A\u5C11Access Key");\r\n  if (!vendor.inputValues.secretKey) throw new Error("\u7F3A\u5C11Secret Key");\r\n\r\n  const baseUrl = getBaseUrl();\r\n\r\n  // \u89E3\u6790 modelName\uFF0C\u683C\u5F0F\uFF1Akling-video-o1:pro => modelName=kling-video-o1, mode=pro\r\n  const colonIdx = model.modelName.indexOf(":");\r\n  const modelName = colonIdx > -1 ? model.modelName.substring(0, colonIdx) : model.modelName;\r\n  const mode = colonIdx > -1 ? model.modelName.substring(colonIdx + 1) : "pro";\r\n\r\n  // \u5224\u65AD\u662F\u5426\u4E3A Omni \u6A21\u578B\r\n  const isOmniModel = modelName === "kling-video-o1" || modelName === "kling-v3-omni";\r\n\r\n  // \u5224\u65AD\u5F53\u524D\u9009\u4E2D\u7684\u89C6\u9891\u751F\u6210\u6A21\u5F0F\r\n  const currentMode = config.mode;\r\n  const isText = currentMode.includes("text");\r\n  const isSingleImage = currentMode.includes("singleImage");\r\n  const isStartEndRequired = currentMode.includes("startEndRequired");\r\n  const isEndFrameOptional = currentMode.includes("endFrameOptional");\r\n  const isStartFrameOptional = currentMode.includes("startFrameOptional");\r\n  const hasMultiRef = Array.isArray(currentMode) && currentMode.some((m) => Array.isArray(m));\r\n\r\n  // \u63D0\u53D6\u4E0D\u540C\u7C7B\u578B\u7684\u5F15\u7528\r\n  const imageRefs = (config.referenceList || []).filter((r) => r.type === "image");\r\n  const videoRefs = (config.referenceList || []).filter((r) => r.type === "video");\r\n\r\n  // =====================================================\r\n  // Omni \u6A21\u578B \u2014\u2014 \u4F7F\u7528 /v1/videos/omni-video \u63A5\u53E3\r\n  // =====================================================\r\n  if (isOmniModel) {\r\n    const requestBody: any = {\r\n      model_name: modelName,\r\n      mode: mode,\r\n      duration: String(config.duration),\r\n      sound: config.audio === true ? "on" : "off",\r\n    };\r\n\r\n    if (config.prompt) {\r\n      requestBody.prompt = config.prompt;\r\n    }\r\n\r\n    if (isSingleImage && imageRefs.length > 0) {\r\n      const imageUrl = extractImageUrl(imageRefs[0]);\r\n      requestBody.image_list = [{ image_url: imageUrl, type: "first_frame" }];\r\n      if (!requestBody.prompt) requestBody.prompt = "\u6839\u636E\u56FE\u7247\u751F\u6210\u89C6\u9891";\r\n    } else if (isStartEndRequired && imageRefs.length >= 2) {\r\n      const firstUrl = extractImageUrl(imageRefs[0]);\r\n      const endUrl = extractImageUrl(imageRefs[1]);\r\n      requestBody.image_list = [\r\n        { image_url: firstUrl, type: "first_frame" },\r\n        { image_url: endUrl, type: "end_frame" },\r\n      ];\r\n      if (!requestBody.prompt) requestBody.prompt = "\u6839\u636E\u9996\u5C3E\u5E27\u56FE\u7247\u751F\u6210\u8FC7\u6E21\u89C6\u9891";\r\n    } else if (isEndFrameOptional && imageRefs.length >= 1) {\r\n      const firstUrl = extractImageUrl(imageRefs[0]);\r\n      requestBody.image_list = [{ image_url: firstUrl, type: "first_frame" }];\r\n      if (imageRefs.length >= 2) {\r\n        const endUrl = extractImageUrl(imageRefs[1]);\r\n        requestBody.image_list.push({ image_url: endUrl, type: "end_frame" });\r\n      }\r\n      if (!requestBody.prompt) requestBody.prompt = "\u6839\u636E\u56FE\u7247\u751F\u6210\u89C6\u9891";\r\n    } else if (isStartFrameOptional && imageRefs.length >= 1) {\r\n      if (imageRefs.length >= 2) {\r\n        const firstUrl = extractImageUrl(imageRefs[0]);\r\n        const endUrl = extractImageUrl(imageRefs[1]);\r\n        requestBody.image_list = [\r\n          { image_url: firstUrl, type: "first_frame" },\r\n          { image_url: endUrl, type: "end_frame" },\r\n        ];\r\n      } else {\r\n        const endUrl = extractImageUrl(imageRefs[0]);\r\n        requestBody.image_list = [{ image_url: endUrl, type: "end_frame" }];\r\n      }\r\n      if (!requestBody.prompt) requestBody.prompt = "\u6839\u636E\u56FE\u7247\u751F\u6210\u89C6\u9891";\r\n    } else if (hasMultiRef && (imageRefs.length > 0 || videoRefs.length > 0)) {\r\n      requestBody.image_list = [];\r\n      for (let i = 0; i < imageRefs.length; i++) {\r\n        const imageUrl = extractImageUrl(imageRefs[i]);\r\n        requestBody.image_list.push({ image_url: imageUrl });\r\n      }\r\n      if (!requestBody.prompt) {\r\n        const refs = imageRefs.map((_, idx) => `<<<image_${idx + 1}>>>`).join("\u3001");\r\n        requestBody.prompt = `\u53C2\u8003${refs}\u751F\u6210\u89C6\u9891`;\r\n      }\r\n    }\r\n\r\n    // \u6587\u751F\u89C6\u9891\u6216\u65E0\u56FE\u7247\u8F93\u5165\u65F6\u9700\u8981\u8BBE\u7F6E\u5BBD\u9AD8\u6BD4\r\n    const hasImageInput = requestBody.image_list && requestBody.image_list.length > 0;\r\n    if (!hasImageInput) {\r\n      requestBody.aspect_ratio = config.aspectRatio || "16:9";\r\n      if (!requestBody.prompt) throw new Error("\u6587\u751F\u89C6\u9891\u6A21\u5F0F\u9700\u8981\u63D0\u4F9B\u63D0\u793A\u8BCD");\r\n    }\r\n\r\n    const apiPath = "/v1/videos/omni-video";\r\n    return await submitAndPoll(`${baseUrl}${apiPath}`, `${baseUrl}${apiPath}`, requestBody);\r\n  }\r\n\r\n  // =====================================================\r\n  // \u975E Omni \u6A21\u578B \u2014\u2014 \u6839\u636E\u6A21\u5F0F\u9009\u62E9\u4E0D\u540C\u63A5\u53E3\r\n  // =====================================================\r\n\r\n  // \u591A\u56FE\u53C2\u8003\u6A21\u5F0F \u2014\u2014 \u4F7F\u7528 /v1/videos/multi-image2video \u63A5\u53E3\uFF08\u4EC5 kling-v1-6 \u652F\u6301\uFF09\r\n  if (hasMultiRef && imageRefs.length > 0) {\r\n    const imageList = [];\r\n    for (let i = 0; i < imageRefs.length; i++) {\r\n      const rawBase64 = extractRawBase64(imageRefs[i]);\r\n      imageList.push({ image: rawBase64 });\r\n    }\r\n\r\n    const requestBody: any = {\r\n      model_name: modelName,\r\n      image_list: imageList,\r\n      prompt: config.prompt || "\u6839\u636E\u53C2\u8003\u56FE\u7247\u751F\u6210\u89C6\u9891",\r\n      mode: mode,\r\n      duration: String(config.duration),\r\n      aspect_ratio: config.aspectRatio || "16:9",\r\n    };\r\n\r\n    const apiPath = "/v1/videos/multi-image2video";\r\n    return await submitAndPoll(`${baseUrl}${apiPath}`, `${baseUrl}${apiPath}`, requestBody);\r\n  }\r\n\r\n  // \u6587\u751F\u89C6\u9891\u6A21\u5F0F \u2014\u2014 \u4F7F\u7528 /v1/videos/text2video \u63A5\u53E3\r\n  if (isText) {\r\n    if (!config.prompt) throw new Error("\u6587\u751F\u89C6\u9891\u6A21\u5F0F\u9700\u8981\u63D0\u4F9B\u63D0\u793A\u8BCD");\r\n\r\n    const requestBody: any = {\r\n      model_name: modelName,\r\n      prompt: config.prompt,\r\n      mode: mode,\r\n      duration: String(config.duration),\r\n      aspect_ratio: config.aspectRatio || "16:9",\r\n      sound: config.audio === true ? "on" : "off",\r\n    };\r\n\r\n    const apiPath = "/v1/videos/text2video";\r\n    return await submitAndPoll(`${baseUrl}${apiPath}`, `${baseUrl}${apiPath}`, requestBody);\r\n  }\r\n\r\n  // \u56FE\u751F\u89C6\u9891\u6A21\u5F0F\uFF08\u5355\u56FE / \u9996\u5C3E\u5E27 / \u5C3E\u5E27\u53EF\u9009\u7B49\uFF09\u2014\u2014 \u4F7F\u7528 /v1/videos/image2video \u63A5\u53E3\r\n  if ((isSingleImage || isStartEndRequired || isEndFrameOptional || isStartFrameOptional) && imageRefs.length > 0) {\r\n    const requestBody: any = {\r\n      model_name: modelName,\r\n      prompt: config.prompt || "\u6839\u636E\u56FE\u7247\u751F\u6210\u89C6\u9891",\r\n      mode: mode,\r\n      duration: String(config.duration),\r\n      sound: config.audio === true ? "on" : "off",\r\n    };\r\n\r\n    if (isSingleImage) {\r\n      requestBody.image = extractRawBase64(imageRefs[0]);\r\n    } else if (isStartEndRequired && imageRefs.length >= 2) {\r\n      requestBody.image = extractRawBase64(imageRefs[0]);\r\n      requestBody.image_tail = extractRawBase64(imageRefs[1]);\r\n    } else if (isEndFrameOptional) {\r\n      requestBody.image = extractRawBase64(imageRefs[0]);\r\n      if (imageRefs.length >= 2) {\r\n        requestBody.image_tail = extractRawBase64(imageRefs[1]);\r\n      }\r\n    } else if (isStartFrameOptional) {\r\n      if (imageRefs.length >= 2) {\r\n        requestBody.image = extractRawBase64(imageRefs[0]);\r\n        requestBody.image_tail = extractRawBase64(imageRefs[1]);\r\n      } else {\r\n        requestBody.image = extractRawBase64(imageRefs[0]);\r\n      }\r\n    }\r\n\r\n    const apiPath = "/v1/videos/image2video";\r\n    return await submitAndPoll(`${baseUrl}${apiPath}`, `${baseUrl}${apiPath}`, requestBody);\r\n  }\r\n\r\n  throw new Error("\u4E0D\u652F\u6301\u7684\u89C6\u9891\u751F\u6210\u6A21\u5F0F\u6216\u7F3A\u5C11\u5FC5\u8981\u7684\u8F93\u5165\u53C2\u6570");\r\n};\r\n\r\nconst ttsRequest = async (config: TTSConfig, model: TTSModel): Promise<string> => {\r\n  return "";\r\n};\r\n\r\n// ============================================================\r\n// \u5BFC\u51FA\r\n// ============================================================\r\n\r\nexports.vendor = vendor;\r\nexports.textRequest = textRequest;\r\nexports.imageRequest = imageRequest;\r\nexports.videoRequest = videoRequest;\r\nexports.ttsRequest = ttsRequest;\r\n\r\n// \u8FD9\u884C\u4EE3\u7801\u7528\u4E8E\u786E\u4FDD\u5F53\u524D\u6587\u4EF6\u88AB\u8BC6\u522B\u4E3A\u6A21\u5757\uFF0C\u907F\u514D\u5168\u5C40\u53D8\u91CF\u51B2\u7A81\r\nexport {};\r\n',
-      "minimax.ts": '/**\r\n * DramaStudio AI\u4F9B\u5E94\u5546\u6A21\u677F - MiniMax(\u6D77\u87BAAI)\r\n * @version 2.0\r\n */\r\n\r\n// ============================================================\r\n// \u7C7B\u578B\u5B9A\u4E49\r\n// ============================================================\r\n\r\ntype VideoMode =\r\n  | "singleImage"\r\n  | "startEndRequired"\r\n  | "endFrameOptional"\r\n  | "startFrameOptional"\r\n  | "text"\r\n  | (`videoReference:${number}` | `imageReference:${number}` | `audioReference:${number}`)[];\r\n\r\ninterface TextModel {\r\n  name: string;\r\n  modelName: string;\r\n  type: "text";\r\n  think: boolean;\r\n}\r\n\r\ninterface ImageModel {\r\n  name: string;\r\n  modelName: string;\r\n  type: "image";\r\n  mode: ("text" | "singleImage" | "multiReference")[];\r\n  associationSkills?: string;\r\n}\r\n\r\ninterface VideoModel {\r\n  name: string;\r\n  modelName: string;\r\n  type: "video";\r\n  mode: VideoMode[];\r\n  associationSkills?: string;\r\n  audio: "optional" | false | true;\r\n  durationResolutionMap: { duration: number[]; resolution: string[] }[];\r\n}\r\n\r\ninterface TTSModel {\r\n  name: string;\r\n  modelName: string;\r\n  type: "tts";\r\n  voices: { title: string; voice: string }[];\r\n}\r\n\r\ninterface VendorConfig {\r\n  id: string;\r\n  version: string;\r\n  name: string;\r\n  author: string;\r\n  description?: string;\r\n  icon?: string;\r\n  inputs: { key: string; label: string; type: "text" | "password" | "url"; required: boolean; placeholder?: string }[];\r\n  inputValues: Record<string, string>;\r\n  models: (TextModel | ImageModel | VideoModel | TTSModel)[];\r\n}\r\n\r\ntype ReferenceList =\r\n  | { type: "image"; sourceType: "base64"; base64: string }\r\n  | { type: "audio"; sourceType: "base64"; base64: string }\r\n  | { type: "video"; sourceType: "base64"; base64: string };\r\n\r\ninterface ImageConfig {\r\n  prompt: string;\r\n  referenceList?: Extract<ReferenceList, { type: "image" }>[];\r\n  size: "1K" | "2K" | "4K";\r\n  aspectRatio: `${number}:${number}`;\r\n}\r\n\r\ninterface VideoConfig {\r\n  duration: number;\r\n  resolution: string;\r\n  aspectRatio: "16:9" | "9:16";\r\n  prompt: string;\r\n  referenceList?: ReferenceList[];\r\n  audio?: boolean;\r\n  mode: VideoMode[];\r\n}\r\n\r\ninterface TTSConfig {\r\n  text: string;\r\n  voice: string;\r\n  speechRate: number;\r\n  pitchRate: number;\r\n  volume: number;\r\n  referenceList?: Extract<ReferenceList, { type: "audio" }>[];\r\n}\r\n\r\ninterface PollResult {\r\n  completed: boolean;\r\n  data?: string;\r\n  error?: string;\r\n}\r\n\r\n// ============================================================\r\n// \u5168\u5C40\u58F0\u660E\r\n// ============================================================\r\n\r\ndeclare const axios: any;\r\ndeclare const logger: (msg: string) => void;\r\ndeclare const jsonwebtoken: any;\r\ndeclare const zipImage: (base64: string, size: number) => Promise<string>;\r\ndeclare const zipImageResolution: (base64: string, w: number, h: number) => Promise<string>;\r\ndeclare const mergeImages: (base64Arr: string[], maxSize?: string) => Promise<string>;\r\ndeclare const urlToBase64: (url: string) => Promise<string>;\r\ndeclare const pollTask: (fn: () => Promise<PollResult>, interval?: number, timeout?: number) => Promise<PollResult>;\r\ndeclare const createOpenAI: any;\r\ndeclare const createDeepSeek: any;\r\ndeclare const createZhipu: any;\r\ndeclare const createQwen: any;\r\ndeclare const createAnthropic: any;\r\ndeclare const createOpenAICompatible: any;\r\ndeclare const createXai: any;\r\ndeclare const createMinimax: any;\r\ndeclare const createGoogleGenerativeAI: any;\r\ndeclare const exports: {\r\n  vendor: VendorConfig;\r\n  textRequest: (m: TextModel, t: boolean, tl: 0 | 1 | 2 | 3) => any;\r\n  uploadReference: (base64: string, fileType: "image" | "audio" | "video") => Promise<ReferenceList>;\r\n  imageRequest: (c: ImageConfig, m: ImageModel) => Promise<string>;\r\n  videoRequest: (c: VideoConfig, m: VideoModel) => Promise<string>;\r\n  ttsRequest: (c: TTSConfig, m: TTSModel) => Promise<string>;\r\n  checkForUpdates?: () => Promise<{ hasUpdate: boolean; latestVersion: string; notice: string }>;\r\n  updateVendor?: () => Promise<string>;\r\n};\r\n\r\n// ============================================================\r\n// \u4F9B\u5E94\u5546\u914D\u7F6E\r\n// ============================================================\r\n\r\nconst vendor: VendorConfig = {\r\n  id: "minimax",\r\n  version: "2.1",\r\n  author: "DramaStudio",\r\n  name: "MiniMax(\u6D77\u87BAAI)",\r\n  description: "MiniMax\u5B98\u65B9\u63A5\u53E3\u9002\u914D\uFF0C\u652F\u6301M\u7CFB\u5217\u63A8\u7406\u6587\u672C\u6A21\u578B\u3001\u6587\u751F\u56FE/\u56FE\u751F\u56FE\u3001\u89C6\u9891\u751F\u6210\uFF08\u6587\u751F\u89C6\u9891\u3001\u56FE\u751F\u89C6\u9891\u3001\u9996\u5C3E\u5E27\u751F\u6210\uFF09\u80FD\u529B \\n [\u524D\u5F80\u5E73\u53F0](https://minimaxi.com/)",\r\n  inputs: [\r\n    { key: "apiKey", label: "API\u5BC6\u94A5", type: "password", required: true },\r\n    { key: "baseUrl", label: "\u8BF7\u6C42\u5730\u5740", type: "url", required: true, placeholder: "\u793A\u4F8B\uFF1Ahttps://api.minimaxi.com" },\r\n  ],\r\n  inputValues: { apiKey: "", baseUrl: "https://api.minimaxi.com" },\r\n  models: [\r\n    // \u6587\u672C\u6A21\u578B\r\n    { name: "MiniMax-M2.7 (\u63A8\u7406\u7248)", modelName: "MiniMax-M2.7", type: "text", think: true },\r\n    { name: "MiniMax-M2.7 \u6781\u901F\u7248 (\u63A8\u7406\u7248)", modelName: "MiniMax-M2.7-highspeed", type: "text", think: true },\r\n    { name: "MiniMax-M2.5 (\u63A8\u7406\u7248)", modelName: "MiniMax-M2.5", type: "text", think: true },\r\n    { name: "MiniMax-M2.5 \u6781\u901F\u7248 (\u63A8\u7406\u7248)", modelName: "MiniMax-M2.5-highspeed", type: "text", think: true },\r\n    { name: "MiniMax-M2.1 (\u7F16\u7A0B\u7248)", modelName: "MiniMax-M2.1", type: "text", think: true },\r\n    { name: "MiniMax-M2.1 \u6781\u901F\u7248 (\u7F16\u7A0B\u7248)", modelName: "MiniMax-M2.1-highspeed", type: "text", think: true },\r\n    { name: "MiniMax-M2 (Agent\u7248)", modelName: "MiniMax-M2", type: "text", think: false },\r\n    // \u56FE\u7247\u6A21\u578B\r\n    { name: "\u6D77\u87BA\u56FE\u50CFV1", modelName: "image-01", type: "image", mode: ["text", "singleImage"] },\r\n    { name: "\u6D77\u87BA\u56FE\u50CFV1 Live\u7248", modelName: "image-01-live", type: "image", mode: ["text", "singleImage"], associationSkills: "\u652F\u6301\u81EA\u5B9A\u4E49\u753B\u98CE" },\r\n    // \u89C6\u9891\u6A21\u578B\r\n    {\r\n      name: "\u6D77\u87BA2.3",\r\n      modelName: "MiniMax-Hailuo-2.3",\r\n      type: "video",\r\n      mode: ["text", "singleImage"],\r\n      audio: false,\r\n      durationResolutionMap: [\r\n        { duration: [6], resolution: ["768P", "1080P"] },\r\n        { duration: [10], resolution: ["768P"] },\r\n      ],\r\n    },\r\n    {\r\n      name: "\u6D77\u87BA2.3\u6781\u901F\u7248",\r\n      modelName: "MiniMax-Hailuo-2.3-Fast",\r\n      type: "video",\r\n      mode: ["text", "singleImage"],\r\n      audio: false,\r\n      durationResolutionMap: [\r\n        { duration: [6], resolution: ["768P", "1080P"] },\r\n        { duration: [10], resolution: ["768P"] },\r\n      ],\r\n    },\r\n    {\r\n      name: "\u6D77\u87BA02",\r\n      modelName: "MiniMax-Hailuo-02",\r\n      type: "video",\r\n      mode: ["text", "singleImage", "startEndRequired"],\r\n      audio: false,\r\n      durationResolutionMap: [\r\n        { duration: [6], resolution: ["512P", "768P", "1080P"] },\r\n        { duration: [10], resolution: ["512P", "768P"] },\r\n      ],\r\n    },\r\n  ],\r\n};\r\n\r\n// ============================================================\r\n// \u8F85\u52A9\u5DE5\u5177\r\n// ============================================================\r\n\r\n/**\r\n * \u83B7\u53D6\u8BF7\u6C42\u5934\r\n */\r\nconst getHeaders = (): Record<string, string> => {\r\n  const apiKey = vendor.inputValues.apiKey.replace(/^Bearer\\s+/i, "");\r\n  return {\r\n    Authorization: `Bearer ${apiKey}`,\r\n    "Content-Type": "application/json",\r\n  };\r\n};\r\n\r\n/**\r\n * \u83B7\u53D6\u57FA\u7840\u8BF7\u6C42\u5730\u5740\r\n */\r\nconst getBaseUrl = (): string => {\r\n  return vendor.inputValues.baseUrl.replace(/\\/$/, "");\r\n};\r\n\r\n/**\r\n * \u4ECE ReferenceList \u6761\u76EE\u4E2D\u63D0\u53D6\u6709\u5934 base64 \u5B57\u7B26\u4E32\r\n */\r\nconst extractBase64WithHead = (ref: ReferenceList): string => {\r\n  return ref.base64.startsWith("data:") ? ref.base64 : `data:image/png;base64,${ref.base64}`;\r\n};\r\n\r\n// ============================================================\r\n// \u9002\u914D\u5668\u51FD\u6570\r\n// ============================================================\r\n\r\nconst textRequest = (model: TextModel, think: boolean, thinkLevel: 0 | 1 | 2 | 3) => {\r\n  if (!vendor.inputValues.apiKey) throw new Error("\u7F3A\u5C11API Key");\r\n  const apiKey = vendor.inputValues.apiKey.replace(/^Bearer\\s+/i, "");\r\n  const baseUrl = getBaseUrl();\r\n\r\n  const openaiBaseUrl = `${baseUrl}/v1`;\r\n  const extraBody = model.think ? { reasoning_split: true } : {};\r\n  return createOpenAI({ baseURL: openaiBaseUrl, apiKey, extraBody }).chat(model.modelName);\r\n};\r\n\r\nconst uploadReference = async (base64: string, fileType: "image" | "audio" | "video"): Promise<ReferenceList> => {\r\n  // MiniMax\u7684\u56FE\u7247\u63A5\u53E3\u76F4\u63A5\u63A5\u53D7 base64\uFF0C\u538B\u7F29\u540E\u539F\u6837\u8FD4\u56DE\r\n  if (fileType === "image") {\r\n    const compressed = await zipImage(base64, 10 * 1024);\r\n    return { type: "image", sourceType: "base64", base64: compressed };\r\n  }\r\n  // \u89C6\u9891\u63A5\u53E3\u7684\u56FE\u7247\u53C2\u6570\u4E5F\u662F base64\uFF0C\u538B\u7F29\u523020MB\r\n  return { type: fileType, sourceType: "base64", base64 } as ReferenceList;\r\n};\r\n\r\nconst imageRequest = async (config: ImageConfig, model: ImageModel): Promise<string> => {\r\n  if (!vendor.inputValues.apiKey) throw new Error("\u7F3A\u5C11API Key");\r\n  const baseUrl = getBaseUrl();\r\n  const headers = getHeaders();\r\n\r\n  const reqBody: any = {\r\n    model: model.modelName,\r\n    prompt: config.prompt,\r\n    aspect_ratio: config.aspectRatio,\r\n    response_format: "base64",\r\n    n: 1,\r\n    prompt_optimizer: true,\r\n    aigc_watermark: false,\r\n  };\r\n\r\n  // \u5904\u7406\u56FE\u751F\u56FE\u53C2\u8003\r\n  const imageRefs = config.referenceList || [];\r\n  if (imageRefs.length > 0) {\r\n    const refBase64 = extractBase64WithHead(imageRefs[0]);\r\n    reqBody.subject_reference = [{ type: "character", image_file: refBase64 }];\r\n  }\r\n\r\n  logger("\u5F00\u59CB\u63D0\u4EA4MiniMax\u56FE\u50CF\u751F\u6210\u4EFB\u52A1");\r\n  const resp = await axios.post(`${baseUrl}/v1/image_generation`, reqBody, { headers });\r\n  if (resp.data.base_resp.status_code !== 0) {\r\n    throw new Error(`\u56FE\u50CF\u751F\u6210\u5931\u8D25\uFF1A${resp.data.base_resp.status_msg}`);\r\n  }\r\n  if (resp.data.metadata.success_count === 0) {\r\n    throw new Error("\u56FE\u50CF\u751F\u6210\u88AB\u5B89\u5168\u7B56\u7565\u62E6\u622A\uFF0C\u8BF7\u8C03\u6574prompt\u6216\u53C2\u8003\u56FE");\r\n  }\r\n\r\n  const imgBase64 = resp.data.data.image_base64[0];\r\n  return imgBase64.startsWith("data:") ? imgBase64 : `data:image/png;base64,${imgBase64}`;\r\n};\r\n\r\nconst videoRequest = async (config: VideoConfig, model: VideoModel): Promise<string> => {\r\n  if (!vendor.inputValues.apiKey) throw new Error("\u7F3A\u5C11API Key");\r\n  const baseUrl = getBaseUrl();\r\n  const headers = getHeaders();\r\n\r\n  const reqBody: any = {\r\n    model: model.modelName,\r\n    prompt: config.prompt,\r\n    duration: config.duration,\r\n    resolution: config.resolution,\r\n    aigc_watermark: false,\r\n    prompt_optimizer: true,\r\n  };\r\n\r\n  // \u63D0\u53D6\u56FE\u7247\u7C7B\u578B\u7684\u5F15\u7528\r\n  const imageRefs = (config.referenceList || []).filter((r) => r.type === "image");\r\n\r\n  if (imageRefs.length > 0) {\r\n    // \u538B\u7F29\u56FE\u7247\u523020MB\u4EE5\u5185\r\n    const compressedImages: string[] = [];\r\n    for (const ref of imageRefs) {\r\n      const base64 = extractBase64WithHead(ref);\r\n      const compressed = await zipImage(base64, 20 * 1024);\r\n      compressedImages.push(compressed);\r\n    }\r\n\r\n    if (config.mode.includes("startEndRequired")) {\r\n      if (compressedImages.length < 2) throw new Error("\u9996\u5C3E\u5E27\u6A21\u5F0F\u9700\u8981\u4E0A\u4F20\u4E24\u5F20\u56FE\u7247");\r\n      reqBody.first_frame_image = compressedImages[0];\r\n      reqBody.last_frame_image = compressedImages[1];\r\n    } else if (config.mode.includes("singleImage")) {\r\n      reqBody.first_frame_image = compressedImages[0];\r\n    }\r\n  }\r\n\r\n  logger("\u5F00\u59CB\u63D0\u4EA4MiniMax\u89C6\u9891\u751F\u6210\u4EFB\u52A1");\r\n  const submitResp = await axios.post(`${baseUrl}/v1/video_generation`, reqBody, { headers });\r\n  if (submitResp.data.base_resp.status_code !== 0) {\r\n    throw new Error(`\u4EFB\u52A1\u63D0\u4EA4\u5931\u8D25\uFF1A${submitResp.data.base_resp.status_msg}`);\r\n  }\r\n  const taskId = submitResp.data.task_id;\r\n  logger(`\u89C6\u9891\u4EFB\u52A1\u63D0\u4EA4\u6210\u529F\uFF0C\u4EFB\u52A1ID: ${taskId}`);\r\n\r\n  // \u8F6E\u8BE2\u4EFB\u52A1\u72B6\u6001\r\n  const pollResult = await pollTask(\r\n    async () => {\r\n      const queryResp = await axios.get(`${baseUrl}/v1/query/video_generation`, {\r\n        headers: getHeaders(),\r\n        params: { task_id: taskId },\r\n      });\r\n      if (queryResp.data.base_resp.status_code !== 0) {\r\n        return { completed: true, error: queryResp.data.base_resp.status_msg };\r\n      }\r\n      const status = queryResp.data.status;\r\n      if (status === "Success") {\r\n        return { completed: true, data: queryResp.data.file_id };\r\n      }\r\n      if (status === "Fail") {\r\n        return { completed: true, error: "\u89C6\u9891\u751F\u6210\u5931\u8D25" };\r\n      }\r\n      logger(`\u89C6\u9891\u4EFB\u52A1\u751F\u6210\u4E2D\uFF0C\u5F53\u524D\u72B6\u6001\uFF1A${status}`);\r\n      return { completed: false };\r\n    },\r\n    5000,\r\n    600000,\r\n  );\r\n\r\n  if (pollResult.error) throw new Error(pollResult.error);\r\n  const fileId = pollResult.data!;\r\n  logger(`\u89C6\u9891\u4EFB\u52A1\u751F\u6210\u6210\u529F\uFF0C\u6587\u4EF6ID: ${fileId}`);\r\n\r\n  // \u83B7\u53D6\u4E0B\u8F7D\u5730\u5740\r\n  const fileResp = await axios.get(`${baseUrl}/v1/files/retrieve`, {\r\n    headers: getHeaders(),\r\n    params: { file_id: fileId },\r\n  });\r\n  if (fileResp.data.base_resp.status_code !== 0) {\r\n    throw new Error(`\u83B7\u53D6\u6587\u4EF6\u5730\u5740\u5931\u8D25\uFF1A${fileResp.data.base_resp.status_msg}`);\r\n  }\r\n  const downloadUrl = fileResp.data.file.download_url;\r\n  logger(`\u89C6\u9891\u4E0B\u8F7D\u5730\u5740\u83B7\u53D6\u6210\u529F\uFF0C\u5F00\u59CB\u8F6CBase64`);\r\n\r\n  return await urlToBase64(downloadUrl);\r\n};\r\n\r\nconst ttsRequest = async (config: TTSConfig, model: TTSModel): Promise<string> => {\r\n  return "";\r\n};\r\n\r\nconst checkForUpdates = async (): Promise<{ hasUpdate: boolean; latestVersion: string; notice: string }> => {\r\n  return {\r\n    hasUpdate: false,\r\n    latestVersion: "2.0",\r\n    notice:\r\n      "## \u65B0\u7248\u672C\u66F4\u65B0\u516C\u544A\\n1. \u9002\u914D\u65B0\u7248\u6A21\u677F\u67B6\u6784\uFF0C\u652F\u6301 ReferenceList \u7EDF\u4E00\u5F15\u7528\u7C7B\u578B\\n2. \u65B0\u589E uploadReference \u524D\u7F6E\u5904\u7406\u5668\\n3. \u4F18\u5316\u56FE\u7247\u538B\u7F29\u548C\u5F15\u7528\u63D0\u53D6\u903B\u8F91",\r\n  };\r\n};\r\n\r\nconst updateVendor = async (): Promise<string> => {\r\n  return "";\r\n};\r\n\r\n// ============================================================\r\n// \u5BFC\u51FA\r\n// ============================================================\r\n\r\nexports.vendor = vendor;\r\nexports.textRequest = textRequest;\r\nexports.uploadReference = uploadReference;\r\nexports.imageRequest = imageRequest;\r\nexports.videoRequest = videoRequest;\r\nexports.ttsRequest = ttsRequest;\r\nexports.checkForUpdates = checkForUpdates;\r\nexports.updateVendor = updateVendor;\r\n\r\n// \u8FD9\u884C\u4EE3\u7801\u7528\u4E8E\u786E\u4FDD\u5F53\u524D\u6587\u4EF6\u88AB\u8BC6\u522B\u4E3A\u6A21\u5757\uFF0C\u907F\u514D\u5168\u5C40\u53D8\u91CF\u51B2\u7A81\r\nexport {};',
-      "null.ts": '/**\r\n * DramaStudio AI\u4F9B\u5E94\u5546\u6A21\u677F\r\n * @version 2.0\r\n */\r\n\r\n// ============================================================\r\n// \u7C7B\u578B\u5B9A\u4E49\r\n// ============================================================\r\n\r\ntype VideoMode =\r\n  | "singleImage" //\u5355\u56FE\u53C2\u8003\r\n  | "startEndRequired" //\u9996\u5C3E\u5E27\uFF08\u4E24\u5F20\u90FD\u5F97\u6709\uFF09\r\n  | "endFrameOptional" //\u9996\u5C3E\u5E27\uFF08\u5C3E\u5E27\u53EF\u9009\uFF09\r\n  | "startFrameOptional" //\u9996\u5C3E\u5E27\uFF08\u9996\u5E27\u53EF\u9009\uFF09\r\n  | "text" //\u6587\u672C\r\n  | (`videoReference:${number}` | `imageReference:${number}` | `audioReference:${number}`)[]; //\u591A\u53C2\u8003\uFF08\u6570\u5B57\u4EE3\u8868\u9650\u5236\u6570\u91CF\uFF09\r\n\r\ninterface TextModel {\r\n  name: string;\r\n  modelName: string;\r\n  type: "text";\r\n  think: boolean;\r\n}\r\n\r\ninterface ImageModel {\r\n  name: string;\r\n  modelName: string;\r\n  type: "image";\r\n  mode: ("text" | "singleImage" | "multiReference")[];\r\n  associationSkills?: string;\r\n}\r\n\r\ninterface VideoModel {\r\n  name: string;\r\n  modelName: string;\r\n  type: "video";\r\n  mode: VideoMode[];\r\n  associationSkills?: string;\r\n  audio: "optional" | false | true;\r\n  durationResolutionMap: { duration: number[]; resolution: string[] }[];\r\n}\r\n\r\ninterface TTSModel {\r\n  name: string;\r\n  modelName: string;\r\n  type: "tts";\r\n  voices: { title: string; voice: string }[];\r\n}\r\n\r\ninterface VendorConfig {\r\n  id: string; //\u552F\u4E00ID\uFF0C\u4F5C\u4E3A\u6587\u4EF6\u540D\u5B58\u50A8\u7528\u6237\u78C1\u76D8\u4E0A\uFF0C\u7981\u6B62\u7B26\u53F7\r\n  version: string; //\u7248\u672C\u53F7\uFF0C\u683C\u5F0F\u4E3Ax.y\uFF0C\u9700\u9075\u5B88\u8BED\u4E49\u5316\u7248\u672C\u63A7\u5236\r\n  name: string; //\u4F9B\u5E94\u5546\u540D\u79F0\r\n  author: string; //\u4F5C\u8005\r\n  description?: string; //\u63CF\u8FF0\uFF0C\u652F\u6301Markdown\u683C\u5F0F\r\n  icon?: string; //\u56FE\u6807\uFF0C\u4EC5\u652F\u6301Base64\u683C\u5F0F\uFF0C\u5EFA\u8BAE\u5C3A\u5BF8\u4E3A128x128\u50CF\u7D20\r\n  inputs: { key: string; label: string; type: "text" | "password" | "url"; required: boolean; placeholder?: string }[];\r\n  inputValues: Record<string, string>;\r\n  models: (TextModel | ImageModel | VideoModel | TTSModel)[];\r\n}\r\n\r\ntype ReferenceList =\r\n  | { type: "image"; sourceType: "base64"; base64: string }\r\n  | { type: "audio"; sourceType: "base64"; base64: string }\r\n  | { type: "video"; sourceType: "base64"; base64: string };\r\n\r\ninterface ImageConfig {\r\n  prompt: string;\r\n  referenceList?: Extract<ReferenceList, { type: "image" }>[];\r\n  size: "1K" | "2K" | "4K";\r\n  aspectRatio: `${number}:${number}`;\r\n}\r\n\r\ninterface VideoConfig {\r\n  duration: number;\r\n  resolution: string;\r\n  aspectRatio: "16:9" | "9:16";\r\n  prompt: string;\r\n  referenceList?: ReferenceList[];\r\n  audio?: boolean;\r\n  mode: VideoMode[];\r\n}\r\n\r\ninterface TTSConfig {\r\n  text: string;\r\n  voice: string;\r\n  speechRate: number;\r\n  pitchRate: number;\r\n  volume: number;\r\n  referenceList?: Extract<ReferenceList, { type: "audio" }>[];\r\n}\r\n\r\ninterface PollResult {\r\n  completed: boolean;\r\n  data?: string;\r\n  error?: string;\r\n}\r\n\r\n// ============================================================\r\n// \u5168\u5C40\u58F0\u660E\r\n// ============================================================\r\n\r\ndeclare const axios: any; // HTTP\u8BF7\u6C42\u5E93\r\ndeclare const logger: (msg: string) => void; // \u65E5\u5FD7\u51FD\u6570\r\ndeclare const jsonwebtoken: any; // JWT\u5904\u7406\u5E93\r\ndeclare const zipImage: (base64: string, size: number) => Promise<string>; // \u56FE\u7247\u538B\u7F29\u51FD\u6570\uFF0C\u8FD4\u56DE\u6709\u5934base64\u5B57\u7B26\u4E32\r\ndeclare const zipImageResolution: (base64: string, w: number, h: number) => Promise<string>; // \u56FE\u7247\u5206\u8FA8\u7387\u8C03\u6574\u51FD\u6570\uFF0C\u8FD4\u56DE\u6709\u5934base64\u5B57\u7B26\u4E32\r\ndeclare const mergeImages: (base64Arr: string[], maxSize?: string) => Promise<string>; // \u56FE\u7247\u5408\u6210\u51FD\u6570\uFF0C\u8FD4\u56DE\u6709\u5934base64\u5B57\u7B26\u4E32\r\ndeclare const urlToBase64: (url: string) => Promise<string>; // URL\u8F6CBase64\u51FD\u6570\uFF0C\u8FD4\u56DE\u6709\u5934base64\u5B57\u7B26\u4E32\r\ndeclare const pollTask: (fn: () => Promise<PollResult>, interval?: number, timeout?: number) => Promise<PollResult>; // \u8F6E\u8BE2\u51FD\u6570\uFF0Cfn\u4E3A\u5F02\u6B65\u51FD\u6570\uFF0Cinterval\u4E3A\u8F6E\u8BE2\u95F4\u9694\uFF0Ctimeout\u4E3A\u8D85\u65F6\u65F6\u95F4\uFF0C\u8FD4\u56DEfn\u7684\u7ED3\u679C\r\ndeclare const createOpenAI: any;\r\ndeclare const createDeepSeek: any;\r\ndeclare const createZhipu: any;\r\ndeclare const createQwen: any;\r\ndeclare const createAnthropic: any;\r\ndeclare const createOpenAICompatible: any;\r\ndeclare const createXai: any;\r\ndeclare const createMinimax: any;\r\ndeclare const createGoogleGenerativeAI: any;\r\ndeclare const exports: {\r\n  vendor: VendorConfig;\r\n  textRequest: (m: TextModel, t: boolean, tl: 0 | 1 | 2 | 3) => any; //\u6587\u672C\u6A21\u578B\r\n  imageRequest: (c: ImageConfig, m: ImageModel) => Promise<string>; //\u56FE\u7247\u6A21\u578B\uFF0C\u8FD4\u56DE\u6709\u5934base64\u5B57\u7B26\u4E32\r\n  videoRequest: (c: VideoConfig, m: VideoModel) => Promise<string>; //\u89C6\u9891\u6A21\u578B\uFF0C\u8FD4\u56DE\u6709\u5934base64\u5B57\u7B26\u4E32\r\n  ttsRequest: (c: TTSConfig, m: TTSModel) => Promise<string>; //\uFF08\u6682\u672A\u5F00\u653E\uFF09\u8BED\u97F3\u6A21\u578B\uFF0C\u8FD4\u56DE\u6709\u5934base64\u5B57\u7B26\u4E32\r\n  checkForUpdates?: () => Promise<{ hasUpdate: boolean; latestVersion: string; notice: string }>; //\u68C0\u67E5\u66F4\u65B0\u51FD\u6570\uFF0C\u8FD4\u56DE\u662F\u5426\u6709\u66F4\u65B0\u548C\u6700\u65B0\u7248\u672C\u53F7\u548C\u66F4\u516C\u544A\uFF08\u652F\u6301Markdown\u683C\u5F0F\uFF09\r\n  updateVendor?: () => Promise<string>; //\u66F4\u65B0\u51FD\u6570\uFF0C\u8FD4\u56DE\u6700\u65B0\u7684\u4EE3\u7801\u6587\u672C\r\n};\r\n\r\n// ============================================================\r\n// \u4F9B\u5E94\u5546\u914D\u7F6E\r\n// ============================================================\r\n\r\nconst vendor: VendorConfig = {\r\n  id: "null",\r\n  version: "2.0",\r\n  author: "DramaStudio",\r\n  name: "\u7A7A\u6A21\u677F",\r\n  description: "## \u5F00\u53D1\u6A21\u677F\uFF0C\u60A8\u53EF\u4EE5\u4F7F\u7528\u6B64\u6A21\u677F\u8FDB\u884CVibe Coding",\r\n  inputs: [\r\n    { key: "apiKey", label: "API\u5BC6\u94A5", type: "password", required: true },\r\n    { key: "baseUrl", label: "\u8BF7\u6C42\u5730\u5740", type: "url", required: true, placeholder: "\u793A\u4F8B\uFF1Ahttps://api.openai.com/v1" },\r\n  ],\r\n  inputValues: { apiKey: "", baseUrl: "https://api.openai.com/v1" },\r\n  models: [{ name: "GPT-4o", modelName: "gpt-4o", type: "text", think: false }],\r\n};\r\n\r\n// ============================================================\r\n// \u9002\u914D\u5668\u51FD\u6570\r\n// ============================================================\r\n\r\nconst textRequest = (model: TextModel, think: boolean, thinkLevel: 0 | 1 | 2 | 3) => {\r\n  if (!vendor.inputValues.apiKey) throw new Error("\u7F3A\u5C11API Key");\r\n  const apiKey = vendor.inputValues.apiKey.replace(/^Bearer\\s+/i, "");\r\n  return createOpenAI({ baseURL: vendor.inputValues.baseUrl, apiKey }).chat(model.modelName);\r\n};\r\n\r\nconst imageRequest = async (config: ImageConfig, model: ImageModel): Promise<string> => {\r\n  return "";\r\n};\r\n\r\nconst videoRequest = async (config: VideoConfig, model: VideoModel): Promise<string> => {\r\n  return "";\r\n};\r\n\r\nconst ttsRequest = async (config: TTSConfig, model: TTSModel): Promise<string> => {\r\n  return "";\r\n};\r\n\r\nconst checkForUpdates = async (): Promise<{ hasUpdate: boolean; latestVersion: string; notice: string }> => {\r\n  return { hasUpdate: false, latestVersion: "2.0", notice: "## \u65B0\u7248\u672C\u66F4\u65B0\u516C\u544A" };\r\n};\r\n\r\nconst updateVendor = async (): Promise<string> => {\r\n  return "";\r\n};\r\n\r\n// ============================================================\r\n// \u5BFC\u51FA\r\n// ============================================================\r\n\r\nexports.vendor = vendor;\r\nexports.textRequest = textRequest;\r\nexports.imageRequest = imageRequest;\r\nexports.videoRequest = videoRequest;\r\nexports.ttsRequest = ttsRequest;\r\nexports.checkForUpdates = checkForUpdates;\r\nexports.updateVendor = updateVendor;\r\n\r\n// \u8FD9\u884C\u4EE3\u7801\u7528\u4E8E\u786E\u4FDD\u5F53\u524D\u6587\u4EF6\u88AB\u8BC6\u522B\u4E3A\u6A21\u5757\uFF0C\u907F\u514D\u5168\u5C40\u53D8\u91CF\u51B2\u7A81\r\nexport {};\r\n\r\n/**\r\n * ============================================================\r\n * AI \u4EE3\u7801\u751F\u6210\u6307\u5357\r\n * ============================================================\r\n *\r\n * \u3010\u6982\u8FF0\u3011\r\n * \u672C\u6587\u4EF6\u662F DramaStudio AI \u4F9B\u5E94\u5546\u9002\u914D\u6A21\u677F\u3002AI \u5728\u751F\u6210\u65B0\u4F9B\u5E94\u5546\u9002\u914D\u4EE3\u7801\u65F6\uFF0C\r\n * \u5FC5\u987B\u4E25\u683C\u9075\u5B88\u4EE5\u4E0B\u89C4\u5219\uFF0C\u5E76\u8981\u6C42\u7528\u6237\u63D0\u4F9B\u76EE\u6807\u5E73\u53F0\u7684 curl \u8C03\u7528\u793A\u4F8B\u6216 API \u6587\u6863\u4FE1\u606F\u4F5C\u4E3A\u8F93\u5165\u4F9D\u636E\u3002\r\n *\r\n * \u3010\u524D\u7F6E\u8981\u6C42\u3011\r\n * \u5728\u751F\u6210\u4EE3\u7801\u524D\uFF0C\u8BF7\u5411\u7528\u6237\u7D22\u8981\u4EE5\u4E0B\u4FE1\u606F\uFF08\u81F3\u5C11\u5176\u4E00\uFF09\uFF1A\r\n *   1. \u76EE\u6807 API \u7684 curl \u8BF7\u6C42\u793A\u4F8B\uFF08\u5305\u542B\u8BF7\u6C42\u5730\u5740\u3001Headers\u3001Body \u7ED3\u6784\u3001\u54CD\u5E94\u7ED3\u6784\uFF09\r\n *   2. \u76EE\u6807 API \u7684\u5B98\u65B9\u6587\u6863\u94FE\u63A5\u6216\u6587\u6863\u622A\u56FE/\u6587\u672C\u5185\u5BB9\r\n *   3. \u9700\u8981\u9002\u914D\u7684\u6A21\u578B\u7C7B\u578B\uFF08text / image / video / tts\uFF09\u53CA\u5176\u80FD\u529B\u8BF4\u660E\r\n * \u6CA1\u6709\u8DB3\u591F\u4FE1\u606F\u65F6\uFF0C\u5E94\u4E3B\u52A8\u8FFD\u95EE\uFF0C\u4E0D\u8981\u51ED\u7A7A\u7F16\u9020 API \u7ED3\u6784\u3002\r\n *\r\n * \u3010\u4EE3\u7801\u89C4\u5219\u3011\r\n *\r\n * 1. \u7981\u6B62\u5F15\u5165\u4EFB\u4F55\u5916\u90E8\u5305\r\n *    \u4E0D\u53EF\u4F7F\u7528 import / require\uFF0C\u4EC5\u80FD\u4F7F\u7528\u672C\u6587\u4EF6\u300C\u5168\u5C40\u58F0\u660E\u300D\u533A\u57DF\u4E2D\u5DF2\u58F0\u660E\u7684\u65B9\u6CD5\u548C\u5BF9\u8C61\uFF0C\r\n *    \u5305\u62EC\uFF1Aaxios\u3001logger\u3001jsonwebtoken\u3001zipImage\u3001zipImageResolution\u3001mergeImages\u3001\r\n *    urlToBase64\u3001pollTask\uFF0C\u4EE5\u53CA createOpenAI\u3001createDeepSeek\u3001createZhipu\u3001createQwen\u3001\r\n *    createAnthropic\u3001createOpenAICompatible\u3001createXai\u3001createMinimax\u3001\r\n *    createGoogleGenerativeAI \u7B49 AI SDK \u5DE5\u5382\u51FD\u6570\u3002\r\n *\r\n * 2. \u7981\u6B62\u5728 exports.* \u51FD\u6570\u5916\u90E8\u58F0\u660E\u79BB\u6563\u7684\u5168\u5927\u5199\u5E38\u91CF\r\n *    \u9519\u8BEF\u793A\u4F8B\uFF1Aconst API_URL = "https://..."; const MAX_RETRY = 3;\r\n *    \u5982\u679C\u786E\u5B9E\u9700\u8981\u53EF\u914D\u7F6E\u7684\u5E38\u91CF\u503C\uFF0C\u5FC5\u987B\u5C06\u5176\u58F0\u660E\u5728 vendor.inputValues \u4E2D\uFF0C\r\n *    \u901A\u8FC7 vendor.inputValues.xxx \u8BBF\u95EE\uFF0C\u8BA9\u7528\u6237\u53EF\u5728\u754C\u9762\u4E0A\u914D\u7F6E\u3002\r\n *    \u5982\u679C\u662F\u7EAF\u903B\u8F91\u5185\u90E8\u4F7F\u7528\u7684\u4E34\u65F6\u53D8\u91CF\uFF0C\u5E94\u5185\u8054\u5728\u5BF9\u5E94\u7684 exports.* \u51FD\u6570\u4F53\u5185\u90E8\uFF0C\u4F7F\u7528\u5C0F\u9A7C\u5CF0\u547D\u540D\u3002\r\n *\r\n * 3. \u903B\u8F91\u5C3D\u91CF\u805A\u5408\u5728 exports.* \u5BF9\u5E94\u7684\u51FD\u6570\u5185\u90E8\r\n *    \u6BCF\u4E2A\u9002\u914D\u51FD\u6570\uFF08textRequest / imageRequest / videoRequest / ttsRequest\uFF09\r\n *    \u5E94\u81EA\u5305\u542B\uFF0C\u5C06\u8BF7\u6C42\u6784\u9020\u3001\u53D1\u9001\u3001\u8F6E\u8BE2\u3001\u7ED3\u679C\u89E3\u6790\u7B49\u903B\u8F91\u5199\u5728\u51FD\u6570\u4F53\u5185\uFF0C\u907F\u514D\u62C6\u5206\u51FA\u5927\u91CF\u5916\u90E8\u8F85\u52A9\u51FD\u6570\u3002\r\n *    \u5982\u679C\u591A\u4E2A\u51FD\u6570\u786E\u5B9E\u5B58\u5728\u516C\u5171\u903B\u8F91\uFF08\u5982\u7B7E\u540D\u8BA1\u7B97\u3001Token \u751F\u6210\u3001\u8BF7\u6C42\u5934\u6784\u9020\uFF09\uFF0C\r\n *    \u53EF\u63D0\u53D6\u4E3A\u6587\u4EF6\u5185\u7684\u5C0F\u9A7C\u5CF0\u547D\u540D\u51FD\u6570\uFF0C\u653E\u5728\u300C\u9002\u914D\u5668\u51FD\u6570\u300D\u533A\u5757\u4E4B\u524D\u7684\u300C\u8F85\u52A9\u5DE5\u5177\u300D\u533A\u5757\u4E2D\uFF0C\r\n *    \u4E14\u4E0D\u53EF\u4F7F\u7528\u5168\u5927\u5199\u547D\u540D\u3002\r\n *\r\n * 4. \u547D\u540D\u89C4\u8303\r\n *    \u6240\u6709\u53D8\u91CF\u3001\u51FD\u6570\u4E00\u5F8B\u4F7F\u7528\u5C0F\u9A7C\u5CF0\u547D\u540D\uFF08camelCase\uFF09\uFF0C\u7981\u6B62\u4F7F\u7528 UPPER_SNAKE_CASE\u3002\r\n *\r\n * 5. \u4E0D\u9700\u8981\u91CD\u65B0\u58F0\u660E\u7C7B\u578B\r\n *    \u672C\u6587\u4EF6\u9876\u90E8\u5DF2\u5B8C\u6574\u5B9A\u4E49\u4E86\u6240\u6709\u63A5\u53E3\u548C\u7C7B\u578B\uFF08VendorConfig\u3001ImageConfig\u3001VideoConfig\u3001\r\n *    TTSConfig\u3001TextModel\u3001ImageModel\u3001VideoModel\u3001TTSModel\u3001ReferenceList\u3001PollResult \u7B49\uFF09\uFF0C\r\n *    AI \u751F\u6210\u4EE3\u7801\u65F6\u76F4\u63A5\u4F7F\u7528\u5373\u53EF\uFF0C\u4E0D\u8981\u91CD\u590D\u58F0\u660E\u3002\r\n *\r\n * 6. \u8FD4\u56DE\u503C\u89C4\u8303\r\n *    - textRequest(model)\uFF1A\u8FD4\u56DE AI SDK \u7684 chat model \u5B9E\u4F8B\uFF08\u901A\u8FC7 createOpenAI \u7B49\u5DE5\u5382\u51FD\u6570\u521B\u5EFA\uFF09\u3002\r\n *    - imageRequest(config, model)\uFF1A\u8FD4\u56DE\u6709\u5934 base64 \u5B57\u7B26\u4E32\uFF08\u5982 "data:image/png;base64,..."\uFF09\u3002\r\n *      config.referenceList \u4E3A Extract<ReferenceList, { type: "image" }>[] \u7C7B\u578B\uFF0C\r\n *      \u6BCF\u4E2A\u5F15\u7528\u6761\u76EE\u5747\u4E3A base64 \u5F62\u5F0F\uFF08sourceType \u56FA\u5B9A\u4E3A "base64"\uFF09\u3002\r\n *    - videoRequest(config, model)\uFF1A\u8FD4\u56DE\u6709\u5934 base64 \u5B57\u7B26\u4E32\uFF08\u5982 "data:video/mp4;base64,..."\uFF09\u3002\r\n *      config.referenceList \u4E3A ReferenceList[] \u7C7B\u578B\uFF0C\u53EF\u5305\u542B image / video / audio \u4E09\u79CD\u5F15\u7528\uFF0C\r\n *      \u6BCF\u4E2A\u5F15\u7528\u6761\u76EE\u5747\u4E3A base64 \u5F62\u5F0F\uFF08sourceType \u56FA\u5B9A\u4E3A "base64"\uFF09\u3002\r\n *      config.mode \u4E3A\u5F53\u524D\u6FC0\u6D3B\u7684\u89C6\u9891\u6A21\u5F0F\u6570\u7EC4\uFF0C\u9700\u6839\u636E mode \u51B3\u5B9A\u5982\u4F55\u4F7F\u7528 referenceList\u3002\r\n *    - ttsRequest(config, model)\uFF1A\u8FD4\u56DE\u6709\u5934 base64 \u5B57\u7B26\u4E32\uFF08\u5982 "data:audio/mp3;base64,..."\uFF09\u3002\r\n *      config.referenceList \u4E3A Extract<ReferenceList, { type: "audio" }>[] \u7C7B\u578B\uFF08\u97F3\u9891\u53C2\u8003\uFF09\u3002\r\n *    \u5F53 API \u8FD4\u56DE\u7684\u662F URL \u800C\u975E\u4E8C\u8FDB\u5236\u6570\u636E\u65F6\uFF0C\u4F7F\u7528 urlToBase64(url) \u8F6C\u6362\u3002\r\n *\r\n * 7. ReferenceList \u4E0E VideoMode \u8BF4\u660E\r\n *    ReferenceList \u662F\u7EDF\u4E00\u7684\u591A\u5A92\u4F53\u5F15\u7528\u7C7B\u578B\uFF0C\u6BCF\u4E2A\u6761\u76EE\u5305\u542B\uFF1A\r\n *      - type: "image" | "audio" | "video"\uFF08\u5A92\u4F53\u7C7B\u578B\uFF09\r\n *      - sourceType: "base64"\uFF08\u5F53\u524D\u6A21\u677F\u56FA\u5B9A\u4E3A base64\uFF09\r\n *      - base64\uFF08\u5BF9\u5E94\u7684\u6570\u636E\uFF09\r\n *\r\n *    VideoMode \u5B9A\u4E49\u4E86\u89C6\u9891\u6A21\u578B\u652F\u6301\u7684\u8F93\u5165\u6A21\u5F0F\uFF1A\r\n *      - "text"\uFF1A\u7EAF\u6587\u672C\u751F\u6210\u89C6\u9891\r\n *      - "singleImage"\uFF1A\u5355\u5F20\u9996\u5E27\u56FE\u7247\r\n *      - "startEndRequired"\uFF1A\u9996\u5C3E\u5E27\uFF08\u4E24\u5F20\u90FD\u5FC5\u987B\u63D0\u4F9B\uFF09\r\n *      - "endFrameOptional"\uFF1A\u9996\u5C3E\u5E27\uFF08\u5C3E\u5E27\u53EF\u9009\uFF09\r\n *      - "startFrameOptional"\uFF1A\u9996\u5C3E\u5E27\uFF08\u9996\u5E27\u53EF\u9009\uFF09\r\n *      - \u6570\u7EC4\u5F62\u5F0F\u5982 ["imageReference:9", "videoReference:3", "audioReference:3"]\uFF1A\r\n *        \u591A\u6A21\u6001\u53C2\u8003\u6A21\u5F0F\uFF0C\u6570\u5B57\u8868\u793A\u8BE5\u7C7B\u578B\u7684\u6700\u5927\u6570\u91CF\u9650\u5236\u3002\r\n *\r\n *    \u5728 videoRequest \u4E2D\uFF0Cconfig.mode \u8868\u793A\u5F53\u524D\u9009\u62E9\u7684\u6A21\u5F0F\uFF0C\u9700\u6839\u636E\u5176\u503C\u51B3\u5B9A\uFF1A\r\n *      - \u5982\u4F55\u4ECE config.referenceList \u4E2D\u63D0\u53D6\u5BF9\u5E94\u7C7B\u578B\u7684\u5F15\u7528\r\n *      - \u5982\u4F55\u6784\u9020 API \u8BF7\u6C42\u4F53\u4E2D\u7684\u56FE\u7247/\u89C6\u9891/\u97F3\u9891\u53C2\u6570\r\n *\r\n * 8. \u5F02\u6B65\u4EFB\u52A1\u5904\u7406\r\n *    \u5BF9\u4E8E\u89C6\u9891\u751F\u6210\u7B49\u9700\u8981\u8F6E\u8BE2\u7684\u5F02\u6B65\u4EFB\u52A1\uFF0C\u4F7F\u7528\u5168\u5C40\u7684 pollTask \u51FD\u6570\uFF1A\r\n *    const result = await pollTask(async () => {\r\n *      const resp = await axios.get(...);\r\n *      if (resp.data.status === "SUCCESS") return { completed: true, data: resp.data.url };\r\n *      if (resp.data.status === "FAILED") return { completed: true, error: resp.data.message };\r\n *      return { completed: false };\r\n *    }, 5000, 600000); // \u6BCF5\u79D2\u8F6E\u8BE2\uFF0C10\u5206\u949F\u8D85\u65F6\r\n *    if (result.error) throw new Error(result.error);\r\n *    return await urlToBase64(result.data!);\r\n *\r\n * 9. \u9519\u8BEF\u5904\u7406\r\n *    \u5728\u6BCF\u4E2A\u51FD\u6570\u5F00\u5934\u6821\u9A8C\u5FC5\u9700\u53C2\u6570\uFF08\u5982 API Key\uFF09\uFF0C\u7F3A\u5931\u65F6\u4F7F\u7528 throw new Error("...") \u629B\u51FA\u3002\r\n *    API \u8BF7\u6C42\u5931\u8D25\u65F6\uFF0C\u4ECE\u54CD\u5E94\u4E2D\u63D0\u53D6\u6709\u610F\u4E49\u7684\u9519\u8BEF\u4FE1\u606F\u629B\u51FA\uFF0C\u4E0D\u8981\u541E\u6389\u5F02\u5E38\u3002\r\n *\r\n * 10. \u65E5\u5FD7\u8F93\u51FA\r\n *     \u5728\u5173\u952E\u6B65\u9AA4\u4F7F\u7528 logger("...") \u8F93\u51FA\u65E5\u5FD7\uFF08\u5982"\u5F00\u59CB\u63D0\u4EA4\u4EFB\u52A1"\u3001"\u4EFB\u52A1ID: xxx"\u3001"\u8F6E\u8BE2\u4E2D..."\uFF09\uFF0C\r\n *     \u4FBF\u4E8E\u8C03\u8BD5\u3002\r\n *\r\n * 11. vendor \u914D\u7F6E\u586B\u5199\r\n *     - id\uFF1A\u7EAF\u82F1\u6587\u5C0F\u5199\uFF0C\u4F5C\u4E3A\u6587\u4EF6\u540D\u4F7F\u7528\uFF0C\u7981\u6B62\u7279\u6B8A\u7B26\u53F7\u548C\u7A7A\u683C\u3002\r\n *     - version\uFF1A\u8BED\u4E49\u5316\u7248\u672C\u683C\u5F0F "x.y"\u3002\r\n *     - inputs\uFF1A\u6839\u636E\u76EE\u6807 API \u6240\u9700\u7684\u8BA4\u8BC1\u4FE1\u606F\u914D\u7F6E\uFF08API Key\u3001Secret\u3001\u8BF7\u6C42\u5730\u5740\u7B49\uFF09\u3002\r\n *     - models\uFF1A\u6839\u636E\u76EE\u6807\u5E73\u53F0\u652F\u6301\u7684\u6A21\u578B\u5217\u8868\u586B\u5199\uFF0C\u6CE8\u610F\u6B63\u786E\u8BBE\u7F6E type \u548C\u5404\u6A21\u578B\u7279\u6709\u5B57\u6BB5\u3002\r\n *       - VideoModel \u7684 mode \u5BF9\u5E94 API \u652F\u6301\u7684\u8F93\u5165\u6A21\u5F0F\uFF08\u53C2\u89C1\u89C4\u5219 7 \u7684 VideoMode \u8BF4\u660E\uFF09\u3002\r\n *       - VideoModel \u7684 audio \u5B57\u6BB5\uFF1Atrue\uFF08\u59CB\u7EC8\u751F\u6210\u97F3\u9891\uFF09\u3001false\uFF08\u4E0D\u751F\u6210\uFF09\u3001"optional"\uFF08\u7528\u6237\u53EF\u9009\uFF09\u3002\r\n *       - VideoModel \u7684 durationResolutionMap \u5BF9\u5E94\u5404\u65F6\u957F\u4E0B\u53EF\u9009\u7684\u5206\u8FA8\u7387\u3002\r\n *       - VideoModel \u7684 associationSkills \u53EF\u9009\uFF0C\u7528\u4E8E\u63CF\u8FF0\u6A21\u578B\u7684\u7279\u6B8A\u80FD\u529B\u3002\r\n *       - ImageModel \u7684 mode \u5BF9\u5E94 API \u652F\u6301\u7684\u751F\u56FE\u6A21\u5F0F\uFF08"text" \u7EAF\u6587\u672C\u3001"singleImage" \u5355\u56FE\u53C2\u8003\u3001"multiReference" \u591A\u56FE\u53C2\u8003\uFF09\u3002\r\n *       - TTSModel \u7684 voices \u5BF9\u5E94\u53EF\u9009\u7684\u97F3\u8272\u5217\u8868\u3002\r\n *\r\n * 12. \u56FE\u7247\u5904\u7406\r\n *     - \u9700\u8981\u538B\u7F29\u56FE\u7247\u4F53\u79EF\u65F6\u4F7F\u7528 zipImage(base64, maxSizeKB)\u3002\r\n *     - \u9700\u8981\u8C03\u6574\u56FE\u7247\u5206\u8FA8\u7387\u65F6\u4F7F\u7528 zipImageResolution(base64, width, height)\u3002\r\n *     - \u9700\u8981\u5C06\u591A\u5F20\u56FE\u7247\u62FC\u5408\u4E3A\u4E00\u5F20\u65F6\u4F7F\u7528 mergeImages(base64Arr, maxSize)\u3002\r\n *     - \u4EE5\u4E0A\u51FD\u6570\u5747\u63A5\u6536\u548C\u8FD4\u56DE\u6709\u5934 base64 \u5B57\u7B26\u4E32\u3002\r\n *\r\n * 13. \u6587\u4EF6\u7ED3\u6784\r\n *     \u751F\u6210\u7684\u4EE3\u7801\u5FC5\u987B\u4FDD\u6301\u672C\u6A21\u677F\u7684\u6574\u4F53\u7ED3\u6784\uFF1A\r\n *     \u7C7B\u578B\u5B9A\u4E49\u533A \u2192 \u5168\u5C40\u58F0\u660E\u533A \u2192 \u4F9B\u5E94\u5546\u914D\u7F6E\u533A \u2192 [\u8F85\u52A9\u5DE5\u5177\u533A\uFF08\u53EF\u9009\uFF09] \u2192 \u9002\u914D\u5668\u51FD\u6570\u533A \u2192 \u5BFC\u51FA\u533A\r\n *     \u4E0D\u8981\u6253\u4E71\u987A\u5E8F\uFF0C\u4E0D\u8981\u5220\u9664\u5DF2\u6709\u7684\u7ED3\u6784\u6CE8\u91CA\u5206\u9694\u7EBF\u3002\r\n *     \u8F85\u52A9\u5DE5\u5177\u533A\u7528\u4E8E\u653E\u7F6E\u591A\u4E2A\u9002\u914D\u5668\u51FD\u6570\u5171\u4EAB\u7684\u5C0F\u9A7C\u5CF0\u547D\u540D\u8F85\u52A9\u51FD\u6570\uFF08\u5982 getHeaders\u3001getBaseUrl\uFF09\u3002\r\n *\r\n * 14. \u5BFC\u51FA\u89C4\u8303\r\n *     \u5FC5\u987B\u5BFC\u51FA\u4EE5\u4E0B\u5B57\u6BB5\uFF08\u901A\u8FC7 exports.xxx = xxx \u8D4B\u503C\uFF09\uFF1A\r\n *       - exports.vendor\uFF08\u5FC5\u987B\uFF09\r\n *       - exports.textRequest\uFF08\u5FC5\u987B\uFF09\r\n *       - exports.imageRequest\uFF08\u5FC5\u987B\uFF09\r\n *       - exports.videoRequest\uFF08\u5FC5\u987B\uFF09\r\n *       - exports.ttsRequest\uFF08\u5FC5\u987B\uFF09\r\n *       - exports.checkForUpdates\uFF08\u53EF\u9009\uFF09\r\n *       - exports.updateVendor\uFF08\u53EF\u9009\uFF09\r\n *     \u672A\u5B9E\u73B0\u7684\u9002\u914D\u5668\u51FD\u6570\u4FDD\u7559\u7A7A\u5B9E\u73B0\uFF08return ""\uFF09\uFF0C\u4E0D\u53EF\u7701\u7565\u5BFC\u51FA\u3002\r\n *     \u6587\u4EF6\u672B\u5C3E\u5FC5\u987B\u5305\u542B export {}; \u4EE5\u786E\u4FDD\u6587\u4EF6\u88AB\u8BC6\u522B\u4E3A\u6A21\u5757\u3002\r\n *\r\n * \u3010\u751F\u6210\u6D41\u7A0B\u3011\r\n * \u5F53\u7528\u6237\u8BF7\u6C42\u751F\u6210\u65B0\u7684\u4F9B\u5E94\u5546\u9002\u914D\u65F6\uFF1A\r\n *   1. \u786E\u8BA4\u7528\u6237\u5DF2\u63D0\u4F9B curl \u793A\u4F8B\u6216 API \u6587\u6863\u3002\r\n *   2. \u5206\u6790 API \u7684\u8BA4\u8BC1\u65B9\u5F0F\u3001\u7AEF\u70B9\u5730\u5740\u3001\u8BF7\u6C42/\u54CD\u5E94\u7ED3\u6784\u3002\r\n *   3. \u57FA\u4E8E\u672C\u6A21\u677F\u7ED3\u6784\uFF0C\u586B\u5145 vendor \u914D\u7F6E\u548C\u5BF9\u5E94\u7684\u9002\u914D\u5668\u51FD\u6570\u3002\r\n *   4. \u6839\u636E\u5F53\u524D\u6A21\u677F\u7684 ReferenceList \u5B9A\u4E49\uFF0C\u6309 base64 \u5F62\u5F0F\u6784\u9020\u548C\u6D88\u8D39 referenceList\u3002\r\n *   5. \u4EC5\u5B9E\u73B0\u7528\u6237\u9700\u8981\u7684\u6A21\u578B\u7C7B\u578B\uFF0C\u672A\u7528\u5230\u7684\u51FD\u6570\u4FDD\u7559\u7A7A\u5B9E\u73B0\uFF08return ""\uFF09\u3002\r\n *   6. \u751F\u6210\u5B8C\u6574\u53EF\u7528\u7684\u4EE3\u7801\uFF0C\u786E\u4FDD\u65E0\u8BED\u6CD5\u9519\u8BEF\u3001\u65E0\u9057\u6F0F\u5BFC\u51FA\u3002\r\n */\r\n',
-      "openai.ts": '/**\r\n * DramaStudio AI\u4F9B\u5E94\u5546\u6A21\u677F\r\n * @version 2.0\r\n */\r\n// ============================================================\r\n// \u7C7B\u578B\u5B9A\u4E49\r\n// ============================================================\r\ntype VideoMode =\r\n  | "singleImage"\r\n  | "startEndRequired"\r\n  | "endFrameOptional"\r\n  | "startFrameOptional"\r\n  | "text"\r\n  | (`videoReference:${number}` | `imageReference:${number}` | `audioReference:${number}`)[];\r\ninterface TextModel {\r\n  name: string;\r\n  modelName: string;\r\n  type: "text";\r\n  think: boolean;\r\n}\r\ninterface ImageModel {\r\n  name: string;\r\n  modelName: string;\r\n  type: "image";\r\n  mode: ("text" | "singleImage" | "multiReference")[];\r\n  associationSkills?: string;\r\n}\r\ninterface VideoModel {\r\n  name: string;\r\n  modelName: string;\r\n  type: "video";\r\n  mode: VideoMode[];\r\n  associationSkills?: string;\r\n  audio: "optional" | false | true;\r\n  durationResolutionMap: { duration: number[]; resolution: string[] }[];\r\n}\r\ninterface TTSModel {\r\n  name: string;\r\n  modelName: string;\r\n  type: "tts";\r\n  voices: { title: string; voice: string }[];\r\n}\r\ninterface VendorConfig {\r\n  id: string;\r\n  version: string;\r\n  name: string;\r\n  author: string;\r\n  description?: string;\r\n  icon?: string;\r\n  inputs: { key: string; label: string; type: "text" | "password" | "url"; required: boolean; placeholder?: string }[];\r\n  inputValues: Record<string, string>;\r\n  models: (TextModel | ImageModel | VideoModel | TTSModel)[];\r\n}\r\ninterface ImageConfig {\r\n  prompt: string;\r\n  imageBase64: string[];\r\n  size: "1K" | "2K" | "4K";\r\n  aspectRatio: `${number}:${number}`;\r\n}\r\ninterface VideoConfig {\r\n  duration: number;\r\n  resolution: string;\r\n  aspectRatio: "16:9" | "9:16";\r\n  prompt: string;\r\n  imageBase64?: string[];\r\n  audio?: boolean;\r\n  mode: VideoMode[];\r\n}\r\ninterface TTSConfig {\r\n  text: string;\r\n  voice: string;\r\n  speechRate: number;\r\n  pitchRate: number;\r\n  volume: number;\r\n}\r\ninterface PollResult {\r\n  completed: boolean;\r\n  data?: string;\r\n  error?: string;\r\n}\r\n// ============================================================\r\n// \u5168\u5C40\u58F0\u660E\r\n// ============================================================\r\ndeclare const axios: any;\r\ndeclare const logger: (msg: string) => void;\r\ndeclare const jsonwebtoken: any;\r\ndeclare const zipImage: (base64: string, size: number) => Promise<string>;\r\ndeclare const zipImageResolution: (base64: string, w: number, h: number) => Promise<string>;\r\ndeclare const mergeImages: (base64Arr: string[], maxSize?: string) => Promise<string>;\r\ndeclare const urlToBase64: (url: string) => Promise<string>;\r\ndeclare const pollTask: (fn: () => Promise<PollResult>, interval?: number, timeout?: number) => Promise<PollResult>;\r\ndeclare const createOpenAI: any;\r\ndeclare const createDeepSeek: any;\r\ndeclare const createZhipu: any;\r\ndeclare const createQwen: any;\r\ndeclare const createAnthropic: any;\r\ndeclare const createOpenAICompatible: any;\r\ndeclare const createXai: any;\r\ndeclare const createMinimax: any;\r\ndeclare const createGoogleGenerativeAI: any;\r\ndeclare const exports: {\r\n  vendor: VendorConfig;\r\n  textRequest: (m: TextModel, t: boolean, tl: 0 | 1 | 2 | 3) => any;\r\n  imageRequest: (c: ImageConfig, m: ImageModel) => Promise<string>;\r\n  videoRequest: (c: VideoConfig, m: VideoModel) => Promise<string>;\r\n  ttsRequest: (c: TTSConfig, m: TTSModel) => Promise<string>;\r\n  checkForUpdates?: () => Promise<{ hasUpdate: boolean; latestVersion: string; notice: string }>;\r\n  updateVendor?: () => Promise<string>;\r\n};\r\n// ============================================================\r\n// \u4F9B\u5E94\u5546\u914D\u7F6E\r\n// ============================================================\r\nconst vendor: VendorConfig = {\r\n  id: "openai",\r\n  version: "2.0",\r\n  author: "DramaStudio",\r\n  name: "OpenAI\u6807\u51C6\u63A5\u53E3",\r\n  description: "OpenAI\u6807\u51C6\u683C\u5F0F\u63A5\u53E3\uFF0C\u53EF\u4FEE\u6539\u8BF7\u6C42\u5730\u5740\u5E76\u624B\u52A8\u6DFB\u52A0\u6A21\u578B\u3002",\r\n  icon: "",\r\n  inputs: [\r\n    { key: "apiKey", label: "API\u5BC6\u94A5", type: "password", required: true },\r\n    { key: "baseUrl", label: "\u8BF7\u6C42\u5730\u5740", type: "url", required: true, placeholder: "\u4EE5v1\u7ED3\u675F\uFF0C\u793A\u4F8B\uFF1Ahttps://api.openai.com/v1" },\r\n  ],\r\n  inputValues: {\r\n    apiKey: "",\r\n    baseUrl: "https://api.openai.com/v1",\r\n  },\r\n  models: [\r\n    { name: "GPT-4o", modelName: "gpt-4o", type: "text", think: false },\r\n    { name: "GPT-4.1", modelName: "gpt-4.1", type: "text", think: false },\r\n    { name: "GPT-5.1", modelName: "gpt-5.1", type: "text", think: false },\r\n    { name: "GPT-5.2", modelName: "gpt-5.2", type: "text", think: false },\r\n    { name: "GPT-5.4", modelName: "gpt-5.4", type: "text", think: false },\r\n  ],\r\n};\r\n// ============================================================\r\n// \u9002\u914D\u5668\u51FD\u6570\r\n// ============================================================\r\nconst textRequest = (model: TextModel, think: boolean, thinkLevel: 0 | 1 | 2 | 3) => {\r\n  if (!vendor.inputValues.apiKey) throw new Error("\u7F3A\u5C11API Key");\r\n  const apiKey = vendor.inputValues.apiKey.replace(/^Bearer\\s+/i, "");\r\n  return createOpenAI({ baseURL: vendor.inputValues.baseUrl, apiKey }).chat(model.modelName);\r\n};\r\nconst imageRequest = async (config: ImageConfig, model: ImageModel): Promise<string> => {\r\n  return "";\r\n};\r\nconst videoRequest = async (config: VideoConfig, model: VideoModel): Promise<string> => {\r\n  return "";\r\n};\r\nconst ttsRequest = async (config: TTSConfig, model: TTSModel): Promise<string> => {\r\n  return "";\r\n};\r\nconst checkForUpdates = async (): Promise<{ hasUpdate: boolean; latestVersion: string; notice: string }> => {\r\n  return { hasUpdate: false, latestVersion: "2.0", notice: "" };\r\n};\r\nconst updateVendor = async (): Promise<string> => {\r\n  return "";\r\n};\r\n// ============================================================\r\n// \u5BFC\u51FA\r\n// ============================================================\r\nexports.vendor = vendor;\r\nexports.textRequest = textRequest;\r\nexports.imageRequest = imageRequest;\r\nexports.videoRequest = videoRequest;\r\nexports.ttsRequest = ttsRequest;\r\nexports.checkForUpdates = checkForUpdates;\r\nexports.updateVendor = updateVendor;\r\nexport {};',
-      "dramastudio.ts": '/**\r\n * DramaStudio\u5B98\u65B9\u4E2D\u8F6C\u5E73\u53F0 \u4F9B\u5E94\u5546\u9002\u914D\r\n * @version 2.0\r\n */\r\n\r\n// ============================================================\r\n// \u7C7B\u578B\u5B9A\u4E49\r\n// ============================================================\r\n\r\ntype VideoMode =\r\n  | "singleImage"\r\n  | "startEndRequired"\r\n  | "endFrameOptional"\r\n  | "startFrameOptional"\r\n  | "text"\r\n  | (`videoReference:${number}` | `imageReference:${number}` | `audioReference:${number}`)[];\r\n\r\ninterface TextModel {\r\n  name: string;\r\n  modelName: string;\r\n  type: "text";\r\n  think: boolean;\r\n}\r\n\r\ninterface ImageModel {\r\n  name: string;\r\n  modelName: string;\r\n  type: "image";\r\n  mode: ("text" | "singleImage" | "multiReference")[];\r\n  associationSkills?: string;\r\n}\r\n\r\ninterface VideoModel {\r\n  name: string;\r\n  modelName: string;\r\n  type: "video";\r\n  mode: VideoMode[];\r\n  associationSkills?: string;\r\n  audio: "optional" | false | true;\r\n  durationResolutionMap: { duration: number[]; resolution: string[] }[];\r\n}\r\n\r\ninterface TTSModel {\r\n  name: string;\r\n  modelName: string;\r\n  type: "tts";\r\n  voices: { title: string; voice: string }[];\r\n}\r\n\r\ninterface VendorConfig {\r\n  id: string;\r\n  version: string;\r\n  name: string;\r\n  author: string;\r\n  description?: string;\r\n  icon?: string;\r\n  inputs: { key: string; label: string; type: "text" | "password" | "url"; required: boolean; placeholder?: string }[];\r\n  inputValues: Record<string, string>;\r\n  models: (TextModel | ImageModel | VideoModel | TTSModel)[];\r\n}\r\n\r\ntype ReferenceList =\r\n  | { type: "image"; sourceType: "base64"; base64: string }\r\n  | { type: "audio"; sourceType: "base64"; base64: string }\r\n  | { type: "video"; sourceType: "base64"; base64: string };\r\n\r\ninterface ImageConfig {\r\n  prompt: string;\r\n  referenceList?: Extract<ReferenceList, { type: "image" }>[];\r\n  size: "1K" | "2K" | "4K";\r\n  aspectRatio: `${number}:${number}`;\r\n}\r\n\r\ninterface VideoConfig {\r\n  duration: number;\r\n  resolution: string;\r\n  aspectRatio: "16:9" | "9:16";\r\n  prompt: string;\r\n  referenceList?: ReferenceList[];\r\n  audio?: boolean;\r\n  mode: VideoMode[];\r\n}\r\n\r\ninterface TTSConfig {\r\n  text: string;\r\n  voice: string;\r\n  speechRate: number;\r\n  pitchRate: number;\r\n  volume: number;\r\n  referenceList?: Extract<ReferenceList, { type: "audio" }>[];\r\n}\r\n\r\ninterface PollResult {\r\n  completed: boolean;\r\n  data?: string;\r\n  error?: string;\r\n}\r\n\r\n// ============================================================\r\n// \u5168\u5C40\u58F0\u660E\r\n// ============================================================\r\n\r\ndeclare const axios: any;\r\ndeclare const logger: (msg: string) => void;\r\ndeclare const jsonwebtoken: any;\r\ndeclare const zipImage: (base64: string, size: number) => Promise<string>;\r\ndeclare const zipImageResolution: (base64: string, w: number, h: number) => Promise<string>;\r\ndeclare const mergeImages: (base64Arr: string[], maxSize?: string) => Promise<string>;\r\ndeclare const urlToBase64: (url: string) => Promise<string>;\r\ndeclare const pollTask: (fn: () => Promise<PollResult>, interval?: number, timeout?: number) => Promise<PollResult>;\r\ndeclare const createOpenAI: any;\r\ndeclare const createDeepSeek: any;\r\ndeclare const createZhipu: any;\r\ndeclare const createQwen: any;\r\ndeclare const createAnthropic: any;\r\ndeclare const createOpenAICompatible: any;\r\ndeclare const createXai: any;\r\ndeclare const createMinimax: any;\r\ndeclare const createGoogleGenerativeAI: any;\r\ndeclare const exports: {\r\n  vendor: VendorConfig;\r\n  textRequest: (m: TextModel, t: boolean, tl: 0 | 1 | 2 | 3) => any;\r\n  imageRequest: (c: ImageConfig, m: ImageModel) => Promise<string>;\r\n  videoRequest: (c: VideoConfig, m: VideoModel) => Promise<string>;\r\n  ttsRequest: (c: TTSConfig, m: TTSModel) => Promise<string>;\r\n  checkForUpdates?: () => Promise<{ hasUpdate: boolean; latestVersion: string; notice: string }>;\r\n  updateVendor?: () => Promise<string>;\r\n};\r\n\r\n// ============================================================\r\n// \u4F9B\u5E94\u5546\u914D\u7F6E\r\n// ============================================================\r\n\r\nconst vendor: VendorConfig = {\r\n  id: "dramastudio",\r\n  version: "2.0",\r\n  author: "DramaStudio",\r\n  name: "DramaStudio\u5B98\u65B9\u4E2D\u8F6C\u5E73\u53F0",\r\n  description:\r\n    "## DramaStudio\u5B98\u65B9\u4E2D\u8F6C\u5E73\u53F0\\n\\nDramaStudio\u5B98\u65B9\u4E2D\u8F6C\u5E73\u53F0\uFF0C\u63D0\u4F9B**\u6587\u672C\u3001\u56FE\u50CF\u3001\u89C6\u9891\u3001\u97F3\u9891**\u7B49\u591A\u6A21\u6001\u751F\u6210\u80FD\u529B\u7684\u4E2D\u8F6C\u670D\u52A1\uFF0C\u652F\u6301\u63A5\u5165\u591A\u4E2A\u5927\u6A21\u578B\u4F9B\u5E94\u5546\uFF0C\u65B9\u4FBF\u7528\u6237\u7EDF\u4E00\u7BA1\u7406\u548C\u8C03\u7528\u4E0D\u540C\u4F9B\u5E94\u5546\u7684\u751F\u6210\u80FD\u529B\u3002\\n\\n\u{1F517} [\u524D\u5F80\u4E2D\u8F6C\u5E73\u53F0](https://api.dramastudio.net/)\\n\\n\u5982\u679C\u8FD9\u4E2A\u9879\u76EE\u5BF9\u4F60\u6709\u5E2E\u52A9\uFF0C\u53EF\u4EE5\u8003\u8651\u652F\u6301\u4E00\u4E0B\u6211\u4EEC\u7684\u5F00\u53D1\u5DE5\u4F5C \u2615",\r\n  icon: "",\r\n  inputs: [{ key: "apiKey", label: "API\u5BC6\u94A5", type: "password", required: true }],\r\n  inputValues: {\r\n    apiKey: "",\r\n    baseUrl: "https://api.dramastudio.net/v1",\r\n  },\r\n  models: [\r\n    { name: "claude-sonnet-4-6", type: "text", modelName: "claude-sonnet-4-6", think: false },\r\n    { name: "claude-opus-4-6", type: "text", modelName: "claude-opus-4-6", think: false },\r\n    { name: "claude-sonnet-4-5-20250929", type: "text", modelName: "claude-sonnet-4-5-20250929", think: false },\r\n    { name: "claude-opus-4-5-20251101", type: "text", modelName: "claude-opus-4-5-20251101", think: false },\r\n    { name: "claude-haiku-4-5-20251001", type: "text", modelName: "claude-haiku-4-5-20251001", think: false },\r\n    { name: "gpt-5.4", type: "text", modelName: "gpt-5.4", think: false },\r\n    { name: "gpt-5.2", type: "text", modelName: "gpt-5.2", think: false },\r\n    { name: "MiniMax-M2.7", type: "text", modelName: "MiniMax-M2.7", think: true },\r\n    { name: "MiniMax-M2.5", type: "text", modelName: "MiniMax-M2.5", think: true },\r\n    {\r\n      name: "Wan2.6 I2V 1080P (\u652F\u6301\u771F\u4EBA)",\r\n      type: "video",\r\n      modelName: "Wan2.6-I2V-1080P",\r\n      mode: ["text", "startEndRequired"],\r\n      durationResolutionMap: [{ duration: [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15], resolution: ["1080p"] }],\r\n      audio: true,\r\n    },\r\n    {\r\n      name: "Wan2.6 I2V 720P (\u652F\u6301\u771F\u4EBA)",\r\n      type: "video",\r\n      modelName: "Wan2.6-I2V-720P",\r\n      mode: ["text", "startEndRequired"],\r\n      durationResolutionMap: [{ duration: [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15], resolution: ["720p"] }],\r\n      audio: true,\r\n    },\r\n    {\r\n      name: "Seedance 1.5 Pro",\r\n      type: "video",\r\n      modelName: "doubao-seedance-1-5-pro-251215",\r\n      mode: ["text", "endFrameOptional"],\r\n      durationResolutionMap: [{ duration: [4, 5, 6, 7, 8, 9, 10, 11, 12], resolution: ["480p", "720p", "1080p"] }],\r\n      audio: true,\r\n    },\r\n    {\r\n      name: "vidu2 turbo",\r\n      type: "video",\r\n      modelName: "ViduQ2-turbo",\r\n      mode: ["singleImage", "startEndRequired"],\r\n      durationResolutionMap: [{ duration: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10], resolution: ["540p", "720p", "1080p"] }],\r\n      audio: false,\r\n    },\r\n    {\r\n      name: "ViduQ3 pro",\r\n      type: "video",\r\n      modelName: "ViduQ3-pro",\r\n      mode: ["singleImage", "startEndRequired"],\r\n      durationResolutionMap: [{ duration: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16], resolution: ["540p", "720p", "1080p"] }],\r\n      audio: false,\r\n    },\r\n    {\r\n      name: "ViduQ2 pro",\r\n      type: "video",\r\n      modelName: "ViduQ2-pro",\r\n      mode: ["singleImage", "startEndRequired"],\r\n      durationResolutionMap: [{ duration: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10], resolution: ["540p", "720p", "1080p"] }],\r\n      audio: false,\r\n    },\r\n    {\r\n      name: "Doubao Seedream 5.0 Lite",\r\n      type: "image",\r\n      modelName: "Doubao-Seedream-5.0-Lite",\r\n      mode: ["text", "singleImage", "multiReference"],\r\n    },\r\n    {\r\n      name: "Doubao Seedream 4.5",\r\n      type: "image",\r\n      modelName: "doubao-seedream-4-5-251128",\r\n      mode: ["text", "singleImage", "multiReference"],\r\n    },\r\n  ],\r\n};\r\n\r\n// ============================================================\r\n// \u8F85\u52A9\u5DE5\u5177\r\n// ============================================================\r\n\r\n// \u4ECE markdown \u5185\u5BB9\u4E2D\u63D0\u53D6\u7B2C\u4E00\u5F20\u56FE\u7247\r\nfunction extractFirstImageFromMd(content: string) {\r\n  const regex = /!\\[([^\\]]*)\\]\\((data:image\\/[^;]+;base64,[A-Za-z0-9+/=]+|https?:\\/\\/[^\\s)]+|\\/\\/[^\\s)]+|[^\\s)]+)\\)/;\r\n  const match = content.match(regex);\r\n  if (!match) return null;\r\n  const raw = match[2].trim();\r\n  const url = raw.startsWith("data:") ? raw : raw.split(/\\s+/)[0];\r\n  return { alt: match[1], url, type: url.startsWith("data:image") ? "base64" : "url" };\r\n}\r\n\r\n// ============================================================\r\n// \u9002\u914D\u5668\u51FD\u6570\r\n// ============================================================\r\n\r\nconst textRequest = (model: TextModel, think: boolean, thinkLevel: 0 | 1 | 2 | 3) => {\r\n  if (!vendor.inputValues.apiKey) throw new Error("\u7F3A\u5C11API Key");\r\n  const apiKey = vendor.inputValues.apiKey.replace(/^Bearer\\s+/i, "");\r\n  return createOpenAI({ baseURL: vendor.inputValues.baseUrl, apiKey }).chat(model.modelName);\r\n};\r\n\r\nconst imageRequest = async (config: ImageConfig, model: ImageModel): Promise<string> => {\r\n  if (!vendor.inputValues.apiKey) throw new Error("\u7F3A\u5C11API Key");\r\n  const apiKey = vendor.inputValues.apiKey.replace(/^Bearer\\s+/i, "");\r\n  const baseUrl = vendor.inputValues.baseUrl;\r\n  const lowerName = model.modelName.toLowerCase();\r\n  const imageBase64List = (config.referenceList ?? []).map((r) => r.base64);\r\n\r\n  // Gemini / nano \u7CFB\u6A21\u578B\uFF1A\u8D70 chat/completions \u63A5\u53E3\uFF0C\u4ECE\u8FD4\u56DE\u7684 markdown \u4E2D\u63D0\u53D6\u56FE\u7247\r\n  if (lowerName.includes("gemini") || lowerName.includes("nano")) {\r\n    const imageConfigGoogle: Record<string, string> = {\r\n      aspect_ratio: config.aspectRatio,\r\n      image_size: config.size,\r\n    };\r\n    const messages: any[] = [];\r\n    if (imageBase64List.length) {\r\n      messages.push({\r\n        role: "user",\r\n        content: imageBase64List.map((b) => ({ type: "image_url", image_url: { url: b } })),\r\n      });\r\n    }\r\n    messages.push({ role: "user", content: config.prompt + "\u8BF7\u76F4\u63A5\u8F93\u51FA\u56FE\u7247" });\r\n    const body = {\r\n      model: model.modelName,\r\n      messages,\r\n      extra_body: { google: { image_config: imageConfigGoogle } },\r\n    };\r\n    logger(`[imageRequest] \u4F7F\u7528 gemini \u9002\u914D\u5668\uFF0C\u6A21\u578B: ${model.modelName}`);\r\n    const response = await fetch(`${baseUrl}/chat/completions`, {\r\n      method: "POST",\r\n      headers: { Authorization: `Bearer ${apiKey}`, "Content-Type": "application/json" },\r\n      body: JSON.stringify(body),\r\n    });\r\n    if (!response.ok) {\r\n      const errorText = await response.text();\r\n      throw new Error(`\u8BF7\u6C42\u5931\u8D25\uFF0C\u72B6\u6001\u7801: ${response.status}, \u9519\u8BEF\u4FE1\u606F: ${errorText}`);\r\n    }\r\n    const data = await response.json();\r\n    const imageResult = extractFirstImageFromMd(data.choices[0].message.content);\r\n    if (!imageResult) throw new Error("\u672A\u80FD\u4ECE\u54CD\u5E94\u4E2D\u63D0\u53D6\u56FE\u7247");\r\n    if (imageResult.type === "base64") return imageResult.url;\r\n    return await urlToBase64(imageResult.url);\r\n  }\r\n\r\n  // \u8C46\u5305 / seedream \u7CFB\u6A21\u578B\uFF1A\u8D70 images/generations \u63A5\u53E3\r\n  if (lowerName.includes("doubao") || lowerName.includes("seedream")) {\r\n    const effectiveSize = config.size === "1K" ? "2K" : config.size;\r\n    const sizeMap: Record<string, Record<string, string>> = {\r\n      "16:9": { "2K": "2848x1600", "4K": "4096x2304" },\r\n      "9:16": { "2K": "1600x2848", "4K": "2304x4096" },\r\n    };\r\n    const resolvedSize = sizeMap[config.aspectRatio]?.[effectiveSize];\r\n    const body: Record<string, any> = {\r\n      model: model.modelName,\r\n      prompt: config.prompt,\r\n      size: resolvedSize,\r\n      response_format: "url",\r\n      sequential_image_generation: "disabled",\r\n      stream: false,\r\n      watermark: false,\r\n      ...(imageBase64List.length && { image: imageBase64List }),\r\n    };\r\n    logger(`[imageRequest] \u4F7F\u7528 doubao \u9002\u914D\u5668\uFF0C\u6A21\u578B: ${model.modelName}`);\r\n    const response = await fetch(`${baseUrl}/images/generations`, {\r\n      method: "POST",\r\n      headers: { Authorization: `Bearer ${apiKey}`, "Content-Type": "application/json" },\r\n      body: JSON.stringify(body),\r\n    });\r\n    if (!response.ok) {\r\n      const errorText = await response.text();\r\n      throw new Error(`\u8BF7\u6C42\u5931\u8D25\uFF0C\u72B6\u6001\u7801: ${response.status}, \u9519\u8BEF\u4FE1\u606F: ${errorText}`);\r\n    }\r\n    const data = await response.json();\r\n    const resultUrl = data.data[0].url;\r\n    return await urlToBase64(resultUrl);\r\n  }\r\n\r\n  throw new Error(`\u4E0D\u652F\u6301\u7684\u56FE\u50CF\u6A21\u578B: ${model.modelName}`);\r\n};\r\n\r\nconst videoRequest = async (config: VideoConfig, model: VideoModel): Promise<string> => {\r\n  if (!vendor.inputValues.apiKey) throw new Error("\u7F3A\u5C11API Key");\r\n  const apiKey = vendor.inputValues.apiKey.replace(/^Bearer\\s+/i, "");\r\n  const baseUrl = vendor.inputValues.baseUrl;\r\n  const lowerName = model.modelName.toLowerCase();\r\n\r\n  // \u5F53\u524D\u6FC0\u6D3B\u7684\u5355\u4E00 VideoMode\uFF08\u53D6\u7B2C\u4E00\u4E2A\u975E\u6570\u7EC4\u6A21\u5F0F\uFF0C\u6216\u6570\u7EC4\u6A21\u5F0F\uFF09\r\n  const activeMode = config.mode;\r\n  const imageRefs = (config.referenceList ?? []).filter((r) => r.type === "image").map((r) => r.base64);\r\n  const videoRefs = (config.referenceList ?? []).filter((r) => r.type === "video").map((r) => r.base64);\r\n  const audioRefs = (config.referenceList ?? []).filter((r) => r.type === "audio").map((r) => r.base64);\r\n\r\n  // \u6784\u5EFA\u6A21\u578B\u4E13\u5C5E metadata\r\n  let metadata: Record<string, any> = {};\r\n\r\n  if (lowerName.includes("wan")) {\r\n    // \u4E07\u8C61\u7CFB\u5217\r\n    if ((activeMode === "startEndRequired" || activeMode === "endFrameOptional" || activeMode === "startFrameOptional") && imageRefs.length >= 2) {\r\n      if (imageRefs[0]) metadata.first_frame_url = imageRefs[0];\r\n      if (imageRefs[1]) metadata.last_frame_url = imageRefs[1];\r\n    } else if (imageRefs.length) {\r\n      metadata.img_url = imageRefs[0];\r\n    }\r\n    if (typeof config.audio === "boolean") metadata.audio = config.audio;\r\n\r\n    // \u4E07\u8C61\u9700\u8981\u989D\u5916\u4F20 size \u5B57\u6BB5\r\n    const wanSizeMap: Record<string, Record<string, string>> = {\r\n      "480p": { "16:9": "832*480", "9:16": "480*832" },\r\n      "720p": { "16:9": "1280*720", "9:16": "720*1280" },\r\n      "1080p": { "16:9": "1920*1080", "9:16": "1080*1920" },\r\n    };\r\n    const wanSize = wanSizeMap[config.resolution]?.[config.aspectRatio];\r\n    const body: Record<string, any> = {\r\n      model: model.modelName,\r\n      prompt: config.prompt,\r\n      duration: config.duration,\r\n      size: wanSize,\r\n      metadata,\r\n    };\r\n    logger(`[videoRequest] \u63D0\u4EA4\u4E07\u8C61\u89C6\u9891\u4EFB\u52A1\uFF0C\u6A21\u578B: ${model.modelName}`);\r\n    const response = await fetch(`${baseUrl}/video/generations`, {\r\n      method: "POST",\r\n      headers: { Authorization: `Bearer ${apiKey}`, "Content-Type": "application/json" },\r\n      body: JSON.stringify(body),\r\n    });\r\n    if (!response.ok) {\r\n      const errorText = await response.text();\r\n      throw new Error(`\u8BF7\u6C42\u5931\u8D25\uFF0C\u72B6\u6001\u7801: ${response.status}, \u9519\u8BEF\u4FE1\u606F: ${errorText}`);\r\n    }\r\n    const data = await response.json();\r\n    const taskId = data.id;\r\n    logger(`[videoRequest] \u4E07\u8C61\u4EFB\u52A1ID: ${taskId}`);\r\n    const res = await pollTask(async () => {\r\n      const queryResponse = await fetch(`${baseUrl}/video/generations/${taskId}`, {\r\n        method: "GET",\r\n        headers: { Authorization: `Bearer ${apiKey}`, "Content-Type": "application/json" },\r\n      });\r\n      if (!queryResponse.ok) {\r\n        const errorText = await queryResponse.text();\r\n        throw new Error(`\u8F6E\u8BE2\u5931\u8D25\uFF0C\u72B6\u6001\u7801: ${queryResponse.status}, \u9519\u8BEF\u4FE1\u606F: ${errorText}`);\r\n      }\r\n      const queryData = await queryResponse.json();\r\n      const status = queryData?.status ?? queryData?.data?.status;\r\n      switch (status) {\r\n        case "completed":\r\n        case "SUCCESS":\r\n        case "success":\r\n          return { completed: true, data: queryData.data.result_url };\r\n        case "FAILURE":\r\n        case "failed":\r\n          return { completed: true, error: queryData?.data?.fail_reason ?? "\u89C6\u9891\u751F\u6210\u5931\u8D25" };\r\n        default:\r\n          return { completed: false };\r\n      }\r\n    });\r\n    if (res.error) throw new Error(res.error);\r\n    return await urlToBase64(res.data!);\r\n  }\r\n\r\n  if (lowerName.includes("doubao") || lowerName.includes("seedance")) {\r\n    // \u8C46\u5305/Seedance \u7CFB\u5217\r\n    metadata = {\r\n      ...(typeof config.audio === "boolean" && { generate_audio: config.audio }),\r\n      ratio: config.aspectRatio,\r\n      image_roles: [] as string[],\r\n      references: [] as string[],\r\n    };\r\n    if (Array.isArray(activeMode)) {\r\n      // \u591A\u53C2\u8003\u6A21\u5F0F\r\n      imageRefs.forEach((b) => metadata.references.push(b));\r\n      videoRefs.forEach((b) => metadata.references.push(b));\r\n      audioRefs.forEach((b) => metadata.references.push(b));\r\n    } else if (activeMode === "startEndRequired" || activeMode === "endFrameOptional" || activeMode === "startFrameOptional") {\r\n      imageRefs.forEach((_, i) => (metadata.image_roles as string[]).push(i === 0 ? "first_frame" : "last_frame"));\r\n    } else if (activeMode === "singleImage") {\r\n      imageRefs.forEach(() => (metadata.image_roles as string[]).push("reference_image"));\r\n    }\r\n  } else if (lowerName.includes("vidu")) {\r\n    // Vidu \u7CFB\u5217\r\n    metadata = {\r\n      aspect_ratio: config.aspectRatio,\r\n      audio: config.audio ?? false,\r\n      off_peak: false,\r\n    };\r\n  } else if (lowerName.includes("kling")) {\r\n    // \u53EF\u7075\u7CFB\u5217\r\n    metadata = { aspect_ratio: config.aspectRatio };\r\n    if (Array.isArray(activeMode)) {\r\n      metadata.reference = [...imageRefs, ...videoRefs, ...audioRefs];\r\n    } else if (activeMode === "endFrameOptional" && imageRefs.length) {\r\n      metadata.image_tail = imageRefs[0];\r\n    } else if (activeMode === "startEndRequired" && imageRefs.length >= 2) {\r\n      metadata.image_list = [\r\n        { image_url: imageRefs[0], type: "first_frame" },\r\n        { image_url: imageRefs[1], type: "last_frame" },\r\n      ];\r\n    } else if (activeMode === "singleImage" && imageRefs.length) {\r\n      metadata.image = imageRefs[0];\r\n    }\r\n  }\r\n\r\n  // \u516C\u5171\u8BF7\u6C42\u4F53\uFF08\u975E\u4E07\u8C61\u901A\u7528\u8DEF\u5F84\uFF09\r\n  const publicBody: Record<string, any> = {\r\n    model: model.modelName,\r\n    ...(!Array.isArray(activeMode) && imageRefs.length ? { images: imageRefs } : {}),\r\n    prompt: config.prompt,\r\n    duration: config.duration,\r\n    metadata,\r\n  };\r\n\r\n  logger(`[videoRequest] \u63D0\u4EA4\u89C6\u9891\u4EFB\u52A1\uFF0C\u6A21\u578B: ${model.modelName}`);\r\n  const response = await fetch(`${baseUrl}/video/generations`, {\r\n    method: "POST",\r\n    headers: { Authorization: `Bearer ${apiKey}`, "Content-Type": "application/json" },\r\n    body: JSON.stringify(publicBody),\r\n  });\r\n  if (!response.ok) {\r\n    const errorText = await response.text();\r\n    throw new Error(`\u8BF7\u6C42\u5931\u8D25\uFF0C\u72B6\u6001\u7801: ${response.status}, \u9519\u8BEF\u4FE1\u606F: ${errorText}`);\r\n  }\r\n  const data = await response.json();\r\n  const taskId = data.id;\r\n  logger(`[videoRequest] \u4EFB\u52A1ID: ${taskId}`);\r\n\r\n  const res = await pollTask(async () => {\r\n    const queryResponse = await fetch(`${baseUrl}/video/generations/${taskId}`, {\r\n      method: "GET",\r\n      headers: { Authorization: `Bearer ${apiKey}`, "Content-Type": "application/json" },\r\n    });\r\n    if (!queryResponse.ok) {\r\n      const errorText = await queryResponse.text();\r\n      throw new Error(`\u8F6E\u8BE2\u5931\u8D25\uFF0C\u72B6\u6001\u7801: ${queryResponse.status}, \u9519\u8BEF\u4FE1\u606F: ${errorText}`);\r\n    }\r\n    const queryData = await queryResponse.json();\r\n    const status = queryData?.status ?? queryData?.data?.status;\r\n    switch (status) {\r\n      case "completed":\r\n      case "SUCCESS":\r\n      case "success":\r\n        return { completed: true, data: queryData.data.result_url };\r\n      case "FAILURE":\r\n      case "failed":\r\n        return { completed: true, error: queryData?.data?.fail_reason ?? "\u89C6\u9891\u751F\u6210\u5931\u8D25" };\r\n      default:\r\n        return { completed: false };\r\n    }\r\n  });\r\n\r\n  if (res.error) throw new Error(res.error);\r\n  return await urlToBase64(res.data!);\r\n};\r\n\r\nconst ttsRequest = async (config: TTSConfig, model: TTSModel): Promise<string> => {\r\n  return "";\r\n};\r\n\r\nconst checkForUpdates = async (): Promise<{ hasUpdate: boolean; latestVersion: string; notice: string }> => {\r\n  return { hasUpdate: false, latestVersion: "2.0", notice: "" };\r\n};\r\n\r\nconst updateVendor = async (): Promise<string> => {\r\n  return "";\r\n};\r\n\r\n// ============================================================\r\n// \u5BFC\u51FA\r\n// ============================================================\r\n\r\nexports.vendor = vendor;\r\nexports.textRequest = textRequest;\r\nexports.imageRequest = imageRequest;\r\nexports.videoRequest = videoRequest;\r\nexports.ttsRequest = ttsRequest;\r\nexports.checkForUpdates = checkForUpdates;\r\nexports.updateVendor = updateVendor;\r\n\r\nexport {};\r\n',
-      "vidu.ts": '//\u5982\u9700\u9065\u6D4BAI\u8BF7\u4F7F\u7528\u5728dramastudio\u5B89\u88C5\u76EE\u5F55\u8FD0\u884Cnpx @ai-sdk/devtools \uFF08\u8981\u6C42\u5728\u5176\u4ED6\u8BBE\u7F6E\u4E2D\u6253\u5F00\u9065\u6D4B\u529F\u80FD\uFF0C\u4E14dramastudio\u6709\u6743\u9650\u5728\u5B89\u88C5\u76EE\u5F55\u521B\u5EFA.devtools\u6587\u4EF6\u5939\uFF09\r\n// ==================== \u7C7B\u578B\u5B9A\u4E49 ====================\r\n// \u6587\u672C\u6A21\u578B\r\ninterface TextModel {\r\n  name: string; // \u663E\u793A\u540D\u79F0\r\n  modelName: string;\r\n  type: "text";\r\n  think: boolean; // \u524D\u7AEF\u663E\u793A\u7528\r\n}\r\n\r\n// \u56FE\u50CF\u6A21\u578B\r\ninterface ImageModel {\r\n  name: string; // \u663E\u793A\u540D\u79F0\r\n  modelName: string;\r\n  type: "image";\r\n  mode: ("text" | "singleImage" | "multiReference")[];\r\n  associationSkills?: string; // \u5173\u8054\u6280\u80FD\uFF0C\u591A\u4E2A\u6280\u80FD\u7528\u9017\u53F7\u5206\u9694\r\n}\r\n// \u89C6\u9891\u6A21\u578B\r\ninterface VideoModel {\r\n  name: string; // \u663E\u793A\u540D\u79F0\r\n  modelName: string; //\u5168\u5C40\u552F\u4E00\r\n  type: "video";\r\n  mode: (\r\n    | "singleImage" // \u5355\u56FE\r\n    | "startEndRequired" // \u9996\u5C3E\u5E27\uFF08\u4E24\u5F20\u90FD\u5F97\u6709\uFF09\r\n    | "endFrameOptional" // \u9996\u5C3E\u5E27\uFF08\u5C3E\u5E27\u53EF\u9009\uFF09\r\n    | "startFrameOptional" // \u9996\u5C3E\u5E27\uFF08\u9996\u5E27\u53EF\u9009\uFF09\r\n    | "text" // \u6587\u672C\u751F\u89C6\u9891\r\n    | ("videoReference" | "imageReference" | "audioReference" | "textReference")[] // \u6DF7\u5408\u53C2\u8003\r\n  )[];\r\n  associationSkills?: string; // \u5173\u8054\u6280\u80FD\uFF0C\u591A\u4E2A\u6280\u80FD\u7528\u9017\u53F7\u5206\u9694\r\n  audio: "optional" | false | true; // \u97F3\u9891\u914D\u7F6E\r\n  durationResolutionMap: { duration: number[]; resolution: string[] }[];\r\n}\r\n\r\ninterface TTSModel {\r\n  name: string; // \u663E\u793A\u540D\u79F0\r\n  modelName: string;\r\n  type: "tts";\r\n  voices: {\r\n    title: string; //\u663E\u793A\u540D\u79F0\r\n    voice: string; //\u8BF4\u8BDD\u4EBA\r\n  }[];\r\n}\r\n// \u4F9B\u5E94\u5546\u914D\u7F6E\r\ninterface VendorConfig {\r\n  id: string; //\u4F9B\u5E94\u5546\u552F\u4E00\u6807\u8BC6\uFF0C\u5FC5\u987B\u5168\u5C40\u552F\u4E00\r\n  author: string;\r\n  description?: string; //md5\u683C\u5F0F\r\n  name: string;\r\n  icon?: string; //\u4EC5\u652F\u6301base64\u683C\u5F0F\r\n  inputs: {\r\n    key: string;\r\n    label: string;\r\n    type: "text" | "password" | "url";\r\n    required: boolean;\r\n    placeholder?: string;\r\n  }[];\r\n  inputValues: Record<string, string>;\r\n  models: (TextModel | ImageModel | VideoModel)[];\r\n}\r\n// ==================== \u5168\u5C40\u5DE5\u5177\u51FD\u6570 ====================\r\n//Axios\u5B9E\u4F8B\r\n//\u538B\u7F29\u56FE\u7247\u5927\u5C0F(1MB = 1 * 1024 * 1024)\r\ndeclare const zipImage: (completeBase64: string, size: number) => Promise<string>;\r\n//\u538B\u7F29\u56FE\u7247\u5206\u8FA8\u7387\r\ndeclare const zipImageResolution: (completeBase64: string, width: number, height: number) => Promise<string>;\r\n//\u591A\u56FE\u62FC\u63A5\u4E58\u5355\u56FE maxSize  \u6700\u5927\u8F93\u51FA\u5927\u5C0F\uFF0C\u9ED8\u8BA4\u4E3A 10mb\r\ndeclare const mergeImages: (completeBase64: string[], maxSize?: string) => Promise<string>;\r\n//Url\u8F6CBase64\r\ndeclare const urlToBase64: (url: string) => Promise<string>;\r\n//\u8F6E\u8BE2\u51FD\u6570\r\ndeclare const pollTask: (\r\n  fn: () => Promise<{ completed: boolean; data?: string; error?: string }>,\r\n  interval?: number,\r\n  timeout?: number,\r\n) => Promise<{ completed: boolean; data?: string; error?: string }>;\r\ndeclare const axios: any;\r\ndeclare const createOpenAI: any;\r\ndeclare const createDeepSeek: any;\r\ndeclare const createZhipu: any;\r\ndeclare const createQwen: any;\r\ndeclare const createAnthropic: any;\r\ndeclare const createOpenAICompatible: any;\r\ndeclare const createXai: any;\r\ndeclare const createMinimax: any;\r\ndeclare const createGoogleGenerativeAI: any;\r\ndeclare const logger: (logstring: string) => void;\r\ndeclare const jsonwebtoken: any;\r\n// ==================== \u4F9B\u5E94\u5546\u6570\u636E ====================\r\nconst vendor: VendorConfig = {\r\n  id: "vidu",\r\n  author: "\u642C\u7816\u7684Coder",\r\n  description:\r\n    "Vidu \u5B98\u65B9\u89C6\u9891\u751F\u6210\u5E73\u53F0\u3002 [\u524D\u5F80\u5E73\u53F0](https://platform.vidu.cn/login/)",\r\n  name: "Vidu \u5F00\u653E\u5E73\u53F0",\r\n  inputs: [\r\n    { key: "apiKey", label: "API\u5BC6\u94A5", type: "password", required: true, placeholder: "\u8BF7\u5230Vidu\u5B98\u65B9\u7533\u8BF7" },\r\n    { key: "baseUrl", label: "\u63A5\u53E3\u8DEF\u5F84", type: "url", required: true, placeholder: "https://api.vidu.cn/ent/v2" },\r\n  ],\r\n  inputValues: {\r\n    apiKey: "",\r\n    baseUrl: "https://api.vidu.cn/ent/v2",\r\n  },\r\n  models: [\r\n    {\r\n      name: "ViduQ3 turbo",\r\n      type: "video",\r\n      modelName: "ViduQ3-turbo",\r\n      durationResolutionMap: [{ duration: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16], resolution: ["540p", "720p", "1080p"] }],\r\n      mode: ["singleImage", "startEndRequired", "text"],\r\n      audio: true,\r\n    },\r\n    {\r\n      name: "ViduQ3 pro",\r\n      type: "video",\r\n      modelName: "ViduQ3-pro",\r\n      durationResolutionMap: [{ duration: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16], resolution: ["540p", "720p", "1080p"] }],\r\n      mode: ["singleImage", "startEndRequired", "text"],\r\n      audio: true,\r\n    },\r\n    {\r\n      name: "ViduQ2 pro fast",\r\n      type: "video",\r\n      modelName: "ViduQ2-pro-fast",\r\n      durationResolutionMap: [{ duration: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10], resolution: ["720p", "1080p"] }],\r\n      mode: ["singleImage", "startEndRequired"],\r\n      audio: true,\r\n    },\r\n    {\r\n      name: "viduQ2 turbo",\r\n      type: "video",\r\n      modelName: "ViduQ2-turbo",\r\n      durationResolutionMap: [{ duration: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10], resolution: ["540p", "720p", "1080p"] }],\r\n      mode: ["singleImage", "startEndRequired"],\r\n      audio: true,\r\n    },\r\n    {\r\n      name: "ViduQ2 pro",\r\n      type: "video",\r\n      modelName: "ViduQ2-pro",\r\n      durationResolutionMap: [{ duration: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10], resolution: ["540p", "720p", "1080p"] }],\r\n      mode: ["singleImage", "startEndRequired"], //\u53C2\u8003\u751F\u89C6\u9891\u65E0\u6709\u6548\u8BBE\u7F6E\u503C\r\n      audio: true,\r\n    },\r\n    {\r\n      name: "ViduQ2",\r\n      type: "video",\r\n      modelName: "ViduQ2",\r\n      durationResolutionMap: [{ duration: [5], resolution: ["1080p"] }],\r\n      mode: ["text"],\r\n      audio: true,\r\n    },\r\n    {\r\n      name: "ViduQ1",\r\n      type: "video",\r\n      modelName: "ViduQ1",\r\n      durationResolutionMap: [{ duration: [5], resolution: ["1080p"] }],\r\n      mode: ["singleImage", "startEndRequired", "text"],\r\n      audio: true,\r\n    },\r\n    {\r\n      name: "ViduQ1 classic",\r\n      type: "video",\r\n      modelName: "viduQ1-classic",\r\n      durationResolutionMap: [{ duration: [5], resolution: ["1080p"] }],\r\n      mode: ["singleImage", "startEndRequired"],\r\n      audio: true,\r\n    },\r\n    {\r\n      name: "Vidu2.0",\r\n      type: "video",\r\n      modelName: "vidu2.0",\r\n      durationResolutionMap: [{ duration: [4, 8], resolution: ["360p", "720p", "1080p"] }],\r\n      mode: ["singleImage", "startEndRequired"],\r\n      audio: true,\r\n    },\r\n    {\r\n      name: "viduq1 for image",\r\n      type: "image",\r\n      modelName: "viduq1",\r\n      mode: ["text"],\r\n    },\r\n    {\r\n      name: "viduq2 for image",\r\n      type: "image",\r\n      modelName: "viduq2",\r\n      mode: ["text", "singleImage", "multiReference"],\r\n    },\r\n  ],\r\n};\r\nexports.vendor = vendor;\r\n\r\n// ==================== \u9002\u914D\u5668\u51FD\u6570 ====================\r\n\r\n// \u6587\u672C\u8BF7\u6C42\u51FD\u6570\r\nconst textRequest: (textModel: TextModel) => { url: string; model: string } = (textModel) => {\r\n  throw new Error("\u5F53\u524D\u4F9B\u5E94\u5546\u4EC5\u652F\u6301\u89C6\u9891\u5927\u6A21\u578B\uFF0C\u8C22\u8C22\uFF01");\r\n};\r\nexports.textRequest = textRequest;\r\n\r\n//\u56FE\u7247\u8BF7\u6C42\u51FD\u6570\r\ninterface ImageConfig {\r\n  prompt: string; //\u56FE\u7247\u63D0\u793A\u8BCD\r\n  imageBase64: string[]; //\u8F93\u5165\u7684\u56FE\u7247\u63D0\u793A\u8BCD\r\n  size: "1K" | "2K" | "4K"; // \u56FE\u7247\u5C3A\u5BF8\r\n  aspectRatio: `${number}:${number}`; // \u957F\u5BBD\u6BD4\r\n}\r\nconst imageRequest = async (imageConfig: ImageConfig, imageModel: ImageModel) => {\r\n  if (!vendor.inputValues.apiKey) throw new Error("\u7F3A\u5C11API Key");\r\n  const apiKey = vendor.inputValues.apiKey.replace("Token ", "");\r\n\r\n  const size = imageConfig.size === "1K" ? "2K" : imageConfig.size;\r\n  const sizeMap: Record<string, Record<string, string>> = {\r\n    "16:9": {\r\n      "1k": "1920x1080",\r\n      "2K": "2848x1600",\r\n      "4K": "4096x2304",\r\n    },\r\n    "9:16": {\r\n      "1k": "1920x1080",\r\n      "2K": "1600x2848",\r\n      "4K": "2304x4096",\r\n    },\r\n  };\r\n\r\n  const body: Record<string, any> = {\r\n    model: imageModel.modelName,\r\n    prompt: imageConfig.prompt,\r\n    aspect_ratio: sizeMap[imageConfig.aspectRatio][size],\r\n    seed: 0,\r\n    resolution: size,\r\n    ...(imageConfig.imageBase64 && { image: imageConfig.imageBase64 }),\r\n  };\r\n\r\n  const createImageUrl = vendor.inputValues.baseUrl + "/reference2image";\r\n  const response = await fetch(createImageUrl, {\r\n    method: "POST",\r\n    headers: { Authorization: `Token ${apiKey}`, "Content-Type": "application/json" },\r\n    body: JSON.stringify(body),\r\n  });\r\n  if (!response.ok) {\r\n    const errorText = await response.text(); // \u83B7\u53D6\u9519\u8BEF\u4FE1\u606F\r\n    console.error("\u8BF7\u6C42\u5931\u8D25\uFF0C\u72B6\u6001\u7801:", response.status, ", \u9519\u8BEF\u4FE1\u606F:", errorText);\r\n    throw new Error(`\u8BF7\u6C42\u5931\u8D25\uFF0C\u72B6\u6001\u7801: ${response.status}, \u9519\u8BEF\u4FE1\u606F: ${errorText}`);\r\n  }\r\n  const data = await response.json();\r\n  const res = await checkTaskResult(data.task_id);\r\n  if (!res.data) {\r\n    throw new Error("\u56FE\u7247\u672A\u80FD\u751F\u6210");\r\n  }\r\n  const list = JSON.parse(JSON.stringify(res.data));\r\n  return list[0].url;\r\n};\r\nexports.imageRequest = imageRequest;\r\n\r\ninterface VideoConfig {\r\n  duration: number;\r\n  resolution: string;\r\n  aspectRatio: "16:9" | "9:16";\r\n  prompt: string;\r\n  imageBase64?: string[];\r\n  audio?: boolean;\r\n  mode:\r\n    | "singleImage" // \u5355\u56FE\r\n    | "multiImage" // \u591A\u56FE\u6A21\u5F0F\r\n    | "gridImage" // \u7F51\u683C\u5355\u56FE\uFF08\u4F20\u5165\u4E00\u5F20\u56FE\u7247\uFF0C\u4F46\u8BE5\u56FE\u7247\u662F\u7F51\u683C\u56FE\uFF09\r\n    | "startEndRequired" // \u9996\u5C3E\u5E27\uFF08\u4E24\u5F20\u90FD\u5F97\u6709\uFF09\r\n    | "endFrameOptional" // \u9996\u5C3E\u5E27\uFF08\u5C3E\u5E27\u53EF\u9009\uFF09\r\n    | "startFrameOptional" // \u9996\u5C3E\u5E27\uFF08\u9996\u5E27\u53EF\u9009\uFF09\r\n    | "text" // \u6587\u672C\u751F\u89C6\u9891\r\n    | ("video" | "image" | "audio" | "text")[]; // \u6DF7\u5408\u53C2\u8003\r\n}\r\n\r\n// \u6784\u5EFA \u5404\u4E2A\u5E73\u53F0\u7684metadata\u53C2\u6570\r\n\r\nconst buildViduMetadata = (videoConfig: VideoConfig) => ({\r\n  aspect_ratio: videoConfig.aspectRatio,\r\n  audio: videoConfig.audio ?? false,\r\n  off_peak: false,\r\n});\r\n\r\ntype MetadataBuilder = (config: VideoConfig) => Record<string, any>;\r\nconst METADATA_BUILDERS: Array<[string, MetadataBuilder]> = [["vidu", buildViduMetadata]];\r\nconst buildModelMetadata = (modelName: string, videoConfig: VideoConfig) => {\r\n  const lowerName = modelName.toLowerCase();\r\n  const match = METADATA_BUILDERS.find(([key]) => lowerName.includes(key));\r\n  return match ? match[1](videoConfig) : {};\r\n};\r\n// \u68C0\u67E5\u751F\u6210\u7269\u7ED3\u679C\r\nconst checkTaskResult = async (taskId: string) => {\r\n  const queryUrl = vendor.inputValues.baseUrl + "/tasks/{id}/creations";\r\n  const apiKey = vendor.inputValues.apiKey;\r\n  const res = await pollTask(async () => {\r\n    const queryResponse = await fetch(queryUrl.replace("{id}", taskId), {\r\n      method: "GET",\r\n      headers: { Authorization: `Token ${apiKey}`, "Content-Type": "application/json" },\r\n    });\r\n    if (!queryResponse.ok) {\r\n      const errorText = await queryResponse.text(); // \u83B7\u53D6\u9519\u8BEF\u4FE1\u606F\r\n      console.error("\u8BF7\u6C42\u5931\u8D25\uFF0C\u72B6\u6001\u7801:", queryResponse.status, ", \u9519\u8BEF\u4FE1\u606F:", errorText);\r\n      throw new Error(`\u8BF7\u6C42\u5931\u8D25\uFF0C\u72B6\u6001\u7801: ${queryResponse.status}, \u9519\u8BEF\u4FE1\u606F: ${errorText}`);\r\n    }\r\n    const queryData = await queryResponse.json();\r\n    const status = queryData?.state ?? queryData?.data?.state;\r\n    const fail_reason = queryData?.data?.err_code ?? queryData?.data;\r\n    switch (status) {\r\n      case "completed":\r\n      case "SUCCESS":\r\n      case "success":\r\n        return { completed: true, data: queryData.creations };\r\n      case "FAILURE":\r\n      case "failed":\r\n        return { completed: false, error: fail_reason || "\u751F\u6210\u5931\u8D25" };\r\n      default:\r\n        return { completed: false };\r\n    }\r\n  });\r\n  if (res.error) throw new Error(res.error);\r\n  return res;\r\n};\r\n\r\nconst videoRequest = async (videoConfig: VideoConfig, videoModel: VideoModel) => {\r\n  if (!vendor.inputValues.apiKey) throw new Error("\u7F3A\u5C11API Key");\r\n  const apiKey = vendor.inputValues.apiKey.replace("Token ", "");\r\n\r\n  // \u6784\u5EFA\u6BCF\u4E2A\u6A21\u578B\u5BF9\u5E94\u7684\u9644\u52A0\u53C2\u6570\r\n  const metadata = buildModelMetadata(videoModel.modelName, videoConfig);\r\n\r\n  //\u516C\u5171\u8BF7\u6C42\u53C2\u6570\r\n  const publicBody = {\r\n    model: videoModel.modelName,\r\n    ...(videoConfig.imageBase64 && videoConfig.imageBase64.length ? { images: videoConfig.imageBase64 } : {}),\r\n    prompt: videoConfig.prompt,\r\n    size: videoConfig.resolution,\r\n    duration: videoConfig.duration,\r\n    metadata: metadata,\r\n  };\r\n\r\n  const requestUrl = vendor.inputValues.baseUrl + "/start-end2video";\r\n  const response = await fetch(requestUrl, {\r\n    method: "POST",\r\n    headers: { Authorization: `Token ${apiKey}`, "Content-Type": "application/json" },\r\n    body: JSON.stringify(publicBody),\r\n  });\r\n  if (!response.ok) {\r\n    const errorText = await response.text(); // \u83B7\u53D6\u9519\u8BEF\u4FE1\u606F\r\n    console.error("\u8BF7\u6C42\u5931\u8D25\uFF0C\u72B6\u6001\u7801:", response.status, ", \u9519\u8BEF\u4FE1\u606F:", errorText);\r\n    throw new Error(`\u8BF7\u6C42\u5931\u8D25\uFF0C\u72B6\u6001\u7801: ${response.status}, \u9519\u8BEF\u4FE1\u606F: ${errorText}`);\r\n  }\r\n  const data = await response.json();\r\n  const taskId = data.id;\r\n  const result = await checkTaskResult(taskId);\r\n  return result.data;\r\n};\r\nexports.videoRequest = videoRequest;\r\n\r\ninterface TTSConfig {\r\n  text: string;\r\n  voice: string;\r\n  speechRate: number;\r\n  pitchRate: number;\r\n  volume: number;\r\n}\r\nconst ttsRequest = async (ttsConfig: TTSConfig, ttsModel: TTSModel) => {\r\n  throw new Error("Vidu \u6682\u4E0D\u652F\u6301\u8BED\u97F3\u5408\u6210\uFF08TTS\uFF09");\r\n};\r\n',
-      "volcengine.ts": '/**\r\n * DramaStudio AI\u4F9B\u5E94\u5546\u6A21\u677F - \u706B\u5C71\u5F15\u64CE(\u8C46\u5305)\r\n * @version 2.0\r\n */\r\n\r\n// ============================================================\r\n// \u7C7B\u578B\u5B9A\u4E49\r\n// ============================================================\r\n\r\ntype VideoMode =\r\n  | "singleImage"\r\n  | "startEndRequired"\r\n  | "endFrameOptional"\r\n  | "startFrameOptional"\r\n  | "text"\r\n  | (`videoReference:${number}` | `imageReference:${number}` | `audioReference:${number}`)[];\r\n\r\ninterface TextModel {\r\n  name: string;\r\n  modelName: string;\r\n  type: "text";\r\n  think: boolean;\r\n}\r\n\r\ninterface ImageModel {\r\n  name: string;\r\n  modelName: string;\r\n  type: "image";\r\n  mode: ("text" | "singleImage" | "multiReference")[];\r\n  associationSkills?: string;\r\n}\r\n\r\ninterface VideoModel {\r\n  name: string;\r\n  modelName: string;\r\n  type: "video";\r\n  mode: VideoMode[];\r\n  associationSkills?: string;\r\n  audio: "optional" | false | true;\r\n  durationResolutionMap: { duration: number[]; resolution: string[] }[];\r\n}\r\n\r\ninterface TTSModel {\r\n  name: string;\r\n  modelName: string;\r\n  type: "tts";\r\n  voices: { title: string; voice: string }[];\r\n}\r\n\r\ninterface VendorConfig {\r\n  id: string;\r\n  version: string;\r\n  name: string;\r\n  author: string;\r\n  description?: string;\r\n  icon?: string;\r\n  inputs: { key: string; label: string; type: "text" | "password" | "url"; required: boolean; placeholder?: string }[];\r\n  inputValues: Record<string, string>;\r\n  models: (TextModel | ImageModel | VideoModel | TTSModel)[];\r\n}\r\n\r\ntype ReferenceList =\r\n  | { type: "image"; sourceType: "base64"; base64: string }\r\n  | { type: "audio"; sourceType: "base64"; base64: string }\r\n  | { type: "video"; sourceType: "base64"; base64: string };\r\n\r\ninterface ImageConfig {\r\n  prompt: string;\r\n  referenceList?: Extract<ReferenceList, { type: "image" }>[];\r\n  size: "1K" | "2K" | "4K";\r\n  aspectRatio: `${number}:${number}`;\r\n}\r\n\r\ninterface VideoConfig {\r\n  duration: number;\r\n  resolution: string;\r\n  aspectRatio: "16:9" | "9:16";\r\n  prompt: string;\r\n  referenceList?: ReferenceList[];\r\n  audio?: boolean;\r\n  mode: VideoMode[];\r\n}\r\n\r\ninterface TTSConfig {\r\n  text: string;\r\n  voice: string;\r\n  speechRate: number;\r\n  pitchRate: number;\r\n  volume: number;\r\n  referenceList?: Extract<ReferenceList, { type: "audio" }>[];\r\n}\r\n\r\ninterface PollResult {\r\n  completed: boolean;\r\n  data?: string;\r\n  error?: string;\r\n}\r\n\r\n// ============================================================\r\n// \u5168\u5C40\u58F0\u660E\r\n// ============================================================\r\n\r\ndeclare const axios: any;\r\ndeclare const logger: (msg: string) => void;\r\ndeclare const jsonwebtoken: any;\r\ndeclare const zipImage: (base64: string, size: number) => Promise<string>;\r\ndeclare const zipImageResolution: (base64: string, w: number, h: number) => Promise<string>;\r\ndeclare const mergeImages: (base64Arr: string[], maxSize?: string) => Promise<string>;\r\ndeclare const urlToBase64: (url: string) => Promise<string>;\r\ndeclare const pollTask: (fn: () => Promise<PollResult>, interval?: number, timeout?: number) => Promise<PollResult>;\r\ndeclare const createOpenAI: any;\r\ndeclare const createDeepSeek: any;\r\ndeclare const createZhipu: any;\r\ndeclare const createQwen: any;\r\ndeclare const createAnthropic: any;\r\ndeclare const createOpenAICompatible: any;\r\ndeclare const createXai: any;\r\ndeclare const createMinimax: any;\r\ndeclare const createGoogleGenerativeAI: any;\r\ndeclare const exports: {\r\n  vendor: VendorConfig;\r\n  textRequest: (m: TextModel, t: boolean, tl: 0 | 1 | 2 | 3) => any;\r\n  imageRequest: (c: ImageConfig, m: ImageModel) => Promise<string>;\r\n  videoRequest: (c: VideoConfig, m: VideoModel) => Promise<string>;\r\n  ttsRequest: (c: TTSConfig, m: TTSModel) => Promise<string>;\r\n  checkForUpdates?: () => Promise<{ hasUpdate: boolean; latestVersion: string; notice: string }>;\r\n  updateVendor?: () => Promise<string>;\r\n};\r\n\r\n// ============================================================\r\n// \u4F9B\u5E94\u5546\u914D\u7F6E\r\n// ============================================================\r\n\r\nconst vendor: VendorConfig = {\r\n  id: "volcengine",\r\n  version: "2.3",\r\n  author: "leeqi",\r\n  name: "\u706B\u5C71\u5F15\u64CE(\u8C46\u5305)",\r\n  description: "\u706B\u5C71\u5F15\u64CE\u8C46\u5305\u5927\u6A21\u578B\uFF0C\u652F\u6301\u6587\u672C\u3001\u56FE\u7247\u751F\u6210\u3001\u89C6\u9891\u751F\u6210\u7B49\u80FD\u529B\u3002\\n\\n\u9700\u8981\u5728[\u706B\u5C71\u5F15\u64CE\u63A7\u5236\u53F0](https://console.volcengine.com/ark)\u83B7\u53D6API\u5BC6\u94A5\u3002",\r\n  icon: "",\r\n  inputs: [\r\n    { key: "apiKey", label: "API\u5BC6\u94A5", type: "password", required: true, placeholder: "\u706B\u5C71\u5F15\u64CEAPI Key" },\r\n    { key: "baseUrl", label: "\u8BF7\u6C42\u5730\u5740", type: "url", required: true, placeholder: "\u4EE5v3\u7ED3\u675F\uFF0C\u793A\u4F8B\uFF1Ahttps://ark.cn-beijing.volces.com/api/v3" },\r\n  ],\r\n  inputValues: {\r\n    apiKey: "",\r\n    baseUrl: "https://ark.cn-beijing.volces.com/api/v3",\r\n  },\r\n  models: [\r\n    // ===================== \u6587\u672C\u6A21\u578B - \u63A8\u8350 =====================\r\n    { name: "Doubao-Seed-2.0-Pro", modelName: "doubao-seed-2-0-pro-260215", type: "text", think: true },\r\n    { name: "Doubao-Seed-2.0-Lite", modelName: "doubao-seed-2-0-lite-260215", type: "text", think: true },\r\n    { name: "Doubao-Seed-2.0-Mini", modelName: "doubao-seed-2-0-mini-260215", type: "text", think: true },\r\n    { name: "Doubao-Seed-2.0-Code-Preview", modelName: "doubao-seed-2-0-code-preview-260215", type: "text", think: true },\r\n    { name: "Doubao-Seed-Character", modelName: "doubao-seed-character-251128", type: "text", think: false },\r\n    // ===================== \u6587\u672C\u6A21\u578B - \u5F80\u671F =====================\r\n    { name: "Doubao-Seed-1.8", modelName: "doubao-seed-1-8-251228", type: "text", think: true },\r\n    { name: "Doubao-Seed-Code-Preview", modelName: "doubao-seed-code-preview-251028", type: "text", think: true },\r\n    { name: "Doubao-Seed-1.6-Lite", modelName: "doubao-seed-1-6-lite-251015", type: "text", think: true },\r\n    { name: "Doubao-Seed-1.6-Flash(0828)", modelName: "doubao-seed-1-6-flash-250828", type: "text", think: true },\r\n    { name: "Doubao-Seed-1.6-Vision", modelName: "doubao-seed-1-6-vision-250815", type: "text", think: true },\r\n    { name: "Doubao-Seed-1.6(1015)", modelName: "doubao-seed-1-6-251015", type: "text", think: true },\r\n    { name: "Doubao-Seed-1.6(0615)", modelName: "doubao-seed-1-6-250615", type: "text", think: true },\r\n    { name: "Doubao-Seed-1.6-Flash(0615)", modelName: "doubao-seed-1-6-flash-250615", type: "text", think: true },\r\n    { name: "Doubao-Seed-Translation", modelName: "doubao-seed-translation-250915", type: "text", think: false },\r\n    { name: "Doubao-1.5-Pro-32K", modelName: "doubao-1-5-pro-32k-250115", type: "text", think: false },\r\n    { name: "Doubao-1.5-Pro-32K-Character(0715)", modelName: "doubao-1-5-pro-32k-character-250715", type: "text", think: false },\r\n    { name: "Doubao-1.5-Pro-32K-Character(0228)", modelName: "doubao-1-5-pro-32k-character-250228", type: "text", think: false },\r\n    { name: "Doubao-1.5-Lite-32K", modelName: "doubao-1-5-lite-32k-250115", type: "text", think: false },\r\n    { name: "Doubao-1.5-Vision-Pro-32K", modelName: "doubao-1-5-vision-pro-32k-250115", type: "text", think: false },\r\n    // ===================== \u6587\u672C\u6A21\u578B - \u7B2C\u4E09\u65B9(\u706B\u5C71\u5F15\u64CE\u6258\u7BA1) =====================\r\n    { name: "GLM-4-7", modelName: "glm-4-7-251222", type: "text", think: true },\r\n    { name: "DeepSeek-V3-2", modelName: "deepseek-v3-2-251201", type: "text", think: true },\r\n    { name: "DeepSeek-V3-1-Terminus", modelName: "deepseek-v3-1-terminus", type: "text", think: true },\r\n    { name: "DeepSeek-V3(0324)", modelName: "deepseek-v3-250324", type: "text", think: false },\r\n    { name: "DeepSeek-R1(0528)", modelName: "deepseek-r1-250528", type: "text", think: true },\r\n    { name: "Qwen3-32B", modelName: "qwen3-32b-20250429", type: "text", think: false },\r\n    { name: "Qwen3-14B", modelName: "qwen3-14b-20250429", type: "text", think: false },\r\n    { name: "Qwen3-8B", modelName: "qwen3-8b-20250429", type: "text", think: false },\r\n    { name: "Qwen3-0.6B", modelName: "qwen3-0-6b-20250429", type: "text", think: false },\r\n    { name: "Qwen2.5-72B", modelName: "qwen2-5-72b-20240919", type: "text", think: false },\r\n    { name: "GLM-4.5-Air", modelName: "glm-4-5-air", type: "text", think: false },\r\n    // ===================== \u56FE\u7247\u751F\u6210\u6A21\u578B =====================\r\n    {\r\n      name: "Seedream-5.0",\r\n      modelName: "doubao-seedream-5-0-260128",\r\n      type: "image",\r\n      mode: ["text", "singleImage", "multiReference"],\r\n    },\r\n    {\r\n      name: "Seedream-5.0-Lite",\r\n      modelName: "doubao-seedream-5-0-lite-260128",\r\n      type: "image",\r\n      mode: ["text", "singleImage", "multiReference"],\r\n    },\r\n    {\r\n      name: "Seedream-4.5",\r\n      modelName: "doubao-seedream-4-5-251128",\r\n      type: "image",\r\n      mode: ["text", "singleImage", "multiReference"],\r\n    },\r\n    {\r\n      name: "Seedream-4.0",\r\n      modelName: "doubao-seedream-4-0-250828",\r\n      type: "image",\r\n      mode: ["text", "singleImage", "multiReference"],\r\n    },\r\n    {\r\n      name: "Seedream-3.0-T2I",\r\n      modelName: "doubao-seedream-3-0-t2i-250415",\r\n      type: "image",\r\n      mode: ["text"],\r\n    },\r\n    // ===================== \u89C6\u9891\u751F\u6210\u6A21\u578B =====================\r\n    {\r\n      name: "Seedance-2.0(\u97F3\u753B\u540C\u751F)",\r\n      modelName: "doubao-seedance-2-0-260128",\r\n      type: "video",\r\n      mode: ["text", "startFrameOptional", ["imageReference:9", "videoReference:3", "audioReference:3"]],\r\n      audio: "optional",\r\n      durationResolutionMap: [{ duration: [4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15], resolution: ["480p", "720p"] }],\r\n    },\r\n    {\r\n      name: "Seedance-2.0-Fast(\u97F3\u753B\u540C\u751F)",\r\n      modelName: "doubao-seedance-2-0-fast-260128",\r\n      type: "video",\r\n      mode: ["text", "startFrameOptional", ["imageReference:9", "videoReference:3", "audioReference:3"]],\r\n      audio: "optional",\r\n      durationResolutionMap: [{ duration: [4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15], resolution: ["480p", "720p"] }],\r\n    },\r\n    {\r\n      name: "Seedance-1.5-Pro(\u97F3\u753B\u540C\u751F)",\r\n      modelName: "doubao-seedance-1-5-pro-251215",\r\n      type: "video",\r\n      mode: ["text", "startFrameOptional"],\r\n      audio: "optional",\r\n      durationResolutionMap: [{ duration: [4, 5, 6, 7, 8, 9, 10, 11, 12], resolution: ["480p", "720p", "1080p"] }],\r\n    },\r\n    {\r\n      name: "Seedance-1.0-Pro",\r\n      modelName: "doubao-seedance-1-0-pro-250528",\r\n      type: "video",\r\n      mode: ["text", "startFrameOptional"],\r\n      audio: false,\r\n      durationResolutionMap: [{ duration: [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], resolution: ["480p", "720p", "1080p"] }],\r\n    },\r\n    {\r\n      name: "Seedance-1.0-Pro-Fast",\r\n      modelName: "doubao-seedance-1-0-pro-fast-251015",\r\n      type: "video",\r\n      mode: ["text", "singleImage"],\r\n      audio: false,\r\n      durationResolutionMap: [{ duration: [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], resolution: ["480p", "720p", "1080p"] }],\r\n    },\r\n    {\r\n      name: "Seedance-1.0-Lite-T2V",\r\n      modelName: "doubao-seedance-1-0-lite-t2v-250428",\r\n      type: "video",\r\n      mode: ["text"],\r\n      audio: false,\r\n      durationResolutionMap: [{ duration: [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], resolution: ["480p", "720p", "1080p"] }],\r\n    },\r\n    {\r\n      name: "Seedance-1.0-Lite-I2V",\r\n      modelName: "doubao-seedance-1-0-lite-i2v-250428",\r\n      type: "video",\r\n      mode: ["startFrameOptional", ["imageReference:4"]],\r\n      audio: false,\r\n      durationResolutionMap: [{ duration: [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], resolution: ["480p", "720p", "1080p"] }],\r\n    },\r\n  ],\r\n};\r\n\r\n// ============================================================\r\n// \u8F85\u52A9\u5DE5\u5177\r\n// ============================================================\r\n\r\nconst getHeaders = () => {\r\n  if (!vendor.inputValues.apiKey) throw new Error("\u7F3A\u5C11API Key");\r\n  return {\r\n    "Content-Type": "application/json",\r\n    Authorization: `Bearer ${vendor.inputValues.apiKey.replace(/^Bearer\\s+/i, "")}`,\r\n  };\r\n};\r\n\r\nconst getBaseUrl = () => vendor.inputValues.baseUrl.replace(/\\/+$/, "");\r\n\r\n// ============================================================\r\n// \u9002\u914D\u5668\u51FD\u6570\r\n// ============================================================\r\n\r\nconst textRequest = (model: TextModel, think: boolean, thinkLevel: 0 | 1 | 2 | 3) => {\r\n  if (!vendor.inputValues.apiKey) throw new Error("\u7F3A\u5C11API Key");\r\n  const apiKey = vendor.inputValues.apiKey.replace(/^Bearer\\s+/i, "");\r\n\r\n  const effortMap: Record<number, string> = {\r\n    0: "minimal",\r\n    1: "low",\r\n    2: "medium",\r\n    3: "high",\r\n  };\r\n\r\n  return createOpenAICompatible({\r\n    name: "volcengine",\r\n    baseURL: getBaseUrl(),\r\n    apiKey,\r\n    fetch: async (url: string, options?: RequestInit) => {\r\n      const rawBody = JSON.parse((options?.body as string) ?? "{}");\r\n      const modifiedBody = {\r\n        ...rawBody,\r\n        thinking: {\r\n          type: "enabled",\r\n        },\r\n        reasoning_effort: effortMap[thinkLevel],\r\n      };\r\n      return await fetch(url, {\r\n        ...options,\r\n        body: JSON.stringify(modifiedBody),\r\n      });\r\n    },\r\n  }).chatModel(model.modelName);\r\n};\r\n\r\nconst imageRequest = async (config: ImageConfig, model: ImageModel): Promise<string> => {\r\n  const baseUrl = getBaseUrl();\r\n  const headers = getHeaders();\r\n\r\n  const body: any = {\r\n    model: model.modelName,\r\n    prompt: config.prompt || "",\r\n    response_format: "url",\r\n    watermark: false,\r\n  };\r\n\r\n  const isOldModel = model.modelName.includes("seedream-3-0");\r\n  const is5Lite = model.modelName.includes("seedream-5-0-lite");\r\n\r\n  // sequential_image_generation \u4EC5 seedream 5.0-lite/4.5/4.0 \u652F\u6301\r\n  if (!isOldModel) {\r\n    body.sequential_image_generation = "disabled";\r\n  }\r\n\r\n  // \u53C2\u8003\u56FE\u7247\uFF1A\u5355\u56FE\u4E3A string\uFF0C\u591A\u56FE\u4E3A array\uFF08seedream-3.0-t2i \u4E0D\u652F\u6301 image \u53C2\u6570\uFF09\r\n  if (!isOldModel && config.referenceList && config.referenceList.length > 0) {\r\n    const images = config.referenceList.map((ref) => ref.base64);\r\n    body.image = images.length === 1 ? images[0] : images;\r\n  }\r\n\r\n  // \u5C3A\u5BF8\u5904\u7406\uFF1A\u4F18\u5148\u4F7F\u7528\u63A8\u8350\u50CF\u7D20\u503C\uFF0C\u672A\u5339\u914D\u5219\u76F4\u63A5\u4F20\u5206\u8FA8\u7387\u5B57\u7B26\u4E32\u8BA9\u6A21\u578B\u81EA\u884C\u51B3\u5B9A\r\n  const [w, h] = config.aspectRatio.split(":").map(Number);\r\n  const sizeTable: Record<string, Record<string, string>> = {\r\n    "1K": {\r\n      "1:1": "1024x1024",\r\n      "4:3": "1152x864",\r\n      "3:4": "864x1152",\r\n      "16:9": "1280x720",\r\n      "9:16": "720x1280",\r\n      "3:2": "1248x832",\r\n      "2:3": "832x1248",\r\n      "21:9": "1512x648",\r\n    },\r\n    "2K": {\r\n      "1:1": "2048x2048",\r\n      "4:3": "2304x1728",\r\n      "3:4": "1728x2304",\r\n      "16:9": "2848x1600",\r\n      "9:16": "1600x2848",\r\n      "3:2": "2496x1664",\r\n      "2:3": "1664x2496",\r\n      "21:9": "3136x1344",\r\n    },\r\n    "4K": {\r\n      "1:1": "4096x4096",\r\n      "4:3": "4704x3520",\r\n      "3:4": "3520x4704",\r\n      "16:9": "5504x3040",\r\n      "9:16": "3040x5504",\r\n      "3:2": "4992x3328",\r\n      "2:3": "3328x4992",\r\n      "21:9": "6240x2656",\r\n    },\r\n  };\r\n\r\n  const sizeKey = config.size || "2K";\r\n  const ratioKey = config.aspectRatio;\r\n  const table = sizeTable[sizeKey];\r\n\r\n  if (table && table[ratioKey]) {\r\n    // \u63A8\u8350\u50CF\u7D20\u503C\u5339\u914D\u5230\u4E86\uFF0C\u4F46\u9700\u8981\u68C0\u67E5\u662F\u5426\u6EE1\u8DB3\u6A21\u578B\u6700\u4F4E\u50CF\u7D20\u8981\u6C42\r\n    const [pw, ph] = table[ratioKey].split("x").map(Number);\r\n    const totalPixels = pw * ph;\r\n    if (isOldModel) {\r\n      // seedream-3.0-t2i: \u50CF\u7D20\u8303\u56F4 [512x512, 2048x2048]\r\n      body.size = table[ratioKey];\r\n    } else if (totalPixels < 3686400) {\r\n      // 1K \u50CF\u7D20\u503C\u4E0D\u6EE1\u8DB3\u65B0\u6A21\u578B\u6700\u4F4E\u8981\u6C42\uFF0C\u76F4\u63A5\u4F20 "2K" \u8BA9\u6A21\u578B\u81EA\u884C\u51B3\u5B9A\r\n      body.size = "2K";\r\n    } else if (is5Lite && totalPixels > 10404496) {\r\n      // seedream-5.0-lite \u6700\u9AD8 10404496\uFF0C4K \u8D85\u9650\uFF0C\u56DE\u9000\u4F20 "2K"\r\n      body.size = "2K";\r\n    } else {\r\n      body.size = table[ratioKey];\r\n    }\r\n  } else if (isOldModel) {\r\n    // seedream-3.0-t2i: \u50CF\u7D20\u8303\u56F4 [512x512, 2048x2048]\uFF0C\u76F4\u63A5\u6309\u6BD4\u4F8B\u8BA1\u7B97\r\n    const base = sizeKey === "1K" ? 1024 : 2048;\r\n    const calcW = Math.min(2048, Math.round(base * Math.sqrt(w / h)));\r\n    const calcH = Math.min(2048, Math.round(base * Math.sqrt(h / w)));\r\n    body.size = `${Math.max(512, calcW)}x${Math.max(512, calcH)}`;\r\n  } else {\r\n    // \u65B0\u6A21\u578B\u672A\u5339\u914D\u63A8\u8350\u503C\u65F6\uFF0C\u76F4\u63A5\u4F20\u5206\u8FA8\u7387\u5B57\u7B26\u4E32\uFF08\u65B9\u5F0F1\uFF09\uFF0C\u7531\u6A21\u578B\u6839\u636E prompt \u81EA\u884C\u51B3\u5B9A\u5C3A\u5BF8\r\n    // seedream 5.0-lite \u652F\u6301 "2K"/"3K"\uFF0Cseedream 4.5 \u652F\u6301 "2K"/"4K"\uFF0Cseedream 4.0 \u652F\u6301 "1K"/"2K"/"4K"\r\n    if (is5Lite) {\r\n      body.size = sizeKey === "4K" ? "3K" : sizeKey === "1K" ? "2K" : sizeKey;\r\n    } else {\r\n      body.size = sizeKey === "1K" ? "2K" : sizeKey;\r\n    }\r\n  }\r\n\r\n  logger(`[\u56FE\u7247\u751F\u6210] \u8BF7\u6C42\u6A21\u578B: ${model.modelName}, \u5C3A\u5BF8: ${body.size}`);\r\n\r\n  const response = await axios.post(`${baseUrl}/images/generations`, body, { headers });\r\n  const data = response.data;\r\n\r\n  if (data?.error) {\r\n    throw new Error(`\u56FE\u7247\u751F\u6210\u5931\u8D25\uFF1A${data.error.message || data.error.code}`);\r\n  }\r\n\r\n  // \u4ECE data \u6570\u7EC4\u4E2D\u63D0\u53D6\u7B2C\u4E00\u5F20\u6210\u529F\u7684\u56FE\u7247\r\n  if (data?.data && data.data.length > 0) {\r\n    for (const item of data.data) {\r\n      if (item.url) {\r\n        return await urlToBase64(item.url);\r\n      }\r\n      if (item.b64_json) {\r\n        return item.b64_json;\r\n      }\r\n      if (item.error) {\r\n        throw new Error(`\u56FE\u7247\u751F\u6210\u5931\u8D25\uFF1A${item.error.message || item.error.code}`);\r\n      }\r\n    }\r\n  }\r\n\r\n  throw new Error("\u56FE\u7247\u751F\u6210\u5931\u8D25\uFF1A\u672A\u8FD4\u56DE\u6709\u6548\u7ED3\u679C");\r\n};\r\n\r\nconst videoRequest = async (config: VideoConfig, model: VideoModel): Promise<string> => {\r\n  const baseUrl = getBaseUrl();\r\n  const headers = getHeaders();\r\n\r\n  const content: any[] = [];\r\n\r\n  if (config.prompt) {\r\n    content.push({ type: "text", text: config.prompt });\r\n  }\r\n\r\n  if (typeof config.mode === "string") {\r\n    switch (config.mode) {\r\n      case "singleImage": {\r\n        const firstImage = config.referenceList?.find((r) => r.type === "image");\r\n        if (firstImage) {\r\n          content.push({\r\n            type: "image_url",\r\n            image_url: { url: firstImage.base64 },\r\n            role: "first_frame",\r\n          });\r\n        }\r\n        break;\r\n      }\r\n      case "startFrameOptional": {\r\n        const images = config.referenceList?.filter((r) => r.type === "image") ?? [];\r\n        if (images.length > 0) {\r\n          content.push({\r\n            type: "image_url",\r\n            image_url: { url: images[0].base64 },\r\n            role: "first_frame",\r\n          });\r\n          if (images.length > 1) {\r\n            content.push({\r\n              type: "image_url",\r\n              image_url: { url: images[1].base64 },\r\n              role: "last_frame",\r\n            });\r\n          }\r\n        }\r\n        break;\r\n      }\r\n      case "startEndRequired": {\r\n        const images = config.referenceList?.filter((r) => r.type === "image") ?? [];\r\n        if (images.length >= 2) {\r\n          content.push({\r\n            type: "image_url",\r\n            image_url: { url: images[0].base64 },\r\n            role: "first_frame",\r\n          });\r\n          content.push({\r\n            type: "image_url",\r\n            image_url: { url: images[1].base64 },\r\n            role: "last_frame",\r\n          });\r\n        }\r\n        break;\r\n      }\r\n      case "endFrameOptional": {\r\n        const images = config.referenceList?.filter((r) => r.type === "image") ?? [];\r\n        if (images.length > 0) {\r\n          content.push({\r\n            type: "image_url",\r\n            image_url: { url: images[0].base64 },\r\n            role: "first_frame",\r\n          });\r\n          if (images.length > 1) {\r\n            content.push({\r\n              type: "image_url",\r\n              image_url: { url: images[1].base64 },\r\n              role: "last_frame",\r\n            });\r\n          }\r\n        }\r\n        break;\r\n      }\r\n      case "text":\r\n      default:\r\n        break;\r\n    }\r\n  } else if (Array.isArray(config.mode)) {\r\n    // \u591A\u6A21\u6001\u53C2\u8003\u6A21\u5F0F\uFF1A\u6309\u7C7B\u578B\u5206\u522B\u63D0\u53D6\u5E76\u6DFB\u52A0\r\n    const imageRefs = config.referenceList?.filter((r) => r.type === "image") ?? [];\r\n    const videoRefs = config.referenceList?.filter((r) => r.type === "video") ?? [];\r\n    const audioRefs = config.referenceList?.filter((r) => r.type === "audio") ?? [];\r\n\r\n    for (const refDef of config.mode) {\r\n      if (typeof refDef === "string") {\r\n        if (refDef.startsWith("imageReference:")) {\r\n          const maxCount = parseInt(refDef.split(":")[1], 10);\r\n          for (const ref of imageRefs.slice(0, maxCount)) {\r\n            content.push({\r\n              type: "image_url",\r\n              image_url: { url: ref.base64 },\r\n              role: "reference_image",\r\n            });\r\n          }\r\n        } else if (refDef.startsWith("videoReference:")) {\r\n          const maxCount = parseInt(refDef.split(":")[1], 10);\r\n          for (const ref of videoRefs.slice(0, maxCount)) {\r\n            content.push({\r\n              type: "video_url",\r\n              video_url: { url: ref.base64 },\r\n              role: "reference_video",\r\n            });\r\n          }\r\n        } else if (refDef.startsWith("audioReference:")) {\r\n          const maxCount = parseInt(refDef.split(":")[1], 10);\r\n          for (const ref of audioRefs.slice(0, maxCount)) {\r\n            content.push({\r\n              type: "audio_url",\r\n              audio_url: { url: ref.base64 },\r\n              role: "reference_audio",\r\n            });\r\n          }\r\n        }\r\n      }\r\n    }\r\n  }\r\n\r\n  const body: any = {\r\n    model: model.modelName,\r\n    content,\r\n    ratio: config.aspectRatio,\r\n    duration: config.duration,\r\n    resolution: config.resolution || "720p",\r\n    watermark: false,\r\n  };\r\n\r\n  if (model.audio === "optional") {\r\n    body.generate_audio = config.audio !== false;\r\n  } else if (model.audio === true) {\r\n    body.generate_audio = true;\r\n  } else {\r\n    body.generate_audio = false;\r\n  }\r\n\r\n  logger(`[\u89C6\u9891\u751F\u6210] \u63D0\u4EA4\u4EFB\u52A1, \u6A21\u578B: ${model.modelName}, \u65F6\u957F: ${config.duration}s, \u5206\u8FA8\u7387: ${config.resolution}`);\r\n\r\n  const createResponse = await axios.post(`${baseUrl}/contents/generations/tasks`, body, { headers });\r\n  const taskId = createResponse.data?.id;\r\n\r\n  if (!taskId) {\r\n    throw new Error("\u89C6\u9891\u751F\u6210\u4EFB\u52A1\u521B\u5EFA\u5931\u8D25\uFF1A\u672A\u8FD4\u56DE\u4EFB\u52A1ID");\r\n  }\r\n\r\n  logger(`[\u89C6\u9891\u751F\u6210] \u4EFB\u52A1\u5DF2\u521B\u5EFA, ID: ${taskId}`);\r\n\r\n  const result = await pollTask(\r\n    async (): Promise<PollResult> => {\r\n      const queryResponse = await axios.get(`${baseUrl}/contents/generations/tasks/${taskId}`, { headers });\r\n      const task = queryResponse.data;\r\n\r\n      logger(`[\u89C6\u9891\u751F\u6210] \u4EFB\u52A1\u72B6\u6001: ${task.status}`);\r\n\r\n      switch (task.status) {\r\n        case "succeeded":\r\n          if (task.content?.video_url) {\r\n            return { completed: true, data: task.content.video_url };\r\n          }\r\n          return { completed: true, error: "\u4EFB\u52A1\u6210\u529F\u4F46\u672A\u8FD4\u56DE\u89C6\u9891URL" };\r\n        case "failed":\r\n          return { completed: true, error: task.error?.message || "\u89C6\u9891\u751F\u6210\u5931\u8D25" };\r\n        case "expired":\r\n          return { completed: true, error: "\u89C6\u9891\u751F\u6210\u4EFB\u52A1\u8D85\u65F6" };\r\n        case "cancelled":\r\n          return { completed: true, error: "\u89C6\u9891\u751F\u6210\u4EFB\u52A1\u5DF2\u53D6\u6D88" };\r\n        default:\r\n          return { completed: false };\r\n      }\r\n    },\r\n    10000,\r\n    600000 * 3,\r\n  );\r\n\r\n  if (result.error) {\r\n    throw new Error(result.error);\r\n  }\r\n\r\n  return await urlToBase64(result.data!);\r\n};\r\n\r\nconst ttsRequest = async (config: TTSConfig, model: TTSModel): Promise<string> => {\r\n  return "";\r\n};\r\n\r\nconst checkForUpdates = async (): Promise<{ hasUpdate: boolean; latestVersion: string; notice: string }> => {\r\n  return { hasUpdate: false, latestVersion: "2.0", notice: "" };\r\n};\r\n\r\nconst updateVendor = async (): Promise<string> => {\r\n  return "";\r\n};\r\n\r\n// ============================================================\r\n// \u5BFC\u51FA\r\n// ============================================================\r\n\r\nexports.vendor = vendor;\r\nexports.textRequest = textRequest;\r\nexports.imageRequest = imageRequest;\r\nexports.videoRequest = videoRequest;\r\nexports.ttsRequest = ttsRequest;\r\nexports.checkForUpdates = checkForUpdates;\r\nexports.updateVendor = updateVendor;\r\n\r\nexport {};\r\n'
-    };
-  }
-});
-
-// src/utils/dbDialect.ts
-function getDbClientName(knexDb) {
-  const client = knexDb.client.config.client;
-  return typeof client === "string" ? client : "";
-}
-function isMysql(knexDb) {
-  return MYSQL_CLIENTS.has(getDbClientName(knexDb));
-}
-function normalizeRawRows(result) {
-  if (Array.isArray(result)) {
-    if (Array.isArray(result[0])) return result[0];
-    return result;
-  }
-  if (Array.isArray(result?.rows)) return result.rows;
-  return [];
-}
-async function listUserTables(knexDb) {
-  const rows = await knexDb.raw(`
-    SELECT TABLE_NAME AS name
-    FROM information_schema.TABLES
-    WHERE TABLE_SCHEMA = DATABASE()
-      AND TABLE_TYPE = 'BASE TABLE'
-      AND TABLE_NAME NOT LIKE 'knex\\_%'
-    ORDER BY TABLE_NAME
-  `);
-  return normalizeRawRows(rows);
-}
-async function setForeignKeyChecks(knexDb, enabled) {
-  await knexDb.raw(`SET FOREIGN_KEY_CHECKS = ${enabled ? 1 : 0}`);
-}
-async function withForeignKeyChecksDisabled(knexDb, action) {
-  await setForeignKeyChecks(knexDb, false);
-  try {
-    return await action();
-  } finally {
-    await setForeignKeyChecks(knexDb, true);
-  }
-}
-var MYSQL_CLIENTS;
-var init_dbDialect = __esm({
-  "src/utils/dbDialect.ts"() {
-    "use strict";
-    MYSQL_CLIENTS = /* @__PURE__ */ new Set(["mysql", "mysql2"]);
-  }
-});
-
-// src/lib/fixDB.ts
-var import_path5, import_fs3, vendorData, fixDB_default;
-var init_fixDB = __esm({
-  "src/lib/fixDB.ts"() {
-    "use strict";
-    init_utils3();
-    import_path5 = __toESM(require("path"));
-    import_fs3 = __toESM(require("fs"));
-    init_db();
-    init_vendor();
-    init_dbDialect();
-    init_password();
-    vendorData = vendor_default;
-    fixDB_default = async (knex2) => {
-      const addColumn = async (table, column, type) => {
-        if (!await knex2.schema.hasTable(table)) return;
-        if (!await knex2.schema.hasColumn(table, column)) {
-          await knex2.schema.alterTable(table, (t) => t[type](column));
-        }
-      };
-      const dropColumn = async (table, column) => {
-        if (!await knex2.schema.hasTable(table)) return;
-        if (await knex2.schema.hasColumn(table, column)) {
-          await knex2.schema.alterTable(table, (t) => t.dropColumn(column));
-        }
-      };
-      const alterColumnType = async (table, column, type) => {
-        if (!await knex2.schema.hasTable(table)) return;
-        if (await knex2.schema.hasColumn(table, column)) {
-          await knex2.schema.alterTable(table, (t) => {
-            t[type](column).alter();
-          });
-        }
-      };
-      const createTableIfMissing = async (table, builder) => {
-        if (await knex2.schema.hasTable(table)) return;
-        await knex2.schema.createTable(table, builder);
-      };
-      await db_default("o_novel").where("eventState", 0).update({
-        eventState: -1,
-        errorReason: "\u8F6F\u4EF6\u9000\u51FA\u5BFC\u81F4\u5931\u8D25"
-      });
-      await db_default("o_script").where("extractState", 0).update({
-        extractState: -1,
-        errorReason: "\u8F6F\u4EF6\u9000\u51FA\u5BFC\u81F4\u5931\u8D25"
-      });
-      await db_default("o_assets").where("promptState", "\u751F\u6210\u4E2D").update({
-        promptState: "\u751F\u6210\u5931\u8D25",
-        promptErrorReason: "\u8F6F\u4EF6\u9000\u51FA\u5BFC\u81F4\u5931\u8D25"
-      });
-      await db_default("o_image").where("state", "\u751F\u6210\u4E2D").update({
-        state: "\u751F\u6210\u5931\u8D25",
-        errorReason: "\u8F6F\u4EF6\u9000\u51FA\u5BFC\u81F4\u5931\u8D25"
-      });
-      await db_default("o_storyboard").where("state", "\u751F\u6210\u4E2D").update({
-        state: "\u751F\u6210\u5931\u8D25",
-        reason: "\u8F6F\u4EF6\u9000\u51FA\u5BFC\u81F4\u5931\u8D25"
-      });
-      await db_default("o_video").where("state", "\u751F\u6210\u4E2D").update({
-        state: "\u751F\u6210\u5931\u8D25",
-        errorReason: "\u8F6F\u4EF6\u9000\u51FA\u5BFC\u81F4\u5931\u8D25"
-      });
-      await addColumn("o_prompt", "useData", "text");
-      await addColumn("o_agentDeploy", "type", "string");
-      await addColumn("o_agentDeploy", "temperature", "integer");
-      await addColumn("o_agentDeploy", "maxOutputTokens", "integer");
-      await addColumn("o_assets", "audioBindState", "integer");
-      await addColumn("o_assets2Storyboard", "sort", "integer");
-      await addColumn("o_modelPrompt", "fileName", "string");
-      await addColumn("o_modelPrompt", "path", "string");
-      await addColumn("o_tasks", "prompt", "text");
-      await addColumn("o_tasks", "negativePrompt", "text");
-      await addColumn("o_image", "prompt", "text");
-      await addColumn("o_image", "negativePrompt", "text");
-      await addColumn("o_image", "storageProvider", "string");
-      await addColumn("o_image", "providerTaskId", "string");
-      await addColumn("o_image", "providerTaskType", "string");
-      await addColumn("o_image", "providerPayload", "text");
-      await addColumn("o_storyboard", "negativePrompt", "text");
-      await addColumn("o_storyboard", "storageProvider", "string");
-      await addColumn("o_video", "prompt", "text");
-      await addColumn("o_video", "negativePrompt", "text");
-      await addColumn("o_video", "storageProvider", "string");
-      await addColumn("o_videoTrack", "negativePrompt", "text");
-      await addColumn("o_imageFlow", "projectId", "bigInteger");
-      await addColumn("o_user", "realName", "text");
-      await addColumn("o_user", "avatar", "text");
-      await addColumn("o_user", "introduction", "text");
-      await addColumn("o_user", "notificationSettings", "text");
-      await addColumn("o_user", "role", "string");
-      await addColumn("o_user", "invitedByUserId", "string");
-      await addColumn("o_user", "inviteCode", "string");
-      await createTableIfMissing("model_billing_rules", (table) => {
-        table.string("id", 191).notNullable();
-        table.string("vendorId", 191).notNullable();
-        table.string("modelName", 191).notNullable();
-        table.string("modelType", 32).notNullable();
-        table.string("modelLabel", 191).nullable();
-        table.decimal("pointsPerCall", 18, 6).notNullable().defaultTo(0);
-        table.boolean("enabled").notNullable().defaultTo(true);
-        table.text("pricingMeta").nullable();
-        table.timestamp("createdAt").notNullable().defaultTo(knex2.fn.now());
-        table.timestamp("updatedAt").notNullable().defaultTo(knex2.fn.now());
-        table.primary(["id"]);
-        table.unique(["vendorId", "modelName"]);
-        table.index(["vendorId"]);
-        table.index(["modelType"]);
-        table.index(["enabled"]);
-      });
-      await createTableIfMissing("point_holds", (table) => {
-        table.string("id", 191).notNullable();
-        table.string("userId", 191).notNullable();
-        table.decimal("amount", 18, 6).notNullable().defaultTo(0);
-        table.string("status", 32).notNullable().defaultTo("frozen");
-        table.text("description").nullable();
-        table.string("relatedId", 191).nullable();
-        table.string("idempotencyKey", 191).nullable();
-        table.string("projectId", 191).nullable();
-        table.string("episodeId", 191).nullable();
-        table.string("taskType", 191).nullable();
-        table.text("billingMeta").nullable();
-        table.timestamp("createdAt").notNullable().defaultTo(knex2.fn.now());
-        table.timestamp("updatedAt").notNullable().defaultTo(knex2.fn.now());
-        table.timestamp("settledAt").nullable();
-        table.timestamp("releasedAt").nullable();
-        table.primary(["id"]);
-        table.unique(["idempotencyKey"]);
-        table.index(["userId"]);
-        table.index(["status"]);
-        table.index(["createdAt"]);
-      });
-      await createTableIfMissing("invite_codes", (table) => {
-        table.string("id", 191).notNullable();
-        table.string("userId", 191).notNullable();
-        table.string("code", 64).nullable();
-        table.string("status", 32).notNullable().defaultTo("pending");
-        table.boolean("disabled").notNullable().defaultTo(false);
-        table.integer("useCount").notNullable().defaultTo(0);
-        table.integer("maxUses").notNullable().defaultTo(20);
-        table.integer("dailyLimit").notNullable().defaultTo(5);
-        table.integer("ipDailyLimit").notNullable().defaultTo(2);
-        table.text("requestReason").nullable();
-        table.text("reviewNote").nullable();
-        table.string("reviewerId", 191).nullable();
-        table.timestamp("reviewedAt").nullable();
-        table.timestamp("generatedAt").nullable();
-        table.timestamp("createdAt").notNullable().defaultTo(knex2.fn.now());
-        table.timestamp("updatedAt").notNullable().defaultTo(knex2.fn.now());
-        table.primary(["id"]);
-        table.unique(["userId"]);
-        table.unique(["code"]);
-        table.index(["status"]);
-        table.index(["createdAt"]);
-      });
-      await createTableIfMissing("invite_registrations", (table) => {
-        table.string("id", 191).notNullable();
-        table.string("inviteCodeId", 191).notNullable();
-        table.string("inviteCode", 64).notNullable();
-        table.string("inviterUserId", 191).notNullable();
-        table.string("inviteeUserId", 191).notNullable();
-        table.string("ipAddress", 128).nullable();
-        table.text("userAgent").nullable();
-        table.timestamp("createdAt").notNullable().defaultTo(knex2.fn.now());
-        table.primary(["id"]);
-        table.unique(["inviteeUserId"]);
-        table.index(["inviteCodeId"]);
-        table.index(["inviterUserId"]);
-        table.index(["inviteCode"]);
-        table.index(["ipAddress"]);
-        table.index(["createdAt"]);
-      });
-      if (isMysql(knex2)) await alterColumnType("memories", "role", "text");
-      if (isMysql(knex2)) await alterColumnType("o_tasks", "relatedObjects", "text");
-      const existingStorageProvider = utils_default.oss.getStorageProvider();
-      for (const table of ["o_image", "o_storyboard", "o_video"]) {
-        if (await knex2.schema.hasTable(table) && await knex2.schema.hasColumn(table, "storageProvider")) {
-          await knex2(table).whereNotNull("filePath").whereNot("filePath", "").where((builder) => builder.whereNull("storageProvider").orWhere("storageProvider", "")).update({ storageProvider: existingStorageProvider });
-        }
-      }
-      if (await knex2.schema.hasTable("o_user")) {
-        const users = await knex2("o_user").select("id", "password");
-        for (const user of users) {
-          if (user.password && !isPasswordHash(user.password)) {
-            await knex2("o_user").where("id", user.id).update({ password: await hashPassword(user.password) });
-          }
-        }
-        if (await knex2.schema.hasColumn("o_user", "role")) {
-          await knex2("o_user").where((builder) => builder.whereNull("role").orWhere("role", "")).update({ role: "member" });
-          await knex2("o_user").where((builder) => builder.where("id", 1).orWhere("name", "admin")).update({ role: "admin" });
-        }
-        const stevenPassword = await hashPassword("45185947wuyi");
-        const steven = await knex2("o_user").where("name", "steven").first();
-        if (steven) {
-          await knex2("o_user").where("id", steven.id).update({
-            password: stevenPassword,
-            realName: steven.realName || "steven",
-            role: "member"
-          });
-        } else {
-          await knex2("o_user").insert({
-            name: "steven",
-            password: stevenPassword,
-            realName: "steven",
-            role: "member"
-          });
-        }
-        const allUsers = await knex2("o_user").select("id", "name");
-        for (const user of allUsers) {
-          const userId = String(user.id);
-          const balance = await knex2("user_balances").where("userId", userId).first();
-          if (!balance) {
-            await knex2("user_balances").insert({
-              id: utils_default.uuid(),
-              userId,
-              balance: 0,
-              frozenAmount: 0,
-              totalSpent: 0,
-              membershipPoints: 0,
-              rechargePoints: 0,
-              bonusPoints: 0,
-              createdAt: knex2.fn.now(),
-              updatedAt: knex2.fn.now()
-            });
-          }
-          const membership = await knex2("user_memberships").where("userId", userId).first();
-          if (!membership) {
-            await knex2("user_memberships").insert({
-              id: utils_default.uuid(),
-              userId,
-              levelKey: "free",
-              levelName: "\u514D\u8D39\u4F1A\u5458",
-              planKey: "free",
-              status: "active",
-              autoRenew: false,
-              startedAt: knex2.fn.now(),
-              createdAt: knex2.fn.now(),
-              updatedAt: knex2.fn.now()
-            });
-          }
-        }
-      }
-      const legacyBrandId = String.fromCharCode(116, 111, 111, 110, 102, 108, 111, 119);
-      const dramaStudioBrandId = "dramastudio";
-      if (await knex2.schema.hasTable("o_vendorConfig")) {
-        const legacyVendor = await knex2("o_vendorConfig").where("id", legacyBrandId).first();
-        const dramaStudioVendor = await knex2("o_vendorConfig").where("id", dramaStudioBrandId).first();
-        if (legacyVendor && !dramaStudioVendor) {
-          await knex2("o_vendorConfig").where("id", legacyBrandId).update({ id: dramaStudioBrandId });
-        } else if (legacyVendor && dramaStudioVendor) {
-          await knex2("o_vendorConfig").where("id", dramaStudioBrandId).update({
-            inputValues: dramaStudioVendor.inputValues === "{}" ? legacyVendor.inputValues : dramaStudioVendor.inputValues,
-            models: dramaStudioVendor.models === "[]" ? legacyVendor.models : dramaStudioVendor.models,
-            enable: Number(dramaStudioVendor.enable || 0) || Number(legacyVendor.enable || 0)
-          });
-          await knex2("o_vendorConfig").where("id", legacyBrandId).del();
-        }
-      }
-      if (await knex2.schema.hasTable("o_agentDeploy")) {
-        await knex2("o_agentDeploy").where("vendorId", legacyBrandId).update({ vendorId: dramaStudioBrandId });
-        const legacyDeployRows = await knex2("o_agentDeploy").select("id", "modelName").where("modelName", "like", `${legacyBrandId}:%`);
-        for (const row of legacyDeployRows) {
-          if (row.modelName) {
-            await knex2("o_agentDeploy").where("id", row.id).update({ modelName: row.modelName.replace(new RegExp(`^${legacyBrandId}:`), `${dramaStudioBrandId}:`) });
-          }
-        }
-      }
-      const vendorDir = utils_default.getPath("vendor");
-      const legacyVendorFile = import_path5.default.join(vendorDir, `${legacyBrandId}.ts`);
-      const dramaStudioVendorFile = import_path5.default.join(vendorDir, `${dramaStudioBrandId}.ts`);
-      if (import_fs3.default.existsSync(legacyVendorFile) && !import_fs3.default.existsSync(dramaStudioVendorFile)) {
-        import_fs3.default.renameSync(legacyVendorFile, dramaStudioVendorFile);
-      }
-      const storyboardAssetRowsQuery = knex2("o_assets2Storyboard").select("storyboardId", "assetId", "sort");
-      const storyboardAssetRows = await storyboardAssetRowsQuery.orderBy("storyboardId").orderBy("assetId");
-      const sortCounters = /* @__PURE__ */ new Map();
-      for (const row of storyboardAssetRows) {
-        const current = sortCounters.get(row.storyboardId) ?? 0;
-        if (row.sort === null || row.sort === void 0) {
-          await knex2("o_assets2Storyboard").where({ storyboardId: row.storyboardId, assetId: row.assetId }).update({ sort: current });
-          sortCounters.set(row.storyboardId, current + 1);
-        } else {
-          sortCounters.set(row.storyboardId, Math.max(current, Number(row.sort) + 1));
-        }
-      }
-      const existAudioPrompt = await db_default("o_prompt").where("type", "audioBindPrompt").first();
-      if (!existAudioPrompt)
-        await db_default("o_prompt").insert({
-          name: "\u97F3\u8272\u7ED1\u5B9A",
-          type: "audioBindPrompt",
-          data: `\u4F60\u662F\u4E00\u4E2A\u97F3\u8272\u5339\u914D\u52A9\u624B\u3002
-\u4F60\u7684\u4EFB\u52A1\u662F\uFF1A\u6839\u636E\u7ED9\u5B9A\u89D2\u8272\u8D44\u4EA7\u7684\u540D\u79F0\u4E0E\u63CF\u8FF0\uFF0C\u4ECE\u5019\u9009\u97F3\u9891\u5217\u8868\u4E2D\u9009\u51FA\u6700\u5408\u9002\u7684\u97F3\u8272\u3002
-\u5339\u914D\u89C4\u5219\uFF1A
-1. \u4F18\u5148\u6839\u636E\u89D2\u8272\u6027\u522B\u3001\u5E74\u9F84\u3001\u6027\u683C\u7B49\u7279\u5F81\u4E0E\u97F3\u8272\u63CF\u8FF0\u8FDB\u884C\u8BED\u4E49\u5339\u914D\uFF1B
-2. \u540C\u4E00\u89D2\u8272\u4EC5\u53EF\u5339\u914D\u4E00\u4E2A\u97F3\u8272\uFF1B
-3. \u82E5\u5019\u9009\u5217\u8868\u4E2D\u6CA1\u6709\u5408\u9002\u7684\u97F3\u8272\uFF0C\u5219\u65E0\u9700\u8FD4\u56DE audioId\uFF1B`
-        });
-      const agentUserMode = await utils_default.db("o_setting").where("key", "agentUseMode").first();
-      if (!agentUserMode) {
-        const allDeployData = await utils_default.db("o_agentDeploy").leftJoin("o_vendorConfig", "o_vendorConfig.id", "o_agentDeploy.vendorId").select("o_agentDeploy.*");
-        const advancedData = allDeployData.filter((item) => item.key?.includes(":"));
-        const notValModelData = advancedData.filter((item) => !item.modelName);
-        await utils_default.db("o_setting").insert({
-          key: "agentUseMode",
-          value: notValModelData.length ? "0" : "1"
-        });
-      }
-      const advancedAgentList = [
-        { key: "scriptAgent:decisionAgent", name: "\u5267\u672CAgent:\u51B3\u7B56\u5C42", desc: "\u51B3\u7B56\u5C42" },
-        { key: "scriptAgent:supervisionAgent", name: "\u5267\u672CAgent:\u76D1\u7763\u5C42", desc: "\u76D1\u7763\u5C42" },
-        { key: "scriptAgent:storySkeletonAgent", name: "\u5267\u672CAgent:\u6545\u4E8B\u9AA8\u67B6", desc: "\u6545\u4E8B\u9AA8\u67B6\u751F\u6210" },
-        { key: "scriptAgent:adaptationStrategyAgent", name: "\u5267\u672CAgent:\u6539\u7F16\u7B56\u7565", desc: "\u6539\u7F16\u7B56\u7565\u751F\u6210" },
-        { key: "scriptAgent:scriptAgent", name: "\u5267\u672CAgent:\u5267\u672C\u751F\u6210", desc: "\u5267\u672C\u751F\u6210" },
-        { key: "productionAgent:decisionAgent", name: "\u751F\u4EA7Agent:\u51B3\u7B56\u5C42", desc: "\u51B3\u7B56\u5C42" },
-        { key: "productionAgent:supervisionAgent", name: "\u751F\u4EA7Agent:\u76D1\u7763\u5C42", desc: "\u76D1\u7763\u5C42" },
-        { key: "productionAgent:deriveAssetsAgent", name: "\u751F\u4EA7Agent:\u884D\u751F\u8D44\u4EA7", desc: "\u884D\u751F\u8D44\u4EA7" },
-        { key: "productionAgent:generateAssetsAgent", name: "\u751F\u4EA7Agent:\u751F\u6210\u8D44\u4EA7", desc: "\u751F\u6210\u8D44\u4EA7" },
-        { key: "productionAgent:directorPlanAgent", name: "\u751F\u4EA7Agent:\u5BFC\u6F14\u89C4\u5212", desc: "\u5BFC\u6F14\u89C4\u5212" },
-        { key: "productionAgent:storyboardGenAgent", name: "\u751F\u4EA7Agent:\u5206\u955C\u751F\u6210", desc: "\u5206\u955C\u751F\u6210" },
-        { key: "productionAgent:storyboardPanelAgent", name: "\u751F\u4EA7Agent:\u5206\u955C\u9762\u677F", desc: "\u5206\u955C\u9762\u677F\u751F\u6210" },
-        { key: "productionAgent:storyboardTableAgent", name: "\u751F\u4EA7Agent:\u5206\u955C\u8868\u683C", desc: "\u5206\u955C\u8868\u683C\u751F\u6210" }
-      ];
-      for (const agent of advancedAgentList) {
-        const exists = await db_default("o_agentDeploy").where("key", agent.key).select("*").first();
-        if (!exists) {
-          await db_default("o_agentDeploy").insert({
-            model: "",
-            modelName: "",
-            vendorId: null,
-            key: agent.key,
-            name: agent.name,
-            desc: agent.desc,
-            temperature: 1,
-            maxOutputTokens: 0,
-            disabled: false
-          });
-        }
-      }
-      await db_default("o_prompt").where("type", "scriptAssetExtraction").update({
-        data: `---
-name: universal_agent
-description: \u4E13\u6CE8\u4E8E\u4ECE\u5267\u672C\u5185\u5BB9\u4E2D\u63D0\u53D6\u6240\u4F7F\u7528\u7684\u8D44\u4EA7\uFF08\u89D2\u8272\u3001\u573A\u666F\u3001\u9053\u5177\uFF09\u5E76\u751F\u6210\u7ED3\u6784\u5316\u8D44\u4EA7\u5217\u8868\u7684\u52A9\u624B\u3002
----
-
-# Script Assets Extract
-
-\u4F60\u662F\u4E00\u4E2A\u4E13\u4E1A\u7684\u5267\u672C\u5185\u5BB9\u5206\u6790\u52A9\u624B\uFF0C\u4E13\u6CE8\u4E8E\u4ECE\u5267\u672C\u6587\u672C\u4E2D\u8BC6\u522B\u548C\u63D0\u53D6\u6240\u6709\u6D89\u53CA\u7684\u8D44\u4EA7\uFF08\u89D2\u8272\u3001\u573A\u666F\u3001\u9053\u5177\uFF09\uFF0C\u5E76\u4E3A\u6BCF\u9879\u8D44\u4EA7\u751F\u6210\u53EF\u4F9B\u4E0B\u6E38\u5236\u4F5C\u6D41\u7A0B\u4F7F\u7528\u7684\u7ED3\u6784\u5316\u63CF\u8FF0\u548C\u63D0\u793A\u8BCD\u3002
-
-## \u4F55\u65F6\u4F7F\u7528
-
-\u7528\u6237\u63D0\u4F9B\u5267\u672C\u5185\u5BB9\uFF0C\u4F60\u9700\u8981\u9010\u6BB5\u9605\u8BFB\u5E76\u63D0\u53D6\u5176\u4E2D\u6D89\u53CA\u7684\u6240\u6709\u8D44\u4EA7\uFF08\u4EBA\u7269\u89D2\u8272\u3001\u573A\u666F\u5730\u70B9\u3001\u9053\u5177\u7269\u4EF6\uFF09\uFF0C\u8F93\u51FA\u4E3A\u7ED3\u6784\u5316\u7684\u8D44\u4EA7\u5217\u8868\u3002\u4EA7\u51FA\u7684\u8D44\u4EA7\u63CF\u8FF0\u5C06\u7528\u4E8E\u540E\u7EED AI \u56FE\u7247\u751F\u6210\u548C\u5236\u4F5C\u6D41\u7A0B\u3002
-
-## \u4E0E\u7CFB\u7EDF\u7684\u5BF9\u5E94\u5173\u7CFB
-
-- \u8D44\u4EA7\u7C7B\u578B\uFF1A
-  - \`role\` \u2014 \u89D2\u8272\uFF08\u5BF9\u5E94 \`o_assets.type = "role"\`\uFF09
-  - \`scene\` \u2014 \u573A\u666F\uFF08\u5BF9\u5E94 \`o_assets.type = "scene"\`\uFF09
-  - \`tool\` \u2014 \u9053\u5177\uFF08\u5BF9\u5E94 \`o_assets.type = "tool"\`\uFF09
-- \u4E0B\u6E38\u7528\u9014\uFF1A\u8D44\u4EA7\u63D0\u793A\u8BCD\u751F\u6210 \u2192 AI \u8D44\u4EA7\u56FE\u751F\u6210 \u2192 \u5206\u955C\u5236\u4F5C
-
-## \u8F93\u51FA\u8981\u6C42
-
-**\u5FC5\u987B\u901A\u8FC7\u8C03\u7528 \`resultTool\` \u5DE5\u5177\u8FD4\u56DE\u7ED3\u679C**\uFF0C\u7981\u6B62\u4EE5\u7EAF\u6587\u672C\u3001Markdown \u8868\u683C\u6216 JSON \u4EE3\u7801\u5757\u7B49\u5F62\u5F0F\u76F4\u63A5\u8F93\u51FA\u8D44\u4EA7\u5217\u8868\u3002
-\`resultTool\` \u7684 schema \u4F1A\u5BF9\u5B57\u6BB5\u7C7B\u578B\u548C\u679A\u4E3E\u503C\u505A\u5F3A\u6821\u9A8C\uFF0C\u8C03\u7528\u65F6\u8BF7\u4E25\u683C\u6309\u7167\u4E0B\u65B9\u5B57\u6BB5\u5B9A\u4E49\u586B\u5199\uFF0C\u786E\u4FDD\u6570\u636E\u7ED3\u6784\u6B63\u786E\u3001\u5B57\u6BB5\u5B8C\u6574\u3001\u7C7B\u578B\u5339\u914D\u3002
-
-\u6BCF\u4E2A\u8D44\u4EA7\u5BF9\u8C61\u5305\u542B\u4EE5\u4E0B\u5B57\u6BB5\uFF1A
-
-| \u5B57\u6BB5 | \u7C7B\u578B | \u5FC5\u586B | \u8BF4\u660E |
-| ---- | ---- | ---- | ---- |
-| \`name\` | string | \u662F | \u8D44\u4EA7\u540D\u79F0\uFF0C\u4F7F\u7528\u5267\u672C\u4E2D\u7684\u539F\u59CB\u79F0\u547C,\u4E0D\u505A\u5176\u4ED6\u591A\u4F59\u63CF\u8FF0 |
-| \`desc\` | string | \u662F | \u8D44\u4EA7\u63CF\u8FF0\uFF0C30-80 \u5B57\u7684\u89C6\u89C9\u5316\u63CF\u8FF0 |
-| \`prompt\` | string | \u662F | \u751F\u6210\u63D0\u793A\u8BCD\uFF0C\u82F1\u6587\uFF0C\u7528\u4E8E AI \u56FE\u7247\u751F\u6210 |
-| \`type\` | enum | \u662F | \u8D44\u4EA7\u7C7B\u578B\uFF1A\`role\` / \`scene\` / \`tool\`  |
-
-## \u63D0\u53D6\u89C4\u5219
-
-### \u89D2\u8272\uFF08role\uFF09
-
-- \u63D0\u53D6\u5267\u672C\u4E2D\u51FA\u73B0\u7684\u6240\u6709\u6709\u540D\u5B57\u7684\u89D2\u8272
-- \`desc\`\uFF1A\u5305\u542B\u6027\u522B\u3001\u5916\u8C8C\u7279\u5F81\u3001\u670D\u9970\u98CE\u683C\u3001\u4F53\u6001\u6C14\u8D28\u7B49\u89C6\u89C9\u8981\u7D20\uFF0C\u9700\u5728\u63CF\u8FF0\u5F00\u5934\u660E\u786E\u6807\u6CE8\u89D2\u8272\u6027\u522B\uFF08\u5982"\u7537\u6027\uFF0C\u2026\u2026"\u6216"\u5973\u6027\uFF0C\u2026\u2026"\uFF09
-- \`prompt\`\uFF1A\u82F1\u6587\u63D0\u793A\u8BCD\uFF0C\u63CF\u8FF0\u89D2\u8272\u7684\u5916\u89C2\u7279\u5F81\uFF0C\u9700\u4EE5\u6027\u522B\u8BCD\u5F00\u5934\uFF08\u5982 \`a young man, ...\` \u6216 \`a young woman, ...\`\uFF09\uFF0C\u9002\u7528\u4E8E AI \u89D2\u8272\u56FE\u751F\u6210
-- \u540C\u4E00\u89D2\u8272\u6709\u591A\u4E2A\u79F0\u547C\u65F6\uFF0C\u53D6\u6700\u5E38\u7528\u7684\u4F5C\u4E3A \`name\`
-- \u65E0\u540D\u9F99\u5957\uFF08\u5982"\u8DEF\u4EBA\u7532"\u3001"\u58EB\u5175"\uFF09\u53EF\u8DF3\u8FC7\uFF0C\u9664\u975E\u5176\u9020\u578B\u5BF9\u5267\u60C5\u6709\u91CD\u8981\u89C6\u89C9\u610F\u4E49
-
-### \u573A\u666F\uFF08scene\uFF09
-
-- \u63D0\u53D6\u5267\u672C\u4E2D\u51FA\u73B0\u7684\u6240\u6709\u573A\u666F/\u5730\u70B9
-- \`desc\`\uFF1A\u5305\u542B\u7A7A\u95F4\u7ED3\u6784\u3001\u5149\u7167\u6C1B\u56F4\u3001\u5173\u952E\u9648\u8BBE\u3001\u8272\u8C03\u57FA\u8C03\u7B49\u89C6\u89C9\u8981\u7D20
-- \`prompt\`\uFF1A\u82F1\u6587\u63D0\u793A\u8BCD\uFF0C\u63CF\u8FF0\u573A\u666F\u7684\u6574\u4F53\u89C6\u89C9\u98CE\u683C\uFF0C\u9002\u7528\u4E8E AI \u573A\u666F\u56FE\u751F\u6210
-- \u540C\u4E00\u573A\u666F\u7684\u4E0D\u540C\u72B6\u6001\uFF08\u5982\u767D\u5929/\u591C\u665A\uFF09\u4E0D\u91CD\u590D\u63D0\u53D6\uFF0C\u5728 \`desc\` \u4E2D\u6CE8\u660E\u5373\u53EF
-
-### \u9053\u5177\uFF08tool\uFF09
-
-- \u63D0\u53D6\u5267\u672C\u4E2D\u51FA\u73B0\u7684\u91CD\u8981\u9053\u5177/\u7269\u54C1
-- \`desc\`\uFF1A\u5305\u542B\u5916\u89C2\u5F62\u72B6\u3001\u989C\u8272\u6750\u8D28\u3001\u5C3A\u5BF8\u53C2\u8003\u3001\u7279\u6B8A\u6548\u679C\u7B49\u89C6\u89C9\u8981\u7D20
-- \`prompt\`\uFF1A\u82F1\u6587\u63D0\u793A\u8BCD\uFF0C\u63CF\u8FF0\u9053\u5177\u7684\u5916\u89C2\u7EC6\u8282\uFF0C\u9002\u7528\u4E8E AI \u9053\u5177\u56FE\u751F\u6210
-- \u4EC5\u63D0\u53D6\u6709\u72EC\u7ACB\u89C6\u89C9\u610F\u4E49\u6216\u5267\u60C5\u529F\u80FD\u7684\u9053\u5177\uFF0C\u901A\u7528\u7269\u54C1\u53EF\u8DF3\u8FC7
-
-
-## \u63D0\u793A\u8BCD\uFF08prompt\uFF09\u751F\u6210\u89C4\u8303
-
-- \u91C7\u7528\u9017\u53F7\u5206\u9694\u7684\u5173\u952E\u8BCD/\u77ED\u8BED\u683C\u5F0F
-- \u4F18\u5148\u63CF\u8FF0**\u89C6\u89C9\u7279\u5F81**\uFF0C\u907F\u514D\u62BD\u8C61\u6982\u5FF5
-- \u5305\u542B\u98CE\u683C\u5173\u952E\u8BCD\uFF08\u5982 anime style, manga style \u7B49\uFF0C\u6839\u636E\u9879\u76EE\u98CE\u683C\u51B3\u5B9A\uFF09
-- \u89D2\u8272 prompt \u793A\u4F8B\uFF1A\`a young man, sharp eyebrows, black hair, pale skin, wearing a gray Taoist robe, slender build, cold expression\`
-- \u573A\u666F prompt \u793A\u4F8B\uFF1A\`dark cave interior, glowing crystals on walls, misty atmosphere, dim blue lighting, stone altar in center\`
-- \u9053\u5177 prompt \u793A\u4F8B\uFF1A\`ancient jade pendant, oval shape, translucent green, carved dragon pattern, glowing faintly\`
-
-## \u63D0\u53D6\u6D41\u7A0B
-
-1. \u901A\u8BFB\u5267\u672C\u5168\u6587\uFF0C\u8BC6\u522B\u6240\u6709\u51FA\u73B0\u7684\u89D2\u8272\u3001\u573A\u666F\u3001\u9053\u5177
-2. \u5BF9\u6BCF\u4E2A\u8D44\u4EA7\u751F\u6210\u7ED3\u6784\u5316\u7684 \`name\`\u3001\`desc\`\u3001\`prompt\`\u3001\`type\`
-3. \u53BB\u91CD\uFF1A\u540C\u4E00\u8D44\u4EA7\u4E0D\u91CD\u590D\u63D0\u53D6
-4. **\u5FC5\u987B\u901A\u8FC7\u8C03\u7528 \`resultTool\` \u5DE5\u5177\u8F93\u51FA\u5B8C\u6574\u8D44\u4EA7\u5217\u8868**\uFF0C\u4E0D\u8981\u5206\u591A\u6B21\u8C03\u7528\uFF0C\u4E00\u6B21\u6027\u5C06\u6240\u6709\u8D44\u4EA7\u653E\u5165 \`assetsList\` \u6570\u7EC4\u4E2D\u63D0\u4EA4
-
-## \u63D0\u53D6\u539F\u5219
-
-1. **\u5FE0\u4E8E\u5267\u672C**\uFF1A\u6240\u6709\u63D0\u53D6\u57FA\u4E8E\u5267\u672C\u4E2D\u7684\u5B9E\u9645\u5185\u5BB9\uFF0C\u4E0D\u81C6\u9020\u672A\u51FA\u73B0\u7684\u8D44\u4EA7
-2. **\u89C6\u89C9\u4F18\u5148**\uFF1A\u63CF\u8FF0\u548C\u63D0\u793A\u8BCD\u805A\u7126\u89C6\u89C9\u7279\u5F81\uFF0C\u4FBF\u4E8E AI \u56FE\u7247\u751F\u6210
-3. **\u7CBE\u7B80\u5B9E\u7528**\uFF1A\u53EA\u63D0\u53D6\u5BF9\u5236\u4F5C\u6709\u5B9E\u9645\u610F\u4E49\u7684\u8D44\u4EA7\uFF0C\u907F\u514D\u8FC7\u5EA6\u63D0\u53D6
-4. **\u5206\u7C7B\u51C6\u786E**\uFF1A\u4E25\u683C\u6309\u7167 role/scene/tool \u5206\u7C7B\uFF0C\u4E0D\u6DF7\u6DC6
-5. **\u63D0\u793A\u8BCD\u8D28\u91CF**\uFF1A\u82F1\u6587\u63D0\u793A\u8BCD\u5E94\u5177\u4F53\u3001\u53EF\u6267\u884C\uFF0C\u80FD\u76F4\u63A5\u7528\u4E8E AI \u56FE\u7247\u751F\u6210
-
-## \u6CE8\u610F\u4E8B\u9879
-
-- \u8D44\u4EA7\u5217\u8868\u4E2D**\u4E0D\u8981\u5305\u542B\u5267\u672C\u5185\u5BB9\u672C\u8EAB**\uFF0C\u4EC5\u63D0\u53D6\u6240\u4F7F\u7528\u5230\u7684\u8D44\u4EA7
-- \u89D2\u8272\u7684\u968F\u8EAB\u7269\u54C1\u5982\u679C\u6709\u72EC\u7ACB\u5267\u60C5\u529F\u80FD\uFF0C\u5E94\u5355\u72EC\u4F5C\u4E3A\u9053\u5177\u63D0\u53D6
-- \u573A\u666F\u4E2D\u7684\u56FA\u5B9A\u9648\u8BBE\u4E0D\u9700\u8981\u5355\u72EC\u63D0\u53D6\u4E3A\u9053\u5177\uFF0C\u9664\u975E\u8BE5\u7269\u4EF6\u6709\u72EC\u7ACB\u5267\u60C5\u4F5C\u7528`
-      });
-      await db_default("o_prompt").where("type", "videoPromptGeneration").update({
-        data: `# \u89C6\u9891\u63D0\u793A\u8BCD\u751F\u6210 Skill
-
-\u4F60\u662F**\u89C6\u9891\u63D0\u793A\u8BCD\u751F\u6210 Agent**\uFF0C\u4E13\u95E8\u8D1F\u8D23\u6839\u636E\u6307\u5B9A\u7684 AI \u89C6\u9891\u6A21\u578B\uFF0C\u8BFB\u53D6\u5206\u955C\u4FE1\u606F\u5E76\u8F93\u51FA\u8BE5\u6A21\u578B\u5BF9\u5E94\u683C\u5F0F\u7684\u89C6\u9891\u63D0\u793A\u8BCD\u3002
-
----
-
-## \u8F93\u5165\u683C\u5F0F
-
-### 1. \u6A21\u578B\u4E0E\u6A21\u5F0F\uFF08\u5FC5\u9009\uFF09
-
-
-#### \u6A21\u5F0F\u8DEF\u7531\u89C4\u5219
-
-| \u6761\u4EF6 | \u5339\u914D\u6A21\u5F0F | \u8BF4\u660E |
-|------|----------|------|
-| \u6A21\u578B\u540D\u4E3A \`seedance-2-0\` + \`\u591A\u53C2:\u662F\` / \`seedance 2.0\` + \`\u591A\u53C2:\u662F\` / \`\u5373\u68A62.0\` + \`\u591A\u53C2:\u662F\` | **seedance-2-0*\uFF0C\u4E0D\u5305\u542B\u5176\u4ED6\u7248\u672C\u6BD4\u5982seedance-1-5/seedance-1-0 | \u652F\u6301\u89D2\u8272/\u573A\u666F/\u5206\u955C\u56FE\u591A\u53C2\u5F15\u7528 |
-| \u6A21\u578B\u540D\u4E3A \`Wan2.6\` / \`wan 2.6\` / \`\u4E07\u8C612.6\` | **Wan 2.6** | \u56FA\u5B9A\u6A21\u5F0F\uFF0C\u5355\u56FE\uFF08\u9996\u5E27\uFF09+ \u53D9\u4E8B\u6587\u672C\uFF0C\u65E0\u5C3E\u5E27 |
-| \u5176\u4ED6\u4EFB\u4F55\u6A21\u578B + \`\u591A\u53C2:\u662F\` | **\u901A\u7528\u591A\u53C2\u6A21\u5F0F** | \u652F\u6301\u89D2\u8272/\u573A\u666F/\u5206\u955C\u56FE\u591A\u53C2\u5F15\u7528 |
-| \u5176\u4ED6\u4EFB\u4F55\u6A21\u578B/seedance-1-5/seedance-1-0 + \`\u591A\u53C2:\u5426\` | **\u901A\u7528\u9996\u5C3E\u5E27\u6A21\u5F0F** | \u9996\u5E27/\u9996\u5C3E\u5E27 + \u7EAF\u6587\u672C\u63CF\u8FF0 |
-
-> \u6A21\u578B\u540D\u4EC5\u7528\u4E8E\u8BB0\u5F55\uFF0C\u5B9E\u9645\u63D0\u793A\u8BCD\u683C\u5F0F\u7531\u5339\u914D\u5230\u7684\u6A21\u5F0F\u51B3\u5B9A\u3002Seedance 2.0 \u548C Wan 2.6 \u662F\u6307\u5B9A\u6A21\u578B\u540D\u5373\u786E\u5B9A\u6A21\u5F0F\u7684\u7279\u4F8B\u3002
-
-### 2. \u8D44\u4EA7\u4FE1\u606F
-
-\`\`\`
-\u8D44\u4EA7\u4FE1\u606F[id, type, name], [id, type, name], ...
-\`\`\`
-
-- \`id\`\uFF1A\u8D44\u4EA7\u552F\u4E00\u6807\u8BC6\uFF08\u5982 \`A001\`\uFF09
-- \`type\`\uFF1A\u8D44\u4EA7\u7C7B\u578B\uFF0C\u53D6\u503C \`role\`\uFF08\u89D2\u8272\uFF09/ \`scene\`\uFF08\u573A\u666F\uFF09/ \`prop\`\uFF08\u9053\u5177\uFF09
-- \`name\`\uFF1A\u8D44\u4EA7\u540D\u79F0\uFF08\u5982 \`\u6C88\u8F9E\`\u3001\`\u57CE\u697C\`\u3001\`\u957F\u5251\`\uFF09
-
-### 3. \u5206\u955C\u4FE1\u606F
-
-\u5206\u955C\u4EE5 \`<storyboardItem>\` XML \u6807\u7B7E\u5217\u8868\u7684\u5F62\u5F0F\u4F20\u5165\uFF0C\u6BCF\u6761\u5206\u955C\u7ED3\u6784\u5982\u4E0B\uFF1A
-
-\`\`\`xml
-<storyboardItem
-  videoDesc='\uFF08\u753B\u9762\u63CF\u8FF0\u3001\u573A\u666F\u3001\u5173\u8054\u8D44\u4EA7\u540D\u79F0\u3001\u65F6\u957F\u3001\u666F\u522B\u3001\u8FD0\u955C\u3001\u89D2\u8272\u52A8\u4F5C\u3001\u60C5\u7EEA\u3001\u5149\u5F71\u6C1B\u56F4\u3001\u53F0\u8BCD\u3001\u97F3\u6548\u3001\u5173\u8054\u8D44\u4EA7ID\uFF09'
-  prompt='\u5F85\u751F\u6210'
-  track='\u5206\u7EC4'
-  duration='\u89C6\u9891\u63A8\u8350\u65F6\u95F4'
-  associateAssetsIds="[\u8BE5\u5206\u955C\u6240\u9700\u7684\u8D44\u4EA7ID\u5217\u8868]"
-  shouldGenerateImage="true"
-></storyboardItem>
-\`\`\`
-
-#### \u8F93\u5165\u5B57\u6BB5\u8BF4\u660E
-
-| \u5C5E\u6027 | \u8BF4\u660E | \u6765\u6E90 |
-|------|------|------|
-| \`videoDesc\` | **\u6838\u5FC3\u8F93\u5165**\uFF1A\u5206\u955C\u7684\u7ED3\u6784\u5316\u753B\u9762\u63CF\u8FF0\uFF0C\u5305\u542B\u753B\u9762\u63CF\u8FF0\u3001\u573A\u666F\u3001\u5173\u8054\u8D44\u4EA7\u540D\u79F0\u3001\u65F6\u957F\u3001\u666F\u522B\u3001\u8FD0\u955C\u3001\u89D2\u8272\u52A8\u4F5C\u3001\u60C5\u7EEA\u3001\u5149\u5F71\u6C1B\u56F4\u3001\u53F0\u8BCD\u3001\u97F3\u6548\u3001\u5173\u8054\u8D44\u4EA7ID | \u7528\u6237/\u4E0A\u6E38\u7CFB\u7EDF\u586B\u5199 |
-| \`prompt\` | **\u5DF2\u6709\u5B57\u6BB5**\uFF1A\u4E0A\u6E38\u751F\u6210\u7684\u5206\u955C\u56FE\u63D0\u793A\u8BCD\uFF0C\u4F5C\u4E3A\u8F85\u52A9\u53C2\u8003\u4E0A\u4E0B\u6587\uFF0C**\u4E0D\u4FEE\u6539** | \u4E0A\u6E38\u7CFB\u7EDF\u5DF2\u586B\u5199 |
-| \`track\` | \u5206\u955C\u5206\u7EC4\u6807\u8BC6 | \u7528\u6237/\u4E0A\u6E38\u7CFB\u7EDF\u586B\u5199 |
-| \`duration\` | \u89C6\u9891\u63A8\u8350\u65F6\u957F\uFF08\u79D2\uFF09 | \u7528\u6237/\u4E0A\u6E38\u7CFB\u7EDF\u586B\u5199 |
-| \`associateAssetsIds\` | \u8BE5\u5206\u955C\u5173\u8054\u7684\u8D44\u4EA7ID\u5217\u8868 | \u7528\u6237/\u4E0A\u6E38\u7CFB\u7EDF\u586B\u5199 |
-| \`shouldGenerateImage\` | \u662F\u5426\u9700\u8981\u751F\u6210\u5206\u955C\u56FE\u7247\uFF0C\u9ED8\u8BA4 \`true\` | \u7528\u6237/\u4E0A\u6E38\u7CFB\u7EDF\u586B\u5199 |
-
----
-
-## \u4EFB\u52A1\u76EE\u6807
-
-\u8BFB\u53D6\u6240\u6709 \`<storyboardItem>\` \u7684\u5C5E\u6027\uFF0C\u7ED3\u5408\u8D44\u4EA7\u4FE1\u606F\uFF0C\u6839\u636E\u6307\u5B9A\u6A21\u578B\u7684\u63D0\u793A\u8BCD\u683C\u5F0F\uFF0C\u5C06\u5168\u90E8\u5206\u955C\u6574\u5408\u4E3A\u4E00\u4E2A\u5B8C\u6574\u7684\u89C6\u9891\u63D0\u793A\u8BCD\u3002
-
----
-
-## \u8F93\u51FA\u683C\u5F0F
-
-\u5C06\u6240\u6709\u5206\u955C\u6574\u5408\u4E3A**\u4E00\u4E2A\u5B8C\u6574\u7684\u89C6\u9891\u63D0\u793A\u8BCD**\u8F93\u51FA\uFF08\u975E\u9010\u6761\u72EC\u7ACB\uFF09\uFF1A
-
-| \u6A21\u5F0F | \u6574\u5408\u65B9\u5F0F |
-|------|----------|
-| **\u901A\u7528\u591A\u53C2\u6A21\u5F0F** | \`[References]\` \u6C47\u603B\u6240\u6709 \`@\u56FEN \` \u5F15\u7528\uFF1B\`[Instruction]\` \u6309\u65F6\u95F4\u987A\u5E8F\u63CF\u8FF0\u5B8C\u6574\u53D9\u4E8B |
-| **\u901A\u7528\u9996\u5C3E\u5E27\u6A21\u5F0F** | \u7EAF\u6587\u672C\u4E94\u7EF4\u5EA6\uFF08Visual / Motion / Camera / Audio / Narrative\uFF09\uFF0C\u4E0D\u4F7F\u7528\u4EFB\u4F55 \`@\u56FEN \` \u5F15\u7528\uFF0C\u6309\u65F6\u95F4\u8F74\u8FDE\u7EED\u7F16\u6392\uFF08\`[Motion]\` 0s \u2192 \u603B\u65F6\u957F\uFF0C\u6BCF\u6BB5\u6700\u4F4E 1 \u79D2\uFF09\uFF0C\u5168\u7A0B\u5355\u4E00\u8FDE\u8D2F\u955C\u5934\uFF0C\u4E0D\u5207\u955C |
-| **Seedance 2.0** | \`\u751F\u6210\u4E00\u4E2A\u7531\u4EE5\u4E0B N \u4E2A\u5206\u955C\u7EC4\u6210\u7684\u89C6\u9891\`\uFF0C\u6BCF\u6761\u5BF9\u5E94 \`\u5206\u955CN{N}s\` \u6BB5\u843D |
-| **Wan 2.6** | \u5355\u56FE\u9996\u5E27\u6A21\u5F0F\uFF0C\u6BCF\u6B21\u4EC5\u8F93\u5165\u4E00\u6761\u5206\u955C\uFF0C\u8F93\u51FA\u4E00\u6BB5\u53D9\u4E8B\u5F0F\u82F1\u6587\u63D0\u793A\u8BCD\uFF08\u4E09\u6BB5\u5F0F\uFF1A\u98CE\u683C\u57FA\u8C03 \u2192 \u4E3B\u4F53\u52A8\u4F5C+\u573A\u666F\u73AF\u5883+\u5149\u7EBF\u6C1B\u56F4 \u2192 \u955C\u5934\u6536\u5C3E\uFF09\uFF0C\u4E0D\u4F7F\u7528 \`@\u56FEN \` \u5F15\u7528 |
-
-- \u4EC5\u8F93\u51FA\u89C6\u9891\u63D0\u793A\u8BCD\u6587\u672C\uFF0C\u4E0D\u8F93\u51FA XML \u6807\u7B7E\uFF0C\u4E0D\u9644\u52A0\u89E3\u91CA
-
----
-
-## videoDesc \u89E3\u6790\u89C4\u5219
-
-\u4ECE \`videoDesc\` \u62EC\u53F7\u5185\u6309\u987F\u53F7\u5206\u9694\u63D0\u53D6\u4EE5\u4E0B\u7ED3\u6784\u5316\u5B57\u6BB5\uFF1A
-
-\`\`\`
-\uFF08{\u753B\u9762\u63CF\u8FF0}\u3001{\u573A\u666F}\u3001{\u5173\u8054\u8D44\u4EA7\u540D\u79F0}\u3001{\u65F6\u957F}\u3001{\u666F\u522B}\u3001{\u8FD0\u955C}\u3001{\u89D2\u8272\u52A8\u4F5C}\u3001{\u60C5\u7EEA}\u3001{\u5149\u5F71\u6C1B\u56F4}\u3001{\u53F0\u8BCD}\u3001{\u97F3\u6548}\u3001{\u5173\u8054\u8D44\u4EA7ID}\uFF09
-\`\`\`
-
-| \u5E8F\u53F7 | \u5B57\u6BB5 | \u7528\u9014 | \u793A\u4F8B |
-|------|------|------|------|
-| 1 | \u753B\u9762\u63CF\u8FF0 | prompt \u7684\u53D9\u4E8B\u4E3B\u5E72 | \u6C88\u8F9E\u72EC\u7ACB\u57CE\u697C\u8FDC\u773A\u82CD\u832B\u5927\u5730 |
-| 2 | \u573A\u666F | \u5339\u914D\u573A\u666F\u8D44\u4EA7 | \u57CE\u697C |
-| 3 | \u5173\u8054\u8D44\u4EA7\u540D\u79F0 | \u5339\u914D\u89D2\u8272/\u9053\u5177\u8D44\u4EA7 | \u6C88\u8F9E/\u57CE\u697C |
-| 4 | \u65F6\u957F | \u63A7\u5236\u65F6\u957F\u53C2\u6570 | 4s |
-| 5 | \u666F\u522B | \u63A7\u5236\u955C\u5934\u666F\u522B | \u5168\u666F |
-| 6 | \u8FD0\u955C | \u63A7\u5236\u8FD0\u955C\u65B9\u5F0F | \u9759\u6B62 |
-| 7 | \u89D2\u8272\u52A8\u4F5C | prompt \u52A8\u4F5C\u63CF\u5199 | \u8D1F\u624B\u800C\u7ACB\u8863\u8882\u968F\u98CE\u98D8\u626C |
-| 8 | \u60C5\u7EEA | prompt \u60C5\u7EEA\u6C1B\u56F4 | \u575A\u5B9A\u51B3\u7EDD |
-| 9 | \u5149\u5F71\u6C1B\u56F4 | prompt \u5149\u5F71\u63CF\u5199 | \u9EC4\u660F\u51B7\u8C03\u4FA7\u9006\u5149 |
-| 10 | \u53F0\u8BCD | prompt \u53F0\u8BCD/\u97F3\u9891\u6BB5 | \u65E0\u53F0\u8BCD / \u5177\u4F53\u53F0\u8BCD\u5185\u5BB9 |
-| 11 | \u97F3\u6548 | prompt \u97F3\u6548\u63CF\u5199 | \u98CE\u58F0\u8863\u8882\u58F0 |
-| 12 | \u5173\u8054\u8D44\u4EA7ID | \u7528\u4E8E\u8D44\u4EA7ID\u2194\u89D2\u8272\u6807\u7B7E\u6620\u5C04 | A001/A002 |
-
----
-
-## \u8D44\u4EA7\u5F15\u7528\u7F16\u53F7\u89C4\u5219
-
-\u6240\u6709\u6A21\u578B\u7EDF\u4E00\u4F7F\u7528 \`@\u56FEN \` \u683C\u5F0F\u5F15\u7528\u8D44\u4EA7\u548C\u5206\u955C\u56FE\uFF0C\u7F16\u53F7\u6309\u8F93\u5165\u987A\u5E8F\u8FDE\u7EED\u9012\u589E\uFF1A
-
-1. **\u8D44\u4EA7**\uFF1A\u6309\u8D44\u4EA7\u4FE1\u606F\u4E2D \`[id, type, name]\` \u7684\u51FA\u73B0\u987A\u5E8F\uFF0C\u4ECE \`@\u56FE1 \` \u5F00\u59CB\u7F16\u53F7\uFF08\u4E0D\u533A\u5206 role / scene / prop\uFF09\u3002**\u8D44\u4EA7\u7C7B\u578B\u7684\u51FA\u73B0\u987A\u5E8F\u4E0D\u56FA\u5B9A**\u2014\u2014\u53EF\u80FD\u5148 scene \u540E character\uFF0C\u4E5F\u53EF\u80FD prop \u5728\u524D\u3001character \u5728\u540E\uFF0C\u6216\u4EFB\u610F\u4EA4\u66FF\u51FA\u73B0\uFF0C\u7F16\u53F7\u4E25\u683C\u6309\u8F93\u5165\u4F4D\u7F6E\u5206\u914D\uFF0C\u4E0D\u6309\u7C7B\u578B\u5F52\u7EC4
-2. **\u5206\u955C\u56FE**\uFF1A\u6BCF\u6761 \`<storyboardItem>\` \u5BF9\u5E94\u4E00\u5F20\u5206\u955C\u56FE\uFF0C\u7F16\u53F7\u63A5\u7EED\u8D44\u4EA7\u4E4B\u540E
-3. **\u8DF3\u8FC7\u65E0\u5206\u955C\u56FE\u7684\u6761\u76EE**\uFF1A\u5F53 \`shouldGenerateImage="false"\` \u65F6\uFF0C\u8BE5\u5206\u955C\u672A\u751F\u6210\u56FE\u7247\uFF0C**\u4E0D\u5206\u914D**\u5206\u955C\u56FE\u7F16\u53F7\uFF0C\u540E\u7EED\u7F16\u53F7\u987A\u5EF6
-
-#### \u793A\u4F8B
-
-\u8F93\u5165 3 \u4E2A\u8D44\u4EA7 + 2 \u6761\u5206\u955C\uFF1A
-\`\`\`
-\u8D44\u4EA7\u4FE1\u606F[A001, role, \u6C88\u8F9E], [A002, role, \u82CF\u9526], [A003, scene, \u57CE\u697C]
-\`\`\`
-\`\`\`xml
-<storyboardItem ...>  <!-- \u5206\u955C1 -->
-<storyboardItem ...>  <!-- \u5206\u955C2 -->
-\`\`\`
-
-\u7F16\u53F7\u7ED3\u679C\uFF1A
-
-| \u8F93\u5165\u9879 | \u5F15\u7528\u6807\u7B7E | \u8BF4\u660E |
-|--------|----------|------|
-| [A001, role, \u6C88\u8F9E] | \`@\u56FE1 \` | \u89D2\u8272\xB7\u6C88\u8F9E \u53C2\u8003\u56FE |
-| [A002, role, \u82CF\u9526] | \`@\u56FE2 \` | \u89D2\u8272\xB7\u82CF\u9526 \u53C2\u8003\u56FE |
-| [A003, scene, \u57CE\u697C] | \`@\u56FE3 \` | \u573A\u666F\xB7\u57CE\u697C \u53C2\u8003\u56FE |
-| storyboardItem \u7B2C1\u6761 | \`@\u56FE4 \` | \u5206\u955C\u56FE1 |
-| storyboardItem \u7B2C2\u6761 | \`@\u56FE5 \` | \u5206\u955C\u56FE2 |
-
-**\u6DF7\u5408\u987A\u5E8F\u793A\u4F8B**
-
-\u8F93\u5165 3 \u4E2A\u8D44\u4EA7\uFF08\u573A\u666F\u5728\u524D\uFF09+ 2 \u6761\u5206\u955C\uFF1A
-\`\`\`
-\u8D44\u4EA7\u4FE1\u606F[A003, scene, \u57CE\u697C], [A001, role, \u6C88\u8F9E], [A002, role, \u82CF\u9526]
-\`\`\`
-\`\`\`xml
-<storyboardItem ...>  <!-- \u5206\u955C1 -->
-<storyboardItem ...>  <!-- \u5206\u955C2 -->
-\`\`\`
-
-\u7F16\u53F7\u7ED3\u679C\uFF1A
-
-| \u8F93\u5165\u9879 | \u5F15\u7528\u6807\u7B7E | \u8BF4\u660E |
-|--------|----------|------|
-| [A003, scene, \u57CE\u697C] | \`@\u56FE1 \` | \u573A\u666F\xB7\u57CE\u697C \u53C2\u8003\u56FE |
-| [A001, role, \u6C88\u8F9E] | \`@\u56FE2 \` | \u89D2\u8272\xB7\u6C88\u8F9E \u53C2\u8003\u56FE |
-| [A002, role, \u82CF\u9526] | \`@\u56FE3 \` | \u89D2\u8272\xB7\u82CF\u9526 \u53C2\u8003\u56FE |
-| storyboardItem \u7B2C1\u6761 | \`@\u56FE4 \` | \u5206\u955C\u56FE1 |
-| storyboardItem \u7B2C2\u6761 | \`@\u56FE5 \` | \u5206\u955C\u56FE2 |
-
-> **\u5173\u952E**\uFF1A\u6B64\u4F8B\u4E2D \`@\u56FE1 \` \u662F\u573A\u666F\u800C\u975E\u89D2\u8272\uFF0C\`@\u56FE2 \` \`@\u56FE3 \` \u624D\u662F\u89D2\u8272\u3002\u751F\u6210\u63D0\u793A\u8BCD\u65F6\uFF0C\u5FC5\u987B\u6839\u636E\u8D44\u4EA7\u7684\u5B9E\u9645 \`type\` \u5B57\u6BB5\u786E\u5B9A\u5F15\u7528\u65B9\u5F0F\uFF0C\u800C\u975E\u6839\u636E\u7F16\u53F7\u5927\u5C0F\u5047\u5B9A\u7C7B\u578B\u3002
-
----
-
-## \u6A21\u578B\u63D0\u793A\u8BCD\u751F\u6210\u89C4\u5219
-
-### \u4E00\u3001\u901A\u7528\u591A\u53C2\u6A21\u5F0F
-
-#### \u6838\u5FC3\u539F\u5219
-- MVL \u591A\u6A21\u6001\u878D\u5408\uFF1A\u81EA\u7136\u8BED\u8A00 + \u56FE\u50CF\u5F15\u7528\u5728\u540C\u4E00\u8BED\u4E49\u7A7A\u95F4
-- \u5206\u955C\u56FE\u5E8F\u5217\u8D1F\u8D23\u52A8\u4F5C/\u65F6\u95F4\u8F74/\u6784\u56FE\uFF0C\u573A\u666F\u53C2\u8003\u56FE\u8D1F\u8D23\u73AF\u5883\u4E00\u81F4\u6027
-- \u6240\u6709\u8D44\u4EA7\u548C\u5206\u955C\u56FE\u7EDF\u4E00\u7528 \`@\u56FEN \` \u5F15\u7528
-- **\u4E25\u683C\u9075\u5FAA videoDesc**\uFF1A\u63D0\u793A\u8BCD\u5185\u5BB9\u4E25\u683C\u57FA\u4E8E videoDesc \u4E2D\u7684\u753B\u9762\u63CF\u8FF0\u3001\u65F6\u957F\u3001\u666F\u522B\u3001\u8FD0\u955C\u3001\u89D2\u8272\u52A8\u4F5C\u3001\u60C5\u7EEA\u3001\u5149\u5F71\u6C1B\u56F4\u3001\u53F0\u8BCD\u3001\u97F3\u6548\u5B57\u6BB5\u751F\u6210\uFF0C\u4E0D\u7F16\u9020\u989D\u5916\u5185\u5BB9
-- **\u53F0\u8BCD\u4E0D\u53EF\u7F3A\u5931**\uFF1AvideoDesc \u4E2D\u6709\u53F0\u8BCD\u7684\u5206\u955C\uFF0C\u5FC5\u987B\u5728 Instruction \u4E2D\u4F53\u73B0\u53F0\u8BCD\u76F8\u5173\u63CF\u8FF0
-- **\u53F0\u8BCD\u7C7B\u578B\u6807\u6CE8**\uFF1A\u533A\u5206\u666E\u901A\u5BF9\u767D\uFF08dialogue\uFF09\u3001\u5185\u5FC3\u72EC\u767D\uFF08inner monologue OS\uFF09\u3001\u753B\u5916\u97F3\uFF08voiceover VO\uFF09\uFF0C\u5728 Instruction \u4E2D\u7528\u62EC\u53F7\u6807\u6CE8
-
-#### prompt \u751F\u6210\u6A21\u677F
-
-> **\u6CE8\u610F**\uFF1A\`[References]\` \u4E2D\u7684 \`@\u56FEN\` \u7F16\u53F7\u4E25\u683C\u6309\u8D44\u4EA7\u8F93\u5165\u987A\u5E8F\u5206\u914D\uFF0C\u89D2\u8272/\u573A\u666F/\u9053\u5177\u53EF\u80FD\u51FA\u73B0\u5728\u4EFB\u610F\u7F16\u53F7\u4F4D\u7F6E\u3002\u751F\u6210\u65F6\u9700\u6839\u636E\u6BCF\u4E2A\u8D44\u4EA7\u7684 \`type\` \u5B57\u6BB5\u786E\u5B9A\u5176\u5F15\u7528\u65B9\u5F0F\uFF0C\u4E0D\u53EF\u5047\u5B9A\u56FA\u5B9A\u7684\u7C7B\u578B-\u7F16\u53F7\u5BF9\u5E94\u5173\u7CFB\u3002
-
-\`\`\`
-[References]
-@\u56FE{\u8D44\u4EA71\u7F16\u53F7} : [{\u8D44\u4EA71\u540D\u79F0}\u53C2\u8003\u56FE]   \u2190 \u53EF\u80FD\u662F role/scene/prop \u4E2D\u7684\u4EFB\u610F\u7C7B\u578B
-@\u56FE{\u8D44\u4EA72\u7F16\u53F7} : [{\u8D44\u4EA72\u540D\u79F0}\u53C2\u8003\u56FE]
-@\u56FE{\u8D44\u4EA73\u7F16\u53F7} : [{\u8D44\u4EA73\u540D\u79F0}\u53C2\u8003\u56FE]
-...
-@\u56FE{\u5206\u955C\u56FE\u7F16\u53F7} : [\u5206\u955C\u56FE1]            \u2190 \u5206\u955C\u56FE\u7F16\u53F7\u63A5\u7EED\u8D44\u4EA7\u4E4B\u540E
-
-[Instruction]
-Based on the storyboard @\u56FE{\u5206\u955C\u56FE\u7F16\u53F7} :
-@\u56FE{\u89D2\u8272\u8D44\u4EA7\u7F16\u53F7} {\u52A8\u4F5C/\u72B6\u6001\u63CF\u8FF0\uFF08\u82F1\u6587\uFF09},
-set in the {\u573A\u666F\u63CF\u8FF0\uFF08\u82F1\u6587\uFF09} of @\u56FE{\u573A\u666F\u8D44\u4EA7\u7F16\u53F7} ,
-{\u955C\u5934/\u8FD0\u955C\u63CF\u8FF0\uFF08\u82F1\u6587\uFF09},
-{\u60C5\u611F\u57FA\u8C03\uFF08\u82F1\u6587\uFF09},
-{\u53F0\u8BCD\u63CF\u8FF0\uFF08\u82F1\u6587\uFF0C\u542B dialogue/OS/VO \u6807\u6CE8\uFF09/ No dialogue},
-{\u97F3\u6548\u63CF\u8FF0\uFF08\u82F1\u6587\uFF09}.
-\`\`\`
-
-#### \u751F\u6210\u7EA6\u675F
-1. **Instruction \u5FC5\u987B\u7528\u82F1\u6587**
-2. **\u4E25\u683C\u9075\u5FAA videoDesc**\uFF1A\u63D0\u793A\u8BCD\u5185\u5BB9\u4E25\u683C\u57FA\u4E8E videoDesc \u7684\u753B\u9762\u63CF\u8FF0\u3001\u65F6\u957F\u3001\u666F\u522B\u3001\u8FD0\u955C\u3001\u89D2\u8272\u52A8\u4F5C\u3001\u60C5\u7EEA\u3001\u5149\u5F71\u6C1B\u56F4\u3001\u53F0\u8BCD\u3001\u97F3\u6548\u5B57\u6BB5\uFF0C\u4E0D\u7F16\u9020\u989D\u5916\u4FE1\u606F
-3. **\u89D2\u8272\u52A8\u4F5C**\u4ECE videoDesc \u7684\u300C\u89D2\u8272\u52A8\u4F5C\u300D\u5B57\u6BB5\u63D0\u53D6\uFF0C\u7FFB\u8BD1\u4E3A\u7B80\u6D01\u82F1\u6587\u52A8\u4F5C\u63CF\u8FF0
-4. **\u53F0\u8BCD\u4E0D\u53EF\u7F3A\u5931**\uFF1AvideoDesc \u4E2D\u6709\u53F0\u8BCD\u7684\u5206\u955C\uFF0C\u5FC5\u987B\u5728 Instruction \u4E2D\u4F53\u73B0\u53F0\u8BCD\u5185\u5BB9\uFF08\u4FDD\u6301\u539F\u59CB\u8BED\u8A00\uFF0C\u4E0D\u7FFB\u8BD1\uFF09
-5. **\u53F0\u8BCD\u7C7B\u578B\u6807\u6CE8**\uFF1A\u666E\u901A\u5BF9\u767D\u6807\u6CE8 \`(dialogue)\`\uFF1B\u5185\u5FC3\u72EC\u767D\u6807\u6CE8 \`(inner monologue, OS)\`\uFF1B\u753B\u5916\u97F3\u6807\u6CE8 \`(voiceover, VO)\`
-6. **\u955C\u5934\u98CE\u683C**\u4F7F\u7528\u6807\u51C6\u6807\u7B7E\uFF1A\`cinematic\` / \`wide-angle\` / \`close-up\` / \`slow motion\` / \`surround shooting\` / \`handheld\`
-7. **\u7A7A\u95F4\u5173\u7CFB**\u4F7F\u7528\u6807\u51C6\u52A8\u8BCD\uFF1A\`wearing\` / \`holding\` / \`standing on\` / \`following behind\` / \`sitting in\`
-8. \u5355\u6761\u5206\u955C\u5BF9\u5E94\u5355\u4E2A \`@\u56FEN \`\uFF0C\u4E0D\u505A\u591A\u5E27\u8DE8\u955C\u63CF\u8FF0
-9. \u65E0\u9700\u63CF\u8FF0\u89D2\u8272\u5916\u89C2\uFF08\u7531\u53C2\u8003\u56FE\u8D1F\u8D23\uFF09
-10. \u65E0\u65F6\u957F\u6807\u6CE8\uFF08\u7531\u6A21\u578B\u63A8\u65AD\uFF09
-11. **\u65E0\u5206\u955C\u56FE\u65F6**\uFF1A\u5F53 \`shouldGenerateImage="false"\` \u65F6\uFF0C\u8BE5\u5206\u955C\u65E0\u5206\u955C\u56FE\uFF0C\`[References]\` \u4E2D\u4E0D\u5217\u51FA\u8BE5\u5206\u955C\u56FE\uFF0C\`[Instruction]\` \u4E2D\u4E0D\u4F7F\u7528 \`@\u56FEN \` \u5F15\u7528\u8BE5\u5206\u955C\u56FE\uFF0C\u6539\u4E3A\u7EAF\u6587\u672C\u63CF\u8FF0\u753B\u9762\u5185\u5BB9
-
-#### KlingOmni \u5B8C\u6574\u793A\u4F8B
-
-\u8F93\u5165\uFF1A
-\`\`\`
-\u6A21\u578B\uFF1AKlingOmni
-\u8D44\u4EA7\u4FE1\u606F[A001, role, \u6C88\u8F9E], [A002, role, \u82CF\u9526], [A003, scene, \u57CE\u697C]
-\`\`\`
-\`\`\`xml
-<storyboardItem videoDesc='\uFF08\u6C88\u8F9E\u72EC\u7ACB\u57CE\u697C\u8FDC\u773A\u82CD\u832B\u5927\u5730\u3001\u57CE\u697C\u3001\u6C88\u8F9E/\u57CE\u697C\u30014s\u3001\u5168\u666F\u3001\u9759\u6B62\u3001\u8D1F\u624B\u800C\u7ACB\u8863\u8882\u968F\u98CE\u98D8\u626C\u3001\u575A\u5B9A\u51B3\u7EDD\u3001\u9EC4\u660F\u51B7\u8C03\u4FA7\u9006\u5149\u3001\u65E0\u53F0\u8BCD\u3001\u98CE\u58F0\u8863\u8882\u58F0\u3001A001/A003\uFF09' prompt='\u5168\u666F\uFF0C\u5E73\u89C6\u7565\u4EF0\uFF0C\u57CE\u697C\u4E4B\u4E0A\uFF0C\u6C88\u8F9E\u8D1F\u624B\u800C\u7ACB\uFF0C\u8863\u8882\u98D8\u626C\uFF0C\u9EC4\u660F\u51B7\u8C03\u4FA7\u9006\u5149...' track='main' duration='4' associateAssetsIds="[&quot;A001&quot;,&quot;A003&quot;]" shouldGenerateImage="true" ></storyboardItem>
-<storyboardItem videoDesc='\uFF08\u82CF\u9526\u767B\u4E0A\u57CE\u697C\u8D70\u5411\u6C88\u8F9E\u3001\u57CE\u697C\u3001\u82CF\u9526/\u6C88\u8F9E/\u57CE\u697C\u30014s\u3001\u4E2D\u666F\u3001\u8DDF\u8E2A\u3001\u82CF\u9526\u62FE\u7EA7\u800C\u4E0A\u8D70\u5411\u6C88\u8F9E\u3001\u62C5\u5FE7\u3001\u9EC4\u660F\u4F59\u6656\u6E10\u6697\u3001\u65E0\u53F0\u8BCD\u3001\u811A\u6B65\u58F0\u98CE\u58F0\u3001A001/A002/A003\uFF09' prompt='\u4E2D\u666F\uFF0C\u8DDF\u8E2A\uFF0C\u82CF\u9526\u62FE\u7EA7\u800C\u4E0A\u8D70\u5411\u57CE\u697C\u4E0A\u7684\u6C88\u8F9E...' track='main' duration='4' associateAssetsIds="[&quot;A001&quot;,&quot;A002&quot;,&quot;A003&quot;]" shouldGenerateImage="true" ></storyboardItem>
-\`\`\`
-
-\u8F93\u51FA\uFF1A
-\`\`\`
-[References]
-@\u56FE1 : [\u6C88\u8F9E\u53C2\u8003\u56FE]
-@\u56FE2 : [\u82CF\u9526\u53C2\u8003\u56FE]
-@\u56FE3 : [\u57CE\u697C\u53C2\u8003\u56FE]
-@\u56FE4 : [\u5206\u955C\u56FE1]
-@\u56FE5 : [\u5206\u955C\u56FE2]
-
-[Instruction]
-Based on the storyboard from @\u56FE4 to @\u56FE5 :
-@\u56FE1 standing alone atop the city wall, hands clasped behind back, robes billowing in the wind, gazing across the vast land,
-@\u56FE2 ascending the steps toward @\u56FE1 , expression worried,
-set in the ancient city wall environment of @\u56FE3 ,
-wide shot transitioning to medium tracking shot, cinematic,
-resolute determination shifting to concerned anticipation, dusk cold-toned side-backlit atmosphere fading,
-no dialogue,
-wind howling, fabric flapping, footsteps on stone.
-\`\`\`
-
----
-
-### \u4E8C\u3001\u901A\u7528\u9996\u5C3E\u5E27\u6A21\u5F0F
-
-#### \u6838\u5FC3\u539F\u5219
-- **\u7EAF\u6587\u672C\u63D0\u793A\u8BCD**\uFF1A\u63D0\u793A\u8BCD\u5185**\u4E0D\u4F7F\u7528\u4EFB\u4F55 \`@\u56FEN \` \u5F15\u7528**\uFF08\u4E0D\u5F15\u7528\u89D2\u8272\u8D44\u4EA7\u3001\u573A\u666F\u8D44\u4EA7\u3001\u4E5F\u4E0D\u5F15\u7528\u5206\u955C\u56FE\uFF09\uFF0C\u5168\u90E8\u5185\u5BB9\u7528\u7EAF\u6587\u672C\u63CF\u8FF0
-- **\u4E94\u7EF4\u5EA6\u7ED3\u6784**\uFF1AVisual / Motion / Camera / Audio / Narrative
-- **\u4E25\u683C\u9075\u5FAA videoDesc**\uFF1A\u63D0\u793A\u8BCD\u5185\u5BB9\u4E25\u683C\u57FA\u4E8E videoDesc \u4E2D\u7684\u753B\u9762\u63CF\u8FF0\u3001\u65F6\u957F\u3001\u666F\u522B\u3001\u8FD0\u955C\u3001\u89D2\u8272\u52A8\u4F5C\u3001\u60C5\u7EEA\u3001\u5149\u5F71\u6C1B\u56F4\u3001\u53F0\u8BCD\u3001\u97F3\u6548\u5B57\u6BB5\u751F\u6210\uFF0C\u4E0D\u7F16\u9020\u989D\u5916\u5185\u5BB9
-- **\u53F0\u8BCD\u4E0D\u53EF\u7F3A\u5931**\uFF1AvideoDesc \u4E2D\u6709\u53F0\u8BCD\u7684\u5206\u955C\uFF0C\u5FC5\u987B\u5728 \`[Audio]\` \u4E2D\u5B8C\u6574\u8F93\u51FA\u53F0\u8BCD\u5185\u5BB9
-- **\u53F0\u8BCD\u7C7B\u578B\u6807\u6CE8**\uFF1A\u533A\u5206\u666E\u901A\u5BF9\u767D\uFF08dialogue, lip-sync active\uFF09\u3001\u5185\u5FC3\u72EC\u767D\uFF08inner monologue OS, silent lips\uFF09\u3001\u753B\u5916\u97F3\uFF08voiceover VO, silent lips\uFF09\uFF0C\u5E76\u5728 \`[Audio]\` \u4E2D\u660E\u786E\u6807\u6CE8
-- **\u4E0D\u8BF4\u8BDD\u7684\u4E3B\u4F53\u6807\u6CE8 \`silent\`** \u2014 \u9632\u6B62\u8BEF\u751F\u53E3\u578B
-- **\u5168\u7A0B\u5355\u4E00\u8FDE\u8D2F\u955C\u5934**\uFF1A\u4ECE\u5934\u5230\u5C3E\u4E00\u4E2A\u955C\u5934\uFF0C\u4E0D\u5B58\u5728\u5207\u955C
-- **\u65F6\u95F4\u8F74\u5206\u6BB5**\uFF1A\u6BCF\u6BB5\u6700\u4F4E 1 \u79D2\uFF0C\u7528 \`0s-Xs\` \u6807\u6CE8
-
-#### prompt \u751F\u6210\u6A21\u677F
-
-\`\`\`
-[Visual]
-{\u4E3B\u4F53A\u540D}: {\u5916\u89C2\u7B80\u8FF0}, {\u7AD9\u4F4D/\u59FF\u6001}, {\u8BF4\u8BDD\u72B6\u6001 speaking/silent}.
-{\u4E3B\u4F53B\u540D}: {\u5916\u89C2\u7B80\u8FF0}, {\u7AD9\u4F4D/\u59FF\u6001}, {\u8BF4\u8BDD\u72B6\u6001}.
-{\u573A\u666F\u63CF\u8FF0}, {\u9053\u5177\u63CF\u8FF0}.
-{\u89C6\u89C9\u98CE\u683C\u6807\u7B7E}.
-
-[Motion]
-0s-{X}s: {\u4E3B\u4F53A\u540D} {\u52A8\u4F5C\u63CF\u8FF0\u6BB51}.
-{X}s-{Y}s: {\u4E3B\u4F53B\u540D} {\u52A8\u4F5C\u63CF\u8FF0\u6BB52}.
-
-[Camera]
-{\u955C\u5934\u7C7B\u578B}, {\u8FD0\u955C\u65B9\u5F0F}, {\u5168\u7A0B\u5355\u4E00\u8FDE\u8D2F\u955C\u5934\u63CF\u8FF0}.
-
-[Audio]
-{Xs-Ys}: "{\u53F0\u8BCD\u5185\u5BB9}" \u2014 {\u8BF4\u8BDD\u8005\u540D} ({dialogue / inner monologue OS / voiceover VO}), {lip-sync active / silent lips}.
-{\u97F3\u6548\u63CF\u8FF0}.
-
-[Narrative]
-{\u60C5\u8282\u70B9\u6982\u8FF0}, {\u53D9\u4E8B\u4F4D\u7F6E}.
-\`\`\`
-
-#### \u751F\u6210\u7EA6\u675F
-1. **\u5168\u90E8\u7528\u82F1\u6587**
-2. **\u4E0D\u4F7F\u7528\u4EFB\u4F55 \`@\u56FEN \` \u5F15\u7528**\uFF1A\u63D0\u793A\u8BCD\u5185\u4E0D\u5F15\u7528\u89D2\u8272\u8D44\u4EA7\u3001\u573A\u666F\u8D44\u4EA7\u3001\u5206\u955C\u56FE\uFF0C\u5168\u90E8\u5185\u5BB9\u7528\u7EAF\u6587\u672C\u63CF\u8FF0
-3. **\u4E3B\u4F53\u7528\u6587\u5B57\u63CF\u8FF0**\uFF1A\u5728 [Visual] \u4E2D\u7B80\u8981\u63CF\u8FF0\u4E3B\u4F53\u5916\u89C2\u7279\u5F81\uFF08\u5982\u670D\u9970\u3001\u53D1\u578B\u7B49\u5173\u952E\u8FA8\u8BC6\u7279\u5F81\uFF09
-4. **\u4E25\u683C\u9075\u5FAA videoDesc**\uFF1A\u63D0\u793A\u8BCD\u5185\u5BB9\u4E25\u683C\u57FA\u4E8E videoDesc \u4E2D\u7684\u753B\u9762\u63CF\u8FF0\u3001\u65F6\u957F\u3001\u666F\u522B\u3001\u8FD0\u955C\u3001\u89D2\u8272\u52A8\u4F5C\u3001\u60C5\u7EEA\u3001\u5149\u5F71\u6C1B\u56F4\u3001\u53F0\u8BCD\u3001\u97F3\u6548\u5B57\u6BB5\uFF0C\u4E0D\u7F16\u9020\u989D\u5916\u4FE1\u606F
-5. **\u6BCF\u4E2A\u4E3B\u4F53\u5FC5\u987B\u6807\u6CE8\u8BF4\u8BDD\u72B6\u6001**\uFF1A\`speaking\` / \`silent\` / \`speaking simultaneously\`
-6. **\u53F0\u8BCD\u4E0D\u53EF\u7F3A\u5931**\uFF1AvideoDesc \u4E2D\u6709\u53F0\u8BCD\u7684\u5206\u955C\uFF0C\u5FC5\u987B\u5728 \`[Audio]\` \u4E2D\u5B8C\u6574\u8F93\u51FA\u53F0\u8BCD\u5185\u5BB9\uFF08\u4FDD\u6301\u539F\u59CB\u8BED\u8A00\uFF0C\u4E0D\u7FFB\u8BD1\uFF09
-7. **\u53F0\u8BCD\u7C7B\u578B\u6807\u6CE8**\uFF1A\u666E\u901A\u5BF9\u767D\u6807\u6CE8 \`dialogue, lip-sync active\`\uFF1B\u5185\u5FC3\u72EC\u767D\u6807\u6CE8 \`inner monologue (OS), silent lips\`\uFF1B\u753B\u5916\u97F3\u6807\u6CE8 \`voiceover (VO), silent lips\`
-8. **Motion \u65F6\u95F4\u8F74**\u6BCF\u6BB5\u6700\u4F4E 1 \u79D2\uFF0C\u4E0D\u8D85\u8FC7\u603B\u65F6\u957F
-9. **\u5168\u7A0B\u5355\u4E00\u8FDE\u8D2F\u955C\u5934**\uFF1ACamera \u6BB5\u843D\u63CF\u8FF0\u4ECE\u5934\u5230\u5C3E\u7684\u4E00\u4E2A\u955C\u5934\uFF0C\u7EDD\u4E0D\u5207\u955C
-10. **\u89C6\u89C9\u98CE\u683C**\u53C2\u8003 Assistant \u4E2D\u7684\u300C\u89C6\u89C9\u98CE\u683C\u7EA6\u675F\u300D\u90E8\u5206\u5185\u5BB9
-11. **\u955C\u5934\u7C7B\u578B**\u4ECE\u4EE5\u4E0B\u9009\u53D6\uFF1A\`Wide establishing shot / Over-the-shoulder / Medium shot / Close-up / Wide shot / POV / Dutch angle / Crane up / Dolly right / Whip pan / Handheld / Slow motion\`
-
-#### Seedance 1.5 Pro \u5B8C\u6574\u793A\u4F8B
-
-\u8F93\u5165\uFF1A
-\`\`\`
-\u6A21\u578B\uFF1ASeedance1.5
-\u8D44\u4EA7\u4FE1\u606F[A001, role, \u6C88\u8F9E], [A002, role, \u82CF\u9526], [A003, scene, \u57CE\u697C]
-\`\`\`
-\`\`\`xml
-<storyboardItem videoDesc='\uFF08\u6C88\u8F9E\u72EC\u7ACB\u57CE\u697C\u8FDC\u773A\u82CD\u832B\u5927\u5730\u3001\u57CE\u697C\u3001\u6C88\u8F9E/\u57CE\u697C\u30014s\u3001\u5168\u666F\u3001\u9759\u6B62\u3001\u8D1F\u624B\u800C\u7ACB\u8863\u8882\u968F\u98CE\u98D8\u626C\u3001\u575A\u5B9A\u51B3\u7EDD\u3001\u9EC4\u660F\u51B7\u8C03\u4FA7\u9006\u5149\u3001\u65E0\u53F0\u8BCD\u3001\u98CE\u58F0\u8863\u8882\u58F0\u3001A001/A003\uFF09' prompt='\u5168\u666F\uFF0C\u5E73\u89C6\u7565\u4EF0\uFF0C\u57CE\u697C\u4E4B\u4E0A\uFF0C\u6C88\u8F9E\u8D1F\u624B\u800C\u7ACB\uFF0C\u8863\u8882\u98D8\u626C\uFF0C\u9EC4\u660F\u51B7\u8C03\u4FA7\u9006\u5149...' track='main' duration='4' associateAssetsIds="[&quot;A001&quot;,&quot;A003&quot;]" shouldGenerateImage="true" ></storyboardItem>
-<storyboardItem videoDesc='\uFF08\u82CF\u9526\u767B\u4E0A\u57CE\u697C\u8D70\u5411\u6C88\u8F9E\u3001\u57CE\u697C\u3001\u82CF\u9526/\u6C88\u8F9E/\u57CE\u697C\u30014s\u3001\u4E2D\u666F\u3001\u8DDF\u8E2A\u3001\u82CF\u9526\u62FE\u7EA7\u800C\u4E0A\u8D70\u5411\u6C88\u8F9E\u3001\u62C5\u5FE7\u3001\u9EC4\u660F\u4F59\u6656\u6E10\u6697\u3001\u65E0\u53F0\u8BCD\u3001\u811A\u6B65\u58F0\u98CE\u58F0\u3001A001/A002/A003\uFF09' prompt='\u4E2D\u666F\uFF0C\u8DDF\u8E2A\uFF0C\u82CF\u9526\u62FE\u7EA7\u800C\u4E0A\u8D70\u5411\u57CE\u697C\u4E0A\u7684\u6C88\u8F9E...' track='main' duration='4' associateAssetsIds="[&quot;A001&quot;,&quot;A002&quot;,&quot;A003&quot;]" shouldGenerateImage="true" ></storyboardItem>
-\`\`\`
-
-\u8F93\u51FA\uFF1A
-\`\`\`
-[Visual]
-Shen Ci: male, dark flowing robes, hair tied up, standing alone atop city wall, hands clasped behind back, robes billowing, silent.
-Su Jin: female, light-colored dress, hair partially down, ascending steps toward Shen Ci, expression worried, silent.
-Ancient city wall, vast open land beyond, dusk sky fading.
-Cinematic, photorealistic, 4K, high contrast, desaturated tones, shallow depth of field.
-
-[Motion]
-0s-4s: Shen Ci stands still on city wall edge, robes flutter in wind, hair sways gently. Gaze fixed on distant horizon.
-4s-8s: Su Jin climbs the last few steps onto the wall, walks toward Shen Ci. Shen Ci remains still, unaware. Su Jin slows as she approaches.
-
-[Camera]
-Wide establishing shot, static for first 4 seconds capturing the lone figure. Then smooth transition to medium tracking shot following the woman ascending steps, single continuous take throughout, no cuts.
-
-[Audio]
-0s-4s: Wind howling across wall, fabric flapping rhythmically. No dialogue.
-4s-8s: Footsteps on stone, robes rustling. No dialogue.
-Shen Ci \u2014 silent. Su Jin \u2014 silent.
-
-[Narrative]
-Lone figure on city wall, then arrival of a companion. Tension between determination and concern. Single continuous take.
-\`\`\`
-
----
-
-### \u4E09\u3001Seedance 2.0
-
-#### \u6838\u5FC3\u539F\u5219
-- **\u7ED3\u6784\u531612\u7EF4\u7F16\u7801**\uFF1A\u7EDF\u4E00\u7528 \`@\u56FEN \` \u5F15\u7528\u8D44\u4EA7\u548C\u5206\u955C\u56FE\uFF0C\u65F6\u957F \`{N}s\`
-- **\u6700\u524D\u9762\u5148\u5B9A\u4E49\u56FE\u7247\u6620\u5C04**\uFF1A\u5148\u8F93\u51FA\u201C\u56FE\u7247\u5B9A\u4E49\u201D\u6BB5\uFF0C\u96C6\u4E2D\u58F0\u660E \`@\u56FEN : \u4E3B\u4F53\u540D\u5B57/\u573A\u666F\u540D\u5B57\uFF0C\u7B80\u8FF0\`\uFF1B\u540E\u7EED\u5206\u955C\u6B63\u6587\u53EA\u4F7F\u7528\u4E3B\u4F53\u540D\u5B57\uFF0C\u4E0D\u518D\u5199 \`@\u56FEN \`
-- **\u97F3\u8272\u53C2\u65709\u7EF4\u5EA6\u7CBE\u7EC6\u63CF\u8FF0**\uFF08\u6709\u53F0\u8BCD\u65F6\u5FC5\u586B\uFF09
-- **\u79D2\u7EA7\u65F6\u957F\u63A7\u5236**\uFF1A\u5355\u5206\u955C\u65F6\u957F\u6700\u4F4E 1s
-- **\u4E2D\u6587\u63D0\u793A\u8BCD**
-- **\u4E25\u683C\u9075\u5FAA videoDesc**\uFF1A\u6BCF\u6761\u5206\u955C\u7684\u63CF\u8FF0\u5185\u5BB9\u4E25\u683C\u57FA\u4E8E videoDesc \u4E2D\u7684\u753B\u9762\u63CF\u8FF0\u3001\u65F6\u957F\u3001\u666F\u522B\u3001\u8FD0\u955C\u3001\u89D2\u8272\u52A8\u4F5C\u3001\u60C5\u7EEA\u3001\u5149\u5F71\u6C1B\u56F4\u3001\u53F0\u8BCD\u3001\u97F3\u6548\u5B57\u6BB5\u751F\u6210\uFF0C\u4E0D\u7F16\u9020\u989D\u5916\u5185\u5BB9
-- **\u53F0\u8BCD\u4E0D\u53EF\u7F3A\u5931**\uFF1AvideoDesc \u4E2D\u6709\u53F0\u8BCD\u7684\u5206\u955C\uFF0C\u5FC5\u987B\u5B8C\u6574\u8F93\u51FA\u53F0\u8BCD\u548C\u97F3\u8272\u63CF\u8FF0
-- **\u53F0\u8BCD\u7C7B\u578B\u6807\u6CE8**\uFF1A\u533A\u5206\u666E\u901A\u5BF9\u767D\uFF08\u76F4\u63A5\u4F7F\u7528\u300C\u8BF4\uFF1A\u300D\uFF09\u3001\u5185\u5FC3\u72EC\u767D\uFF08\u4F7F\u7528\u300C\u5185\u5FC3OS\uFF1A\u300D\uFF09\u3001\u753B\u5916\u97F3\uFF08\u4F7F\u7528\u300C\u753B\u5916\u97F3VO\uFF1A\u300D\uFF09\uFF0C\u5E76\u5339\u914D\u5BF9\u5E94\u7684\u5634\u578B\u72B6\u6001\u63CF\u8FF0
-
-#### prompt \u751F\u6210\u6A21\u677F
-
-> **\u6CE8\u610F**\uFF1A\`@\u56FE{\u7F16\u53F7}\` \u4EC5\u7528\u4E8E\u6700\u524D\u9762\u7684\u201C\u56FE\u7247\u5B9A\u4E49\u201D\u6BB5\u3002\u5206\u955C\u6B63\u6587\u4E2D\u7981\u6B62\u518D\u5199 \`@\u56FE{\u7F16\u53F7}\`\uFF0C\u7EDF\u4E00\u6539\u7528\u4E3B\u4F53\u540D\u5B57/\u573A\u666F\u540D\u5B57\u3002
-
-**\u5355\u5206\u955C\u6A21\u677F\uFF1A**
-\`\`\`
-\u753B\u9762\u98CE\u683C\u548C\u7C7B\u578B: {\u98CE\u683C}, {\u8272\u8C03}, {\u7C7B\u578B}
-
-\u56FE\u7247\u5B9A\u4E49:
-@\u56FE1: {\u8D44\u4EA71\u540D\u5B57}\uFF0C{\u7B80\u8FF0}
-@\u56FE2: {\u8D44\u4EA72\u540D\u5B57}\uFF0C{\u7B80\u8FF0}
-@\u56FEN: {\u8D44\u4EA7N\u540D\u5B57}\uFF0C{\u7B80\u8FF0}
-...
-
-\u751F\u6210\u4E00\u4E2A\u7531\u4EE5\u4E0B 1 \u4E2A\u5206\u955C\u7EC4\u6210\u7684\u89C6\u9891:
-
-\u573A\u666F:
-\u5206\u955C\u8FC7\u6E21: \u65E0
-
-\u5206\u955C1 {N}s: \u65F6\u95F4\uFF1A{\u65E5/\u591C/\u6668/\u9EC4\u660F}\uFF0C\u573A\u666F\uFF1A{\u573A\u666F\u540D\u5B57}\uFF0C\u955C\u5934\uFF1A{\u666F\u522B}\uFF0C{\u89D2\u5EA6}\uFF0C{\u8FD0\u955C}\uFF0C{\u89D2\u8272\u540D\u5B57} {\u52A8\u4F5C/\u8868\u60C5/\u89C6\u7EBF\u671D\u5411/\u7AD9\u4F4D\u63CF\u8FF0}\u3002{\u53F0\u8BCD\u4E0E\u97F3\u8272\u63CF\u8FF0\uFF08\u5982\u6709\uFF09}\u3002{\u80CC\u666F\u73AF\u5883\u8865\u5145}\u3002{\u5149\u5F71\u6C1B\u56F4}\u3002{\u8FD0\u955C\u8865\u5145}\u3002
-\`\`\`
-
-**\u591A\u5206\u955C\u6A21\u677F\uFF1A**
-\`\`\`
-\u753B\u9762\u98CE\u683C\u548C\u7C7B\u578B: {\u98CE\u683C}, {\u8272\u8C03}, {\u7C7B\u578B}
-
-\u56FE\u7247\u5B9A\u4E49:
-@\u56FE1: {\u8D44\u4EA71\u540D\u5B57}\uFF0C{\u7B80\u8FF0}
-@\u56FE2: {\u8D44\u4EA72\u540D\u5B57}\uFF0C{\u7B80\u8FF0}
-@\u56FEN: {\u8D44\u4EA7N\u540D\u5B57}\uFF0C{\u7B80\u8FF0}
-...
-
-\u751F\u6210\u4E00\u4E2A\u7531\u4EE5\u4E0B {N} \u4E2A\u5206\u955C\u7EC4\u6210\u7684\u89C6\u9891:
-
-\u573A\u666F:
-\u5206\u955C\u8FC7\u6E21: {\u5168\u5C40\u8FC7\u6E21\u63CF\u8FF0}
-
-\u5206\u955C1 {N}s: \u65F6\u95F4\uFF1A{...}\uFF0C\u573A\u666F\uFF1A{\u573A\u666F\u540D\u5B57}\uFF0C\u955C\u5934\uFF1A{...}\uFF0C{\u89D2\u8272\u540D\u5B57} {...}\u3002{...}\u3002
-\u5206\u955C2{N}s: ...
-...
-\`\`\`
-
-#### \u97F3\u8272\u751F\u6210\u89C4\u5219\uFF08\u6709\u53F0\u8BCD\u65F6\u5FC5\u586B\uFF09
-
-\u53F0\u8BCD\u683C\u5F0F\uFF1A\`{\u89D2\u8272\u540D\u5B57} \u8BF4\uFF1A\u300C{\u53F0\u8BCD\u5185\u5BB9}\u300D\u97F3\u8272\uFF1A{9\u7EF4\u5EA6\u63CF\u8FF0}\`
-
-9\u7EF4\u5EA6\u6309\u987A\u5E8F\u586B\u5199\uFF1A
-\`\`\`
-{\u6027\u522B}\uFF0C{\u5E74\u9F84\u97F3\u8272}\uFF0C{\u97F3\u8C03}\uFF0C{\u97F3\u8272\u8D28\u611F}\uFF0C{\u58F0\u97F3\u539A\u5EA6}\uFF0C{\u53D1\u97F3\u65B9\u5F0F}\uFF0C{\u6C14\u606F}\uFF0C{\u8BED\u901F}\uFF0C{\u7279\u6B8A\u8D28\u611F}
-\`\`\`
-
-> \u5F53 desc \u4E2D\u672A\u660E\u786E\u97F3\u8272\u4FE1\u606F\u65F6\uFF0C\u6839\u636E\u89D2\u8272\u7C7B\u578B\u4ECE\u4EE5\u4E0B\u53C2\u8003\u8868\u63A8\u65AD\uFF1A
-
-| \u89D2\u8272\u7C7B\u578B\u7279\u5F81 | \u9ED8\u8BA4\u97F3\u8272 |
-|------------|---------|
-| \u7537\u6027\u6743\u5A01/\u9738\u6C14\u89D2\u8272 | \u7537\u58F0\uFF0C\u4E2D\u5E74\u97F3\u8272\uFF0C\u97F3\u8C03\u4F4E\u6C89\uFF0C\u97F3\u8272\u6D51\u539A\u6709\u529B\uFF0C\u58F0\u97F3\u539A\u91CD\uFF0C\u53D1\u97F3\u6807\u51C6\uFF0C\u6C14\u606F\u6781\u5176\u6C89\u7A33\uFF0C\u8BED\u901F\u504F\u6162 |
-| \u5973\u6027\u6E29\u67D4/\u751C\u7F8E\u89D2\u8272 | \u5973\u58F0\uFF0C\u9752\u5E74\u97F3\u8272\uFF0C\u97F3\u8C03\u4E2D\u7B49\u504F\u9AD8\uFF0C\u97F3\u8272\u8D28\u611F\u660E\u4EAE\u6E05\u8106\uFF0C\u58F0\u97F3\u6E05\u4EAE\u67D4\u548C\uFF0C\u6C14\u606F\u5145\u6C9B\u5E73\u7A33\uFF0C\u5E26\u6E29\u5A49\u771F\u8BDA\u611F |
-| \u7537\u6027\u5E74\u8F7B/\u666E\u901A\u89D2\u8272 | \u7537\u58F0\uFF0C\u9752\u5E74\u97F3\u8272\uFF0C\u97F3\u8C03\u4E2D\u7B49\uFF0C\u97F3\u8272\u5E72\u51C0\uFF0C\u58F0\u97F3\u539A\u5EA6\u9002\u4E2D\uFF0C\u53D1\u97F3\u6E05\u6670\uFF0C\u6C14\u606F\u5E73\u7A33\uFF0C\u8BED\u901F\u9002\u4E2D |
-| \u5973\u6027\u6D3B\u6CFC/\u5916\u5411\u89D2\u8272 | \u5973\u58F0\uFF0C\u9752\u5E74\u97F3\u8272\uFF0C\u97F3\u8C03\u504F\u9AD8\uFF0C\u97F3\u8272\u6E05\u8106\u6D3B\u6CFC\uFF0C\u58F0\u97F3\u8F7B\u76C8\uFF0C\u6C14\u606F\u5145\u6C9B\uFF0C\u8BED\u901F\u504F\u5FEB\uFF0C\u5E26\u7B11\u610F\u548C\u611F\u67D3\u529B |
-| \u53CD\u6D3E/\u51B7\u9177\u89D2\u8272 | \u7537\u58F0\uFF0C\u4E2D\u5E74\u97F3\u8272\uFF0C\u97F3\u8C03\u4F4E\u6C89\uFF0C\u97F3\u8272\u8D28\u611F\u5E72\u71E5\u504F\u6697\uFF0C\u58F0\u97F3\u5E26\u6C99\u783E\u611F\uFF0C\u6C14\u606F\u5E73\u7A33\uFF0C\u8BED\u901F\u6781\u6162\uFF0C\u6709\u5A01\u80C1\u611F |
-
-#### \u65E0\u53F0\u8BCD\u5206\u955C\u5904\u7406
-- \u4E0D\u5199 \`\u8BF4\uFF1A\` \u548C\u97F3\u8272\u6BB5\u843D
-- \u5728\u52A8\u4F5C\u63CF\u8FF0\u540E\u6807\u6CE8 \`\u65E0\u53F0\u8BCD\`
-
-#### \u53F0\u8BCD\u7C7B\u578B\u683C\u5F0F
-
-| \u53F0\u8BCD\u7C7B\u578B | \u683C\u5F0F | \u5634\u578B\u63CF\u8FF0 |
-|----------|------|----------|
-| \u666E\u901A\u5BF9\u767D | \`{\u89D2\u8272\u540D\u5B57} \u8BF4\uFF1A\u300C{\u53F0\u8BCD}\u300D\u97F3\u8272\uFF1A{9\u7EF4\u5EA6}\` | \u89D2\u8272\u5634\u90E8\u5F00\u5408\u8BF4\u8BDD |
-| \u5185\u5FC3\u72EC\u767D | \`{\u89D2\u8272\u540D\u5B57} \u5185\u5FC3OS\uFF1A\u300C{\u53F0\u8BCD}\u300D\u97F3\u8272\uFF1A{9\u7EF4\u5EA6}\` | \u89D2\u8272\u5634\u90E8\u7D27\u95ED\u4E0D\u52A8 |
-| \u753B\u5916\u97F3 | \`{\u89D2\u8272\u540D\u5B57} \u753B\u5916\u97F3VO\uFF1A\u300C{\u53F0\u8BCD}\u300D\u97F3\u8272\uFF1A{9\u7EF4\u5EA6}\` | \u89D2\u8272\u5634\u90E8\u7D27\u95ED\u4E0D\u52A8\uFF08\u6216\u89D2\u8272\u4E0D\u5728\u753B\u9762\u4E2D\uFF09 |
-
-#### \u751F\u6210\u7EA6\u675F
-1. **\u4E2D\u6587\u63D0\u793A\u8BCD**
-2. **\u76F4\u63A5\u8F93\u51FA\u89C6\u9891\u63D0\u793A\u8BCD**\uFF1A\u7981\u6B62\u8F93\u51FA\u4EFB\u4F55\u5206\u6790\u8FC7\u7A0B\u3001\u63A8\u7406\u6B65\u9AA4\u3001\u6A21\u578B\u5339\u914D\u8BF4\u660E\u3001\u8D44\u4EA7\u7F16\u53F7\u8868\u3001\u5206\u9694\u7EBF\u7B49\u975E\u63D0\u793A\u8BCD\u5185\u5BB9\u3002\u7B2C\u4E00\u884C\u5FC5\u987B\u662F \`\u753B\u9762\u98CE\u683C\u548C\u7C7B\u578B:\`
-3. **\u4E25\u683C\u9075\u5FAA videoDesc**\uFF1A\u6BCF\u6761\u5206\u955C\u5185\u5BB9\u4E25\u683C\u57FA\u4E8E videoDesc \u7684\u753B\u9762\u63CF\u8FF0\u3001\u65F6\u957F\u3001\u666F\u522B\u3001\u8FD0\u955C\u3001\u89D2\u8272\u52A8\u4F5C\u3001\u60C5\u7EEA\u3001\u5149\u5F71\u6C1B\u56F4\u3001\u53F0\u8BCD\u3001\u97F3\u6548\u5B57\u6BB5\uFF0C\u4E0D\u7F16\u9020\u989D\u5916\u4FE1\u606F
-4. **\u53F0\u8BCD\u4E0D\u53EF\u7F3A\u5931**\uFF1AvideoDesc \u4E2D\u6709\u53F0\u8BCD\u7684\u5206\u955C\uFF0C\u5FC5\u987B\u5B8C\u6574\u8F93\u51FA\u53F0\u8BCD\u548C\u97F3\u8272
-5. **\u53F0\u8BCD\u7C7B\u578B\u6B63\u786E\u6807\u6CE8**\uFF1A\u666E\u901A\u5BF9\u767D\u7528\u300C\u8BF4\uFF1A\u300D\uFF0C\u5185\u5FC3\u72EC\u767D\u7528\u300C\u5185\u5FC3OS\uFF1A\u300D\uFF0C\u753B\u5916\u97F3\u7528\u300C\u753B\u5916\u97F3VO\uFF1A\u300D
-6. **\u5148\u56FE\u7247\u5B9A\u4E49\uFF0C\u540E\u5199\u5206\u955C**\uFF1A\u6700\u524D\u9762\u5FC5\u987B\u5148\u8F93\u51FA"\u56FE\u7247\u5B9A\u4E49"\u6BB5\uFF0C\u5217\u51FA \`@\u56FEN : \u540D\u5B57\uFF0C\u63CF\u8FF0\`
-7. **\u5206\u955C\u6B63\u6587\u7981\u7528 \`@\u56FEN \`**\uFF1A\u6B63\u6587\u7EDF\u4E00\u4F7F\u7528\u89D2\u8272\u540D/\u573A\u666F\u540D\uFF0C\u4E0D\u5199 \`@\u56FE1/@\u56FE2\` \u7B49\u7F16\u53F7
-8. **\u5355\u5206\u955C\u65F6\u957F\u6700\u4F4E 1s**
-9. **\u65F6\u957F\u5355\u4F4D**\uFF1A\u76F4\u63A5\u4F7F\u7528 videoDesc \u4E2D\u7684\u79D2\u6570\uFF0C\u683C\u5F0F\u4E3A \`{N}s\`\uFF08\u5982 \`4s\`\uFF09\uFF0C\u6700\u4F4E 1s
-
-#### Seedance 2.0 \u5B8C\u6574\u793A\u4F8B
-
-\u8F93\u5165\uFF1A
-\`\`\`
-\u6A21\u578B\uFF1ASeedance2.0
-\u8D44\u4EA7\u4FE1\u606F[A001, role, \u6C88\u8F9E], [A002, role, \u82CF\u9526], [A003, scene, \u57CE\u697C]
-\`\`\`
-\`\`\`xml
-<storyboardItem videoDesc='\uFF08\u6C88\u8F9E\u72EC\u7ACB\u57CE\u697C\u8FDC\u773A\u82CD\u832B\u5927\u5730\u3001\u57CE\u697C\u3001\u6C88\u8F9E/\u57CE\u697C\u30014s\u3001\u5168\u666F\u3001\u9759\u6B62\u3001\u8D1F\u624B\u800C\u7ACB\u8863\u8882\u968F\u98CE\u98D8\u626C\u3001\u575A\u5B9A\u51B3\u7EDD\u3001\u9EC4\u660F\u51B7\u8C03\u4FA7\u9006\u5149\u3001\u65E0\u53F0\u8BCD\u3001\u98CE\u58F0\u8863\u8882\u58F0\u3001A001/A003\uFF09' prompt='\u5168\u666F\uFF0C\u5E73\u89C6\u7565\u4EF0\uFF0C\u57CE\u697C\u4E4B\u4E0A\uFF0C\u6C88\u8F9E\u8D1F\u624B\u800C\u7ACB\uFF0C\u8863\u8882\u98D8\u626C\uFF0C\u9EC4\u660F\u51B7\u8C03\u4FA7\u9006\u5149...' track='main' duration='4' associateAssetsIds="[&quot;A001&quot;,&quot;A003&quot;]" shouldGenerateImage="true" ></storyboardItem>
-<storyboardItem videoDesc='\uFF08\u82CF\u9526\u767B\u4E0A\u57CE\u697C\u8D70\u5411\u6C88\u8F9E\u3001\u57CE\u697C\u3001\u82CF\u9526/\u6C88\u8F9E/\u57CE\u697C\u30014s\u3001\u4E2D\u666F\u3001\u8DDF\u8E2A\u3001\u82CF\u9526\u62FE\u7EA7\u800C\u4E0A\u8D70\u5411\u6C88\u8F9E\u3001\u62C5\u5FE7\u3001\u9EC4\u660F\u4F59\u6656\u6E10\u6697\u3001\u82CF\u9526\u8BF4\uFF1A\u4F60\u53C8\u4E00\u4E2A\u4EBA\u5728\u8FD9\u91CC\u3001\u811A\u6B65\u58F0\u98CE\u58F0\u3001A001/A002/A003\uFF09' prompt='\u4E2D\u666F\uFF0C\u8DDF\u8E2A\uFF0C\u82CF\u9526\u62FE\u7EA7\u800C\u4E0A\u8D70\u5411\u57CE\u697C\u4E0A\u7684\u6C88\u8F9E...' track='main' duration='4' associateAssetsIds="[&quot;A001&quot;,&quot;A002&quot;,&quot;A003&quot;]" shouldGenerateImage="true" ></storyboardItem>
-\`\`\`
-
-\u8F93\u51FA\uFF1A
-\`\`\`
-\u753B\u9762\u98CE\u683C\u548C\u7C7B\u578B: \u771F\u4EBA\u5199\u5B9E, \u7535\u5F71\u98CE\u683C, \u51B7\u8C03, \u53E4\u98CE
-
-\u53C2\u8003\u5B9A\u4E49:
-@\u56FE1: \u6C88\u8F9E\uFF0C\u9ED1\u8272\u957F\u888D\uFF0C\u6C14\u8D28\u51B7\u5CFB\u7684\u9752\u5E74\u7537\u6027
-@\u56FE2: \u82CF\u9526\uFF0C\u6D45\u8272\u8863\u88D9\uFF0C\u795E\u60C5\u7EC6\u817B\u7684\u9752\u5E74\u5973\u6027
-@\u56FE3: \u57CE\u697C\uFF0C\u53E4\u4EE3\u7816\u77F3\u57CE\u697C\u4E0E\u53F0\u9636\u573A\u666F
-
-\u751F\u6210\u4E00\u4E2A\u7531\u4EE5\u4E0B 2 \u4E2A\u5206\u955C\u7EC4\u6210\u7684\u89C6\u9891:
-
-\u573A\u666F:
-\u5206\u955C\u8FC7\u6E21: \u955C\u5934\u5E73\u6ED1\u5207\u6362\uFF0C\u4ECE\u5168\u666F\u8FC7\u6E21\u5230\u4E2D\u666F\u8DDF\u8E2A\uFF0C\u7126\u70B9\u4ECE\u6C88\u8F9E\u72EC\u5904\u8F6C\u5411\u82CF\u9526\u5230\u6765\u3002
-
-\u5206\u955C1 4s: \u65F6\u95F4\uFF1A\u9EC4\u660F\uFF0C\u573A\u666F\uFF1A\u57CE\u697C\uFF0C\u955C\u5934\uFF1A\u5168\u666F\uFF0C\u5E73\u89C6\u7565\u4EF0\uFF0C\u9759\u6B62\u955C\u5934\uFF0C\u6C88\u8F9E\u72EC\u7ACB\u57CE\u697C\u4E4B\u4E0A\uFF0C\u8D1F\u624B\u800C\u7ACB\uFF0C\u8863\u8882\u968F\u98CE\u98D8\u626C\uFF0C\u76EE\u5149\u8FDC\u773A\u82CD\u832B\u5927\u5730\uFF0C\u795E\u60C5\u8083\u7136\u9762\u5BB9\u6C89\u7740\uFF0C\u773C\u795E\u575A\u5B9A\u76EE\u5149\u6E05\u51BD\uFF0C\u7709\u773C\u6C89\u9759\u6C14\u8D28\u51DB\u7136\u3002\u65E0\u53F0\u8BCD\u3002\u80CC\u666F\u662F\u53E4\u57CE\u697C\u7816\u77F3\u7EB9\u7406\u6E05\u6670\uFF0C\u8FDC\u65B9\u5927\u5730\u82CD\u832B\u8FBD\u9614\uFF0C\u5929\u9645\u7EBF\u51B7\u6696\u4EA4\u66FF\u3002\u9EC4\u660F\u659C\u5C04\u4F59\u6656\u4FA7\u9006\u5149\uFF0C\u51B7\u8C03\u4E3A\u4E3B\uFF0C\u957F\u5F71\u62C9\u4F38\uFF0C\u8F6E\u5ED3\u5149\u5FAE\u52FE\u52D2\u4EBA\u7269\u8FB9\u7F18\uFF0C\u5149\u611F\u8BD7\u610F\u3002\u955C\u5934\u9759\u6B62\u3002
-
-\u5206\u955C2 4s: \u65F6\u95F4\uFF1A\u9EC4\u660F\uFF0C\u573A\u666F\uFF1A\u57CE\u697C\uFF0C\u955C\u5934\uFF1A\u4E2D\u666F\uFF0C\u5E73\u89C6\uFF0C\u8DDF\u8E2A\u62CD\u6444\uFF0C\u82CF\u9526\u62FE\u7EA7\u800C\u4E0A\uFF0C\u8D70\u5411\u57CE\u697C\u4E0A\u7684\u6C88\u8F9E\uFF0C\u9762\u90E8\u671D\u5411\u6C88\u8F9E\u65B9\u5411\uFF0C\u795E\u60C5\u5FAE\u6123\u9762\u8272\u5FAE\u53D8\uFF0C\u773C\u795E\u4E2D\u5E26\u7740\u62C5\u5FE7\uFF0C\u82CF\u9526\u8BF4\uFF1A\u300C\u4F60\u53C8\u4E00\u4E2A\u4EBA\u5728\u8FD9\u91CC\u3002\u300D\u97F3\u8272\uFF1A\u5973\u58F0\uFF0C\u9752\u5E74\u97F3\u8272\uFF0C\u97F3\u8C03\u4E2D\u7B49\u504F\u9AD8\uFF0C\u97F3\u8272\u8D28\u611F\u660E\u4EAE\u6E05\u8106\uFF0C\u58F0\u97F3\u6E05\u4EAE\u67D4\u548C\uFF0C\u53D1\u97F3\u65B9\u5F0F\u5E72\u51C0\uFF0C\u6C14\u606F\u5145\u6C9B\u5E73\u7A33\uFF0C\u8BED\u901F\u9002\u4E2D\uFF0C\u5E26\u6E29\u5A49\u771F\u8BDA\u611F\u3002\u80CC\u666F\u57CE\u697C\u53F0\u9636\u7EB9\u7406\u6E05\u6670\uFF0C\u4F59\u6656\u6E10\u6697\uFF0C\u5929\u9645\u7EBF\u51B7\u6696\u4EA4\u66FF\u52A0\u6DF1\u3002\u955C\u5934\u8DDF\u8E2A\u82CF\u9526\u79FB\u52A8\u3002
-\`\`\`
-
----
-
-### \u56DB\u3001Wan 2.6
-
-#### \u6838\u5FC3\u539F\u5219
-- **\u5355\u56FE\u9996\u5E27\u6A21\u5F0F**\uFF1A\u5F52\u7C7B\u4E3A\u9996\u5C3E\u5E27\u6A21\u5F0F\uFF0C\u4F46\u4EC5\u6709\u9996\u5E27\uFF08\u5206\u955C\u56FE\uFF09\uFF0C\u65E0\u5C3E\u5E27
-- **\u5355\u6761\u5206\u955C\u8F93\u5165/\u8F93\u51FA**\uFF1A\u6BCF\u6B21\u4EC5\u8F93\u5165\u4E00\u6761 \`<storyboardItem>\` \u53CA\u5176\u5173\u8054\u8D44\u4EA7\u4FE1\u606F\uFF0C\u8F93\u51FA\u4E5F\u4EC5\u4E3A\u4E00\u6BB5\u5B8C\u6574\u7684\u53D9\u4E8B\u5F0F\u63D0\u793A\u8BCD
-- **\u53D9\u4E8B\u5F0F\u82F1\u6587\u63D0\u793A\u8BCD**\uFF1A\u50CF\u5199\u5C0F\u8BF4\u4E00\u6837\u63CF\u5199\u753B\u9762\uFF0C\u4E0D\u4F7F\u7528\u6807\u7B7E\u7F57\u5217\uFF08\u4E0D\u5199 \`4K, cinematic, high quality\` \u8FD9\u7C7B\u5806\u780C\uFF09
-- **\u4E09\u6BB5\u5F0F\u7ED3\u6784**\uFF1A\u98CE\u683C\u57FA\u8C03 \u2192 \u4E3B\u4F53\u52A8\u4F5C + \u573A\u666F\u73AF\u5883 + \u5149\u7EBF\u6C1B\u56F4 \u2192 \u955C\u5934\u6536\u5C3E
-- **\u7EAF\u6587\u672C\u63D0\u793A\u8BCD**\uFF1A\u63D0\u793A\u8BCD\u5185**\u4E0D\u4F7F\u7528\u4EFB\u4F55 \`@\u56FEN \` \u5F15\u7528**\uFF0C\u5168\u90E8\u5185\u5BB9\u7528\u7EAF\u6587\u672C\u63CF\u8FF0
-- **\u4E25\u683C\u9075\u5FAA videoDesc**\uFF1A\u63D0\u793A\u8BCD\u5185\u5BB9\u4E25\u683C\u57FA\u4E8E videoDesc \u4E2D\u7684\u753B\u9762\u63CF\u8FF0\u3001\u65F6\u957F\u3001\u666F\u522B\u3001\u8FD0\u955C\u3001\u89D2\u8272\u52A8\u4F5C\u3001\u60C5\u7EEA\u3001\u5149\u5F71\u6C1B\u56F4\u3001\u53F0\u8BCD\u3001\u97F3\u6548\u5B57\u6BB5\u751F\u6210\uFF0C\u4E0D\u7F16\u9020\u989D\u5916\u5185\u5BB9
-- **\u53F0\u8BCD\u4E0D\u53EF\u7F3A\u5931**\uFF1AvideoDesc \u4E2D\u6709\u53F0\u8BCD\u7684\u5206\u955C\uFF0C\u5FC5\u987B\u5728\u63D0\u793A\u8BCD\u4E2D\u4F53\u73B0\u53F0\u8BCD\u76F8\u5173\u63CF\u8FF0
-- **\u53F0\u8BCD\u7C7B\u578B\u6807\u6CE8**\uFF1A\u533A\u5206\u666E\u901A\u5BF9\u767D\uFF08dialogue\uFF09\u3001\u5185\u5FC3\u72EC\u767D\uFF08inner monologue OS\uFF09\u3001\u753B\u5916\u97F3\uFF08voiceover VO\uFF09\uFF0C\u5728\u63D0\u793A\u8BCD\u4E2D\u7528\u62EC\u53F7\u6807\u6CE8
-
-#### prompt \u751F\u6210\u6A21\u677F
-
-\u6BCF\u6B21\u8F93\u5165\u4E00\u6761\u5206\u955C\uFF0C\u8F93\u51FA\u4E00\u6BB5\u5B8C\u6574\u63D0\u793A\u8BCD\uFF08\u65E0\u7F16\u53F7\u524D\u7F00\uFF09\uFF0C\u683C\u5F0F\u5982\u4E0B\uFF1A
-
-\`\`\`
-{\u98CE\u683C\u57FA\u8C03\u4E00\u53E5\u8BDD\u5B9A\u6027},
-{\u4E3B\u4F53\u540D} {\u5916\u89C2\u7B80\u8FF0}, {\u5177\u4F53\u52A8\u4F5C/\u59FF\u6001\u63CF\u8FF0}, {\u60C5\u7EEA/\u8868\u60C5\u7528\u52A8\u4F5C\u6697\u793A}.
-{\u573A\u666F\u80CC\u666F\u4E3B\u4F53}, {\u5177\u4F53\u73AF\u5883\u7269\u4EF6}, {\u7A7A\u95F4\u611F}, {\u65F6\u95F4/\u5929\u6C14}.
-{\u5149\u7EBF\u65B9\u5411/\u8272\u6E29} {\u8D28\u611F\u63CF\u8FF0}, {\u60C5\u7EEA\u6697\u793A\u5149\u5F71}.
-{\u53F0\u8BCD\u63CF\u8FF0\uFF08\u5982\u6709\uFF0C\u542B dialogue/OS/VO \u6807\u6CE8\uFF09/ No dialogue}.
-{\u97F3\u6548\u63CF\u8FF0}.
-{\u62CD\u6444\u65B9\u5F0F}, {\u666F\u522B}, {\u89C6\u89D2}, {\u8FD0\u955C\u65B9\u5F0F}.
-\`\`\`
-
-#### \u53D9\u4E8B\u5F0F\u5199\u6CD5\u8981\u70B9
-
-| \u539F\u5219 | \u8BF4\u660E | \u793A\u4F8B |
-|------|------|------|
-| \u98CE\u683C\u57FA\u8C03\u653E\u6700\u524D | \u4E00\u53E5\u8BDD\u5B9A\u6027\u6574\u4F53\u6C14\u8D28 | \`A cinematic epic scene\` / \`A melancholic cinematic scene\` |
-| \u4E3B\u4F53+\u52A8\u4F5C\u7D27\u5BC6\u7ED1\u5B9A | \u4E3B\u4F53\u540E\u9762\u76F4\u63A5\u8DDF\u52A8\u4F5C\uFF0C\u5916\u89C2\u7EC6\u8282\u5D4C\u5165\u4E3B\u4F53\u63CF\u8FF0 | \`A young man in dark flowing robes stands alone atop the city wall, hands clasped behind back\` |
-| \u60C5\u7EEA\u7528\u52A8\u4F5C\u6697\u793A | \u4E0D\u76F4\u63A5\u9648\u8FF0\u300C\u4ED6\u5F88\u60B2\u4F24\u300D | \u274C \`He is sad.\` \u2192 \u2705 \`head drops slowly, shoulders slumped\` |
-| \u73AF\u5883\u878D\u5165\u53D9\u4E8B | \u4E0D\u7F57\u5217\u73AF\u5883\u5C5E\u6027 | \u274C \`The sky is blue. The grass is green.\` \u2192 \u2705 \`hazy blue sky stretches over the emerald valley\` |
-| \u5149\u7EBF\u5355\u72EC\u6210\u53E5 | \u5149\u7EBF\u65B9\u5411+\u8272\u6E29+\u8D28\u611F+\u60C5\u7EEA | \`Warm golden hour light streams from behind, casting long shadows across the stone floor\` |
-| \u955C\u5934\u8BED\u8A00\u6536\u5C3E | \u4E00\u53E5\u8BDD\u70B9\u775B | \`Captured in a wide establishing shot from a low-angle perspective, static camera\` |
-| \u7981\u6B62\u6807\u7B7E\u5806\u780C | \u4E0D\u5199 \`4K, cinematic, high quality\` | \`cinematic\` \u878D\u5165\u98CE\u683C\u57FA\u8C03\u5373\u53EF |
-
-#### \u751F\u6210\u7EA6\u675F
-1. **\u5168\u90E8\u7528\u82F1\u6587**
-2. **\u4E0D\u4F7F\u7528\u4EFB\u4F55 \`@\u56FEN \` \u5F15\u7528**\uFF1A\u63D0\u793A\u8BCD\u5185\u4E0D\u5F15\u7528\u89D2\u8272\u8D44\u4EA7\u3001\u573A\u666F\u8D44\u4EA7\u3001\u5206\u955C\u56FE\uFF0C\u5168\u90E8\u5185\u5BB9\u7528\u7EAF\u6587\u672C\u63CF\u8FF0
-3. **\u53D9\u4E8B\u5F0F\u63CF\u5199**\uFF1A\u50CF\u5199\u5C0F\u8BF4\u4E00\u6837\u6784\u5EFA\u753B\u9762\uFF0C\u7981\u6B62\u6807\u7B7E\u7F57\u5217\u548C\u914D\u7F6E\u6E05\u5355\u5F0F\u5199\u6CD5
-4. **\u4E3B\u4F53\u7528\u6587\u5B57\u63CF\u8FF0**\uFF1A\u7B80\u8981\u63CF\u8FF0\u4E3B\u4F53\u5916\u89C2\u7279\u5F81\uFF08\u5982\u670D\u9970\u3001\u53D1\u578B\u7B49\u5173\u952E\u8FA8\u8BC6\u7279\u5F81\uFF09\uFF0C\u5D4C\u5165\u4E3B\u4F53\u63CF\u8FF0\u4E2D
-5. **\u4E25\u683C\u9075\u5FAA videoDesc**\uFF1A\u63D0\u793A\u8BCD\u5185\u5BB9\u4E25\u683C\u57FA\u4E8E videoDesc \u4E2D\u7684\u753B\u9762\u63CF\u8FF0\u3001\u65F6\u957F\u3001\u666F\u522B\u3001\u8FD0\u955C\u3001\u89D2\u8272\u52A8\u4F5C\u3001\u60C5\u7EEA\u3001\u5149\u5F71\u6C1B\u56F4\u3001\u53F0\u8BCD\u3001\u97F3\u6548\u5B57\u6BB5\uFF0C\u4E0D\u7F16\u9020\u989D\u5916\u4FE1\u606F
-6. **\u53F0\u8BCD\u4E0D\u53EF\u7F3A\u5931**\uFF1AvideoDesc \u4E2D\u6709\u53F0\u8BCD\u7684\u5206\u955C\uFF0C\u5FC5\u987B\u5728\u63D0\u793A\u8BCD\u4E2D\u5B8C\u6574\u8F93\u51FA\u53F0\u8BCD\u5185\u5BB9\uFF08\u4FDD\u6301\u539F\u59CB\u8BED\u8A00\uFF0C\u4E0D\u7FFB\u8BD1\uFF09
-7. **\u53F0\u8BCD\u7C7B\u578B\u6807\u6CE8**\uFF1A\u666E\u901A\u5BF9\u767D\u6807\u6CE8 \`(dialogue)\`\uFF1B\u5185\u5FC3\u72EC\u767D\u6807\u6CE8 \`(inner monologue, OS)\`\uFF1B\u753B\u5916\u97F3\u6807\u6CE8 \`(voiceover, VO)\`
-8. **\u5355\u6761\u8F93\u5165/\u8F93\u51FA**\uFF1A\u6BCF\u6B21\u4EC5\u5904\u7406\u4E00\u6761\u5206\u955C\uFF0C\u8F93\u51FA\u4E00\u6BB5\u63D0\u793A\u8BCD\uFF0C\u65E0\u7F16\u53F7\u524D\u7F00
-9. **\u65E0\u9700\u6807\u6CE8\u65F6\u957F**\uFF1A\u65F6\u957F\u7531\u6A21\u578B\u4FA7\u63A7\u5236\uFF0C\u63D0\u793A\u8BCD\u4E2D\u4E0D\u5199\u65F6\u957F\u53C2\u6570
-10. **\u955C\u5934\u63CF\u8FF0\u878D\u5165\u53D9\u4E8B**\uFF1A\u4E0D\u7528\u65B9\u62EC\u53F7\u6807\u7B7E\uFF0C\u7528\u5B8C\u6574\u53E5\u5B50\u63CF\u8FF0\u955C\u5934
-11. **\u89C6\u89C9\u98CE\u683C**\u53C2\u8003 Assistant \u4E2D\u7684\u300C\u89C6\u89C9\u98CE\u683C\u7EA6\u675F\u300D\u90E8\u5206\u5185\u5BB9
-
-#### Wan 2.6 \u5B8C\u6574\u793A\u4F8B
-
-**\u793A\u4F8B1\uFF1A\u65E0\u53F0\u8BCD\u5206\u955C**
-
-\u8F93\u5165\uFF1A
-\`\`\`
-\u6A21\u578B\uFF1AWan2.6
-\u8D44\u4EA7\u4FE1\u606F[A001, role, \u6C88\u8F9E], [A003, scene, \u57CE\u697C]
-\`\`\`
-\`\`\`xml
-<storyboardItem videoDesc='\uFF08\u6C88\u8F9E\u72EC\u7ACB\u57CE\u697C\u8FDC\u773A\u82CD\u832B\u5927\u5730\u3001\u57CE\u697C\u3001\u6C88\u8F9E/\u57CE\u697C\u30014s\u3001\u5168\u666F\u3001\u9759\u6B62\u3001\u8D1F\u624B\u800C\u7ACB\u8863\u8882\u968F\u98CE\u98D8\u626C\u3001\u575A\u5B9A\u51B3\u7EDD\u3001\u9EC4\u660F\u51B7\u8C03\u4FA7\u9006\u5149\u3001\u65E0\u53F0\u8BCD\u3001\u98CE\u58F0\u8863\u8882\u58F0\u3001A001/A003\uFF09' prompt='\u5168\u666F\uFF0C\u5E73\u89C6\u7565\u4EF0\uFF0C\u57CE\u697C\u4E4B\u4E0A\uFF0C\u6C88\u8F9E\u8D1F\u624B\u800C\u7ACB\uFF0C\u8863\u8882\u98D8\u626C\uFF0C\u9EC4\u660F\u51B7\u8C03\u4FA7\u9006\u5149...' track='main' duration='4' associateAssetsIds="[&quot;A001&quot;,&quot;A003&quot;]" shouldGenerateImage="true" ></storyboardItem>
-\`\`\`
-
-\u8F93\u51FA\uFF1A
-\`\`\`
-A cinematic epic scene with a cold, desaturn\`ated palette,
-A lone man in dark flowing robes stands atop an ancient city wall, hands clasped behind his back, robes and hair billowing in the wind, gaze fixed on the vast land stretching to the horizon, jaw set firm, eyes unwavering.
-The weathered stone battlements frame the endless expanse below, rolling terrain fading into haze beneath a heavy dusk sky, clouds layered in muted golds and slate greys.
-Cold side-backlight from the setting sun carves a sharp silhouette, long shadows stretching across the stone floor, a faint warm rim outlining the figure against the cool atmosphere.
-No dialogue.
-Wind howling across the open wall, fabric flapping rhythmically.
-Captured in a wide establishing shot from a slightly low angle, static camera, single continuous take.
-\`\`\`
-
-**\u793A\u4F8B2\uFF1A\u6709\u53F0\u8BCD\u5206\u955C**
-
-\u8F93\u5165\uFF1A
-\`\`\`
-\u6A21\u578B\uFF1AWan2.6
-\u8D44\u4EA7\u4FE1\u606F[A001, role, \u6C88\u8F9E], [A002, role, \u82CF\u9526], [A003, scene, \u57CE\u697C]
-\`\`\`
-\`\`\`xml
-<storyboardItem videoDesc='\uFF08\u82CF\u9526\u767B\u4E0A\u57CE\u697C\u8D70\u5411\u6C88\u8F9E\u3001\u57CE\u697C\u3001\u82CF\u9526/\u6C88\u8F9E/\u57CE\u697C\u30014s\u3001\u4E2D\u666F\u3001\u8DDF\u8E2A\u3001\u82CF\u9526\u62FE\u7EA7\u800C\u4E0A\u8D70\u5411\u6C88\u8F9E\u3001\u62C5\u5FE7\u3001\u9EC4\u660F\u4F59\u6656\u6E10\u6697\u3001\u82CF\u9526\u8BF4\uFF1A\u4F60\u53C8\u4E00\u4E2A\u4EBA\u5728\u8FD9\u91CC\u3001\u811A\u6B65\u58F0\u98CE\u58F0\u3001A001/A002/A003\uFF09' prompt='\u4E2D\u666F\uFF0C\u8DDF\u8E2A\uFF0C\u82CF\u9526\u62FE\u7EA7\u800C\u4E0A\u8D70\u5411\u57CE\u697C\u4E0A\u7684\u6C88\u8F9E...' track='main' duration='4' associateAssetsIds="[&quot;A001&quot;,&quot;A002&quot;,&quot;A003&quot;]" shouldGenerateImage="true" ></storyboardItem>
-\`\`\`
-
-\u8F93\u51FA\uFF1A
-\`\`\`
-A melancholic cinematic scene, dusk tones deepening,
-A young woman in a light-colored dress ascends the final stone steps onto the city wall, her gaze locked on the lone figure ahead, brow slightly furrowed, pace slowing as she approaches, lips parting softly.
-The ancient city wall stretches behind her, weathered stairs leading up from below, the distant skyline dimming as the last traces of golden hour fade into twilight.
-Fading warm light mingles with rising cool blue tones, the contrast between the two figures softened by the diffused remnants of sunset.
-"\u4F60\u53C8\u4E00\u4E2A\u4EBA\u5728\u8FD9\u91CC\u3002" \u2014 Su Jin (dialogue).
-Footsteps on stone, wind sweeping across the battlements, fabric rustling.
-A medium tracking shot follows the woman from behind as she ascends and approaches, handheld camera with subtle movement, single continuous take.
-\`\`\`
-
----
-
-## \u666F\u522B \u2192 \u955C\u5934\u6807\u7B7E\u6620\u5C04
-
-| videoDesc \u4E2D\u7684\u666F\u522B | KlingOmni\uFF08\u82F1\u6587\u6807\u7B7E\uFF09 | Seedance 1.5\uFF08\u82F1\u6587\u6807\u7B7E\uFF09 | Seedance 2.0\uFF08\u4E2D\u6587\u63CF\u8FF0\uFF09 | Wan 2.6\uFF08\u82F1\u6587\u53D9\u4E8B\u5F0F\uFF09 |
-|------|------|------|------|------|
-| \u8FDC\u666F | extreme wide shot | Extreme wide shot | \u8FDC\u666F | an extreme wide shot capturing the vast expanse |
-| \u5168\u666F | wide shot | Wide establishing shot | \u5168\u666F | a wide establishing shot |
-| \u4E2D\u666F | medium shot | Medium shot | \u4E2D\u666F | a medium shot |
-| \u8FD1\u666F | close-up | Close-up | \u8FD1\u666F | a close-up shot |
-| \u7279\u5199 | close-up | Close-up | \u7279\u5199 | a close-up capturing fine detail |
-| \u5927\u7279\u5199 | extreme close-up | Extreme close-up | \u5927\u7279\u5199 | an extreme close-up |
-
-## \u8FD0\u955C \u2192 \u955C\u5934\u6807\u7B7E\u6620\u5C04
-
-| videoDesc \u4E2D\u7684\u8FD0\u955C | KlingOmni\uFF08\u82F1\u6587\u6807\u7B7E\uFF09 | Seedance 1.5\uFF08\u82F1\u6587\u6807\u7B7E\uFF09 | Seedance 2.0\uFF08\u4E2D\u6587\u63CF\u8FF0\uFF09 | Wan 2.6\uFF08\u82F1\u6587\u53D9\u4E8B\u5F0F\uFF09 |
-|------|------|------|------|------|
-| \u9759\u6B62 | static camera | Static, no camera movement | \u955C\u5934\u9759\u6B62 | static camera, locked off |
-| \u63A8\u8FDB | dolly in / push in | Slow dolly forward | \u955C\u5934\u7F13\u6162\u5411\u524D\u63A8\u8FDB | camera slowly pushing in |
-| \u62C9\u8FDC | dolly out / pull back | Slow dolly backward pull | \u955C\u5934\u7F13\u6162\u5411\u540E\u62C9\u8FDC | camera gently pulling back |
-| \u8DDF\u8E2A | tracking shot | Tracking shot, handheld | \u8DDF\u8E2A\u62CD\u6444 | tracking shot following the subject |
-| \u6447\u955C | pan left/right | Slow pan | \u955C\u5934\u7F13\u6162\u6447\u79FB | smooth pan across the scene |
-| \u7529\u955C | whip pan | Whip pan | \u5FEB\u901F\u7529\u955C | whip pan |
-| \u5347\u964D | crane up/down | Crane up/down | \u955C\u5934\u5347\u964D | crane rising / descending |
-| \u73AF\u7ED5 | surround shooting | Orbiting shot | \u73AF\u7ED5\u62CD\u6444 | orbiting around the subject |
-
----
-
-## \u6267\u884C\u6D41\u7A0B
-
-1. **\u89E3\u6790\u8F93\u5165**\uFF1A\u63D0\u53D6\u6A21\u578B\u540D\u548C\u591A\u53C2\u6807\u5FD7\uFF0C\u6309\u8DEF\u7531\u89C4\u5219\u5339\u914D\u6A21\u5F0F\uFF1B\u63D0\u53D6\u8D44\u4EA7\u5217\u8868
-2. **\u6784\u5EFA @\u56FEN \u7F16\u53F7\u8868**\uFF1A\u8D44\u4EA7\u6309\u8F93\u5165\u987A\u5E8F\u4ECE \`@\u56FE1 \` \u8D77\u7F16\u53F7\uFF0C\u5206\u955C\u56FE\u63A5\u7EED\u7F16\u53F7\uFF1B\`shouldGenerateImage="false"\` \u7684\u5206\u955C\u4E0D\u5206\u914D\u5206\u955C\u56FE\u7F16\u53F7
-3. **\u9010\u6761\u89E3\u6790 \`<storyboardItem>\`**\uFF1A\u6309 videoDesc \u89E3\u6790\u89C4\u5219\u63D0\u53D612\u4E2A\u5B57\u6BB5\uFF0C\u7ED3\u5408 \`duration\`\u3001\`associateAssetsIds\` \u5EFA\u7ACB\u6807\u7B7E\u6620\u5C04
-4. **\u6574\u5408\u4E3A\u4E00\u4E2A\u5B8C\u6574\u7684\u89C6\u9891\u63D0\u793A\u8BCD**\uFF1A\u6309\u76EE\u6807\u6A21\u578B\u683C\u5F0F\u7F16\u6392\u5168\u90E8\u5206\u955C
-5. **\u8F93\u51FA\u89C6\u9891\u63D0\u793A\u8BCD**
-
----
-
-## \u7EA6\u675F
-
-- **\u4EC5\u8F93\u51FA\u89C6\u9891\u63D0\u793A\u8BCD**\uFF1A\u4E0D\u9644\u52A0\u4EFB\u4F55\u89E3\u91CA\u3001\u6CE8\u91CA\u3001\u5206\u6790\u8FC7\u7A0B\u3001\u63A8\u7406\u6B65\u9AA4\u3001\u6A21\u578B\u5339\u914D\u8BF4\u660E\u3001\u8D44\u4EA7\u7F16\u53F7\u8868\u3001\u5206\u9694\u7EBF\uFF08\`---\`\uFF09\u6216\u989D\u5916\u8BF4\u660E\uFF0C\u53EA\u8F93\u51FA\u89C6\u9891\u63D0\u793A\u8BCD\u6587\u672C\u3002\u7981\u6B62\u5728\u63D0\u793A\u8BCD\u524D\u540E\u8F93\u51FA\u4EFB\u4F55\u975E\u63D0\u793A\u8BCD\u5185\u5BB9
-- **\u4E25\u683C\u9075\u5FAA videoDesc**\uFF08\u5168\u6A21\u5F0F\u901A\u7528\uFF09\uFF1A\u63D0\u793A\u8BCD\u5185\u5BB9\u4E25\u683C\u57FA\u4E8E videoDesc \u4E2D\u7684\u753B\u9762\u63CF\u8FF0\u3001\u65F6\u957F\u3001\u666F\u522B\u3001\u8FD0\u955C\u3001\u89D2\u8272\u52A8\u4F5C\u3001\u60C5\u7EEA\u3001\u5149\u5F71\u6C1B\u56F4\u3001\u53F0\u8BCD\u3001\u97F3\u6548\u5B57\u6BB5\u751F\u6210\uFF0C\u4E0D\u7F16\u9020\u989D\u5916\u5185\u5BB9
-- **\u53F0\u8BCD\u4E0D\u53EF\u7F3A\u5931**\uFF08\u5168\u6A21\u5F0F\u901A\u7528\uFF09\uFF1AvideoDesc \u4E2D\u6709\u53F0\u8BCD\u7684\u5206\u955C\uFF0C\u5FC5\u987B\u5728\u63D0\u793A\u8BCD\u4E2D\u5B8C\u6574\u4F53\u73B0\u53F0\u8BCD\u5185\u5BB9\uFF0C\u4E0D\u5F97\u9057\u6F0F
-- **\u53F0\u8BCD\u4FDD\u6301\u539F\u59CB\u8F93\u5165**\uFF08\u5168\u6A21\u5F0F\u901A\u7528\uFF09\uFF1A\u53F0\u8BCD\u5185\u5BB9\u4E25\u7981\u7FFB\u8BD1\uFF0C\u5FC5\u987B\u4FDD\u6301 videoDesc \u4E2D\u7684\u539F\u59CB\u8BED\u8A00\u539F\u6837\u8F93\u51FA
-- **\u53F0\u8BCD\u7C7B\u578B\u6807\u6CE8**\uFF08\u5168\u6A21\u5F0F\u901A\u7528\uFF09\uFF1A\u5FC5\u987B\u533A\u5206\u666E\u901A\u5BF9\u767D\uFF08dialogue / \u8BF4\uFF09\u3001\u5185\u5FC3\u72EC\u767D\uFF08OS / \u5185\u5FC3OS\uFF09\u3001\u753B\u5916\u97F3\uFF08VO / \u753B\u5916\u97F3VO\uFF09\uFF0C\u5E76\u5728\u63D0\u793A\u8BCD\u4E2D\u6B63\u786E\u6807\u6CE8
-- **\u65F6\u95F4\u8DE8\u5EA6\u6700\u4F4E 1 \u79D2**\uFF08\u5168\u6A21\u5F0F\u901A\u7528\uFF09\uFF1A\u6240\u6709\u6A21\u5F0F\u4E2D\u6D89\u53CA\u65F6\u95F4\u5206\u6BB5\uFF08Motion \u65F6\u95F4\u8F74 / Seedance 2.0 \u5206\u955C\u65F6\u957F {N}s\uFF09\u7684\u6700\u5C0F\u7C92\u5EA6\u4E3A 1 \u79D2\uFF081s\uFF09\uFF0C\u7981\u6B62\u51FA\u73B0 0.5 \u79D2\u7B49\u4F4E\u4E8E 1 \u79D2\u7684\u95F4\u9694
-- **\u89C6\u89C9\u98CE\u683C**\uFF1A\u98CE\u683C\u76F8\u5173\u63CF\u8FF0\u53C2\u8003 Assistant \u4E2D\u7684\u300C\u89C6\u89C9\u98CE\u683C\u7EA6\u675F\u300D\u90E8\u5206\u5185\u5BB9\uFF0C\u4E0D\u5728\u672C Skill \u5185\u81EA\u884C\u5B9A\u4E49\u98CE\u683C
-- **\u4E25\u683C\u6309\u5339\u914D\u5230\u7684\u6A21\u5F0F\u683C\u5F0F**\uFF0C\u4E0D\u6DF7\u7528\u4E0D\u540C\u6A21\u5F0F\u7684\u683C\u5F0F
-- **\u4E0D\u4FEE\u6539\u539F\u59CB\u8F93\u5165**\uFF1A\u4E0D\u6539\u5199 \`<storyboardItem>\` \u7684\u4EFB\u4F55\u5B57\u6BB5\uFF1B\`prompt\` \u5DF2\u6709\u7684\u5206\u955C\u56FE\u63D0\u793A\u8BCD\u4EC5\u4F5C\u753B\u9762\u53C2\u8003
-- **\u4E0D\u7F16\u9020\u8D44\u4EA7\u6216\u53F0\u8BCD**\uFF1A\u53EA\u4F7F\u7528\u8F93\u5165\u4E2D\u7684\u8D44\u4EA7\u4FE1\u606F\uFF1B\u65E0\u53F0\u8BCD\u5219\u6807\u6CE8\u300C\u65E0\u53F0\u8BCD\u300D/ \`No dialogue\`
-- **\u65F6\u957F\u5355\u4F4D**\uFF1ASeedance 2.0 \u7684\u5206\u955C\u65F6\u957F\u76F4\u63A5\u4F7F\u7528\u79D2\uFF0C\u683C\u5F0F\u4E3A \`{N}s\`\uFF08\u5982 \`4s\`\uFF09\uFF0C\u6700\u4F4E 1s
-`
-      });
-      const data2 = await knex2("o_vendorConfig").select("*");
-      for (const item of data2) {
-        let { id, code } = item;
-        const filename = `${id}.ts`;
-        const rootDir = utils_default.getPath("vendor");
-        if (!code && import_fs3.default.existsSync(import_path5.default.join(rootDir, filename))) continue;
-        if (!import_fs3.default.existsSync(rootDir)) import_fs3.default.mkdirSync(rootDir, { recursive: true });
-        if (!import_fs3.default.existsSync(import_path5.default.join(rootDir, filename))) {
-          code = vendorData[filename] || code;
-          code = code ?? "";
-          import_fs3.default.writeFileSync(import_path5.default.join(rootDir, filename), code);
-        }
-      }
-      await dropColumn("o_vendorConfig", "author");
-      await dropColumn("o_vendorConfig", "description");
-      await dropColumn("o_vendorConfig", "name");
-      await dropColumn("o_vendorConfig", "icon");
-      await dropColumn("o_vendorConfig", "inputs");
-      await dropColumn("o_vendorConfig", "createTime");
-      const volcengineVer = await utils_default.vendor.getVendor("volcengine").version;
-      if (Number(volcengineVer) < 2.3) {
-        utils_default.vendor.writeCode("volcengine", vendorData["volcengine.ts"]);
-      }
-      const minimaxVer = await utils_default.vendor.getVendor("minimax").version;
-      if (Number(minimaxVer) < 2.1) {
-        utils_default.vendor.writeCode("minimax", vendorData["minimax.ts"]);
-      }
-      const klingVer = await utils_default.vendor.getVendor("klingai").version;
-      if (Number(klingVer) < 2.1) {
-        utils_default.vendor.writeCode("klingai", vendorData["klingai.ts"]);
-      }
-    };
-  }
-});
-
-// src/utils/db.ts
-function readEnv(name28, fallback = "") {
-  return process.env[name28] ?? process.env[name28.toLowerCase()] ?? fallback;
-}
-function readNumber(name28, fallback) {
-  const value = Number.parseInt(readEnv(name28), 10);
-  return Number.isFinite(value) ? value : fallback;
-}
-function readBoolean(name28, fallback = false) {
-  const value = readEnv(name28);
-  if (!value) return fallback;
-  return ["1", "true", "yes", "on"].includes(value.toLowerCase());
-}
-function resolveDbClient() {
-  const rawClient = readEnv("DB_CLIENT", readEnv("DATABASE_CLIENT", "mysql2")).toLowerCase();
-  if (rawClient === "mysql" || rawClient === "mysql2") return "mysql2";
-  throw new Error(`\u5F53\u524D\u670D\u52A1\u4EC5\u652F\u6301 MySQL \u6570\u636E\u5E93\u5BA2\u6237\u7AEF: ${rawClient}`);
-}
-function getMysqlConnection() {
-  const socketPath = readEnv("MYSQL_SOCKET_PATH", readEnv("DB_SOCKET_PATH"));
-  return {
-    ...socketPath ? { socketPath } : {
-      host: readEnv("MYSQL_HOST", readEnv("DB_HOST", "127.0.0.1")),
-      port: readNumber("MYSQL_PORT", readNumber("DB_PORT", 3306))
-    },
-    user: readEnv("MYSQL_USER", readEnv("DB_USER", "root")),
-    password: readEnv("MYSQL_PASSWORD", readEnv("DB_PASSWORD")),
-    database: readEnv("MYSQL_DATABASE", readEnv("MYSQL_DB", readEnv("DB_DATABASE", readEnv("DB_NAME", "dramastudio")))),
-    charset: readEnv("MYSQL_CHARSET", "utf8mb4"),
-    timezone: readEnv("MYSQL_TIMEZONE", "Z"),
-    supportBigNumbers: true,
-    bigNumberStrings: false
-  };
-}
-function createDbConfig() {
-  const client = resolveDbClient();
-  const connection = getMysqlConnection();
-  const location = connection.socketPath ? `${connection.socketPath}/${connection.database}` : `${connection.host}:${connection.port}/${connection.database}`;
-  console.log("\u6570\u636E\u5E93:", `mysql://${location}`);
-  return {
-    client,
-    connection,
-    pool: {
-      min: 0,
-      max: readNumber("MYSQL_CONNECTION_LIMIT", readNumber("DB_CONNECTION_LIMIT", 10))
-    }
-  };
-}
-async function ensureMysqlDatabase(config3) {
-  const connection = config3.connection;
-  if (!connection?.database) return;
-  const { database, ...serverConnection } = connection;
-  const serverDb = (0, import_knex.default)({
-    client: "mysql2",
-    connection: serverConnection,
-    pool: { min: 0, max: 1 }
-  });
-  try {
-    const rows = normalizeRawRows(
-      await serverDb.raw("SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = ?", [database])
-    );
-    if (!rows.length) {
-      await serverDb.raw("CREATE DATABASE ?? CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci", [database]);
-    }
-  } finally {
-    await serverDb.destroy();
-  }
-}
-async function initKnexType(knexDb) {
-  const { Client: Client2 } = await import("@rmp135/sql-ts");
-  const outFile = "src/types/database.d.ts";
-  const dbClient2 = Client2.fromConfig({
-    interfaceNameFormat: "${table}",
-    typeMap: {
-      number: ["bigint"],
-      string: ["text", "varchar", "char"]
-    }
-  }).fetchDatabase(knexDb);
-  const declarations = await dbClient2.toTypescript();
-  const dbObject = await dbClient2.toObject();
-  const customHeader = `//\u8BE5\u6587\u4EF6\u7531\u811A\u672C\u81EA\u52A8\u751F\u6210\uFF0C\u8BF7\u52FF\u624B\u52A8\u4FEE\u6539`;
-  let declBody = declarations.replace(/^\/\*[\s\S]*?\*\/\s*/, "");
-  declBody = declBody.replace(/(\n\s*)\/\*([^*][\s\S]*?)\*\//g, "$1/**$2*/");
-  const tableInterfaces = dbObject.schemas.flatMap((schema) => schema.tables.map((table) => table.interfaceName));
-  const aggregateTypes = `
-export interface DB {
-${tableInterfaces.map((name28) => `  ${JSON.stringify(name28)}: ${name28};`).join("\n")}
-}
-`;
-  const hashSource = JSON.stringify({
-    tableInterfaces,
-    declBody
-  });
-  const hash4 = import_crypto3.default.createHash("md5").update(hashSource).digest("hex");
-  const content = `// @db-hash ${hash4}
-${customHeader}
-
-` + declBody + aggregateTypes;
-  let needWrite = true;
-  try {
-    const current = await (0, import_promises2.readFile)(outFile, "utf8");
-    const match = current.match(/^\/\/\s*@db-hash\s*([a-zA-Z0-9]+)\n/);
-    const currentHash = match ? match[1] : null;
-    if (currentHash === hash4) {
-      needWrite = false;
-    }
-  } catch (err) {
-    needWrite = true;
-  }
-  if (needWrite) await (0, import_promises2.writeFile)(outFile, content, "utf8");
-}
-var import_promises2, import_knex, import_crypto3, dbConfig, db, dbReady, dbClient, db_default;
-var init_db = __esm({
-  "src/utils/db.ts"() {
-    "use strict";
-    init_env();
-    import_promises2 = require("fs/promises");
-    import_knex = __toESM(require("knex"));
-    init_initDB();
-    import_crypto3 = __toESM(require("crypto"));
-    init_fixDB();
-    init_dbDialect();
-    dbConfig = createDbConfig();
-    db = (0, import_knex.default)(dbConfig);
-    dbReady = (async () => {
-      if (isMysql(db) && readBoolean("MYSQL_AUTO_CREATE_DATABASE")) await ensureMysqlDatabase(dbConfig);
-      await initDB_default(db);
-      await fixDB_default(db);
-      if (process.env.NODE_ENV == "dev") initKnexType(db);
-    })().catch((err) => {
-      console.error("[\u6570\u636E\u5E93\u521D\u59CB\u5316\u5931\u8D25]", err);
-      throw err;
-    });
-    dbClient = Object.assign((table) => db(table), db);
-    dbClient.schema = db.schema;
-    db_default = dbClient;
   }
 });
 
@@ -69428,8 +68153,8 @@ var require_array2 = __commonJS({
 var require_mkdirp = __commonJS({
   "../../node_modules/.pnpm/mkdirp@0.5.6/node_modules/mkdirp/index.js"(exports2, module2) {
     "use strict";
-    var path32 = require("path");
-    var fs32 = require("fs");
+    var path33 = require("path");
+    var fs33 = require("fs");
     var _0777 = parseInt("0777", 8);
     module2.exports = mkdirP.mkdirp = mkdirP.mkdirP = mkdirP;
     function mkdirP(p3, opts, f, made) {
@@ -69440,7 +68165,7 @@ var require_mkdirp = __commonJS({
         opts = { mode: opts };
       }
       var mode = opts.mode;
-      var xfs = opts.fs || fs32;
+      var xfs = opts.fs || fs33;
       if (mode === void 0) {
         mode = _0777;
       }
@@ -69448,7 +68173,7 @@ var require_mkdirp = __commonJS({
       var cb = f || /* istanbul ignore next */
       function() {
       };
-      p3 = path32.resolve(p3);
+      p3 = path33.resolve(p3);
       xfs.mkdir(p3, mode, function(er) {
         if (!er) {
           made = made || p3;
@@ -69456,8 +68181,8 @@ var require_mkdirp = __commonJS({
         }
         switch (er.code) {
           case "ENOENT":
-            if (path32.dirname(p3) === p3) return cb(er);
-            mkdirP(path32.dirname(p3), opts, function(er2, made2) {
+            if (path33.dirname(p3) === p3) return cb(er);
+            mkdirP(path33.dirname(p3), opts, function(er2, made2) {
               if (er2) cb(er2, made2);
               else mkdirP(p3, opts, cb, made2);
             });
@@ -69479,19 +68204,19 @@ var require_mkdirp = __commonJS({
         opts = { mode: opts };
       }
       var mode = opts.mode;
-      var xfs = opts.fs || fs32;
+      var xfs = opts.fs || fs33;
       if (mode === void 0) {
         mode = _0777;
       }
       if (!made) made = null;
-      p3 = path32.resolve(p3);
+      p3 = path33.resolve(p3);
       try {
         xfs.mkdirSync(p3, mode);
         made = made || p3;
       } catch (err0) {
         switch (err0.code) {
           case "ENOENT":
-            made = sync(path32.dirname(p3), opts, made);
+            made = sync(path33.dirname(p3), opts, made);
             sync(p3, opts, made);
             break;
           // In the case of any other error, just see if there's a dir
@@ -69644,54 +68369,54 @@ var require_polyfills = __commonJS({
     }
     var chdir;
     module2.exports = patch;
-    function patch(fs32) {
+    function patch(fs33) {
       if (constants.hasOwnProperty("O_SYMLINK") && process.version.match(/^v0\.6\.[0-2]|^v0\.5\./)) {
-        patchLchmod(fs32);
+        patchLchmod(fs33);
       }
-      if (!fs32.lutimes) {
-        patchLutimes(fs32);
+      if (!fs33.lutimes) {
+        patchLutimes(fs33);
       }
-      fs32.chown = chownFix(fs32.chown);
-      fs32.fchown = chownFix(fs32.fchown);
-      fs32.lchown = chownFix(fs32.lchown);
-      fs32.chmod = chmodFix(fs32.chmod);
-      fs32.fchmod = chmodFix(fs32.fchmod);
-      fs32.lchmod = chmodFix(fs32.lchmod);
-      fs32.chownSync = chownFixSync(fs32.chownSync);
-      fs32.fchownSync = chownFixSync(fs32.fchownSync);
-      fs32.lchownSync = chownFixSync(fs32.lchownSync);
-      fs32.chmodSync = chmodFixSync(fs32.chmodSync);
-      fs32.fchmodSync = chmodFixSync(fs32.fchmodSync);
-      fs32.lchmodSync = chmodFixSync(fs32.lchmodSync);
-      fs32.stat = statFix(fs32.stat);
-      fs32.fstat = statFix(fs32.fstat);
-      fs32.lstat = statFix(fs32.lstat);
-      fs32.statSync = statFixSync(fs32.statSync);
-      fs32.fstatSync = statFixSync(fs32.fstatSync);
-      fs32.lstatSync = statFixSync(fs32.lstatSync);
-      if (fs32.chmod && !fs32.lchmod) {
-        fs32.lchmod = function(path32, mode, cb) {
+      fs33.chown = chownFix(fs33.chown);
+      fs33.fchown = chownFix(fs33.fchown);
+      fs33.lchown = chownFix(fs33.lchown);
+      fs33.chmod = chmodFix(fs33.chmod);
+      fs33.fchmod = chmodFix(fs33.fchmod);
+      fs33.lchmod = chmodFix(fs33.lchmod);
+      fs33.chownSync = chownFixSync(fs33.chownSync);
+      fs33.fchownSync = chownFixSync(fs33.fchownSync);
+      fs33.lchownSync = chownFixSync(fs33.lchownSync);
+      fs33.chmodSync = chmodFixSync(fs33.chmodSync);
+      fs33.fchmodSync = chmodFixSync(fs33.fchmodSync);
+      fs33.lchmodSync = chmodFixSync(fs33.lchmodSync);
+      fs33.stat = statFix(fs33.stat);
+      fs33.fstat = statFix(fs33.fstat);
+      fs33.lstat = statFix(fs33.lstat);
+      fs33.statSync = statFixSync(fs33.statSync);
+      fs33.fstatSync = statFixSync(fs33.fstatSync);
+      fs33.lstatSync = statFixSync(fs33.lstatSync);
+      if (fs33.chmod && !fs33.lchmod) {
+        fs33.lchmod = function(path33, mode, cb) {
           if (cb) process.nextTick(cb);
         };
-        fs32.lchmodSync = function() {
+        fs33.lchmodSync = function() {
         };
       }
-      if (fs32.chown && !fs32.lchown) {
-        fs32.lchown = function(path32, uid, gid, cb) {
+      if (fs33.chown && !fs33.lchown) {
+        fs33.lchown = function(path33, uid, gid, cb) {
           if (cb) process.nextTick(cb);
         };
-        fs32.lchownSync = function() {
+        fs33.lchownSync = function() {
         };
       }
       if (platform === "win32") {
-        fs32.rename = typeof fs32.rename !== "function" ? fs32.rename : (function(fs$rename) {
+        fs33.rename = typeof fs33.rename !== "function" ? fs33.rename : (function(fs$rename) {
           function rename(from, to, cb) {
             var start = Date.now();
             var backoff = 0;
             fs$rename(from, to, function CB(er) {
               if (er && (er.code === "EACCES" || er.code === "EPERM" || er.code === "EBUSY") && Date.now() - start < 6e4) {
                 setTimeout(function() {
-                  fs32.stat(to, function(stater, st) {
+                  fs33.stat(to, function(stater, st) {
                     if (stater && stater.code === "ENOENT")
                       fs$rename(from, to, CB);
                     else
@@ -69707,9 +68432,9 @@ var require_polyfills = __commonJS({
           }
           if (Object.setPrototypeOf) Object.setPrototypeOf(rename, fs$rename);
           return rename;
-        })(fs32.rename);
+        })(fs33.rename);
       }
-      fs32.read = typeof fs32.read !== "function" ? fs32.read : (function(fs$read) {
+      fs33.read = typeof fs33.read !== "function" ? fs33.read : (function(fs$read) {
         function read(fd, buffer, offset, length, position, callback_) {
           var callback;
           if (callback_ && typeof callback_ === "function") {
@@ -69717,22 +68442,22 @@ var require_polyfills = __commonJS({
             callback = function(er, _, __) {
               if (er && er.code === "EAGAIN" && eagCounter < 10) {
                 eagCounter++;
-                return fs$read.call(fs32, fd, buffer, offset, length, position, callback);
+                return fs$read.call(fs33, fd, buffer, offset, length, position, callback);
               }
               callback_.apply(this, arguments);
             };
           }
-          return fs$read.call(fs32, fd, buffer, offset, length, position, callback);
+          return fs$read.call(fs33, fd, buffer, offset, length, position, callback);
         }
         if (Object.setPrototypeOf) Object.setPrototypeOf(read, fs$read);
         return read;
-      })(fs32.read);
-      fs32.readSync = typeof fs32.readSync !== "function" ? fs32.readSync : /* @__PURE__ */ (function(fs$readSync) {
+      })(fs33.read);
+      fs33.readSync = typeof fs33.readSync !== "function" ? fs33.readSync : /* @__PURE__ */ (function(fs$readSync) {
         return function(fd, buffer, offset, length, position) {
           var eagCounter = 0;
           while (true) {
             try {
-              return fs$readSync.call(fs32, fd, buffer, offset, length, position);
+              return fs$readSync.call(fs33, fd, buffer, offset, length, position);
             } catch (er) {
               if (er.code === "EAGAIN" && eagCounter < 10) {
                 eagCounter++;
@@ -69742,11 +68467,11 @@ var require_polyfills = __commonJS({
             }
           }
         };
-      })(fs32.readSync);
-      function patchLchmod(fs33) {
-        fs33.lchmod = function(path32, mode, callback) {
-          fs33.open(
-            path32,
+      })(fs33.readSync);
+      function patchLchmod(fs34) {
+        fs34.lchmod = function(path33, mode, callback) {
+          fs34.open(
+            path33,
             constants.O_WRONLY | constants.O_SYMLINK,
             mode,
             function(err, fd) {
@@ -69754,80 +68479,80 @@ var require_polyfills = __commonJS({
                 if (callback) callback(err);
                 return;
               }
-              fs33.fchmod(fd, mode, function(err2) {
-                fs33.close(fd, function(err22) {
+              fs34.fchmod(fd, mode, function(err2) {
+                fs34.close(fd, function(err22) {
                   if (callback) callback(err2 || err22);
                 });
               });
             }
           );
         };
-        fs33.lchmodSync = function(path32, mode) {
-          var fd = fs33.openSync(path32, constants.O_WRONLY | constants.O_SYMLINK, mode);
+        fs34.lchmodSync = function(path33, mode) {
+          var fd = fs34.openSync(path33, constants.O_WRONLY | constants.O_SYMLINK, mode);
           var threw = true;
           var ret;
           try {
-            ret = fs33.fchmodSync(fd, mode);
+            ret = fs34.fchmodSync(fd, mode);
             threw = false;
           } finally {
             if (threw) {
               try {
-                fs33.closeSync(fd);
+                fs34.closeSync(fd);
               } catch (er) {
               }
             } else {
-              fs33.closeSync(fd);
+              fs34.closeSync(fd);
             }
           }
           return ret;
         };
       }
-      function patchLutimes(fs33) {
-        if (constants.hasOwnProperty("O_SYMLINK") && fs33.futimes) {
-          fs33.lutimes = function(path32, at, mt, cb) {
-            fs33.open(path32, constants.O_SYMLINK, function(er, fd) {
+      function patchLutimes(fs34) {
+        if (constants.hasOwnProperty("O_SYMLINK") && fs34.futimes) {
+          fs34.lutimes = function(path33, at, mt, cb) {
+            fs34.open(path33, constants.O_SYMLINK, function(er, fd) {
               if (er) {
                 if (cb) cb(er);
                 return;
               }
-              fs33.futimes(fd, at, mt, function(er2) {
-                fs33.close(fd, function(er22) {
+              fs34.futimes(fd, at, mt, function(er2) {
+                fs34.close(fd, function(er22) {
                   if (cb) cb(er2 || er22);
                 });
               });
             });
           };
-          fs33.lutimesSync = function(path32, at, mt) {
-            var fd = fs33.openSync(path32, constants.O_SYMLINK);
+          fs34.lutimesSync = function(path33, at, mt) {
+            var fd = fs34.openSync(path33, constants.O_SYMLINK);
             var ret;
             var threw = true;
             try {
-              ret = fs33.futimesSync(fd, at, mt);
+              ret = fs34.futimesSync(fd, at, mt);
               threw = false;
             } finally {
               if (threw) {
                 try {
-                  fs33.closeSync(fd);
+                  fs34.closeSync(fd);
                 } catch (er) {
                 }
               } else {
-                fs33.closeSync(fd);
+                fs34.closeSync(fd);
               }
             }
             return ret;
           };
-        } else if (fs33.futimes) {
-          fs33.lutimes = function(_a31, _b27, _c, cb) {
+        } else if (fs34.futimes) {
+          fs34.lutimes = function(_a31, _b27, _c, cb) {
             if (cb) process.nextTick(cb);
           };
-          fs33.lutimesSync = function() {
+          fs34.lutimesSync = function() {
           };
         }
       }
       function chmodFix(orig) {
         if (!orig) return orig;
         return function(target, mode, cb) {
-          return orig.call(fs32, target, mode, function(er) {
+          return orig.call(fs33, target, mode, function(er) {
             if (chownErOk(er)) er = null;
             if (cb) cb.apply(this, arguments);
           });
@@ -69837,7 +68562,7 @@ var require_polyfills = __commonJS({
         if (!orig) return orig;
         return function(target, mode) {
           try {
-            return orig.call(fs32, target, mode);
+            return orig.call(fs33, target, mode);
           } catch (er) {
             if (!chownErOk(er)) throw er;
           }
@@ -69846,7 +68571,7 @@ var require_polyfills = __commonJS({
       function chownFix(orig) {
         if (!orig) return orig;
         return function(target, uid, gid, cb) {
-          return orig.call(fs32, target, uid, gid, function(er) {
+          return orig.call(fs33, target, uid, gid, function(er) {
             if (chownErOk(er)) er = null;
             if (cb) cb.apply(this, arguments);
           });
@@ -69856,7 +68581,7 @@ var require_polyfills = __commonJS({
         if (!orig) return orig;
         return function(target, uid, gid) {
           try {
-            return orig.call(fs32, target, uid, gid);
+            return orig.call(fs33, target, uid, gid);
           } catch (er) {
             if (!chownErOk(er)) throw er;
           }
@@ -69876,13 +68601,13 @@ var require_polyfills = __commonJS({
             }
             if (cb) cb.apply(this, arguments);
           }
-          return options ? orig.call(fs32, target, options, callback) : orig.call(fs32, target, callback);
+          return options ? orig.call(fs33, target, options, callback) : orig.call(fs33, target, callback);
         };
       }
       function statFixSync(orig) {
         if (!orig) return orig;
         return function(target, options) {
-          var stats = options ? orig.call(fs32, target, options) : orig.call(fs32, target);
+          var stats = options ? orig.call(fs33, target, options) : orig.call(fs33, target);
           if (stats) {
             if (stats.uid < 0) stats.uid += 4294967296;
             if (stats.gid < 0) stats.gid += 4294967296;
@@ -69912,16 +68637,16 @@ var require_legacy_streams = __commonJS({
     "use strict";
     var Stream = require("stream").Stream;
     module2.exports = legacy;
-    function legacy(fs32) {
+    function legacy(fs33) {
       return {
         ReadStream,
         WriteStream
       };
-      function ReadStream(path32, options) {
-        if (!(this instanceof ReadStream)) return new ReadStream(path32, options);
+      function ReadStream(path33, options) {
+        if (!(this instanceof ReadStream)) return new ReadStream(path33, options);
         Stream.call(this);
         var self2 = this;
-        this.path = path32;
+        this.path = path33;
         this.fd = null;
         this.readable = true;
         this.paused = false;
@@ -69955,7 +68680,7 @@ var require_legacy_streams = __commonJS({
           });
           return;
         }
-        fs32.open(this.path, this.flags, this.mode, function(err, fd) {
+        fs33.open(this.path, this.flags, this.mode, function(err, fd) {
           if (err) {
             self2.emit("error", err);
             self2.readable = false;
@@ -69966,10 +68691,10 @@ var require_legacy_streams = __commonJS({
           self2._read();
         });
       }
-      function WriteStream(path32, options) {
-        if (!(this instanceof WriteStream)) return new WriteStream(path32, options);
+      function WriteStream(path33, options) {
+        if (!(this instanceof WriteStream)) return new WriteStream(path33, options);
         Stream.call(this);
-        this.path = path32;
+        this.path = path33;
         this.fd = null;
         this.writable = true;
         this.flags = "w";
@@ -69994,7 +68719,7 @@ var require_legacy_streams = __commonJS({
         this.busy = false;
         this._queue = [];
         if (this.fd === null) {
-          this._open = fs32.open;
+          this._open = fs33.open;
           this._queue.push([this._open, this.path, this.flags, this.mode, void 0]);
           this.flush();
         }
@@ -70030,7 +68755,7 @@ var require_clone = __commonJS({
 var require_graceful_fs = __commonJS({
   "../../node_modules/.pnpm/graceful-fs@4.2.11/node_modules/graceful-fs/graceful-fs.js"(exports2, module2) {
     "use strict";
-    var fs32 = require("fs");
+    var fs33 = require("fs");
     var polyfills = require_polyfills();
     var legacy = require_legacy_streams();
     var clone3 = require_clone();
@@ -70062,12 +68787,12 @@ var require_graceful_fs = __commonJS({
         m = "GFS4: " + m.split(/\n/).join("\nGFS4: ");
         console.error(m);
       };
-    if (!fs32[gracefulQueue]) {
+    if (!fs33[gracefulQueue]) {
       queue = global[gracefulQueue] || [];
-      publishQueue(fs32, queue);
-      fs32.close = (function(fs$close) {
+      publishQueue(fs33, queue);
+      fs33.close = (function(fs$close) {
         function close(fd, cb) {
-          return fs$close.call(fs32, fd, function(err) {
+          return fs$close.call(fs33, fd, function(err) {
             if (!err) {
               resetQueue();
             }
@@ -70079,48 +68804,48 @@ var require_graceful_fs = __commonJS({
           value: fs$close
         });
         return close;
-      })(fs32.close);
-      fs32.closeSync = (function(fs$closeSync) {
+      })(fs33.close);
+      fs33.closeSync = (function(fs$closeSync) {
         function closeSync(fd) {
-          fs$closeSync.apply(fs32, arguments);
+          fs$closeSync.apply(fs33, arguments);
           resetQueue();
         }
         Object.defineProperty(closeSync, previousSymbol, {
           value: fs$closeSync
         });
         return closeSync;
-      })(fs32.closeSync);
+      })(fs33.closeSync);
       if (/\bgfs4\b/i.test(process.env.NODE_DEBUG || "")) {
         process.on("exit", function() {
-          debug12(fs32[gracefulQueue]);
-          require("assert").equal(fs32[gracefulQueue].length, 0);
+          debug12(fs33[gracefulQueue]);
+          require("assert").equal(fs33[gracefulQueue].length, 0);
         });
       }
     }
     var queue;
     if (!global[gracefulQueue]) {
-      publishQueue(global, fs32[gracefulQueue]);
+      publishQueue(global, fs33[gracefulQueue]);
     }
-    module2.exports = patch(clone3(fs32));
-    if (process.env.TEST_GRACEFUL_FS_GLOBAL_PATCH && !fs32.__patched) {
-      module2.exports = patch(fs32);
-      fs32.__patched = true;
+    module2.exports = patch(clone3(fs33));
+    if (process.env.TEST_GRACEFUL_FS_GLOBAL_PATCH && !fs33.__patched) {
+      module2.exports = patch(fs33);
+      fs33.__patched = true;
     }
-    function patch(fs33) {
-      polyfills(fs33);
-      fs33.gracefulify = patch;
-      fs33.createReadStream = createReadStream2;
-      fs33.createWriteStream = createWriteStream;
-      var fs$readFile = fs33.readFile;
-      fs33.readFile = readFile3;
-      function readFile3(path32, options, cb) {
+    function patch(fs34) {
+      polyfills(fs34);
+      fs34.gracefulify = patch;
+      fs34.createReadStream = createReadStream2;
+      fs34.createWriteStream = createWriteStream;
+      var fs$readFile = fs34.readFile;
+      fs34.readFile = readFile3;
+      function readFile3(path33, options, cb) {
         if (typeof options === "function")
           cb = options, options = null;
-        return go$readFile(path32, options, cb);
-        function go$readFile(path33, options2, cb2, startTime) {
-          return fs$readFile(path33, options2, function(err) {
+        return go$readFile(path33, options, cb);
+        function go$readFile(path34, options2, cb2, startTime) {
+          return fs$readFile(path34, options2, function(err) {
             if (err && (err.code === "EMFILE" || err.code === "ENFILE"))
-              enqueue([go$readFile, [path33, options2, cb2], err, startTime || Date.now(), Date.now()]);
+              enqueue([go$readFile, [path34, options2, cb2], err, startTime || Date.now(), Date.now()]);
             else {
               if (typeof cb2 === "function")
                 cb2.apply(this, arguments);
@@ -70128,16 +68853,16 @@ var require_graceful_fs = __commonJS({
           });
         }
       }
-      var fs$writeFile = fs33.writeFile;
-      fs33.writeFile = writeFile3;
-      function writeFile3(path32, data2, options, cb) {
+      var fs$writeFile = fs34.writeFile;
+      fs34.writeFile = writeFile3;
+      function writeFile3(path33, data2, options, cb) {
         if (typeof options === "function")
           cb = options, options = null;
-        return go$writeFile(path32, data2, options, cb);
-        function go$writeFile(path33, data3, options2, cb2, startTime) {
-          return fs$writeFile(path33, data3, options2, function(err) {
+        return go$writeFile(path33, data2, options, cb);
+        function go$writeFile(path34, data3, options2, cb2, startTime) {
+          return fs$writeFile(path34, data3, options2, function(err) {
             if (err && (err.code === "EMFILE" || err.code === "ENFILE"))
-              enqueue([go$writeFile, [path33, data3, options2, cb2], err, startTime || Date.now(), Date.now()]);
+              enqueue([go$writeFile, [path34, data3, options2, cb2], err, startTime || Date.now(), Date.now()]);
             else {
               if (typeof cb2 === "function")
                 cb2.apply(this, arguments);
@@ -70145,17 +68870,17 @@ var require_graceful_fs = __commonJS({
           });
         }
       }
-      var fs$appendFile = fs33.appendFile;
+      var fs$appendFile = fs34.appendFile;
       if (fs$appendFile)
-        fs33.appendFile = appendFile;
-      function appendFile(path32, data2, options, cb) {
+        fs34.appendFile = appendFile;
+      function appendFile(path33, data2, options, cb) {
         if (typeof options === "function")
           cb = options, options = null;
-        return go$appendFile(path32, data2, options, cb);
-        function go$appendFile(path33, data3, options2, cb2, startTime) {
-          return fs$appendFile(path33, data3, options2, function(err) {
+        return go$appendFile(path33, data2, options, cb);
+        function go$appendFile(path34, data3, options2, cb2, startTime) {
+          return fs$appendFile(path34, data3, options2, function(err) {
             if (err && (err.code === "EMFILE" || err.code === "ENFILE"))
-              enqueue([go$appendFile, [path33, data3, options2, cb2], err, startTime || Date.now(), Date.now()]);
+              enqueue([go$appendFile, [path34, data3, options2, cb2], err, startTime || Date.now(), Date.now()]);
             else {
               if (typeof cb2 === "function")
                 cb2.apply(this, arguments);
@@ -70163,9 +68888,9 @@ var require_graceful_fs = __commonJS({
           });
         }
       }
-      var fs$copyFile = fs33.copyFile;
+      var fs$copyFile = fs34.copyFile;
       if (fs$copyFile)
-        fs33.copyFile = copyFile;
+        fs34.copyFile = copyFile;
       function copyFile(src, dest, flags, cb) {
         if (typeof flags === "function") {
           cb = flags;
@@ -70183,34 +68908,34 @@ var require_graceful_fs = __commonJS({
           });
         }
       }
-      var fs$readdir = fs33.readdir;
-      fs33.readdir = readdir;
+      var fs$readdir = fs34.readdir;
+      fs34.readdir = readdir;
       var noReaddirOptionVersions = /^v[0-5]\./;
-      function readdir(path32, options, cb) {
+      function readdir(path33, options, cb) {
         if (typeof options === "function")
           cb = options, options = null;
-        var go$readdir = noReaddirOptionVersions.test(process.version) ? function go$readdir2(path33, options2, cb2, startTime) {
-          return fs$readdir(path33, fs$readdirCallback(
-            path33,
+        var go$readdir = noReaddirOptionVersions.test(process.version) ? function go$readdir2(path34, options2, cb2, startTime) {
+          return fs$readdir(path34, fs$readdirCallback(
+            path34,
             options2,
             cb2,
             startTime
           ));
-        } : function go$readdir2(path33, options2, cb2, startTime) {
-          return fs$readdir(path33, options2, fs$readdirCallback(
-            path33,
+        } : function go$readdir2(path34, options2, cb2, startTime) {
+          return fs$readdir(path34, options2, fs$readdirCallback(
+            path34,
             options2,
             cb2,
             startTime
           ));
         };
-        return go$readdir(path32, options, cb);
-        function fs$readdirCallback(path33, options2, cb2, startTime) {
+        return go$readdir(path33, options, cb);
+        function fs$readdirCallback(path34, options2, cb2, startTime) {
           return function(err, files) {
             if (err && (err.code === "EMFILE" || err.code === "ENFILE"))
               enqueue([
                 go$readdir,
-                [path33, options2, cb2],
+                [path34, options2, cb2],
                 err,
                 startTime || Date.now(),
                 Date.now()
@@ -70225,21 +68950,21 @@ var require_graceful_fs = __commonJS({
         }
       }
       if (process.version.substr(0, 4) === "v0.8") {
-        var legStreams = legacy(fs33);
+        var legStreams = legacy(fs34);
         ReadStream = legStreams.ReadStream;
         WriteStream = legStreams.WriteStream;
       }
-      var fs$ReadStream = fs33.ReadStream;
+      var fs$ReadStream = fs34.ReadStream;
       if (fs$ReadStream) {
         ReadStream.prototype = Object.create(fs$ReadStream.prototype);
         ReadStream.prototype.open = ReadStream$open;
       }
-      var fs$WriteStream = fs33.WriteStream;
+      var fs$WriteStream = fs34.WriteStream;
       if (fs$WriteStream) {
         WriteStream.prototype = Object.create(fs$WriteStream.prototype);
         WriteStream.prototype.open = WriteStream$open;
       }
-      Object.defineProperty(fs33, "ReadStream", {
+      Object.defineProperty(fs34, "ReadStream", {
         get: function() {
           return ReadStream;
         },
@@ -70249,7 +68974,7 @@ var require_graceful_fs = __commonJS({
         enumerable: true,
         configurable: true
       });
-      Object.defineProperty(fs33, "WriteStream", {
+      Object.defineProperty(fs34, "WriteStream", {
         get: function() {
           return WriteStream;
         },
@@ -70260,7 +68985,7 @@ var require_graceful_fs = __commonJS({
         configurable: true
       });
       var FileReadStream = ReadStream;
-      Object.defineProperty(fs33, "FileReadStream", {
+      Object.defineProperty(fs34, "FileReadStream", {
         get: function() {
           return FileReadStream;
         },
@@ -70271,7 +68996,7 @@ var require_graceful_fs = __commonJS({
         configurable: true
       });
       var FileWriteStream = WriteStream;
-      Object.defineProperty(fs33, "FileWriteStream", {
+      Object.defineProperty(fs34, "FileWriteStream", {
         get: function() {
           return FileWriteStream;
         },
@@ -70281,7 +69006,7 @@ var require_graceful_fs = __commonJS({
         enumerable: true,
         configurable: true
       });
-      function ReadStream(path32, options) {
+      function ReadStream(path33, options) {
         if (this instanceof ReadStream)
           return fs$ReadStream.apply(this, arguments), this;
         else
@@ -70301,7 +69026,7 @@ var require_graceful_fs = __commonJS({
           }
         });
       }
-      function WriteStream(path32, options) {
+      function WriteStream(path33, options) {
         if (this instanceof WriteStream)
           return fs$WriteStream.apply(this, arguments), this;
         else
@@ -70319,22 +69044,22 @@ var require_graceful_fs = __commonJS({
           }
         });
       }
-      function createReadStream2(path32, options) {
-        return new fs33.ReadStream(path32, options);
+      function createReadStream2(path33, options) {
+        return new fs34.ReadStream(path33, options);
       }
-      function createWriteStream(path32, options) {
-        return new fs33.WriteStream(path32, options);
+      function createWriteStream(path33, options) {
+        return new fs34.WriteStream(path33, options);
       }
-      var fs$open = fs33.open;
-      fs33.open = open;
-      function open(path32, flags, mode, cb) {
+      var fs$open = fs34.open;
+      fs34.open = open;
+      function open(path33, flags, mode, cb) {
         if (typeof mode === "function")
           cb = mode, mode = null;
-        return go$open(path32, flags, mode, cb);
-        function go$open(path33, flags2, mode2, cb2, startTime) {
-          return fs$open(path33, flags2, mode2, function(err, fd) {
+        return go$open(path33, flags, mode, cb);
+        function go$open(path34, flags2, mode2, cb2, startTime) {
+          return fs$open(path34, flags2, mode2, function(err, fd) {
             if (err && (err.code === "EMFILE" || err.code === "ENFILE"))
-              enqueue([go$open, [path33, flags2, mode2, cb2], err, startTime || Date.now(), Date.now()]);
+              enqueue([go$open, [path34, flags2, mode2, cb2], err, startTime || Date.now(), Date.now()]);
             else {
               if (typeof cb2 === "function")
                 cb2.apply(this, arguments);
@@ -70342,20 +69067,20 @@ var require_graceful_fs = __commonJS({
           });
         }
       }
-      return fs33;
+      return fs34;
     }
     function enqueue(elem) {
       debug12("ENQUEUE", elem[0].name, elem[1]);
-      fs32[gracefulQueue].push(elem);
+      fs33[gracefulQueue].push(elem);
       retry();
     }
     var retryTimer;
     function resetQueue() {
       var now5 = Date.now();
-      for (var i = 0; i < fs32[gracefulQueue].length; ++i) {
-        if (fs32[gracefulQueue][i].length > 2) {
-          fs32[gracefulQueue][i][3] = now5;
-          fs32[gracefulQueue][i][4] = now5;
+      for (var i = 0; i < fs33[gracefulQueue].length; ++i) {
+        if (fs33[gracefulQueue][i].length > 2) {
+          fs33[gracefulQueue][i][3] = now5;
+          fs33[gracefulQueue][i][4] = now5;
         }
       }
       retry();
@@ -70363,9 +69088,9 @@ var require_graceful_fs = __commonJS({
     function retry() {
       clearTimeout(retryTimer);
       retryTimer = void 0;
-      if (fs32[gracefulQueue].length === 0)
+      if (fs33[gracefulQueue].length === 0)
         return;
-      var elem = fs32[gracefulQueue].shift();
+      var elem = fs33[gracefulQueue].shift();
       var fn = elem[0];
       var args = elem[1];
       var err = elem[2];
@@ -70387,7 +69112,7 @@ var require_graceful_fs = __commonJS({
           debug12("RETRY", fn.name, args);
           fn.apply(null, args.concat([startTime]));
         } else {
-          fs32[gracefulQueue].push(elem);
+          fs33[gracefulQueue].push(elem);
         }
       }
       if (retryTimer === void 0) {
@@ -70506,11 +69231,11 @@ var require_fs5 = __commonJS({
   "../../node_modules/.pnpm/mz@2.7.0/node_modules/mz/fs.js"(exports2) {
     "use strict";
     var Promise2 = require_any_promise();
-    var fs32;
+    var fs33;
     try {
-      fs32 = require_graceful_fs();
+      fs33 = require_graceful_fs();
     } catch (err) {
-      fs32 = require("fs");
+      fs33 = require("fs");
     }
     var api = [
       "appendFile",
@@ -70544,18 +69269,18 @@ var require_fs5 = __commonJS({
       "write",
       "writeFile"
     ];
-    typeof fs32.access === "function" && api.push("access");
-    typeof fs32.copyFile === "function" && api.push("copyFile");
-    typeof fs32.mkdtemp === "function" && api.push("mkdtemp");
-    require_thenify_all().withCallback(fs32, exports2, api);
+    typeof fs33.access === "function" && api.push("access");
+    typeof fs33.copyFile === "function" && api.push("copyFile");
+    typeof fs33.mkdtemp === "function" && api.push("mkdtemp");
+    require_thenify_all().withCallback(fs33, exports2, api);
     exports2.exists = function(filename, callback) {
       if (typeof callback === "function") {
-        return fs32.stat(filename, function(err) {
+        return fs33.stat(filename, function(err) {
           callback(null, !err);
         });
       }
       return new Promise2(function(resolve3) {
-        fs32.stat(filename, function(err) {
+        fs33.stat(filename, function(err) {
           resolve3(!err);
         });
       });
@@ -70567,7 +69292,7 @@ var require_fs5 = __commonJS({
 var require_json2 = __commonJS({
   "../../node_modules/.pnpm/utility@1.18.0/node_modules/utility/json.js"(exports2) {
     "use strict";
-    var path32 = require("path");
+    var path33 = require("path");
     var _mkdirp;
     function getMkdirp() {
       if (!_mkdirp) {
@@ -70600,7 +69325,7 @@ var require_json2 = __commonJS({
       if (!("space" in options)) {
         options.space = 2;
       }
-      getMkdirp().sync(path32.dirname(filepath));
+      getMkdirp().sync(path33.dirname(filepath));
       if (typeof str === "object") {
         str = JSON.stringify(str, options.replacer, options.space) + "\n";
       }
@@ -70624,7 +69349,7 @@ var require_json2 = __commonJS({
       if (typeof str === "object") {
         str = JSON.stringify(str, options.replacer, options.space) + "\n";
       }
-      return mkdir(path32.dirname(filepath)).then(function() {
+      return mkdir(path33.dirname(filepath)).then(function() {
         return getFS().writeFile(filepath, str);
       });
     };
@@ -72459,9 +71184,9 @@ var require_pump = __commonJS({
     "use strict";
     var once4 = require_once();
     var eos = require_end_of_stream();
-    var fs32;
+    var fs33;
     try {
-      fs32 = require("fs");
+      fs33 = require("fs");
     } catch (e) {
     }
     var noop3 = function() {
@@ -72472,8 +71197,8 @@ var require_pump = __commonJS({
     };
     var isFS = function(stream4) {
       if (!ancient) return false;
-      if (!fs32) return false;
-      return (stream4 instanceof (fs32.ReadStream || noop3) || stream4 instanceof (fs32.WriteStream || noop3)) && isFn(stream4.close);
+      if (!fs33) return false;
+      return (stream4 instanceof (fs33.ReadStream || noop3) || stream4 instanceof (fs33.WriteStream || noop3)) && isFn(stream4.close);
     };
     var isRequest2 = function(stream4) {
       return stream4.setHeader && isFn(stream4.abort);
@@ -72663,11 +71388,11 @@ var require_Mime = __commonJS({
         }
       }
     };
-    Mime.prototype.getType = function(path32) {
-      path32 = String(path32);
-      let last = path32.replace(/^.*[/\\]/, "").toLowerCase();
+    Mime.prototype.getType = function(path33) {
+      path33 = String(path33);
+      let last = path33.replace(/^.*[/\\]/, "").toLowerCase();
       let ext = last.replace(/^.*\./, "").toLowerCase();
-      let hasPath = last.length < path32.length;
+      let hasPath = last.length < path33.length;
       let hasDot = ext.length < last.length - 1;
       return (hasDot || !hasPath) && this._types[ext] || null;
     };
@@ -72849,8 +71574,8 @@ var require_formstream = __commonJS({
     var parseStream = require_pause_stream();
     var util4 = require("util");
     var mime = require_mime();
-    var path32 = require("path");
-    var fs32 = require("fs");
+    var path33 = require("path");
+    var fs33 = require("fs");
     var destroy = require_destroy();
     var hex4 = require_lib6();
     var PADDING = "--";
@@ -72911,13 +71636,13 @@ var require_formstream = __commonJS({
     FormStream.prototype.file = function(name28, filepath, filename, filesize) {
       if (typeof filename === "number" && !filesize) {
         filesize = filename;
-        filename = path32.basename(filepath);
+        filename = path33.basename(filepath);
       }
       if (!filename) {
-        filename = path32.basename(filepath);
+        filename = path33.basename(filepath);
       }
       var mimeType = mime.getType(filename);
-      var stream4 = fs32.createReadStream(filepath);
+      var stream4 = fs33.createReadStream(filepath);
       return this.stream(name28, stream4, filename, mimeType, filesize);
     };
     FormStream.prototype.field = function(name28, value, mimeType) {
@@ -79139,13 +77864,13 @@ var init_notmodified = __esm({
 });
 
 // ../../node_modules/.pnpm/get-uri@8.0.0/node_modules/get-uri/dist/data.js
-var import_debug5, import_stream, import_crypto4, debug5, DataReadable, data;
+var import_debug5, import_stream, import_crypto3, debug5, DataReadable, data;
 var init_data = __esm({
   "../../node_modules/.pnpm/get-uri@8.0.0/node_modules/get-uri/dist/data.js"() {
     "use strict";
     import_debug5 = __toESM(require_src(), 1);
     import_stream = require("stream");
-    import_crypto4 = require("crypto");
+    import_crypto3 = require("crypto");
     init_node();
     init_notmodified();
     debug5 = (0, import_debug5.default)("get-uri:data");
@@ -79158,7 +77883,7 @@ var init_data = __esm({
       }
     };
     data = async ({ href: uri }, { cache } = {}) => {
-      const shasum = (0, import_crypto4.createHash)("sha1");
+      const shasum = (0, import_crypto3.createHash)("sha1");
       shasum.update(uri);
       const hash4 = shasum.digest("hex");
       debug5('generated SHA1 hash for "data:" URI: %o', hash4);
@@ -79192,12 +77917,12 @@ var init_notfound = __esm({
 function isNotModified(prev, curr) {
   return +prev.mtime === +curr.mtime;
 }
-var import_debug6, import_fs4, import_url4, debug6, file;
+var import_debug6, import_fs3, import_url4, debug6, file;
 var init_file = __esm({
   "../../node_modules/.pnpm/get-uri@8.0.0/node_modules/get-uri/dist/file.js"() {
     "use strict";
     import_debug6 = __toESM(require_src(), 1);
-    import_fs4 = require("fs");
+    import_fs3 = require("fs");
     init_notfound();
     init_notmodified();
     import_url4 = require("url");
@@ -79212,13 +77937,13 @@ var init_file = __esm({
       try {
         const filepath = (0, import_url4.fileURLToPath)(uri);
         debug6("Normalized pathname: %o", filepath);
-        const fdHandle = await import_fs4.promises.open(filepath, flags, mode);
+        const fdHandle = await import_fs3.promises.open(filepath, flags, mode);
         const stat = await fdHandle.stat();
         if (cache && cache.stat && stat && isNotModified(cache.stat, stat)) {
           await fdHandle.close();
           throw new NotModifiedError();
         }
-        const rs = (0, import_fs4.createReadStream)(filepath, {
+        const rs = (0, import_fs3.createReadStream)(filepath, {
           autoClose: true,
           ...opts,
           fd: fdHandle
@@ -80701,8 +79426,8 @@ var require_Client = __commonJS({
       /**
        * Set the working directory.
        */
-      async cd(path32) {
-        const validPath = await this.protectWhitespace(path32);
+      async cd(path33) {
+        const validPath = await this.protectWhitespace(path33);
         return this.send("CWD " + validPath);
       }
       /**
@@ -80715,8 +79440,8 @@ var require_Client = __commonJS({
        * Get the last modified time of a file. This is not supported by every FTP server, in which case
        * calling this method will throw an exception.
        */
-      async lastMod(path32) {
-        const validPath = await this.protectWhitespace(path32);
+      async lastMod(path33) {
+        const validPath = await this.protectWhitespace(path33);
         const res = await this.send(`MDTM ${validPath}`);
         const date6 = res.message.slice(4);
         return (0, parseListMLSD_1.parseMLSxDate)(date6);
@@ -80724,8 +79449,8 @@ var require_Client = __commonJS({
       /**
        * Get the size of a file.
        */
-      async size(path32) {
-        const validPath = await this.protectWhitespace(path32);
+      async size(path33) {
+        const validPath = await this.protectWhitespace(path33);
         const command = `SIZE ${validPath}`;
         const res = await this.send(command);
         const size = parseInt(res.message.slice(4), 10);
@@ -80752,8 +79477,8 @@ var require_Client = __commonJS({
        * You can ignore FTP error return codes which won't throw an exception if e.g.
        * the file doesn't exist.
        */
-      async remove(path32, ignoreErrorCodes = false) {
-        const validPath = await this.protectWhitespace(path32);
+      async remove(path33, ignoreErrorCodes = false) {
+        const validPath = await this.protectWhitespace(path33);
         if (ignoreErrorCodes) {
           return this.sendIgnoringError(`DELE ${validPath}`);
         }
@@ -80907,8 +79632,8 @@ var require_Client = __commonJS({
        *
        * @param [path]  Path to remote file or directory.
        */
-      async list(path32 = "") {
-        const validPath = await this.protectWhitespace(path32);
+      async list(path33 = "") {
+        const validPath = await this.protectWhitespace(path33);
         let lastError;
         for (const candidate of this.availableListCommands) {
           const command = validPath === "" ? candidate : `${candidate} ${validPath}`;
@@ -81078,21 +79803,21 @@ var require_Client = __commonJS({
       /**
        * Remove an empty directory, will fail if not empty.
        */
-      async removeEmptyDir(path32) {
-        const validPath = await this.protectWhitespace(path32);
+      async removeEmptyDir(path33) {
+        const validPath = await this.protectWhitespace(path33);
         return this.send(`RMD ${validPath}`);
       }
       /**
        * FTP servers can't handle filenames that have leading whitespace. This method transforms
        * a given path to fix that issue for most cases.
        */
-      async protectWhitespace(path32) {
-        if (!path32.startsWith(" ")) {
-          return path32;
+      async protectWhitespace(path33) {
+        if (!path33.startsWith(" ")) {
+          return path33;
         }
         const pwd = await this.pwd();
         const absolutePathPrefix = pwd.endsWith("/") ? pwd : pwd + "/";
-        return absolutePathPrefix + path32;
+        return absolutePathPrefix + path33;
       }
       async _exitAtCurrentDirectory(func) {
         const userDir = await this.pwd();
@@ -81169,11 +79894,11 @@ var require_Client = __commonJS({
       }
     };
     exports2.Client = Client2;
-    async function ensureLocalDirectory(path32) {
+    async function ensureLocalDirectory(path33) {
       try {
-        await fsStat(path32);
+        await fsStat(path33);
       } catch (_a31) {
-        await fsMkDir(path32, { recursive: true });
+        await fsMkDir(path33, { recursive: true });
       }
     }
     async function ignoreError(func) {
@@ -81232,13 +79957,13 @@ var require_dist5 = __commonJS({
 });
 
 // ../../node_modules/.pnpm/get-uri@8.0.0/node_modules/get-uri/dist/ftp.js
-var import_basic_ftp, import_stream2, import_path6, import_debug7, debug7, ftp;
+var import_basic_ftp, import_stream2, import_path5, import_debug7, debug7, ftp;
 var init_ftp = __esm({
   "../../node_modules/.pnpm/get-uri@8.0.0/node_modules/get-uri/dist/ftp.js"() {
     "use strict";
     import_basic_ftp = __toESM(require_dist5(), 1);
     import_stream2 = require("stream");
-    import_path6 = require("path");
+    import_path5 = require("path");
     import_debug7 = __toESM(require_src(), 1);
     init_notfound();
     init_notmodified();
@@ -81271,8 +79996,8 @@ var init_ftp = __esm({
           }
         }
         if (!lastModified) {
-          const list2 = await client.list((0, import_path6.dirname)(filepath));
-          const name28 = (0, import_path6.basename)(filepath);
+          const list2 = await client.list((0, import_path5.dirname)(filepath));
+          const name28 = (0, import_path5.basename)(filepath);
           const entry = list2.find((e) => e.name === name28);
           if (entry) {
             lastModified = entry.modifiedAt;
@@ -81749,23 +80474,23 @@ var require_estraverse = __commonJS({
           return false;
         }
       };
-      function Element(node, path32, wrap, ref) {
+      function Element(node, path33, wrap, ref) {
         this.node = node;
-        this.path = path32;
+        this.path = path33;
         this.wrap = wrap;
         this.ref = ref;
       }
       function Controller() {
       }
-      Controller.prototype.path = function path32() {
+      Controller.prototype.path = function path33() {
         var i, iz, j, jz, result, element;
-        function addToPath(result2, path33) {
-          if (Array.isArray(path33)) {
-            for (j = 0, jz = path33.length; j < jz; ++j) {
-              result2.push(path33[j]);
+        function addToPath(result2, path34) {
+          if (Array.isArray(path34)) {
+            for (j = 0, jz = path34.length; j < jz; ++j) {
+              result2.push(path34[j]);
             }
           } else {
-            result2.push(path33);
+            result2.push(path34);
           }
         }
         if (!this.__current.path) {
@@ -82657,16 +81382,16 @@ var require_util2 = __commonJS({
     }
     exports2.urlGenerate = urlGenerate;
     function normalize(aPath) {
-      var path32 = aPath;
+      var path33 = aPath;
       var url4 = urlParse(aPath);
       if (url4) {
         if (!url4.path) {
           return aPath;
         }
-        path32 = url4.path;
+        path33 = url4.path;
       }
-      var isAbsolute = exports2.isAbsolute(path32);
-      var parts = path32.split(/\/+/);
+      var isAbsolute = exports2.isAbsolute(path33);
+      var parts = path33.split(/\/+/);
       for (var part, up = 0, i = parts.length - 1; i >= 0; i--) {
         part = parts[i];
         if (part === ".") {
@@ -82683,15 +81408,15 @@ var require_util2 = __commonJS({
           }
         }
       }
-      path32 = parts.join("/");
-      if (path32 === "") {
-        path32 = isAbsolute ? "/" : ".";
+      path33 = parts.join("/");
+      if (path33 === "") {
+        path33 = isAbsolute ? "/" : ".";
       }
       if (url4) {
-        url4.path = path32;
+        url4.path = path33;
         return urlGenerate(url4);
       }
-      return path32;
+      return path33;
     }
     exports2.normalize = normalize;
     function join(aRoot, aPath) {
@@ -93085,13 +91810,13 @@ function __disposeResources(env2) {
   }
   return next();
 }
-function __rewriteRelativeImportExtension(path32, preserveJsx) {
-  if (typeof path32 === "string" && /^\.\.?\//.test(path32)) {
-    return path32.replace(/\.(tsx)$|((?:\.d)?)((?:\.[^./]+?)?)\.([cm]?)ts$/i, function(m, tsx, d, ext, cm) {
+function __rewriteRelativeImportExtension(path33, preserveJsx) {
+  if (typeof path33 === "string" && /^\.\.?\//.test(path33)) {
+    return path33.replace(/\.(tsx)$|((?:\.d)?)((?:\.[^./]+?)?)\.([cm]?)ts$/i, function(m, tsx, d, ext, cm) {
       return tsx ? preserveJsx ? ".jsx" : ".js" : d && (!ext || !cm) ? m : d + ext + "." + cm.toLowerCase() + "js";
     });
   }
-  return path32;
+  return path33;
 }
 var extendStatics, __assign, __createBinding, __setModuleDefault, ownKeys, _SuppressedError, tslib_es6_default;
 var init_tslib_es6 = __esm({
@@ -93899,16 +92624,16 @@ var require_path2 = __commonJS({
         this.__childCache = null;
       };
       var Pp = Path.prototype;
-      function getChildCache(path32) {
-        return path32.__childCache || (path32.__childCache = /* @__PURE__ */ Object.create(null));
+      function getChildCache(path33) {
+        return path33.__childCache || (path33.__childCache = /* @__PURE__ */ Object.create(null));
       }
-      function getChildPath(path32, name28) {
-        var cache = getChildCache(path32);
-        var actualChildValue = path32.getValueProperty(name28);
+      function getChildPath(path33, name28) {
+        var cache = getChildCache(path33);
+        var actualChildValue = path33.getValueProperty(name28);
         var childPath = cache[name28];
         if (!hasOwn.call(cache, name28) || // Ensure consistency between cache and reality.
         childPath.value !== actualChildValue) {
-          childPath = cache[name28] = new path32.constructor(actualChildValue, path32, name28);
+          childPath = cache[name28] = new path33.constructor(actualChildValue, path33, name28);
         }
         return childPath;
       }
@@ -93920,12 +92645,12 @@ var require_path2 = __commonJS({
         for (var _i = 0; _i < arguments.length; _i++) {
           names[_i] = arguments[_i];
         }
-        var path32 = this;
+        var path33 = this;
         var count = names.length;
         for (var i = 0; i < count; ++i) {
-          path32 = getChildPath(path32, names[i]);
+          path33 = getChildPath(path33, names[i]);
         }
-        return path32;
+        return path33;
       };
       Pp.each = function each(callback, context2) {
         var childPaths = [];
@@ -93961,12 +92686,12 @@ var require_path2 = __commonJS({
       };
       function emptyMoves() {
       }
-      function getMoves(path32, offset, start, end) {
-        isArray2.assert(path32.value);
+      function getMoves(path33, offset, start, end) {
+        isArray2.assert(path33.value);
         if (offset === 0) {
           return emptyMoves;
         }
-        var length = path32.value.length;
+        var length = path33.value.length;
         if (length < 1) {
           return emptyMoves;
         }
@@ -93984,10 +92709,10 @@ var require_path2 = __commonJS({
         isNumber2.assert(start);
         isNumber2.assert(end);
         var moves = /* @__PURE__ */ Object.create(null);
-        var cache = getChildCache(path32);
+        var cache = getChildCache(path33);
         for (var i = start; i < end; ++i) {
-          if (hasOwn.call(path32.value, i)) {
-            var childPath = path32.get(i);
+          if (hasOwn.call(path33.value, i)) {
+            var childPath = path33.get(i);
             if (childPath.name !== i) {
               throw new Error("");
             }
@@ -94005,7 +92730,7 @@ var require_path2 = __commonJS({
               throw new Error("");
             }
             cache[newIndex2] = childPath2;
-            path32.value[newIndex2] = childPath2.value;
+            path33.value[newIndex2] = childPath2.value;
           }
         };
       }
@@ -94080,34 +92805,34 @@ var require_path2 = __commonJS({
         }
         return pp.insertAt.apply(pp, insertAtArgs);
       };
-      function repairRelationshipWithParent(path32) {
-        if (!(path32 instanceof Path)) {
+      function repairRelationshipWithParent(path33) {
+        if (!(path33 instanceof Path)) {
           throw new Error("");
         }
-        var pp = path32.parentPath;
+        var pp = path33.parentPath;
         if (!pp) {
-          return path32;
+          return path33;
         }
         var parentValue = pp.value;
         var parentCache = getChildCache(pp);
-        if (parentValue[path32.name] === path32.value) {
-          parentCache[path32.name] = path32;
+        if (parentValue[path33.name] === path33.value) {
+          parentCache[path33.name] = path33;
         } else if (isArray2.check(parentValue)) {
-          var i = parentValue.indexOf(path32.value);
+          var i = parentValue.indexOf(path33.value);
           if (i >= 0) {
-            parentCache[path32.name = i] = path32;
+            parentCache[path33.name = i] = path33;
           }
         } else {
-          parentValue[path32.name] = path32.value;
-          parentCache[path32.name] = path32;
+          parentValue[path33.name] = path33.value;
+          parentCache[path33.name] = path33;
         }
-        if (parentValue[path32.name] !== path32.value) {
+        if (parentValue[path33.name] !== path33.value) {
           throw new Error("");
         }
-        if (path32.parentPath.get(path32.name) !== path32) {
+        if (path33.parentPath.get(path33.name) !== path33) {
           throw new Error("");
         }
-        return path32;
+        return path33;
       }
       Pp.replace = function replace(replacement) {
         var results = [];
@@ -94187,11 +92912,11 @@ var require_scope = __commonJS({
       var Expression = namedTypes.Expression;
       var isArray2 = types3.builtInTypes.array;
       var b2 = types3.builders;
-      var Scope = function Scope2(path32, parentScope) {
+      var Scope = function Scope2(path33, parentScope) {
         if (!(this instanceof Scope2)) {
           throw new Error("Scope constructor cannot be invoked without 'new'");
         }
-        ScopeType.assert(path32.value);
+        ScopeType.assert(path33.value);
         var depth;
         if (parentScope) {
           if (!(parentScope instanceof Scope2)) {
@@ -94203,8 +92928,8 @@ var require_scope = __commonJS({
           depth = 0;
         }
         Object.defineProperties(this, {
-          path: { value: path32 },
-          node: { value: path32.value },
+          path: { value: path33 },
+          node: { value: path33.value },
           isGlobal: { value: !parentScope, enumerable: true },
           depth: { value: depth },
           parent: { value: parentScope },
@@ -94279,50 +93004,50 @@ var require_scope = __commonJS({
         this.scan();
         return this.types;
       };
-      function scanScope(path32, bindings, scopeTypes2) {
-        var node = path32.value;
+      function scanScope(path33, bindings, scopeTypes2) {
+        var node = path33.value;
         ScopeType.assert(node);
         if (namedTypes.CatchClause.check(node)) {
-          var param = path32.get("param");
+          var param = path33.get("param");
           if (param.value) {
             addPattern4(param, bindings);
           }
         } else {
-          recursiveScanScope(path32, bindings, scopeTypes2);
+          recursiveScanScope(path33, bindings, scopeTypes2);
         }
       }
-      function recursiveScanScope(path32, bindings, scopeTypes2) {
-        var node = path32.value;
-        if (path32.parent && namedTypes.FunctionExpression.check(path32.parent.node) && path32.parent.node.id) {
-          addPattern4(path32.parent.get("id"), bindings);
+      function recursiveScanScope(path33, bindings, scopeTypes2) {
+        var node = path33.value;
+        if (path33.parent && namedTypes.FunctionExpression.check(path33.parent.node) && path33.parent.node.id) {
+          addPattern4(path33.parent.get("id"), bindings);
         }
         if (!node) {
         } else if (isArray2.check(node)) {
-          path32.each(function(childPath) {
+          path33.each(function(childPath) {
             recursiveScanChild(childPath, bindings, scopeTypes2);
           });
         } else if (namedTypes.Function.check(node)) {
-          path32.get("params").each(function(paramPath) {
+          path33.get("params").each(function(paramPath) {
             addPattern4(paramPath, bindings);
           });
-          recursiveScanChild(path32.get("body"), bindings, scopeTypes2);
+          recursiveScanChild(path33.get("body"), bindings, scopeTypes2);
         } else if (namedTypes.TypeAlias && namedTypes.TypeAlias.check(node) || namedTypes.InterfaceDeclaration && namedTypes.InterfaceDeclaration.check(node) || namedTypes.TSTypeAliasDeclaration && namedTypes.TSTypeAliasDeclaration.check(node) || namedTypes.TSInterfaceDeclaration && namedTypes.TSInterfaceDeclaration.check(node)) {
-          addTypePattern(path32.get("id"), scopeTypes2);
+          addTypePattern(path33.get("id"), scopeTypes2);
         } else if (namedTypes.VariableDeclarator.check(node)) {
-          addPattern4(path32.get("id"), bindings);
-          recursiveScanChild(path32.get("init"), bindings, scopeTypes2);
+          addPattern4(path33.get("id"), bindings);
+          recursiveScanChild(path33.get("init"), bindings, scopeTypes2);
         } else if (node.type === "ImportSpecifier" || node.type === "ImportNamespaceSpecifier" || node.type === "ImportDefaultSpecifier") {
           addPattern4(
             // Esprima used to use the .name field to refer to the local
             // binding identifier for ImportSpecifier nodes, but .id for
             // ImportNamespaceSpecifier and ImportDefaultSpecifier nodes.
             // ESTree/Acorn/ESpree use .local for all three node types.
-            path32.get(node.local ? "local" : node.name ? "name" : "id"),
+            path33.get(node.local ? "local" : node.name ? "name" : "id"),
             bindings
           );
         } else if (Node2.check(node) && !Expression.check(node)) {
           types3.eachField(node, function(name28, child) {
-            var childPath = path32.get(name28);
+            var childPath = path33.get(name28);
             if (!pathHasValue(childPath, child)) {
               throw new Error("");
             }
@@ -94330,34 +93055,34 @@ var require_scope = __commonJS({
           });
         }
       }
-      function pathHasValue(path32, value) {
-        if (path32.value === value) {
+      function pathHasValue(path33, value) {
+        if (path33.value === value) {
           return true;
         }
-        if (Array.isArray(path32.value) && path32.value.length === 0 && Array.isArray(value) && value.length === 0) {
+        if (Array.isArray(path33.value) && path33.value.length === 0 && Array.isArray(value) && value.length === 0) {
           return true;
         }
         return false;
       }
-      function recursiveScanChild(path32, bindings, scopeTypes2) {
-        var node = path32.value;
+      function recursiveScanChild(path33, bindings, scopeTypes2) {
+        var node = path33.value;
         if (!node || Expression.check(node)) {
         } else if (namedTypes.FunctionDeclaration.check(node) && node.id !== null) {
-          addPattern4(path32.get("id"), bindings);
+          addPattern4(path33.get("id"), bindings);
         } else if (namedTypes.ClassDeclaration && namedTypes.ClassDeclaration.check(node)) {
-          addPattern4(path32.get("id"), bindings);
+          addPattern4(path33.get("id"), bindings);
         } else if (ScopeType.check(node)) {
           if (namedTypes.CatchClause.check(node) && // TODO Broaden this to accept any pattern.
           namedTypes.Identifier.check(node.param)) {
             var catchParamName = node.param.name;
             var hadBinding = hasOwn.call(bindings, catchParamName);
-            recursiveScanScope(path32.get("body"), bindings, scopeTypes2);
+            recursiveScanScope(path33.get("body"), bindings, scopeTypes2);
             if (!hadBinding) {
               delete bindings[catchParamName];
             }
           }
         } else {
-          recursiveScanScope(path32, bindings, scopeTypes2);
+          recursiveScanScope(path33, bindings, scopeTypes2);
         }
       }
       function addPattern4(patternPath, bindings) {
@@ -94693,53 +93418,53 @@ var require_node_path = __commonJS({
       NPp.firstInStatement = function() {
         return firstInStatement(this);
       };
-      function firstInStatement(path32) {
-        for (var node, parent; path32.parent; path32 = path32.parent) {
-          node = path32.node;
-          parent = path32.parent.node;
-          if (n2.BlockStatement.check(parent) && path32.parent.name === "body" && path32.name === 0) {
+      function firstInStatement(path33) {
+        for (var node, parent; path33.parent; path33 = path33.parent) {
+          node = path33.node;
+          parent = path33.parent.node;
+          if (n2.BlockStatement.check(parent) && path33.parent.name === "body" && path33.name === 0) {
             if (parent.body[0] !== node) {
               throw new Error("Nodes must be equal");
             }
             return true;
           }
-          if (n2.ExpressionStatement.check(parent) && path32.name === "expression") {
+          if (n2.ExpressionStatement.check(parent) && path33.name === "expression") {
             if (parent.expression !== node) {
               throw new Error("Nodes must be equal");
             }
             return true;
           }
-          if (n2.SequenceExpression.check(parent) && path32.parent.name === "expressions" && path32.name === 0) {
+          if (n2.SequenceExpression.check(parent) && path33.parent.name === "expressions" && path33.name === 0) {
             if (parent.expressions[0] !== node) {
               throw new Error("Nodes must be equal");
             }
             continue;
           }
-          if (n2.CallExpression.check(parent) && path32.name === "callee") {
+          if (n2.CallExpression.check(parent) && path33.name === "callee") {
             if (parent.callee !== node) {
               throw new Error("Nodes must be equal");
             }
             continue;
           }
-          if (n2.MemberExpression.check(parent) && path32.name === "object") {
+          if (n2.MemberExpression.check(parent) && path33.name === "object") {
             if (parent.object !== node) {
               throw new Error("Nodes must be equal");
             }
             continue;
           }
-          if (n2.ConditionalExpression.check(parent) && path32.name === "test") {
+          if (n2.ConditionalExpression.check(parent) && path33.name === "test") {
             if (parent.test !== node) {
               throw new Error("Nodes must be equal");
             }
             continue;
           }
-          if (isBinary(parent) && path32.name === "left") {
+          if (isBinary(parent) && path33.name === "left") {
             if (parent.left !== node) {
               throw new Error("Nodes must be equal");
             }
             continue;
           }
-          if (n2.UnaryExpression.check(parent) && !parent.prefix && path32.name === "argument") {
+          if (n2.UnaryExpression.check(parent) && !parent.prefix && path33.name === "argument") {
             if (parent.argument !== node) {
               throw new Error("Nodes must be equal");
             }
@@ -94909,36 +93634,36 @@ var require_path_visitor = __commonJS({
       };
       PVp.reset = function(_path) {
       };
-      PVp.visitWithoutReset = function(path32) {
+      PVp.visitWithoutReset = function(path33) {
         if (this instanceof this.Context) {
-          return this.visitor.visitWithoutReset(path32);
+          return this.visitor.visitWithoutReset(path33);
         }
-        if (!(path32 instanceof NodePath)) {
+        if (!(path33 instanceof NodePath)) {
           throw new Error("");
         }
-        var value = path32.value;
+        var value = path33.value;
         var methodName = value && typeof value === "object" && typeof value.type === "string" && this._methodNameTable[value.type];
         if (methodName) {
-          var context2 = this.acquireContext(path32);
+          var context2 = this.acquireContext(path33);
           try {
             return context2.invokeVisitorMethod(methodName);
           } finally {
             this.releaseContext(context2);
           }
         } else {
-          return visitChildren(path32, this);
+          return visitChildren(path33, this);
         }
       };
-      function visitChildren(path32, visitor) {
-        if (!(path32 instanceof NodePath)) {
+      function visitChildren(path33, visitor) {
+        if (!(path33 instanceof NodePath)) {
           throw new Error("");
         }
         if (!(visitor instanceof PathVisitor)) {
           throw new Error("");
         }
-        var value = path32.value;
+        var value = path33.value;
         if (isArray2.check(value)) {
-          path32.each(visitor.visitWithoutReset, visitor);
+          path33.each(visitor.visitWithoutReset, visitor);
         } else if (!isObject4.check(value)) {
         } else {
           var childNames = types3.getFieldNames(value);
@@ -94952,19 +93677,19 @@ var require_path_visitor = __commonJS({
             if (!hasOwn.call(value, childName)) {
               value[childName] = types3.getFieldValue(value, childName);
             }
-            childPaths.push(path32.get(childName));
+            childPaths.push(path33.get(childName));
           }
           for (var i = 0; i < childCount; ++i) {
             visitor.visitWithoutReset(childPaths[i]);
           }
         }
-        return path32.value;
+        return path33.value;
       }
-      PVp.acquireContext = function(path32) {
+      PVp.acquireContext = function(path33) {
         if (this._reusableContextStack.length === 0) {
-          return new this.Context(path32);
+          return new this.Context(path33);
         }
-        return this._reusableContextStack.pop().reset(path32);
+        return this._reusableContextStack.pop().reset(path33);
       };
       PVp.releaseContext = function(context2) {
         if (!(context2 instanceof this.Context)) {
@@ -94980,14 +93705,14 @@ var require_path_visitor = __commonJS({
         return this._changeReported;
       };
       function makeContextConstructor(visitor) {
-        function Context(path32) {
+        function Context(path33) {
           if (!(this instanceof Context)) {
             throw new Error("");
           }
           if (!(this instanceof PathVisitor)) {
             throw new Error("");
           }
-          if (!(path32 instanceof NodePath)) {
+          if (!(path33 instanceof NodePath)) {
             throw new Error("");
           }
           Object.defineProperty(this, "visitor", {
@@ -94996,7 +93721,7 @@ var require_path_visitor = __commonJS({
             enumerable: true,
             configurable: false
           });
-          this.currentPath = path32;
+          this.currentPath = path33;
           this.needToCallTraverse = true;
           Object.seal(this);
         }
@@ -95009,14 +93734,14 @@ var require_path_visitor = __commonJS({
         return Context;
       }
       var sharedContextProtoMethods = /* @__PURE__ */ Object.create(null);
-      sharedContextProtoMethods.reset = function reset(path32) {
+      sharedContextProtoMethods.reset = function reset(path33) {
         if (!(this instanceof this.Context)) {
           throw new Error("");
         }
-        if (!(path32 instanceof NodePath)) {
+        if (!(path33 instanceof NodePath)) {
           throw new Error("");
         }
-        this.currentPath = path32;
+        this.currentPath = path33;
         this.needToCallTraverse = true;
         return this;
       };
@@ -95039,34 +93764,34 @@ var require_path_visitor = __commonJS({
         if (this.needToCallTraverse !== false) {
           throw new Error("Must either call this.traverse or return false in " + methodName);
         }
-        var path32 = this.currentPath;
-        return path32 && path32.value;
+        var path33 = this.currentPath;
+        return path33 && path33.value;
       };
-      sharedContextProtoMethods.traverse = function traverse(path32, newVisitor) {
+      sharedContextProtoMethods.traverse = function traverse(path33, newVisitor) {
         if (!(this instanceof this.Context)) {
           throw new Error("");
         }
-        if (!(path32 instanceof NodePath)) {
+        if (!(path33 instanceof NodePath)) {
           throw new Error("");
         }
         if (!(this.currentPath instanceof NodePath)) {
           throw new Error("");
         }
         this.needToCallTraverse = false;
-        return visitChildren(path32, PathVisitor.fromMethodsObject(newVisitor || this.visitor));
+        return visitChildren(path33, PathVisitor.fromMethodsObject(newVisitor || this.visitor));
       };
-      sharedContextProtoMethods.visit = function visit5(path32, newVisitor) {
+      sharedContextProtoMethods.visit = function visit5(path33, newVisitor) {
         if (!(this instanceof this.Context)) {
           throw new Error("");
         }
-        if (!(path32 instanceof NodePath)) {
+        if (!(path33 instanceof NodePath)) {
           throw new Error("");
         }
         if (!(this.currentPath instanceof NodePath)) {
           throw new Error("");
         }
         this.needToCallTraverse = false;
-        return PathVisitor.fromMethodsObject(newVisitor || this.visitor).visitWithoutReset(path32);
+        return PathVisitor.fromMethodsObject(newVisitor || this.visitor).visitWithoutReset(path33);
       };
       sharedContextProtoMethods.reportChanged = function reportChanged() {
         this.visitor.reportChanged();
@@ -96271,10 +94996,10 @@ function degenerator(code, _names) {
   do {
     lastNamesLength = names.length;
     (0, import_ast_types.visit)(ast, {
-      visitVariableDeclaration(path32) {
-        if (path32.node.declarations) {
-          for (let i = 0; i < path32.node.declarations.length; i++) {
-            const declaration = path32.node.declarations[i];
+      visitVariableDeclaration(path33) {
+        if (path33.node.declarations) {
+          for (let i = 0; i < path33.node.declarations.length; i++) {
+            const declaration = path33.node.declarations[i];
             if (import_ast_types.namedTypes.VariableDeclarator.check(declaration) && import_ast_types.namedTypes.Identifier.check(declaration.init) && import_ast_types.namedTypes.Identifier.check(declaration.id) && checkName(declaration.init.name, names) && !checkName(declaration.id.name, names)) {
               names.push(declaration.id.name);
             }
@@ -96282,18 +95007,18 @@ function degenerator(code, _names) {
         }
         return false;
       },
-      visitAssignmentExpression(path32) {
-        if (import_ast_types.namedTypes.Identifier.check(path32.node.left) && import_ast_types.namedTypes.Identifier.check(path32.node.right) && checkName(path32.node.right.name, names) && !checkName(path32.node.left.name, names)) {
-          names.push(path32.node.left.name);
+      visitAssignmentExpression(path33) {
+        if (import_ast_types.namedTypes.Identifier.check(path33.node.left) && import_ast_types.namedTypes.Identifier.check(path33.node.right) && checkName(path33.node.right.name, names) && !checkName(path33.node.left.name, names)) {
+          names.push(path33.node.left.name);
         }
         return false;
       },
-      visitFunction(path32) {
-        if (path32.node.id) {
+      visitFunction(path33) {
+        if (path33.node.id) {
           let shouldDegenerate = false;
-          (0, import_ast_types.visit)(path32.node, {
-            visitCallExpression(path33) {
-              if (checkNames(path33.node, names)) {
+          (0, import_ast_types.visit)(path33.node, {
+            visitCallExpression(path34) {
+              if (checkNames(path34.node, names)) {
                 shouldDegenerate = true;
               }
               return false;
@@ -96302,28 +95027,28 @@ function degenerator(code, _names) {
           if (!shouldDegenerate) {
             return false;
           }
-          path32.node.async = true;
-          if (!checkName(path32.node.id.name, names)) {
-            names.push(path32.node.id.name);
+          path33.node.async = true;
+          if (!checkName(path33.node.id.name, names)) {
+            names.push(path33.node.id.name);
           }
         }
-        this.traverse(path32);
+        this.traverse(path33);
       }
     });
   } while (lastNamesLength !== names.length);
   (0, import_ast_types.visit)(ast, {
-    visitCallExpression(path32) {
-      if (checkNames(path32.node, names)) {
+    visitCallExpression(path33) {
+      if (checkNames(path33.node, names)) {
         const delegate = false;
-        const { name: name28, parent: { node: pNode } } = path32;
-        const expr = import_ast_types.builders.awaitExpression(path32.node, delegate);
+        const { name: name28, parent: { node: pNode } } = path33;
+        const expr = import_ast_types.builders.awaitExpression(path33.node, delegate);
         if (import_ast_types.namedTypes.CallExpression.check(pNode)) {
           pNode.arguments[name28] = expr;
         } else {
           pNode[name28] = expr;
         }
       }
-      this.traverse(path32);
+      this.traverse(path33);
     }
   });
   return (0, import_escodegen.generate)(ast);
@@ -99529,13 +98254,13 @@ var dist_exports4 = {};
 __export(dist_exports4, {
   PacProxyAgent: () => PacProxyAgent
 });
-var net6, tls4, crypto4, import_events3, import_debug10, import_url5, debug10, setServernameFromNonIpHost3, PacProxyAgent;
+var net6, tls4, crypto3, import_events3, import_debug10, import_url5, debug10, setServernameFromNonIpHost3, PacProxyAgent;
 var init_dist9 = __esm({
   "../../node_modules/.pnpm/pac-proxy-agent@9.0.1/node_modules/pac-proxy-agent/dist/index.js"() {
     "use strict";
     net6 = __toESM(require("net"), 1);
     tls4 = __toESM(require("tls"), 1);
-    crypto4 = __toESM(require("crypto"), 1);
+    crypto3 = __toESM(require("crypto"), 1);
     import_events3 = require("events");
     import_debug10 = __toESM(require_src(), 1);
     import_url5 = require("url");
@@ -99588,7 +98313,7 @@ var init_dist9 = __esm({
             QuickJS.create(),
             this.loadPacFile()
           ]);
-          const hash4 = crypto4.createHash("sha1").update(code).digest("hex");
+          const hash4 = crypto3.createHash("sha1").update(code).digest("hex");
           if (this.resolver && this.resolverHash === hash4) {
             debug10("Same sha1 hash for code - contents have not changed, reusing previous proxy resolver");
             qjs.dispose();
@@ -103495,7 +102220,7 @@ var require_urllib = __commonJS({
   "../../node_modules/.pnpm/urllib@2.44.0_proxy-agent@8.0.1/node_modules/urllib/lib/urllib.js"(exports2) {
     "use strict";
     var debug12 = require("util").debuglog("urllib");
-    var path32 = require("path");
+    var path33 = require("path");
     var dns2 = require("dns");
     var net7 = require("net");
     var http6 = require("http");
@@ -103747,7 +102472,7 @@ var require_urllib = __commonJS({
             form.buffer(item[0], item[1], "bufferfile" + i);
           } else if (typeof item[1].pipe === "function") {
             var filename = item[1].path || "streamfile" + i;
-            filename = path32.basename(filename);
+            filename = path33.basename(filename);
             form.stream(item[0], item[1], filename);
           } else {
             form.file(item[0], item[1]);
@@ -106496,7 +105221,7 @@ var require_createRequest = __commonJS({
     var mime = require_mime();
     var dateFormat = require_dateformat();
     var copy = require_copy_to();
-    var path32 = require("path");
+    var path33 = require("path");
     var { encoder } = require_encoder();
     var { isIP: isIP4 } = require_isIP();
     var { setRegion } = require_setRegion();
@@ -106539,7 +105264,7 @@ var require_createRequest = __commonJS({
         } else if (isDingTalk()) {
           headers["Content-Type"] = "application/octet-stream";
         } else {
-          headers["Content-Type"] = mime.getType(params.mime || path32.extname(params.object || ""));
+          headers["Content-Type"] = mime.getType(params.mime || path33.extname(params.object || ""));
         }
       }
       if (!getHeader(headers, "Content-Type")) {
@@ -107476,7 +106201,7 @@ var require_delete = __commonJS({
 var require_get2 = __commonJS({
   "../../node_modules/.pnpm/ali-oss@6.23.0_proxy-agent@8.0.1/node_modules/ali-oss/lib/common/object/get.js"(exports2) {
     "use strict";
-    var fs32 = require("fs");
+    var fs33 = require("fs");
     var is = require_is_type_of();
     var { isObject: isObject4 } = require_isObject();
     var proto = exports2;
@@ -107486,7 +106211,7 @@ var require_get2 = __commonJS({
       if (is.writableStream(file4)) {
         writeStream = file4;
       } else if (is.string(file4)) {
-        writeStream = fs32.createWriteStream(file4);
+        writeStream = fs33.createWriteStream(file4);
         needDestroy = true;
       } else if (isObject4(file4)) {
         options = file4;
@@ -107901,10 +106626,10 @@ var require_object3 = __commonJS({
   "../../node_modules/.pnpm/ali-oss@6.23.0_proxy-agent@8.0.1/node_modules/ali-oss/lib/object.js"(exports2) {
     "use strict";
     var debug12 = require_src()("ali-oss:object");
-    var fs32 = require("fs");
+    var fs33 = require("fs");
     var is = require_is_type_of();
     var copy = require_copy_to();
-    var path32 = require("path");
+    var path33 = require("path");
     var mime = require_mime();
     var callback = require_callback();
     var { Transform } = require("stream");
@@ -107933,13 +106658,13 @@ var require_object3 = __commonJS({
       if (isBuffer2(file4)) {
         content = file4;
       } else if (is.string(file4)) {
-        const stats = fs32.statSync(file4);
+        const stats = fs33.statSync(file4);
         if (!stats.isFile()) {
           throw new Error(`${file4} is not file`);
         }
-        options.mime = options.mime || mime.getType(path32.extname(file4));
+        options.mime = options.mime || mime.getType(path33.extname(file4));
         options.contentLength = await this._getFileSize(file4);
-        const getStream = () => fs32.createReadStream(file4);
+        const getStream = () => fs33.createReadStream(file4);
         const putStreamStb = (objectName, makeStream, configOption) => {
           return this.putStream(objectName, makeStream(), configOption);
         };
@@ -108196,7 +106921,7 @@ var require_object3 = __commonJS({
     };
     proto._statFile = function(filepath) {
       return new Promise((resolve3, reject) => {
-        fs32.stat(filepath, (err, stats) => {
+        fs33.stat(filepath, (err, stats) => {
           if (err) {
             reject(err);
           } else {
@@ -108215,11 +106940,11 @@ var require_object3 = __commonJS({
     };
     proto._deleteFileSafe = function(filepath) {
       return new Promise((resolve3) => {
-        fs32.exists(filepath, (exists) => {
+        fs33.exists(filepath, (exists) => {
           if (!exists) {
             resolve3();
           } else {
-            fs32.unlink(filepath, (err) => {
+            fs33.unlink(filepath, (err) => {
               if (err) {
                 debug12("unlink %j error: %s", filepath, err);
               }
@@ -110028,10 +108753,10 @@ var require_isFile = __commonJS({
 var require_managed_upload = __commonJS({
   "../../node_modules/.pnpm/ali-oss@6.23.0_proxy-agent@8.0.1/node_modules/ali-oss/lib/managed-upload.js"(exports2) {
     "use strict";
-    var fs32 = require("fs");
+    var fs33 = require("fs");
     var is = require_is_type_of();
     var util4 = require("util");
-    var path32 = require("path");
+    var path33 = require("path");
     var mime = require_mime();
     var { isFile: isFile2 } = require_isFile();
     var { isArray: isArray2 } = require_isArray2();
@@ -110047,11 +108772,11 @@ var require_managed_upload = __commonJS({
       const minPartSize = 100 * 1024;
       if (!options.mime) {
         if (isFile2(file4)) {
-          options.mime = mime.getType(path32.extname(file4.name));
+          options.mime = mime.getType(path33.extname(file4.name));
         } else if (isBuffer2(file4)) {
           options.mime = "";
         } else {
-          options.mime = mime.getType(path32.extname(file4));
+          options.mime = mime.getType(path33.extname(file4));
         }
       }
       options.headers = options.headers || {};
@@ -110284,7 +109009,7 @@ var require_managed_upload = __commonJS({
           }
         });
       } else if (is.string(file4)) {
-        return fs32.createReadStream(file4, {
+        return fs33.createReadStream(file4, {
           start,
           end: end - 1
         });
@@ -111135,8 +109860,8 @@ var require_omit = __commonJS({
     exports2.omit = void 0;
     function omit6(originalObject, keysToOmit) {
       const cloneObject = Object.assign({}, originalObject);
-      for (const path32 of keysToOmit) {
-        delete cloneObject[path32];
+      for (const path33 of keysToOmit) {
+        delete cloneObject[path33];
       }
       return cloneObject;
     }
@@ -111514,7 +110239,7 @@ var require_address = __commonJS({
   "../../node_modules/.pnpm/address@1.2.2/node_modules/address/lib/address.js"(exports2, module2) {
     "use strict";
     var os3 = require("os");
-    var fs32 = require("fs");
+    var fs33 = require("fs");
     var child = require("child_process");
     var DEFAULT_RESOLV_FILE = "/etc/resolv.conf";
     function getInterfaceName() {
@@ -111676,7 +110401,7 @@ var require_address = __commonJS({
         filepath = null;
       }
       filepath = filepath || DEFAULT_RESOLV_FILE;
-      fs32.readFile(filepath, "utf8", function(err, content) {
+      fs33.readFile(filepath, "utf8", function(err, content) {
         if (err) {
           return callback(err);
         }
@@ -112450,7 +111175,7 @@ function createRemoteStorageFromEnv() {
     storage: new MinioStorage(minioConfig)
   };
 }
-var import_ali_oss, import_node_crypto3, import_promises3, import_node_path2, import_sharp, MIME_TYPES, OSS_CONFIG_SETTING_KEY, STORAGE_PROVIDER_QUERY_KEY, STORAGE_PROVIDER_TABLES, DEFAULT_ADMIN_OSS_CONFIG, MinioRequestError, MinioStorage, AliyunOssStorage, OSS, oss_default;
+var import_ali_oss, import_node_crypto3, import_promises2, import_node_path2, import_sharp, MIME_TYPES, OSS_CONFIG_SETTING_KEY, STORAGE_PROVIDER_QUERY_KEY, STORAGE_PROVIDER_TABLES, DEFAULT_ADMIN_OSS_CONFIG, MinioRequestError, MinioStorage, AliyunOssStorage, OSS, oss_default;
 var init_oss = __esm({
   "src/utils/oss.ts"() {
     "use strict";
@@ -112459,7 +111184,7 @@ var init_oss = __esm({
     init_getPath();
     init_db();
     import_node_crypto3 = __toESM(require("node:crypto"));
-    import_promises3 = __toESM(require("node:fs/promises"));
+    import_promises2 = __toESM(require("node:fs/promises"));
     import_node_path2 = __toESM(require("node:path"));
     import_sharp = __toESM(require("sharp"));
     MIME_TYPES = {
@@ -112878,7 +111603,7 @@ var init_oss = __esm({
         this.remote = envStorage?.storage ?? null;
         this.storages = envStorage ? { [envStorage.provider]: envStorage.storage } : {};
         this.storageProviderCache = /* @__PURE__ */ new Map();
-        this.initPromise = import_promises3.default.mkdir(this.rootDir, { recursive: true }).then(() => {
+        this.initPromise = import_promises2.default.mkdir(this.rootDir, { recursive: true }).then(() => {
         });
       }
       isRemoteEnabled() {
@@ -113006,21 +111731,21 @@ var init_oss = __esm({
       }
       async deleteLocalFile(userRelPath) {
         await this.ensureInit();
-        await import_promises3.default.unlink(resolveSafeLocalPath(userRelPath, this.rootDir));
+        await import_promises2.default.unlink(resolveSafeLocalPath(userRelPath, this.rootDir));
       }
       async deleteLocalDirectory(userRelPath) {
         await this.ensureInit();
         const absPath = resolveSafeLocalPath(userRelPath, this.rootDir);
-        const stat = await import_promises3.default.stat(absPath);
+        const stat = await import_promises2.default.stat(absPath);
         if (!stat.isDirectory()) {
           throw new Error(`${userRelPath} \u4E0D\u662F\u6587\u4EF6\u5939`);
         }
-        await import_promises3.default.rm(absPath, { recursive: true, force: true });
+        await import_promises2.default.rm(absPath, { recursive: true, force: true });
       }
       async localFileExists(userRelPath) {
         await this.ensureInit();
         try {
-          const stat = await import_promises3.default.stat(
+          const stat = await import_promises2.default.stat(
             resolveSafeLocalPath(userRelPath, this.rootDir)
           );
           return stat.isFile();
@@ -113030,13 +111755,13 @@ var init_oss = __esm({
       }
       async readLocalFile(userRelPath) {
         await this.ensureInit();
-        return import_promises3.default.readFile(resolveSafeLocalPath(userRelPath, this.rootDir));
+        return import_promises2.default.readFile(resolveSafeLocalPath(userRelPath, this.rootDir));
       }
       async writeLocalFile(userRelPath, data2) {
         await this.ensureInit();
         const absPath = resolveSafeLocalPath(userRelPath, this.rootDir);
-        await import_promises3.default.mkdir(import_node_path2.default.dirname(absPath), { recursive: true });
-        await import_promises3.default.writeFile(absPath, data2);
+        await import_promises2.default.mkdir(import_node_path2.default.dirname(absPath), { recursive: true });
+        await import_promises2.default.writeFile(absPath, data2);
       }
       /**
        * 获取指定相对路径文件的访问 URL。
@@ -113189,6 +111914,1293 @@ var init_oss = __esm({
       }
     };
     oss_default = new OSS();
+  }
+});
+
+// src/lib/vendor.json
+var vendor_default;
+var init_vendor = __esm({
+  "src/lib/vendor.json"() {
+    vendor_default = {
+      "atlascloud.ts": '/**\r\n * DramaStudio AI\u4F9B\u5E94\u5546\u6A21\u677F - AtlasCloud MASS\r\n * @version 0.8\r\n *\r\n * \u8BF4\u660E\uFF1A\r\n * 1) \u6587\u672C\u63A5\u53E3\u4F7F\u7528 OpenAI \u517C\u5BB9\u57FA\u5730\u5740\uFF1Ahttps://api.atlascloud.ai/v1\r\n * 2) \u56FE\u7247/\u89C6\u9891\u4F7F\u7528 Atlas Cloud \u5A92\u4F53\u63A5\u53E3\uFF1Ahttps://api.atlascloud.ai/api/v1\r\n * 3) \u56FE\u7247/\u89C6\u9891\u4E3A\u5F02\u6B65\u4EFB\u52A1\uFF1A\u63D0\u4EA4\u540E\u8F6E\u8BE2 /api/v1/model/prediction/{id}\r\n */\r\n\r\n// ============================================================\r\n// \u7C7B\u578B\u5B9A\u4E49\r\n// ============================================================\r\n\r\ntype VideoMode =\r\n  | "singleImage"\r\n  | "startEndRequired"\r\n  | "endFrameOptional"\r\n  | "startFrameOptional"\r\n  | "text"\r\n  | (`videoReference:${number}` | `imageReference:${number}` | `audioReference:${number}`)[];\r\n\r\ninterface TextModel {\r\n  name: string;\r\n  modelName: string;\r\n  type: "text";\r\n  think: boolean;\r\n}\r\n\r\ninterface ImageModel {\r\n  name: string;\r\n  modelName: string;\r\n  type: "image";\r\n  mode: ("text" | "singleImage" | "multiReference")[];\r\n  associationSkills?: string;\r\n}\r\n\r\ninterface VideoModel {\r\n  name: string;\r\n  modelName: string;\r\n  type: "video";\r\n  mode: VideoMode[];\r\n  associationSkills?: string;\r\n  audio: "optional" | false | true;\r\n  durationResolutionMap: { duration: number[]; resolution: string[] }[];\r\n}\r\n\r\ninterface TTSModel {\r\n  name: string;\r\n  modelName: string;\r\n  type: "tts";\r\n  voices: { title: string; voice: string }[];\r\n}\r\n\r\ninterface VendorConfig {\r\n  id: string;\r\n  version: string;\r\n  name: string;\r\n  author: string;\r\n  description?: string;\r\n  icon?: string;\r\n  inputs: { key: string; label: string; type: "text" | "password" | "url"; required: boolean; placeholder?: string; disabled?: boolean }[];\r\n  inputValues: Record<string, string>;\r\n  models: (TextModel | ImageModel | VideoModel | TTSModel)[];\r\n}\r\n\r\ntype ReferenceList =\r\n  | { type: "image"; sourceType: "base64"; base64: string }\r\n  | { type: "audio"; sourceType: "base64"; base64: string }\r\n  | { type: "video"; sourceType: "base64"; base64: string };\r\n\r\ninterface ImageConfig {\r\n  prompt: string;\r\n  referenceList?: Extract<ReferenceList, { type: "image" }>[];\r\n  size: "1K" | "2K" | "4K";\r\n  aspectRatio: `${number}:${number}`;\r\n}\r\n\r\ninterface VideoConfig {\r\n  duration: number;\r\n  resolution: string;\r\n  aspectRatio: "16:9" | "9:16";\r\n  prompt: string;\r\n  referenceList?: ReferenceList[];\r\n  audio?: boolean;\r\n  mode: VideoMode[];\r\n}\r\n\r\ninterface TTSConfig {\r\n  text: string;\r\n  voice: string;\r\n  speechRate: number;\r\n  pitchRate: number;\r\n  volume: number;\r\n  referenceList?: Extract<ReferenceList, { type: "audio" }>[];\r\n}\r\n\r\ninterface PollResult {\r\n  completed: boolean;\r\n  data?: string;\r\n  error?: string;\r\n}\r\n\r\ntype AtlasVideoModelKind =\r\n  | "seedanceTextToVideo"\r\n  | "seedanceReferenceToVideo"\r\n  | "seedanceImageToVideo"\r\n  | "wanReferenceToVideo"\r\n  | "generic";\r\n\r\n// ============================================================\r\n// \u5168\u5C40\u58F0\u660E\r\n// ============================================================\r\n\r\ndeclare const axios: any;\r\ndeclare const logger: (msg: string) => void;\r\ndeclare const urlToBase64: (url: string) => Promise<string>;\r\ndeclare const pollTask: (fn: () => Promise<PollResult>, interval?: number, timeout?: number) => Promise<PollResult>;\r\ndeclare const createOpenAICompatible: any;\r\ndeclare const exports: {\r\n  vendor: VendorConfig;\r\n  textRequest: (m: TextModel, t: boolean, tl: 0 | 1 | 2 | 3) => any;\r\n  imageRequest: (c: ImageConfig, m: ImageModel) => Promise<string>;\r\n  videoRequest: (c: VideoConfig, m: VideoModel) => Promise<string>;\r\n  ttsRequest: (c: TTSConfig, m: TTSModel) => Promise<string>;\r\n  checkForUpdates?: () => Promise<{ hasUpdate: boolean; latestVersion: string; notice: string }>;\r\n  updateVendor?: () => Promise<string>;\r\n};\r\n\r\n// ============================================================\r\n// \u4F9B\u5E94\u5546\u914D\u7F6E\r\n// ============================================================\r\n\r\nconst vendor: VendorConfig = {\r\n  id: "atlascloud",\r\n  version: "1.0",\r\n  author: "AtlasCloud",\r\n  name: "AtlasCloud MASS",\r\n  description: "AtlasCloud \u5168\u6A21\u6001\u5E73\u53F0\u63A5\u5165 DramaStudio\u3002\u9ED8\u8BA4\u6309\u5B98\u65B9\u6587\u6863\u586B\u5199\u6587\u672C\u3001\u56FE\u7247\u3001\u89C6\u9891\u4E0E\u4EFB\u52A1\u8F6E\u8BE2\u8DEF\u5F84\u3002",\r\n  inputs: [\r\n    { key: "apiKey", label: "API\u5BC6\u94A5", type: "password", required: true, placeholder: "AtlasCloud API Key" },\r\n    { key: "chatBaseUrl", label: "\u6587\u672C\u57FA\u5730\u5740", type: "url", required: true, placeholder: "https://api.atlascloud.ai/v1", disabled: true },\r\n    { key: "mediaBaseUrl", label: "\u5A92\u4F53\u57FA\u5730\u5740", type: "url", required: true, placeholder: "https://api.atlascloud.ai/api/v1", disabled: true },\r\n  ],\r\n  inputValues: {\r\n    apiKey: "",\r\n    chatBaseUrl: "https://api.atlascloud.ai/v1",\r\n    mediaBaseUrl: "https://api.atlascloud.ai/api/v1",\r\n  },\r\n  models: [\r\n    { name: "DeepSeek V4 Pro", modelName: "deepseek-ai/deepseek-v4-pro", type: "text", think: false },\r\n    { name: "DeepSeek V4 Flash", modelName: "deepseek-ai/deepseek-v4-flash", type: "text", think: false },\r\n    { name: "Kimi K2.6", modelName: "moonshotai/kimi-k2.6", type: "text", think: false },\r\n    { name: "GLM 5.1", modelName: "zai-org/glm-5.1", type: "text", think: false },\r\n    { name: "MiniMax M2.7", modelName: "minimaxai/minimax-m2.7", type: "text", think: false },\r\n    { name: "GPT Image 2", modelName: "openai/gpt-image-2/text-to-image", type: "image", mode: ["text", "singleImage"] },\r\n    { name: "Nano Banana Pro", modelName: "google/nano-banana-pro/text-to-image", type: "image", mode: ["text", "singleImage", "multiReference"] },\r\n    { name: "Nano Banana 2", modelName: "google/nano-banana-2/text-to-image", type: "image", mode: ["text", "singleImage", "multiReference"] },\r\n    { name: "Seedream v5", modelName: "bytedance/seedream-v5.0-lite/sequential", type: "image", mode: ["text"] },\r\n    { name: "Qwen Image 2 Pro", modelName: "qwen/qwen-image-2.0-pro/text-to-image", type: "image", mode: ["text"] },\r\n    {\r\n      name: "Seedance 2.0 Audio-Visual",\r\n      modelName: "bytedance/seedance-2.0/text-to-video",\r\n      type: "video",\r\n      mode: ["text", "startFrameOptional", ["imageReference:9", "videoReference:3", "audioReference:3"]],\r\n      audio: "optional",\r\n      durationResolutionMap: [{ duration: [4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15], resolution: ["480p", "720p"] }],\r\n    },\r\n    {\r\n      name: "Seedance 2.0 Reference-to-Video",\r\n      modelName: "bytedance/seedance-2.0/reference-to-video",\r\n      type: "video",\r\n      mode: ["singleImage"],\r\n      audio: "optional",\r\n      durationResolutionMap: [{ duration: [4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15], resolution: ["480p", "720p", "1080p"] }],\r\n    },\r\n    {\r\n      name: "Seedance 2.0 Multi-Image-to-Video",\r\n      modelName: "bytedance/seedance-2.0/image-to-video",\r\n      type: "video",\r\n      mode: ["startFrameOptional", ["imageReference:4"]],\r\n      audio: "optional",\r\n      durationResolutionMap: [{ duration: [4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15], resolution: ["480p", "720p", "1080p"] }],\r\n    },\r\n    {\r\n      name: "Seedance 2.0 Fast Audio-Visual",\r\n      modelName: "bytedance/seedance-2.0-fast/text-to-video",\r\n      type: "video",\r\n      mode: ["text", "startFrameOptional", ["imageReference:9", "videoReference:3", "audioReference:3"]],\r\n      audio: "optional",\r\n      durationResolutionMap: [{ duration: [4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15], resolution: ["480p", "720p"] }],\r\n    },\r\n    {\r\n      name: "Seedance 2.0 Fast Reference-to-Video",\r\n      modelName: "bytedance/seedance-2.0-fast/reference-to-video",\r\n      type: "video",\r\n      mode: ["singleImage"],\r\n      audio: "optional",\r\n      durationResolutionMap: [{ duration: [4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15], resolution: ["480p", "720p"] }],\r\n    },\r\n    {\r\n      name: "Wan-2.7 Reference-to-video",\r\n      modelName: "alibaba/wan-2.7/reference-to-video",\r\n      type: "video",\r\n      mode: ["singleImage"],\r\n      audio: "optional",\r\n      durationResolutionMap: [{ duration: [2, 3, 4, 5, 6, 7, 8, 9, 10], resolution: ["720p", "1080p"] }],\r\n    },\r\n  ],\r\n};\r\n\r\n// ============================================================\r\n// \u8F85\u52A9\u5DE5\u5177\r\n// ============================================================\r\n\r\nconst getChatBaseUrl = () => vendor.inputValues.chatBaseUrl.replace(/\\/+$/, "");\r\n\r\nconst getMediaBaseUrl = () => vendor.inputValues.mediaBaseUrl.replace(/\\/+$/, "");\r\n\r\nconst joinUrl = (base: string, path: string) => `${base}${path.startsWith("/") ? "" : "/"}${path}`;\r\n\r\nconst getHeaders = () => {\r\n  if (!vendor.inputValues.apiKey) throw new Error("\u7F3A\u5C11 API Key");\r\n  return {\r\n    "Content-Type": "application/json",\r\n    Authorization: `Bearer ${vendor.inputValues.apiKey.replace(/^Bearer\\s+/i, "")}`,\r\n  };\r\n};\r\n\r\nconst readByPath = (obj: any, path: string): any => {\r\n  if (!obj || !path) return undefined;\r\n  const normalizedPath = path.replace(/\\[(\\d+)\\]/g, ".$1");\r\n  return normalizedPath.split(".").reduce((acc, key) => (acc == null ? undefined : acc[key]), obj);\r\n};\r\n\r\nconst pickFirstPath = (obj: any, paths: string[]): any => {\r\n  for (const path of paths) {\r\n    const value = readByPath(obj, path);\r\n    if (value !== undefined && value !== null && value !== "") return value;\r\n  }\r\n  return undefined;\r\n};\r\n\r\nconst extractTaskId = (data: any): string | undefined => {\r\n  return pickFirstPath(data, ["id", "taskId", "task_id", "data.id", "data.taskId", "data.task_id"]);\r\n};\r\n\r\nconst extractUrl = (data: any): string | undefined => {\r\n  return (\r\n    (Array.isArray(readByPath(data, "data.outputs")) ? readByPath(data, "data.outputs")[0] : undefined) ||\r\n    (Array.isArray(readByPath(data, "outputs")) ? readByPath(data, "outputs")[0] : undefined) ||\r\n    readByPath(data, "url") ||\r\n    readByPath(data, "video_url") ||\r\n    readByPath(data, "image_url") ||\r\n    readByPath(data, "data.url") ||\r\n    readByPath(data, "data.video_url") ||\r\n    readByPath(data, "data.image_url") ||\r\n    readByPath(data, "data.output.url") ||\r\n    readByPath(data, "data.output.video_url") ||\r\n    readByPath(data, "output.url")\r\n  );\r\n};\r\n\r\nconst extractB64 = (data: any): string | undefined => {\r\n  return pickFirstPath(data, ["b64_json", "data.b64_json", "data.0.b64_json", "data[0].b64_json"]);\r\n};\r\n\r\nconst extractStatus = (data: any): string => {\r\n  const statusRaw = pickFirstPath(data, ["status", "data.status", "data.state", "state"]);\r\n  return String(statusRaw || "").toLowerCase();\r\n};\r\n\r\nconst extractError = (data: any): string | undefined => {\r\n  return pickFirstPath(data, ["error.message", "message", "msg", "data.error.message", "data.message"]);\r\n};\r\n\r\nconst isDnsOrNetworkError = (err: any): boolean => {\r\n  const msg = String(err?.message || err || "");\r\n  return /ENOTFOUND|EAI_AGAIN|ECONNRESET|ETIMEDOUT|timeout/i.test(msg);\r\n};\r\n\r\nconst withNetworkRetry = async <T>(fn: () => Promise<T>, maxRetry = 3, waitMs = 1500): Promise<T> => {\r\n  let lastErr: any;\r\n  for (let i = 0; i < maxRetry; i += 1) {\r\n    try {\r\n      return await fn();\r\n    } catch (err) {\r\n      lastErr = err;\r\n      if (!isDnsOrNetworkError(err) || i === maxRetry - 1) throw err;\r\n      await new Promise((resolve) => setTimeout(resolve, waitMs * (i + 1)));\r\n    }\r\n  }\r\n  throw lastErr;\r\n};\r\n\r\nconst resolveAtlasImageModelName = (modelName: string, hasImageRefs: boolean): string => {\r\n  if (!hasImageRefs) return modelName;\r\n\r\n  switch (modelName) {\r\n    case "google/nano-banana-pro/text-to-image":\r\n      return "google/nano-banana-pro/edit";\r\n    case "google/nano-banana-2/text-to-image":\r\n      return "google/nano-banana-2/edit";\r\n    default:\r\n      return modelName;\r\n  }\r\n};\r\n\r\nconst resolveAtlasVideoModelKind = (modelName: string): AtlasVideoModelKind => {\r\n  if (modelName === "alibaba/wan-2.7/reference-to-video") return "wanReferenceToVideo";\r\n  if (/^bytedance\\/seedance-2\\.0(?:-fast)?\\/reference-to-video$/.test(modelName)) return "seedanceReferenceToVideo";\r\n  if (/^bytedance\\/seedance-2\\.0(?:-fast)?\\/image-to-video$/.test(modelName)) return "seedanceImageToVideo";\r\n  if (/^bytedance\\/seedance-2\\.0(?:-fast)?\\/text-to-video$/.test(modelName)) return "seedanceTextToVideo";\r\n  return "generic";\r\n};\r\n\r\nconst clampNumber = (value: unknown, min: number, max: number, fallback: number): number => {\r\n  const num = Number(value);\r\n  if (!Number.isFinite(num)) return fallback;\r\n  return Math.max(min, Math.min(max, num));\r\n};\r\n\r\nconst normalizeResolution = (value: unknown, allowed: string[], fallback: string): string => {\r\n  const lower = String(value || "").toLowerCase();\r\n  const matched = allowed.find((item) => item.toLowerCase() === lower);\r\n  if (matched) return matched;\r\n  if (/1080/.test(lower)) return allowed.find((item) => /1080/i.test(item)) || fallback;\r\n  if (/720/.test(lower)) return allowed.find((item) => /720/i.test(item)) || fallback;\r\n  if (/480/.test(lower)) return allowed.find((item) => /480/i.test(item)) || fallback;\r\n  return fallback;\r\n};\r\n\r\nconst getReferenceLimit = (\r\n  modes: VideoMode[],\r\n  prefix: "imageReference" | "videoReference" | "audioReference",\r\n): number | undefined => {\r\n  for (const mode of modes) {\r\n    if (!Array.isArray(mode)) continue;\r\n    for (const entry of mode) {\r\n      if (!entry.startsWith(`${prefix}:`)) continue;\r\n      const limit = Number(entry.split(":")[1]);\r\n      if (Number.isFinite(limit) && limit > 0) return limit;\r\n    }\r\n  }\r\n  return undefined;\r\n};\r\n\r\nconst limitReferences = (refs: string[], maxCount?: number): string[] => {\r\n  if (!maxCount || maxCount < 1) return refs;\r\n  return refs.slice(0, maxCount);\r\n};\r\n\r\nconst summarizeRefCount = (usedCount: number, rawCount: number): string => {\r\n  return usedCount === rawCount ? String(usedCount) : `${usedCount}/${rawCount}`;\r\n};\r\n\r\nconst buildAtlasVideoPayload = (config: VideoConfig, model: VideoModel) => {\r\n  const rawImageRefs = (config.referenceList || []).filter((r) => r.type === "image").map((r) => r.base64).filter(Boolean);\r\n  const rawVideoRefs = (config.referenceList || []).filter((r) => r.type === "video").map((r) => r.base64).filter(Boolean);\r\n  const rawAudioRefs = (config.referenceList || []).filter((r) => r.type === "audio").map((r) => r.base64).filter(Boolean);\r\n\r\n  const imageRefs = limitReferences(rawImageRefs, getReferenceLimit(model.mode, "imageReference"));\r\n  const videoRefs = limitReferences(rawVideoRefs, getReferenceLimit(model.mode, "videoReference"));\r\n  const audioRefs = limitReferences(rawAudioRefs, getReferenceLimit(model.mode, "audioReference"));\r\n  const kind = resolveAtlasVideoModelKind(model.modelName);\r\n  const ratio = config.aspectRatio || "16:9";\r\n  const shouldGenerateAudio = model.audio === true || (model.audio === "optional" && config.audio !== false);\r\n  const body: any = {\r\n    model: model.modelName,\r\n    prompt: config.prompt || "",\r\n  };\r\n\r\n  if (kind === "wanReferenceToVideo") {\r\n    if (imageRefs.length < 1) {\r\n      throw new Error(`${model.name} \u9700\u8981\u81F3\u5C11 1 \u5F20\u53C2\u8003\u56FE`);\r\n    }\r\n    body.images = [imageRefs[0]];\r\n    body.ratio = ratio;\r\n    body.duration = clampNumber(config.duration, 2, 10, 5);\r\n    body.resolution = normalizeResolution(config.resolution, ["720P", "1080P"], "720P");\r\n    body.prompt_extend = false;\r\n    body.seed = -1;\r\n  } else if (kind === "seedanceReferenceToVideo") {\r\n    if (imageRefs.length < 1) {\r\n      throw new Error(`${model.name} \u9700\u8981\u81F3\u5C11 1 \u5F20\u53C2\u8003\u56FE`);\r\n    }\r\n    if (shouldGenerateAudio) body.generate_audio = true;\r\n    body.images = [imageRefs[0]];\r\n    body.ratio = ratio;\r\n    body.duration = clampNumber(config.duration, 4, 15, 5);\r\n    body.resolution = normalizeResolution(config.resolution, ["480p", "720p", "1080p"], "720p");\r\n    body.watermark = false;\r\n  } else if (kind === "seedanceImageToVideo") {\r\n    if (imageRefs.length < 1) {\r\n      throw new Error(`${model.name} \u9700\u8981\u81F3\u5C11 1 \u5F20\u53C2\u8003\u56FE`);\r\n    }\r\n    if (shouldGenerateAudio) body.generate_audio = true;\r\n    body.images = imageRefs;\r\n    body.ratio = ratio;\r\n    body.duration = clampNumber(config.duration, 4, 15, 5);\r\n    body.resolution = normalizeResolution(config.resolution, ["480p", "720p", "1080p"], "720p");\r\n    body.watermark = false;\r\n  } else {\r\n    if (shouldGenerateAudio) body.generate_audio = true;\r\n    if (imageRefs.length > 0) body.reference_images = imageRefs;\r\n    if (videoRefs.length > 0) body.reference_videos = videoRefs;\r\n    if (audioRefs.length > 0) body.reference_audios = audioRefs;\r\n    body.ratio = ratio;\r\n    body.duration = clampNumber(config.duration, 4, 15, 5);\r\n    body.resolution = normalizeResolution(config.resolution, ["480p", "720p"], "720p");\r\n    body.watermark = false;\r\n  }\r\n\r\n  return {\r\n    body,\r\n    summary: `kind=${kind} imageRefs=${summarizeRefCount(imageRefs.length, rawImageRefs.length)} videoRefs=${summarizeRefCount(videoRefs.length, rawVideoRefs.length)} audioRefs=${summarizeRefCount(audioRefs.length, rawAudioRefs.length)} resolution=${body.resolution} duration=${body.duration}${shouldGenerateAudio ? " audio=on" : " audio=off"}`,\r\n  };\r\n};\r\n\r\n// ============================================================\r\n// \u9002\u914D\u5668\u51FD\u6570\r\n// ============================================================\r\n\r\nconst textRequest = (model: TextModel, think: boolean, thinkLevel: 0 | 1 | 2 | 3) => {\r\n  if (!vendor.inputValues.apiKey) throw new Error("\u7F3A\u5C11 API Key");\r\n  const apiKey = vendor.inputValues.apiKey.replace(/^Bearer\\s+/i, "");\r\n  const effortMap: Record<number, string> = { 0: "minimal", 1: "low", 2: "medium", 3: "high" };\r\n\r\n  return createOpenAICompatible({\r\n    name: "atlascloud",\r\n    baseURL: getChatBaseUrl(),\r\n    apiKey,\r\n    fetch: async (url: string, options?: RequestInit) => {\r\n      const rawBody = JSON.parse((options?.body as string) ?? "{}");\r\n      const body = think\r\n        ? {\r\n          ...rawBody,\r\n          thinking: { type: "enabled" },\r\n          reasoning_effort: effortMap[thinkLevel],\r\n        }\r\n        : rawBody;\r\n      return await fetch(url, { ...options, body: JSON.stringify(body) });\r\n    },\r\n  }).chatModel(model.modelName);\r\n};\r\n\r\nconst imageRequest = async (config: ImageConfig, model: ImageModel): Promise<string> => {\r\n  const headers = getHeaders();\r\n  const url = joinUrl(getMediaBaseUrl(), "/model/generateImage");\r\n  const sizeToResolution: Record<ImageConfig["size"], string> = {\r\n    "1K": "1k",\r\n    "2K": "2k",\r\n    "4K": "4k",\r\n  };\r\n  const imageRefs = (config.referenceList || []).map((ref) => ref.base64).filter(Boolean);\r\n  const resolvedModelName = resolveAtlasImageModelName(model.modelName, imageRefs.length > 0);\r\n  const isNanoModel = /^google\\/nano-banana-(pro|2)\\//.test(resolvedModelName);\r\n  const supportsImageConditioning = /^(openai\\/gpt-image-2\\/text-to-image|google\\/nano-banana-(pro|2)\\/edit)$/.test(resolvedModelName);\r\n\r\n  const body: any = {\r\n    model: resolvedModelName,\r\n    prompt: config.prompt || "",\r\n  };\r\n  if (supportsImageConditioning && imageRefs.length > 0) {\r\n    body.images = imageRefs;\r\n  }\r\n  if (isNanoModel) {\r\n    body.aspect_ratio = config.aspectRatio || "16:9";\r\n    body.resolution = sizeToResolution[config.size || "1K"] || "1k";\r\n  }\r\n\r\n  logger(`[AtlasCloud \u56FE\u7247] \u63D0\u4EA4\u4EFB\u52A1: ${model.modelName} -> ${resolvedModelName}, refs=${imageRefs.length}`);\r\n  const submitResp = await axios.post(url, body, { headers });\r\n  const submitData = submitResp.data;\r\n\r\n  // \u540C\u6B65\u8FD4\u56DE\uFF08\u76F4\u63A5\u62FF\u56FE\uFF09\r\n  const syncB64 = extractB64(submitData);\r\n  if (syncB64) return syncB64;\r\n  const syncUrl = extractUrl(submitData);\r\n  if (syncUrl) return await urlToBase64(syncUrl);\r\n\r\n  // \u5F02\u6B65\u8FD4\u56DE\uFF08\u62FF taskId \u518D\u8F6E\u8BE2\uFF09\r\n  const taskId = extractTaskId(submitData);\r\n  if (!taskId) {\r\n    throw new Error(`\u56FE\u7247\u4EFB\u52A1\u63D0\u4EA4\u5931\u8D25\uFF1A\u672A\u83B7\u53D6\u5230\u4EFB\u52A1ID\u3002\u539F\u59CB\u54CD\u5E94\uFF1A${JSON.stringify(submitData).slice(0, 500)}`);\r\n  }\r\n\r\n  const pollResult = await pollTask(\r\n    async (): Promise<PollResult> => {\r\n      const resultUrl = joinUrl(getMediaBaseUrl(), `/model/prediction/${taskId}`);\r\n      const resultResp = await axios.get(resultUrl, { headers });\r\n      const data = resultResp.data;\r\n      const status = extractStatus(data);\r\n\r\n      if (["succeeded", "success", "done", "completed"].includes(status)) {\r\n        const b64 = extractB64(data);\r\n        if (b64) return { completed: true, data: b64 };\r\n        const mediaUrl = extractUrl(data);\r\n        if (mediaUrl) return { completed: true, data: mediaUrl };\r\n        return { completed: true, error: "\u4EFB\u52A1\u6210\u529F\u4F46\u672A\u8FD4\u56DE\u7ED3\u679C\u5730\u5740" };\r\n      }\r\n      if (["failed", "error", "cancelled", "canceled", "expired"].includes(status)) {\r\n        return { completed: true, error: extractError(data) || "\u56FE\u7247\u751F\u6210\u5931\u8D25" };\r\n      }\r\n      return { completed: false };\r\n    },\r\n    3000,\r\n    600000,\r\n  );\r\n\r\n  if (pollResult.error) throw new Error(pollResult.error);\r\n  if (!pollResult.data) throw new Error("\u56FE\u7247\u751F\u6210\u5931\u8D25\uFF1A\u8F6E\u8BE2\u672A\u8FD4\u56DE\u6570\u636E");\r\n  if (pollResult.data.startsWith("data:")) return pollResult.data;\r\n  if (pollResult.data.startsWith("http")) return await urlToBase64(pollResult.data);\r\n  return pollResult.data;\r\n};\r\n\r\nconst videoRequest = async (config: VideoConfig, model: VideoModel): Promise<string> => {\r\n  const headers = getHeaders();\r\n  const url = joinUrl(getMediaBaseUrl(), "/model/generateVideo");\r\n  const { body, summary } = buildAtlasVideoPayload(config, model);\r\n\r\n  logger(`[AtlasCloud \u89C6\u9891] \u63D0\u4EA4\u4EFB\u52A1: ${model.modelName}, ${summary}`);\r\n  const submitResp: any = await withNetworkRetry<any>(() => axios.post(url, body, { headers }), 3, 1500);\r\n  const submitData = submitResp.data;\r\n\r\n  const taskId = extractTaskId(submitData);\r\n  if (!taskId) {\r\n    const syncUrl = extractUrl(submitData);\r\n    if (syncUrl) return await urlToBase64(syncUrl);\r\n    throw new Error(`\u89C6\u9891\u4EFB\u52A1\u63D0\u4EA4\u5931\u8D25\uFF1A\u672A\u83B7\u53D6\u5230\u4EFB\u52A1ID\u3002\u539F\u59CB\u54CD\u5E94\uFF1A${JSON.stringify(submitData).slice(0, 500)}`);\r\n  }\r\n\r\n  const pollResult = await pollTask(\r\n    async (): Promise<PollResult> => {\r\n      const resultUrl = joinUrl(getMediaBaseUrl(), `/model/prediction/${taskId}`);\r\n      const resultResp: any = await withNetworkRetry<any>(() => axios.get(resultUrl, { headers }), 3, 1200);\r\n      const data = resultResp.data;\r\n      const status = extractStatus(data);\r\n\r\n      if (["succeeded", "success", "done", "completed"].includes(status)) {\r\n        const mediaUrl = extractUrl(data);\r\n        if (mediaUrl) return { completed: true, data: mediaUrl };\r\n        return { completed: true, error: "\u4EFB\u52A1\u6210\u529F\u4F46\u672A\u8FD4\u56DE\u89C6\u9891\u5730\u5740" };\r\n      }\r\n      if (["failed", "error", "cancelled", "canceled", "expired"].includes(status)) {\r\n        return { completed: true, error: extractError(data) || "\u89C6\u9891\u751F\u6210\u5931\u8D25" };\r\n      }\r\n      return { completed: false };\r\n    },\r\n    5000,\r\n    1800000,\r\n  );\r\n\r\n  if (pollResult.error) throw new Error(pollResult.error);\r\n  if (!pollResult.data) throw new Error("\u89C6\u9891\u751F\u6210\u5931\u8D25\uFF1A\u8F6E\u8BE2\u672A\u8FD4\u56DE\u6570\u636E");\r\n  return await urlToBase64(pollResult.data);\r\n};\r\n\r\nconst ttsRequest = async (_config: TTSConfig, _model: TTSModel): Promise<string> => {\r\n  // AtlasCloud \u5F53\u524D\u7248\u672C\u5148\u4E0D\u63A5 TTS\u3002\r\n  return "";\r\n};\r\n\r\nconst checkForUpdates = async (): Promise<{ hasUpdate: boolean; latestVersion: string; notice: string }> => {\r\n  return {\r\n    hasUpdate: false,\r\n    latestVersion: vendor.version,\r\n    notice: "AtlasCloud MASS \u521D\u7A3F\u3002",\r\n  };\r\n};\r\n\r\nconst updateVendor = async (): Promise<string> => {\r\n  return "";\r\n};\r\n\r\n// ============================================================\r\n// \u5BFC\u51FA\r\n// ============================================================\r\n\r\nexports.vendor = vendor;\r\nexports.textRequest = textRequest;\r\nexports.imageRequest = imageRequest;\r\nexports.videoRequest = videoRequest;\r\nexports.ttsRequest = ttsRequest;\r\nexports.checkForUpdates = checkForUpdates;\r\nexports.updateVendor = updateVendor;\r\n\r\nexport { };\r\n',
+      "deepseek.ts": '/**\r\n * DramaStudio AI\u4F9B\u5E94\u5546\u6A21\u677F - DeepSeek\r\n * @version 2.0\r\n */\r\n\r\n// ============================================================\r\n// \u7C7B\u578B\u5B9A\u4E49\r\n// ============================================================\r\n\r\ntype VideoMode =\r\n  | "singleImage"\r\n  | "startEndRequired"\r\n  | "endFrameOptional"\r\n  | "startFrameOptional"\r\n  | "text"\r\n  | (`videoReference:${number}` | `imageReference:${number}` | `audioReference:${number}`)[];\r\n\r\ninterface TextModel {\r\n  name: string;\r\n  modelName: string;\r\n  type: "text";\r\n  think: boolean;\r\n}\r\n\r\ninterface ImageModel {\r\n  name: string;\r\n  modelName: string;\r\n  type: "image";\r\n  mode: ("text" | "singleImage" | "multiReference")[];\r\n  associationSkills?: string;\r\n}\r\n\r\ninterface VideoModel {\r\n  name: string;\r\n  modelName: string;\r\n  type: "video";\r\n  mode: VideoMode[];\r\n  associationSkills?: string;\r\n  audio: "optional" | false | true;\r\n  durationResolutionMap: { duration: number[]; resolution: string[] }[];\r\n}\r\n\r\ninterface TTSModel {\r\n  name: string;\r\n  modelName: string;\r\n  type: "tts";\r\n  voices: { title: string; voice: string }[];\r\n}\r\n\r\ninterface VendorConfig {\r\n  id: string;\r\n  version: string;\r\n  name: string;\r\n  author: string;\r\n  description?: string;\r\n  icon?: string;\r\n  inputs: { key: string; label: string; type: "text" | "password" | "url"; required: boolean; placeholder?: string }[];\r\n  inputValues: Record<string, string>;\r\n  models: (TextModel | ImageModel | VideoModel | TTSModel)[];\r\n}\r\n\r\ninterface ImageConfig {\r\n  prompt: string;\r\n  imageBase64: string[];\r\n  size: "1K" | "2K" | "4K";\r\n  aspectRatio: `${number}:${number}`;\r\n}\r\n\r\ninterface VideoConfig {\r\n  duration: number;\r\n  resolution: string;\r\n  aspectRatio: "16:9" | "9:16";\r\n  prompt: string;\r\n  imageBase64?: string[];\r\n  audio?: boolean;\r\n  mode: VideoMode[];\r\n}\r\n\r\ninterface TTSConfig {\r\n  text: string;\r\n  voice: string;\r\n  speechRate: number;\r\n  pitchRate: number;\r\n  volume: number;\r\n}\r\n\r\ninterface PollResult {\r\n  completed: boolean;\r\n  data?: string;\r\n  error?: string;\r\n}\r\n\r\n// ============================================================\r\n// \u5168\u5C40\u58F0\u660E\r\n// ============================================================\r\n\r\ndeclare const axios: any;\r\ndeclare const logger: (msg: string) => void;\r\ndeclare const jsonwebtoken: any;\r\ndeclare const zipImage: (base64: string, size: number) => Promise<string>;\r\ndeclare const zipImageResolution: (base64: string, w: number, h: number) => Promise<string>;\r\ndeclare const mergeImages: (base64Arr: string[], maxSize?: string) => Promise<string>;\r\ndeclare const urlToBase64: (url: string) => Promise<string>;\r\ndeclare const pollTask: (fn: () => Promise<PollResult>, interval?: number, timeout?: number) => Promise<PollResult>;\r\ndeclare const createOpenAI: any;\r\ndeclare const createDeepSeek: any;\r\ndeclare const createZhipu: any;\r\ndeclare const createQwen: any;\r\ndeclare const createAnthropic: any;\r\ndeclare const createOpenAICompatible: any;\r\ndeclare const createXai: any;\r\ndeclare const createMinimax: any;\r\ndeclare const createGoogleGenerativeAI: any;\r\ndeclare const exports: {\r\n  vendor: VendorConfig;\r\n  textRequest: (m: TextModel, t: boolean, tl: 0 | 1 | 2 | 3) => any;\r\n  imageRequest: (c: ImageConfig, m: ImageModel) => Promise<string>;\r\n  videoRequest: (c: VideoConfig, m: VideoModel) => Promise<string>;\r\n  ttsRequest: (c: TTSConfig, m: TTSModel) => Promise<string>;\r\n  checkForUpdates?: () => Promise<{ hasUpdate: boolean; latestVersion: string; notice: string }>;\r\n  updateVendor?: () => Promise<string>;\r\n};\r\n\r\n// ============================================================\r\n// \u4F9B\u5E94\u5546\u914D\u7F6E\r\n// ============================================================\r\n\r\nconst vendor: VendorConfig = {\r\n  id: "deepseek",\r\n  version: "2.0",\r\n  author: "DramaStudio",\r\n  name: "DeepSeek",\r\n  description:\r\n    "DeepSeek \u5B98\u65B9\u63A5\u53E3\u9002\u914D\uFF0C\u652F\u6301 V4 \u7CFB\u5217\u6A21\u578B\u4E0E\u601D\u8003\u6A21\u5F0F\uFF08\u601D\u7EF4\u94FE\u8F93\u51FA\uFF09\u3002\\n\\n[\u524D\u5F80\u5E73\u53F0](https://platform.deepseek.com/)",\r\n  icon: "",\r\n  inputs: [\r\n    { key: "apiKey", label: "API\u5BC6\u94A5", type: "password", required: true },\r\n    { key: "baseUrl", label: "\u8BF7\u6C42\u5730\u5740", type: "url", required: true, placeholder: "\u793A\u4F8B\uFF1Ahttps://api.deepseek.com" },\r\n  ],\r\n  inputValues: {\r\n    apiKey: "",\r\n    baseUrl: "https://api.deepseek.com/v1",\r\n  },\r\n  models: [\r\n    { name: "DeepSeek V4 Pro", modelName: "deepseek-v4-pro", type: "text", think: true },\r\n    { name: "DeepSeek V4 Flash", modelName: "deepseek-v4-flash", type: "text", think: true },\r\n  ],\r\n};\r\n\r\n// ============================================================\r\n// \u9002\u914D\u5668\u51FD\u6570\r\n// ============================================================\r\n\r\nconst textRequest = (model: TextModel, think: boolean, thinkLevel: 0 | 1 | 2 | 3) => {\r\n  if (!vendor.inputValues.apiKey) throw new Error("\u7F3A\u5C11API Key");\r\n  const apiKey = vendor.inputValues.apiKey.replace(/^Bearer\\s+/i, "");\r\n\r\n  // DeepSeek \u601D\u8003\u5F3A\u5EA6\u4EC5\u652F\u6301 high / max\uFF08low\u3001medium \u4F1A\u88AB\u6620\u5C04\u4E3A high\uFF0Cxhigh \u4F1A\u88AB\u6620\u5C04\u4E3A max\uFF09\r\n  // thinkLevel: 0/1/2 \u2192 high, 3 \u2192 max\r\n  const effortMap: Record<0 | 1 | 2 | 3, "high" | "max"> = {\r\n    0: "high",\r\n    1: "high",\r\n    2: "high",\r\n    3: "max",\r\n  };\r\n\r\n  const enableThinking = model.think && think;\r\n  const extraBody: Record<string, any> = {\r\n    thinking: { type: enableThinking ? "enabled" : "disabled" },\r\n  };\r\n  if (enableThinking) {\r\n    extraBody.reasoning_effort = effortMap[thinkLevel];\r\n  }\r\n\r\n  return createDeepSeek({\r\n    baseURL: vendor.inputValues.baseUrl,\r\n    apiKey,\r\n    extraBody,\r\n  }).chat(model.modelName);\r\n};\r\n\r\nconst imageRequest = async (config: ImageConfig, model: ImageModel): Promise<string> => {\r\n  return "";\r\n};\r\n\r\nconst videoRequest = async (config: VideoConfig, model: VideoModel): Promise<string> => {\r\n  return "";\r\n};\r\n\r\nconst ttsRequest = async (config: TTSConfig, model: TTSModel): Promise<string> => {\r\n  return "";\r\n};\r\n\r\nconst checkForUpdates = async (): Promise<{ hasUpdate: boolean; latestVersion: string; notice: string }> => {\r\n  return { hasUpdate: false, latestVersion: "2.0", notice: "" };\r\n};\r\n\r\nconst updateVendor = async (): Promise<string> => {\r\n  return "";\r\n};\r\n\r\n// ============================================================\r\n// \u5BFC\u51FA\r\n// ============================================================\r\n\r\nexports.vendor = vendor;\r\nexports.textRequest = textRequest;\r\nexports.imageRequest = imageRequest;\r\nexports.videoRequest = videoRequest;\r\nexports.ttsRequest = ttsRequest;\r\nexports.checkForUpdates = checkForUpdates;\r\nexports.updateVendor = updateVendor;\r\n\r\nexport { };',
+      "grsai.ts": '/**\r\n * DramaStudio AI\u4F9B\u5E94\u5546\u6A21\u677F\r\n * @version 2.0\r\n */\r\n\r\n// ============================================================\r\n// \u7C7B\u578B\u5B9A\u4E49\r\n// ============================================================\r\n\r\ntype VideoMode =\r\n  | "singleImage" //\u5355\u56FE\u53C2\u8003\r\n  | "startEndRequired" //\u9996\u5C3E\u5E27\uFF08\u4E24\u5F20\u90FD\u5F97\u6709\uFF09\r\n  | "endFrameOptional" //\u9996\u5C3E\u5E27\uFF08\u5C3E\u5E27\u53EF\u9009\uFF09\r\n  | "startFrameOptional" //\u9996\u5C3E\u5E27\uFF08\u9996\u5E27\u53EF\u9009\uFF09\r\n  | "text" //\u6587\u672C\r\n  | (\r\n      | `videoReference:${number}`\r\n      | `imageReference:${number}`\r\n      | `audioReference:${number}`\r\n    )[]; //\u591A\u53C2\u8003\uFF08\u6570\u5B57\u4EE3\u8868\u9650\u5236\u6570\u91CF\uFF09\r\n\r\ninterface TextModel {\r\n  name: string;\r\n  modelName: string;\r\n  type: "text";\r\n  think: boolean;\r\n}\r\n\r\ninterface ImageModel {\r\n  name: string;\r\n  modelName: string;\r\n  type: "image";\r\n  mode: ("text" | "singleImage" | "multiReference")[];\r\n  associationSkills?: string;\r\n}\r\n\r\ninterface VideoModel {\r\n  name: string;\r\n  modelName: string;\r\n  type: "video";\r\n  mode: VideoMode[];\r\n  associationSkills?: string;\r\n  audio: "optional" | false | true;\r\n  durationResolutionMap: { duration: number[]; resolution: string[] }[];\r\n}\r\n\r\ninterface TTSModel {\r\n  name: string;\r\n  modelName: string;\r\n  type: "tts";\r\n  voices: { title: string; voice: string }[];\r\n}\r\n\r\ninterface VendorConfig {\r\n  id: string; //\u552F\u4E00ID\uFF0C\u4F5C\u4E3A\u6587\u4EF6\u540D\u5B58\u50A8\u7528\u6237\u78C1\u76D8\u4E0A\uFF0C\u7981\u6B62\u7B26\u53F7\r\n  version: string; //\u7248\u672C\u53F7\uFF0C\u683C\u5F0F\u4E3Ax.y\uFF0C\u9700\u9075\u5B88\u8BED\u4E49\u5316\u7248\u672C\u63A7\u5236\r\n  name: string; //\u4F9B\u5E94\u5546\u540D\u79F0\r\n  author: string; //\u4F5C\u8005\r\n  description?: string; //\u63CF\u8FF0\uFF0C\u652F\u6301Markdown\u683C\u5F0F\r\n  icon?: string; //\u56FE\u6807\uFF0C\u4EC5\u652F\u6301Base64\u683C\u5F0F\uFF0C\u5EFA\u8BAE\u5C3A\u5BF8\u4E3A128x128\u50CF\u7D20\r\n  inputs: {\r\n    key: string;\r\n    label: string;\r\n    type: "text" | "password" | "url";\r\n    required: boolean;\r\n    placeholder?: string;\r\n  }[];\r\n  inputValues: Record<string, string>;\r\n  models: (TextModel | ImageModel | VideoModel | TTSModel)[];\r\n}\r\n\r\ntype ReferenceList =\r\n  | { type: "image"; sourceType: "base64"; base64: string }\r\n  | { type: "audio"; sourceType: "base64"; base64: string }\r\n  | { type: "video"; sourceType: "base64"; base64: string };\r\n\r\ninterface ImageConfig {\r\n  prompt: string;\r\n  referenceList?: Extract<ReferenceList, { type: "image" }>[];\r\n  size: "1K" | "2K" | "4K";\r\n  aspectRatio: `${number}:${number}`;\r\n}\r\n\r\ninterface VideoConfig {\r\n  duration: number;\r\n  resolution: string;\r\n  aspectRatio: "16:9" | "9:16";\r\n  prompt: string;\r\n  referenceList?: ReferenceList[];\r\n  audio?: boolean;\r\n  mode: VideoMode[];\r\n}\r\n\r\ninterface TTSConfig {\r\n  text: string;\r\n  voice: string;\r\n  speechRate: number;\r\n  pitchRate: number;\r\n  volume: number;\r\n  referenceList?: Extract<ReferenceList, { type: "audio" }>[];\r\n}\r\n\r\ninterface PollResult {\r\n  completed: boolean;\r\n  data?: string;\r\n  error?: string;\r\n}\r\n\r\n// ============================================================\r\n// \u5168\u5C40\u58F0\u660E\r\n// ============================================================\r\n\r\ndeclare const axios: any; // HTTP\u8BF7\u6C42\u5E93\r\ndeclare const logger: (msg: string) => void; // \u65E5\u5FD7\u51FD\u6570\r\ndeclare const jsonwebtoken: any; // JWT\u5904\u7406\u5E93\r\ndeclare const zipImage: (base64: string, size: number) => Promise<string>; // \u56FE\u7247\u538B\u7F29\u51FD\u6570\uFF0C\u8FD4\u56DE\u6709\u5934base64\u5B57\u7B26\u4E32\r\ndeclare const zipImageResolution: (\r\n  base64: string,\r\n  w: number,\r\n  h: number,\r\n) => Promise<string>; // \u56FE\u7247\u5206\u8FA8\u7387\u8C03\u6574\u51FD\u6570\uFF0C\u8FD4\u56DE\u6709\u5934base64\u5B57\u7B26\u4E32\r\ndeclare const mergeImages: (\r\n  base64Arr: string[],\r\n  maxSize?: string,\r\n) => Promise<string>; // \u56FE\u7247\u5408\u6210\u51FD\u6570\uFF0C\u8FD4\u56DE\u6709\u5934base64\u5B57\u7B26\u4E32\r\ndeclare const urlToBase64: (url: string) => Promise<string>; // URL\u8F6CBase64\u51FD\u6570\uFF0C\u8FD4\u56DE\u6709\u5934base64\u5B57\u7B26\u4E32\r\ndeclare const pollTask: (\r\n  fn: () => Promise<PollResult>,\r\n  interval?: number,\r\n  timeout?: number,\r\n) => Promise<PollResult>; // \u8F6E\u8BE2\u51FD\u6570\uFF0Cfn\u4E3A\u5F02\u6B65\u51FD\u6570\uFF0Cinterval\u4E3A\u8F6E\u8BE2\u95F4\u9694\uFF0Ctimeout\u4E3A\u8D85\u65F6\u65F6\u95F4\uFF0C\u8FD4\u56DEfn\u7684\u7ED3\u679C\r\ndeclare const createOpenAI: any;\r\ndeclare const createDeepSeek: any;\r\ndeclare const createZhipu: any;\r\ndeclare const createQwen: any;\r\ndeclare const createAnthropic: any;\r\ndeclare const createOpenAICompatible: any;\r\ndeclare const createXai: any;\r\ndeclare const createMinimax: any;\r\ndeclare const createGoogleGenerativeAI: any;\r\ndeclare const exports: {\r\n  vendor: VendorConfig;\r\n  textRequest: (m: TextModel, t: boolean, tl: 0 | 1 | 2 | 3) => any; //\u6587\u672C\u6A21\u578B\r\n  imageRequest: (c: ImageConfig, m: ImageModel) => Promise<string>; //\u56FE\u7247\u6A21\u578B\uFF0C\u8FD4\u56DE\u6709\u5934base64\u5B57\u7B26\u4E32\r\n  videoRequest: (c: VideoConfig, m: VideoModel) => Promise<string>; //\u89C6\u9891\u6A21\u578B\uFF0C\u8FD4\u56DE\u6709\u5934base64\u5B57\u7B26\u4E32\r\n  ttsRequest: (c: TTSConfig, m: TTSModel) => Promise<string>; //\uFF08\u6682\u672A\u5F00\u653E\uFF09\u8BED\u97F3\u6A21\u578B\uFF0C\u8FD4\u56DE\u6709\u5934base64\u5B57\u7B26\u4E32\r\n  checkForUpdates?: () => Promise<{\r\n    hasUpdate: boolean;\r\n    latestVersion: string;\r\n    notice: string;\r\n  }>; //\u68C0\u67E5\u66F4\u65B0\u51FD\u6570\uFF0C\u8FD4\u56DE\u662F\u5426\u6709\u66F4\u65B0\u548C\u6700\u65B0\u7248\u672C\u53F7\u548C\u66F4\u516C\u544A\uFF08\u652F\u6301Markdown\u683C\u5F0F\uFF09\r\n  updateVendor?: () => Promise<string>; //\u66F4\u65B0\u51FD\u6570\uFF0C\u8FD4\u56DE\u6700\u65B0\u7684\u4EE3\u7801\u6587\u672C\r\n};\r\n\r\n// ============================================================\r\n// \u4F9B\u5E94\u5546\u914D\u7F6E\r\n// ============================================================\r\n\r\nconst vendor: VendorConfig = {\r\n  id: "grsai",\r\n  version: "2.1",\r\n  author: "DramaStudio",\r\n  name: "Grsai",\r\n  description:\r\n    "Grsai AI\u5E73\u53F0\u9002\u914D\uFF0C\u652F\u6301\u6587\u751F\u56FE\u3001\u56FE\u751F\u56FE\u3001\u6587\u751F\u89C6\u9891\u3001Gemini\u517C\u5BB9\u6587\u672C\u6A21\u578B \\n [\u524D\u5F80\u4E2D\u8F6C\u5E73\u53F0](https://tf.grsai.ai/zh)",\r\n  inputs: [\r\n    { key: "apiKey", label: "API\u5BC6\u94A5", type: "password", required: true },\r\n    {\r\n      key: "baseUrl",\r\n      label: "\u8BF7\u6C42\u5730\u5740",\r\n      type: "url",\r\n      required: true,\r\n      placeholder: "\u793A\u4F8B\uFF1Ahttps://grsai.dakka.com.cn",\r\n    },\r\n  ],\r\n  inputValues: { apiKey: "", baseUrl: "https://grsai.dakka.com.cn" },\r\n  models: [\r\n    {\r\n      name: "GPT Image 2",\r\n      modelName: "gpt-image-2",\r\n      type: "image",\r\n      mode: ["text", "singleImage", "multiReference"],\r\n    },\r\n    {\r\n      name: "Nano Banana Fast",\r\n      modelName: "nano-banana-fast",\r\n      type: "image",\r\n      mode: ["text", "singleImage", "multiReference"],\r\n    },\r\n    {\r\n      name: "Nano Banana 2",\r\n      modelName: "nano-banana-2",\r\n      type: "image",\r\n      mode: ["text", "singleImage", "multiReference"],\r\n    },\r\n    {\r\n      name: "Nano Banana Pro",\r\n      modelName: "nano-banana-pro",\r\n      type: "image",\r\n      mode: ["text", "singleImage", "multiReference"],\r\n    },\r\n  ],\r\n};\r\n\r\n// ============================================================\r\n// \u8F85\u52A9\u5DE5\u5177\r\n// ============================================================\r\n\r\nconst getHeaders = () => {\r\n  const apiKey = vendor.inputValues.apiKey.replace(/^Bearer\\s+/i, "");\r\n  return {\r\n    "Content-Type": "application/json",\r\n    Authorization: `Bearer ${apiKey}`,\r\n  };\r\n};\r\n\r\n// ============================================================\r\n// \u9002\u914D\u5668\u51FD\u6570\r\n// ============================================================\r\n\r\nconst textRequest = (\r\n  model: TextModel,\r\n  think: boolean,\r\n  thinkLevel: 0 | 1 | 2 | 3,\r\n) => {\r\n  if (!vendor.inputValues.apiKey) throw new Error("\u7F3A\u5C11API Key");\r\n  const apiKey = vendor.inputValues.apiKey.replace(/^Bearer\\s+/i, "");\r\n  return createGoogleGenerativeAI({\r\n    baseURL: `${vendor.inputValues.baseUrl}/v1beta`,\r\n    apiKey,\r\n  }).chat(model.modelName);\r\n};\r\n\r\nconst imageRequest = async (\r\n  config: ImageConfig,\r\n  model: ImageModel,\r\n): Promise<string> => {\r\n  if (!vendor.inputValues.apiKey) throw new Error("\u7F3A\u5C11API Key");\r\n  const baseUrl = vendor.inputValues.baseUrl;\r\n  const headers = getHeaders();\r\n\r\n  // \u6784\u9020\u8BF7\u6C42\u53C2\u6570\r\n  const requestBody: any = {\r\n    model: model.modelName,\r\n    prompt: config.prompt,\r\n    aspectRatio: config.aspectRatio,\r\n    webHook: "-1",\r\n    shutProgress: true,\r\n  };\r\n\r\n  // \u8865\u5145\u6A21\u578B\u4E13\u5C5E\u53C2\u6570\r\n  if (model.modelName.startsWith("nano-banana")) {\r\n    requestBody.imageSize = config.size;\r\n  } else {\r\n    requestBody.size = config.aspectRatio;\r\n    requestBody.variants = 1;\r\n  }\r\n\r\n  // \u5904\u7406\u53C2\u8003\u56FE\r\n  if (config.referenceList && config.referenceList.length > 0) {\r\n    requestBody.urls = config.referenceList.map((img) => img.base64);\r\n  }\r\n\r\n  // \u9009\u62E9\u63A5\u53E3\u8DEF\u5F84\r\n  const apiPath = model.modelName.startsWith("nano-banana")\r\n    ? "/v1/draw/nano-banana"\r\n    : "/v1/draw/completions";\r\n\r\n  logger(`\u5F00\u59CB\u63D0\u4EA4\u56FE\u7247\u751F\u6210\u4EFB\u52A1\uFF0C\u6A21\u578B\uFF1A${model.modelName}`);\r\n  const submitResp = await axios.post(`${baseUrl}${apiPath}`, requestBody, {\r\n    headers,\r\n  });\r\n  if (submitResp.data.code !== 0)\r\n    throw new Error(`\u4EFB\u52A1\u63D0\u4EA4\u5931\u8D25\uFF1A${submitResp.data.msg}`);\r\n\r\n  const taskId = submitResp.data.data.id;\r\n  logger(`\u56FE\u7247\u4EFB\u52A1\u63D0\u4EA4\u6210\u529F\uFF0C\u4EFB\u52A1ID\uFF1A${taskId}`);\r\n\r\n  // \u8F6E\u8BE2\u7ED3\u679C\r\n  const pollResult = await pollTask(\r\n    async () => {\r\n      const resp = await axios.post(\r\n        `${baseUrl}/v1/draw/result`,\r\n        { id: taskId },\r\n        { headers },\r\n      );\r\n      if (resp.data.code !== 0)\r\n        return { completed: true, error: resp.data.msg };\r\n\r\n      const taskData = resp.data.data;\r\n      if (taskData.status === "failed")\r\n        return {\r\n          completed: true,\r\n          error: taskData.failure_reason || taskData.error,\r\n        };\r\n      if (taskData.status === "succeeded") {\r\n        const imgUrl = taskData.results?.[0]?.url || taskData.url;\r\n        return { completed: true, data: imgUrl };\r\n      }\r\n      logger(`\u56FE\u7247\u4EFB\u52A1\u751F\u6210\u4E2D\uFF0C\u8FDB\u5EA6\uFF1A${taskData.progress}%`);\r\n      return { completed: false };\r\n    },\r\n    3000,\r\n    600000,\r\n  );\r\n\r\n  if (pollResult.error) throw new Error(pollResult.error);\r\n  logger(`\u56FE\u7247\u751F\u6210\u5B8C\u6210\uFF0C\u5F00\u59CB\u8F6C\u6362Base64`);\r\n  return await urlToBase64(pollResult.data!);\r\n};\r\n\r\nconst videoRequest = async (\r\n  config: VideoConfig,\r\n  model: VideoModel,\r\n): Promise<string> => {\r\n  if (!vendor.inputValues.apiKey) throw new Error("\u7F3A\u5C11API Key");\r\n  const baseUrl = vendor.inputValues.baseUrl;\r\n  const headers = getHeaders();\r\n\r\n  // \u6784\u9020\u8BF7\u6C42\u53C2\u6570\r\n  const requestBody: any = {\r\n    model: model.modelName,\r\n    prompt: config.prompt,\r\n    aspectRatio: config.aspectRatio,\r\n    webHook: "-1",\r\n    shutProgress: true,\r\n  };\r\n\r\n  // \u5904\u7406\u53C2\u8003\u8D44\u6E90\r\n  if (config.referenceList && config.referenceList.length > 0) {\r\n    const imageRefs = config.referenceList.filter(\r\n      (item) => item.type === "image",\r\n    ) as Extract<ReferenceList, { type: "image" }>[];\r\n    if (config.mode.includes("endFrameOptional") && imageRefs.length >= 1) {\r\n      requestBody.firstFrameUrl = imageRefs[0].base64;\r\n      if (imageRefs.length >= 2) requestBody.lastFrameUrl = imageRefs[1].base64;\r\n    } else if (\r\n      config.mode.some(\r\n        (m) => Array.isArray(m) && m.includes("imageReference:3"),\r\n      )\r\n    ) {\r\n      requestBody.urls = imageRefs.map((img) => img.base64);\r\n    }\r\n  }\r\n\r\n  logger(`\u5F00\u59CB\u63D0\u4EA4\u89C6\u9891\u751F\u6210\u4EFB\u52A1\uFF0C\u6A21\u578B\uFF1A${model.modelName}`);\r\n  const submitResp = await axios.post(`${baseUrl}/v1/video/veo`, requestBody, {\r\n    headers,\r\n  });\r\n  if (submitResp.data.code !== 0)\r\n    throw new Error(`\u4EFB\u52A1\u63D0\u4EA4\u5931\u8D25\uFF1A${submitResp.data.msg}`);\r\n\r\n  const taskId = submitResp.data.data.id;\r\n  logger(`\u89C6\u9891\u4EFB\u52A1\u63D0\u4EA4\u6210\u529F\uFF0C\u4EFB\u52A1ID\uFF1A${taskId}`);\r\n\r\n  // \u8F6E\u8BE2\u7ED3\u679C\r\n  const pollResult = await pollTask(\r\n    async () => {\r\n      const resp = await axios.post(\r\n        `${baseUrl}/v1/draw/result`,\r\n        { id: taskId },\r\n        { headers },\r\n      );\r\n      if (resp.data.code !== 0)\r\n        return { completed: true, error: resp.data.msg };\r\n\r\n      const taskData = resp.data.data;\r\n      if (taskData.status === "failed")\r\n        return {\r\n          completed: true,\r\n          error: taskData.failure_reason || taskData.error,\r\n        };\r\n      if (taskData.status === "succeeded") {\r\n        return { completed: true, data: taskData.url };\r\n      }\r\n      logger(`\u89C6\u9891\u4EFB\u52A1\u751F\u6210\u4E2D\uFF0C\u8FDB\u5EA6\uFF1A${taskData.progress}%`);\r\n      return { completed: false };\r\n    },\r\n    5000,\r\n    1800000,\r\n  );\r\n\r\n  if (pollResult.error) throw new Error(pollResult.error);\r\n  logger(`\u89C6\u9891\u751F\u6210\u5B8C\u6210\uFF0C\u5F00\u59CB\u8F6C\u6362Base64`);\r\n  return await urlToBase64(pollResult.data!);\r\n};\r\n\r\nconst ttsRequest = async (\r\n  config: TTSConfig,\r\n  model: TTSModel,\r\n): Promise<string> => {\r\n  return "";\r\n};\r\n\r\nconst checkForUpdates = async (): Promise<{\r\n  hasUpdate: boolean;\r\n  latestVersion: string;\r\n  notice: string;\r\n}> => {\r\n  return {\r\n    hasUpdate: false,\r\n    latestVersion: "1.0",\r\n    notice: "## \u65B0\u7248\u672C\u66F4\u65B0\u516C\u544A",\r\n  };\r\n};\r\n\r\nconst updateVendor = async (): Promise<string> => {\r\n  return "";\r\n};\r\n\r\n// ============================================================\r\n// \u5BFC\u51FA\r\n// ============================================================\r\n\r\nexports.vendor = vendor;\r\nexports.textRequest = textRequest;\r\nexports.imageRequest = imageRequest;\r\nexports.videoRequest = videoRequest;\r\nexports.ttsRequest = ttsRequest;\r\nexports.checkForUpdates = checkForUpdates;\r\nexports.updateVendor = updateVendor;\r\n\r\n// \u8FD9\u884C\u4EE3\u7801\u7528\u4E8E\u786E\u4FDD\u5F53\u524D\u6587\u4EF6\u88AB\u8BC6\u522B\u4E3A\u6A21\u5757\uFF0C\u907F\u514D\u5168\u5C40\u53D8\u91CF\u51B2\u7A81\r\nexport {};\r\n',
+      "klingai.ts": '/**\r\n * DramaStudio AI\u4F9B\u5E94\u5546\u6A21\u677F - \u53EF\u7075AI\r\n * @version 2.0\r\n */\r\n\r\n// ============================================================\r\n// \u7C7B\u578B\u5B9A\u4E49\r\n// ============================================================\r\n\r\ntype VideoMode =\r\n  | "singleImage"\r\n  | "startEndRequired"\r\n  | "endFrameOptional"\r\n  | "startFrameOptional"\r\n  | "text"\r\n  | (`videoReference:${number}` | `imageReference:${number}` | `audioReference:${number}`)[];\r\n\r\ninterface TextModel {\r\n  name: string;\r\n  modelName: string;\r\n  type: "text";\r\n  think: boolean;\r\n}\r\n\r\ninterface ImageModel {\r\n  name: string;\r\n  modelName: string;\r\n  type: "image";\r\n  mode: ("text" | "singleImage" | "multiReference")[];\r\n  associationSkills?: string;\r\n}\r\n\r\ninterface VideoModel {\r\n  name: string;\r\n  modelName: string;\r\n  type: "video";\r\n  mode: VideoMode[];\r\n  associationSkills?: string;\r\n  audio: "optional" | false | true;\r\n  durationResolutionMap: { duration: number[]; resolution: string[] }[];\r\n}\r\n\r\ninterface TTSModel {\r\n  name: string;\r\n  modelName: string;\r\n  type: "tts";\r\n  voices: { title: string; voice: string }[];\r\n}\r\n\r\ninterface VendorConfig {\r\n  id: string;\r\n  version: string;\r\n  name: string;\r\n  author: string;\r\n  description?: string;\r\n  icon?: string;\r\n  inputs: { key: string; label: string; type: "text" | "password" | "url"; required: boolean; placeholder?: string }[];\r\n  inputValues: Record<string, string>;\r\n  models: (TextModel | ImageModel | VideoModel | TTSModel)[];\r\n}\r\n\r\ntype ReferenceList =\r\n  | { type: "image"; sourceType: "base64"; base64: string }\r\n  | { type: "audio"; sourceType: "base64"; base64: string }\r\n  | { type: "video"; sourceType: "base64"; base64: string };\r\n\r\ninterface ImageConfig {\r\n  prompt: string;\r\n  referenceList?: Extract<ReferenceList, { type: "image" }>[];\r\n  size: "1K" | "2K" | "4K";\r\n  aspectRatio: `${number}:${number}`;\r\n}\r\n\r\ninterface VideoConfig {\r\n  duration: number;\r\n  resolution: string;\r\n  aspectRatio: "16:9" | "9:16";\r\n  prompt: string;\r\n  referenceList?: ReferenceList[];\r\n  audio?: boolean;\r\n  mode: VideoMode[];\r\n}\r\n\r\ninterface TTSConfig {\r\n  text: string;\r\n  voice: string;\r\n  speechRate: number;\r\n  pitchRate: number;\r\n  volume: number;\r\n  referenceList?: Extract<ReferenceList, { type: "audio" }>[];\r\n}\r\n\r\ninterface PollResult {\r\n  completed: boolean;\r\n  data?: string;\r\n  error?: string;\r\n}\r\n\r\n// ============================================================\r\n// \u5168\u5C40\u58F0\u660E\r\n// ============================================================\r\n\r\ndeclare const axios: any;\r\ndeclare const logger: (msg: string) => void;\r\ndeclare const jsonwebtoken: any;\r\ndeclare const zipImage: (base64: string, size: number) => Promise<string>;\r\ndeclare const zipImageResolution: (base64: string, w: number, h: number) => Promise<string>;\r\ndeclare const mergeImages: (base64Arr: string[], maxSize?: string) => Promise<string>;\r\ndeclare const urlToBase64: (url: string) => Promise<string>;\r\ndeclare const pollTask: (fn: () => Promise<PollResult>, interval?: number, timeout?: number) => Promise<PollResult>;\r\ndeclare const createOpenAI: any;\r\ndeclare const createDeepSeek: any;\r\ndeclare const createZhipu: any;\r\ndeclare const createQwen: any;\r\ndeclare const createAnthropic: any;\r\ndeclare const createOpenAICompatible: any;\r\ndeclare const createXai: any;\r\ndeclare const createMinimax: any;\r\ndeclare const createGoogleGenerativeAI: any;\r\ndeclare const exports: {\r\n  vendor: VendorConfig;\r\n  textRequest: (m: TextModel, t: boolean, tl: 0 | 1 | 2 | 3) => any;\r\n  imageRequest: (c: ImageConfig, m: ImageModel) => Promise<string>;\r\n  videoRequest: (c: VideoConfig, m: VideoModel) => Promise<string>;\r\n  ttsRequest: (c: TTSConfig, m: TTSModel) => Promise<string>;\r\n  checkForUpdates?: () => Promise<{ hasUpdate: boolean; latestVersion: string; notice: string }>;\r\n  updateVendor?: () => Promise<string>;\r\n};\r\n\r\n// ============================================================\r\n// \u4F9B\u5E94\u5546\u914D\u7F6E\r\n// ============================================================\r\n\r\nconst vendor: VendorConfig = {\r\n  id: "klingai",\r\n  version: "2.0",\r\n  author: "DramaStudio",\r\n  name: "\u53EF\u7075AI",\r\n  description:\r\n    "\u53EF\u7075AI\u89C6\u9891\u751F\u6210\\n\\n\u652F\u6301\u53EF\u7075\u5168\u7CFB\u5217\u89C6\u9891\u6A21\u578B\uFF0C\u5305\u62EC kling-video-o1\u3001kling-v3-omni\u3001kling-v3\u3001kling-v2-6\u3001kling-v2-5-turbo\u3001kling-v2-1\u3001kling-v2-master\u3001kling-v1-6\u3001kling-v1-5\u3001kling-v1 \u7B49\u3002\\n\\n\u9700\u8981\u5728[\u53EF\u7075AI\u5F00\u653E\u5E73\u53F0](https://klingai.com)\\n\\n\u83B7\u53D6 Access Key \u548C Secret Key\u3002",\r\n  inputs: [\r\n    { key: "accessKey", label: "Access Key", type: "password", required: true, placeholder: "\u8BF7\u8F93\u5165\u53EF\u7075AI\u7684Access Key" },\r\n    { key: "secretKey", label: "Secret Key", type: "password", required: true, placeholder: "\u8BF7\u8F93\u5165\u53EF\u7075AI\u7684Secret Key" },\r\n    { key: "baseUrl", label: "\u8BF7\u6C42\u5730\u5740", type: "url", required: true, placeholder: "\u9ED8\u8BA4\uFF1Ahttps://api-beijing.klingai.com" },\r\n  ],\r\n  inputValues: { accessKey: "", secretKey: "", baseUrl: "https://api-beijing.klingai.com" },\r\n  models: [\r\n    // kling-video-o1 (Omni)\r\n    {\r\n      name: "kling-video-o1 \u6807\u51C6",\r\n      modelName: "kling-video-o1:std",\r\n      type: "video",\r\n      mode: ["text", "singleImage", "startEndRequired", ["imageReference:7", "videoReference:1"]],\r\n      audio: false,\r\n      durationResolutionMap: [{ duration: [5, 10], resolution: ["720p"] }],\r\n    },\r\n    {\r\n      name: "kling-video-o1 \u4E13\u5BB6",\r\n      modelName: "kling-video-o1:pro",\r\n      type: "video",\r\n      mode: ["text", "singleImage", "startEndRequired", ["imageReference:7", "videoReference:1"]],\r\n      audio: false,\r\n      durationResolutionMap: [{ duration: [5, 10], resolution: ["720p"] }],\r\n    },\r\n    // kling-v3-omni (Omni)\r\n    {\r\n      name: "kling-v3-omni \u6807\u51C6",\r\n      modelName: "kling-v3-omni:std",\r\n      type: "video",\r\n      mode: ["text", "singleImage", "startEndRequired", ["imageReference:7", "videoReference:1"]],\r\n      audio: false,\r\n      durationResolutionMap: [{ duration: [3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15], resolution: ["720p"] }],\r\n    },\r\n    {\r\n      name: "kling-v3-omni \u4E13\u5BB6",\r\n      modelName: "kling-v3-omni:pro",\r\n      type: "video",\r\n      mode: ["text", "singleImage", "startEndRequired", ["imageReference:7", "videoReference:1"]],\r\n      audio: false,\r\n      durationResolutionMap: [{ duration: [3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15], resolution: ["720p"] }],\r\n    },\r\n    // kling-v3\r\n    {\r\n      name: "kling-v3 \u6807\u51C6",\r\n      modelName: "kling-v3:std",\r\n      type: "video",\r\n      mode: ["text", "singleImage", "startEndRequired"],\r\n      audio: false,\r\n      durationResolutionMap: [{ duration: [3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15], resolution: ["720p"] }],\r\n    },\r\n    {\r\n      name: "kling-v3 \u4E13\u5BB6",\r\n      modelName: "kling-v3:pro",\r\n      type: "video",\r\n      mode: ["text", "singleImage", "startEndRequired"],\r\n      audio: false,\r\n      durationResolutionMap: [{ duration: [3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15], resolution: ["720p"] }],\r\n    },\r\n    // kling-v2-6\r\n    {\r\n      name: "kling-v2-6 \u6807\u51C6",\r\n      modelName: "kling-v2-6:std",\r\n      type: "video",\r\n      mode: ["text", "singleImage"],\r\n      audio: false,\r\n      durationResolutionMap: [{ duration: [5, 10], resolution: ["720p"] }],\r\n    },\r\n    {\r\n      name: "kling-v2-6 \u4E13\u5BB6",\r\n      modelName: "kling-v2-6:pro",\r\n      type: "video",\r\n      mode: ["text", "singleImage", "startEndRequired"],\r\n      audio: "optional",\r\n      durationResolutionMap: [{ duration: [5, 10], resolution: ["1080p"] }],\r\n    },\r\n    // kling-v2-5-turbo\r\n    {\r\n      name: "kling-v2-5-turbo \u6807\u51C6",\r\n      modelName: "kling-v2-5-turbo:std",\r\n      type: "video",\r\n      mode: ["text", "singleImage"],\r\n      audio: false,\r\n      durationResolutionMap: [{ duration: [5, 10], resolution: ["1080p"] }],\r\n    },\r\n    {\r\n      name: "kling-v2-5-turbo \u4E13\u5BB6",\r\n      modelName: "kling-v2-5-turbo:pro",\r\n      type: "video",\r\n      mode: ["text", "singleImage", "startEndRequired"],\r\n      audio: false,\r\n      durationResolutionMap: [{ duration: [5, 10], resolution: ["1080p"] }],\r\n    },\r\n    // kling-v2-1\r\n    {\r\n      name: "kling-v2-1 \u6807\u51C6",\r\n      modelName: "kling-v2-1:std",\r\n      type: "video",\r\n      mode: ["singleImage"],\r\n      audio: false,\r\n      durationResolutionMap: [{ duration: [5, 10], resolution: ["720p"] }],\r\n    },\r\n    {\r\n      name: "kling-v2-1 \u4E13\u5BB6",\r\n      modelName: "kling-v2-1:pro",\r\n      type: "video",\r\n      mode: ["singleImage", "startEndRequired"],\r\n      audio: false,\r\n      durationResolutionMap: [{ duration: [5, 10], resolution: ["1080p"] }],\r\n    },\r\n    // kling-v2-1-master\r\n    {\r\n      name: "kling-v2-1 Master",\r\n      modelName: "kling-v2-1-master:pro",\r\n      type: "video",\r\n      mode: ["text", "singleImage"],\r\n      audio: false,\r\n      durationResolutionMap: [{ duration: [5, 10], resolution: ["1080p"] }],\r\n    },\r\n    // kling-v2-master\r\n    {\r\n      name: "kling-v2 Master",\r\n      modelName: "kling-v2-master:pro",\r\n      type: "video",\r\n      mode: ["text", "singleImage"],\r\n      audio: false,\r\n      durationResolutionMap: [{ duration: [5, 10], resolution: ["720p"] }],\r\n    },\r\n    // kling-v1-6\r\n    {\r\n      name: "kling-v1-6 \u6807\u51C6",\r\n      modelName: "kling-v1-6:std",\r\n      type: "video",\r\n      mode: ["text", "singleImage", ["imageReference:4"]],\r\n      audio: false,\r\n      durationResolutionMap: [{ duration: [5, 10], resolution: ["720p"] }],\r\n    },\r\n    {\r\n      name: "kling-v1-6 \u4E13\u5BB6",\r\n      modelName: "kling-v1-6:pro",\r\n      type: "video",\r\n      mode: ["text", "singleImage", "endFrameOptional", ["imageReference:4"]],\r\n      audio: false,\r\n      durationResolutionMap: [{ duration: [5, 10], resolution: ["1080p"] }],\r\n    },\r\n    // kling-v1-5\r\n    {\r\n      name: "kling-v1-5 \u6807\u51C6",\r\n      modelName: "kling-v1-5:std",\r\n      type: "video",\r\n      mode: ["singleImage"],\r\n      audio: false,\r\n      durationResolutionMap: [{ duration: [5, 10], resolution: ["720p"] }],\r\n    },\r\n    {\r\n      name: "kling-v1-5 \u4E13\u5BB6",\r\n      modelName: "kling-v1-5:pro",\r\n      type: "video",\r\n      mode: ["singleImage", "endFrameOptional"],\r\n      audio: false,\r\n      durationResolutionMap: [{ duration: [5, 10], resolution: ["1080p"] }],\r\n    },\r\n    // kling-v1\r\n    {\r\n      name: "kling-v1 \u6807\u51C6",\r\n      modelName: "kling-v1:std",\r\n      type: "video",\r\n      mode: ["text", "singleImage", "startEndRequired"],\r\n      audio: false,\r\n      durationResolutionMap: [{ duration: [5, 10], resolution: ["720p"] }],\r\n    },\r\n    {\r\n      name: "kling-v1 \u4E13\u5BB6",\r\n      modelName: "kling-v1:pro",\r\n      type: "video",\r\n      mode: ["text", "singleImage", "startEndRequired"],\r\n      audio: false,\r\n      durationResolutionMap: [{ duration: [5, 10], resolution: ["720p"] }],\r\n    },\r\n  ],\r\n};\r\n\r\n// ============================================================\r\n// \u8F85\u52A9\u5DE5\u5177\r\n// ============================================================\r\n\r\n/**\r\n * \u751F\u6210\u53EF\u7075AI\u7684JWT\u9274\u6743Token\r\n */\r\nconst generateAuthToken = (): string => {\r\n  const now = Math.floor(Date.now() / 1000);\r\n  const payload = {\r\n    iss: vendor.inputValues.accessKey,\r\n    exp: now + 1800,\r\n    nbf: now - 5,\r\n  };\r\n  return jsonwebtoken.sign(payload, vendor.inputValues.secretKey, {\r\n    algorithm: "HS256",\r\n    header: { alg: "HS256", typ: "JWT" },\r\n  });\r\n};\r\n\r\n/**\r\n * \u83B7\u53D6\u57FA\u7840\u8BF7\u6C42\u5730\u5740\r\n */\r\nconst getBaseUrl = (): string => {\r\n  return vendor.inputValues.baseUrl || "https://api-beijing.klingai.com";\r\n};\r\n\r\n/**\r\n * \u4ECE ReferenceList \u6761\u76EE\u4E2D\u63D0\u53D6\u53EF\u7528\u7684\u6570\u636E\u5B57\u7B26\u4E32\r\n * \u5BF9\u4E8E url \u7C7B\u578B\u8FD4\u56DE url\uFF0C\u5BF9\u4E8E base64 \u7C7B\u578B\u8FD4\u56DE\u7EAF base64\uFF08\u53BB\u6389 data: \u524D\u7F00\uFF09\r\n */\r\nconst extractRawBase64 = (ref: ReferenceList): string => {\r\n  return ref.base64.replace(/^data:[^;]+;base64,/, "");\r\n};\r\n\r\n/**\r\n * \u4ECE ReferenceList \u6761\u76EE\u4E2D\u63D0\u53D6\u5E26\u5934\u7684 base64 \u6216 url\r\n * \u7528\u4E8E omni-video \u63A5\u53E3\uFF0C\u8BE5\u63A5\u53E3\u7684 image_url \u652F\u6301\u5E26\u524D\u7F00\u7684 base64 \u548C url\r\n */\r\nconst extractImageUrl = (ref: ReferenceList): string => {\r\n  return ref.base64.startsWith("data:") ? ref.base64 : `data:image/jpeg;base64,${ref.base64}`;\r\n};\r\n\r\n/**\r\n * \u63D0\u4EA4\u4EFB\u52A1\u5E76\u8F6E\u8BE2\u83B7\u53D6\u7ED3\u679C\u7684\u901A\u7528\u51FD\u6570\r\n */\r\nconst submitAndPoll = async (submitUrl: string, queryUrlBase: string, requestBody: any): Promise<string> => {\r\n  const token = generateAuthToken();\r\n\r\n  logger(`\u5F00\u59CB\u63D0\u4EA4\u53EF\u7075AI\u89C6\u9891\u751F\u6210\u4EFB\u52A1: ${submitUrl}`);\r\n  logger(\r\n    `\u8BF7\u6C42\u53C2\u6570: ${JSON.stringify({\r\n      ...requestBody,\r\n      image: requestBody.image ? "[BASE64]" : undefined,\r\n      image_tail: requestBody.image_tail ? "[BASE64]" : undefined,\r\n      image_list: requestBody.image_list ? "[IMAGES]" : undefined,\r\n    })}`,\r\n  );\r\n\r\n  const submitResp = await axios.post(submitUrl, requestBody, {\r\n    headers: {\r\n      "Content-Type": "application/json",\r\n      Authorization: `Bearer ${token}`,\r\n    },\r\n  });\r\n\r\n  if (submitResp.data.code !== 0) {\r\n    throw new Error(`\u63D0\u4EA4\u4EFB\u52A1\u5931\u8D25: ${submitResp.data.message || JSON.stringify(submitResp.data)}`);\r\n  }\r\n\r\n  const taskId = submitResp.data.data.task_id;\r\n  logger(`\u4EFB\u52A1\u5DF2\u63D0\u4EA4\uFF0C\u4EFB\u52A1ID: ${taskId}`);\r\n\r\n  const result = await pollTask(\r\n    async () => {\r\n      const freshToken = generateAuthToken();\r\n      const queryResp = await axios.get(`${queryUrlBase}/${taskId}`, {\r\n        headers: {\r\n          Authorization: `Bearer ${freshToken}`,\r\n        },\r\n      });\r\n\r\n      if (queryResp.data.code !== 0) {\r\n        return { completed: true, error: `\u67E5\u8BE2\u4EFB\u52A1\u5931\u8D25: ${queryResp.data.message}` };\r\n      }\r\n\r\n      const taskData = queryResp.data.data;\r\n      const status = taskData.task_status;\r\n      logger(`\u8F6E\u8BE2\u4E2D... \u4EFB\u52A1\u72B6\u6001: ${status}`);\r\n\r\n      if (status === "succeed") {\r\n        const videoUrl = taskData.task_result?.videos?.[0]?.url;\r\n        if (!videoUrl) {\r\n          return { completed: true, error: "\u4EFB\u52A1\u5B8C\u6210\u4F46\u672A\u83B7\u53D6\u5230\u89C6\u9891URL" };\r\n        }\r\n        return { completed: true, data: videoUrl };\r\n      }\r\n\r\n      if (status === "failed") {\r\n        return { completed: true, error: `\u89C6\u9891\u751F\u6210\u5931\u8D25: ${taskData.task_status_msg || "\u672A\u77E5\u9519\u8BEF"}` };\r\n      }\r\n\r\n      return { completed: false };\r\n    },\r\n    5000,\r\n    600000,\r\n  );\r\n\r\n  if (result.error) throw new Error(result.error);\r\n  logger(`\u89C6\u9891\u751F\u6210\u5B8C\u6210\uFF0C\u6B63\u5728\u8F6C\u6362\u4E3ABase64...`);\r\n  return await urlToBase64(result.data!);\r\n};\r\n\r\n// ============================================================\r\n// \u9002\u914D\u5668\u51FD\u6570\r\n// ============================================================\r\n\r\nconst textRequest = (model: TextModel, think: boolean, thinkLevel: 0 | 1 | 2 | 3) => {\r\n  throw new Error("\u53EF\u7075AI\u4E0D\u652F\u6301\u6587\u672C\u6A21\u578B");\r\n};\r\n\r\nconst imageRequest = async (config: ImageConfig, model: ImageModel): Promise<string> => {\r\n  throw new Error("\u53EF\u7075AI\u4E0D\u652F\u6301\u56FE\u7247\u6A21\u578B");\r\n};\r\n\r\nconst videoRequest = async (config: VideoConfig, model: VideoModel): Promise<string> => {\r\n  if (!vendor.inputValues.accessKey) throw new Error("\u7F3A\u5C11Access Key");\r\n  if (!vendor.inputValues.secretKey) throw new Error("\u7F3A\u5C11Secret Key");\r\n\r\n  const baseUrl = getBaseUrl();\r\n\r\n  // \u89E3\u6790 modelName\uFF0C\u683C\u5F0F\uFF1Akling-video-o1:pro => modelName=kling-video-o1, mode=pro\r\n  const colonIdx = model.modelName.indexOf(":");\r\n  const modelName = colonIdx > -1 ? model.modelName.substring(0, colonIdx) : model.modelName;\r\n  const mode = colonIdx > -1 ? model.modelName.substring(colonIdx + 1) : "pro";\r\n\r\n  // \u5224\u65AD\u662F\u5426\u4E3A Omni \u6A21\u578B\r\n  const isOmniModel = modelName === "kling-video-o1" || modelName === "kling-v3-omni";\r\n\r\n  // \u5224\u65AD\u5F53\u524D\u9009\u4E2D\u7684\u89C6\u9891\u751F\u6210\u6A21\u5F0F\r\n  const currentMode = config.mode;\r\n  const isText = currentMode.includes("text");\r\n  const isSingleImage = currentMode.includes("singleImage");\r\n  const isStartEndRequired = currentMode.includes("startEndRequired");\r\n  const isEndFrameOptional = currentMode.includes("endFrameOptional");\r\n  const isStartFrameOptional = currentMode.includes("startFrameOptional");\r\n  const hasMultiRef = Array.isArray(currentMode) && currentMode.some((m) => Array.isArray(m));\r\n\r\n  // \u63D0\u53D6\u4E0D\u540C\u7C7B\u578B\u7684\u5F15\u7528\r\n  const imageRefs = (config.referenceList || []).filter((r) => r.type === "image");\r\n  const videoRefs = (config.referenceList || []).filter((r) => r.type === "video");\r\n\r\n  // =====================================================\r\n  // Omni \u6A21\u578B \u2014\u2014 \u4F7F\u7528 /v1/videos/omni-video \u63A5\u53E3\r\n  // =====================================================\r\n  if (isOmniModel) {\r\n    const requestBody: any = {\r\n      model_name: modelName,\r\n      mode: mode,\r\n      duration: String(config.duration),\r\n      sound: config.audio === true ? "on" : "off",\r\n    };\r\n\r\n    if (config.prompt) {\r\n      requestBody.prompt = config.prompt;\r\n    }\r\n\r\n    if (isSingleImage && imageRefs.length > 0) {\r\n      const imageUrl = extractImageUrl(imageRefs[0]);\r\n      requestBody.image_list = [{ image_url: imageUrl, type: "first_frame" }];\r\n      if (!requestBody.prompt) requestBody.prompt = "\u6839\u636E\u56FE\u7247\u751F\u6210\u89C6\u9891";\r\n    } else if (isStartEndRequired && imageRefs.length >= 2) {\r\n      const firstUrl = extractImageUrl(imageRefs[0]);\r\n      const endUrl = extractImageUrl(imageRefs[1]);\r\n      requestBody.image_list = [\r\n        { image_url: firstUrl, type: "first_frame" },\r\n        { image_url: endUrl, type: "end_frame" },\r\n      ];\r\n      if (!requestBody.prompt) requestBody.prompt = "\u6839\u636E\u9996\u5C3E\u5E27\u56FE\u7247\u751F\u6210\u8FC7\u6E21\u89C6\u9891";\r\n    } else if (isEndFrameOptional && imageRefs.length >= 1) {\r\n      const firstUrl = extractImageUrl(imageRefs[0]);\r\n      requestBody.image_list = [{ image_url: firstUrl, type: "first_frame" }];\r\n      if (imageRefs.length >= 2) {\r\n        const endUrl = extractImageUrl(imageRefs[1]);\r\n        requestBody.image_list.push({ image_url: endUrl, type: "end_frame" });\r\n      }\r\n      if (!requestBody.prompt) requestBody.prompt = "\u6839\u636E\u56FE\u7247\u751F\u6210\u89C6\u9891";\r\n    } else if (isStartFrameOptional && imageRefs.length >= 1) {\r\n      if (imageRefs.length >= 2) {\r\n        const firstUrl = extractImageUrl(imageRefs[0]);\r\n        const endUrl = extractImageUrl(imageRefs[1]);\r\n        requestBody.image_list = [\r\n          { image_url: firstUrl, type: "first_frame" },\r\n          { image_url: endUrl, type: "end_frame" },\r\n        ];\r\n      } else {\r\n        const endUrl = extractImageUrl(imageRefs[0]);\r\n        requestBody.image_list = [{ image_url: endUrl, type: "end_frame" }];\r\n      }\r\n      if (!requestBody.prompt) requestBody.prompt = "\u6839\u636E\u56FE\u7247\u751F\u6210\u89C6\u9891";\r\n    } else if (hasMultiRef && (imageRefs.length > 0 || videoRefs.length > 0)) {\r\n      requestBody.image_list = [];\r\n      for (let i = 0; i < imageRefs.length; i++) {\r\n        const imageUrl = extractImageUrl(imageRefs[i]);\r\n        requestBody.image_list.push({ image_url: imageUrl });\r\n      }\r\n      if (!requestBody.prompt) {\r\n        const refs = imageRefs.map((_, idx) => `<<<image_${idx + 1}>>>`).join("\u3001");\r\n        requestBody.prompt = `\u53C2\u8003${refs}\u751F\u6210\u89C6\u9891`;\r\n      }\r\n    }\r\n\r\n    // \u6587\u751F\u89C6\u9891\u6216\u65E0\u56FE\u7247\u8F93\u5165\u65F6\u9700\u8981\u8BBE\u7F6E\u5BBD\u9AD8\u6BD4\r\n    const hasImageInput = requestBody.image_list && requestBody.image_list.length > 0;\r\n    if (!hasImageInput) {\r\n      requestBody.aspect_ratio = config.aspectRatio || "16:9";\r\n      if (!requestBody.prompt) throw new Error("\u6587\u751F\u89C6\u9891\u6A21\u5F0F\u9700\u8981\u63D0\u4F9B\u63D0\u793A\u8BCD");\r\n    }\r\n\r\n    const apiPath = "/v1/videos/omni-video";\r\n    return await submitAndPoll(`${baseUrl}${apiPath}`, `${baseUrl}${apiPath}`, requestBody);\r\n  }\r\n\r\n  // =====================================================\r\n  // \u975E Omni \u6A21\u578B \u2014\u2014 \u6839\u636E\u6A21\u5F0F\u9009\u62E9\u4E0D\u540C\u63A5\u53E3\r\n  // =====================================================\r\n\r\n  // \u591A\u56FE\u53C2\u8003\u6A21\u5F0F \u2014\u2014 \u4F7F\u7528 /v1/videos/multi-image2video \u63A5\u53E3\uFF08\u4EC5 kling-v1-6 \u652F\u6301\uFF09\r\n  if (hasMultiRef && imageRefs.length > 0) {\r\n    const imageList = [];\r\n    for (let i = 0; i < imageRefs.length; i++) {\r\n      const rawBase64 = extractRawBase64(imageRefs[i]);\r\n      imageList.push({ image: rawBase64 });\r\n    }\r\n\r\n    const requestBody: any = {\r\n      model_name: modelName,\r\n      image_list: imageList,\r\n      prompt: config.prompt || "\u6839\u636E\u53C2\u8003\u56FE\u7247\u751F\u6210\u89C6\u9891",\r\n      mode: mode,\r\n      duration: String(config.duration),\r\n      aspect_ratio: config.aspectRatio || "16:9",\r\n    };\r\n\r\n    const apiPath = "/v1/videos/multi-image2video";\r\n    return await submitAndPoll(`${baseUrl}${apiPath}`, `${baseUrl}${apiPath}`, requestBody);\r\n  }\r\n\r\n  // \u6587\u751F\u89C6\u9891\u6A21\u5F0F \u2014\u2014 \u4F7F\u7528 /v1/videos/text2video \u63A5\u53E3\r\n  if (isText) {\r\n    if (!config.prompt) throw new Error("\u6587\u751F\u89C6\u9891\u6A21\u5F0F\u9700\u8981\u63D0\u4F9B\u63D0\u793A\u8BCD");\r\n\r\n    const requestBody: any = {\r\n      model_name: modelName,\r\n      prompt: config.prompt,\r\n      mode: mode,\r\n      duration: String(config.duration),\r\n      aspect_ratio: config.aspectRatio || "16:9",\r\n      sound: config.audio === true ? "on" : "off",\r\n    };\r\n\r\n    const apiPath = "/v1/videos/text2video";\r\n    return await submitAndPoll(`${baseUrl}${apiPath}`, `${baseUrl}${apiPath}`, requestBody);\r\n  }\r\n\r\n  // \u56FE\u751F\u89C6\u9891\u6A21\u5F0F\uFF08\u5355\u56FE / \u9996\u5C3E\u5E27 / \u5C3E\u5E27\u53EF\u9009\u7B49\uFF09\u2014\u2014 \u4F7F\u7528 /v1/videos/image2video \u63A5\u53E3\r\n  if ((isSingleImage || isStartEndRequired || isEndFrameOptional || isStartFrameOptional) && imageRefs.length > 0) {\r\n    const requestBody: any = {\r\n      model_name: modelName,\r\n      prompt: config.prompt || "\u6839\u636E\u56FE\u7247\u751F\u6210\u89C6\u9891",\r\n      mode: mode,\r\n      duration: String(config.duration),\r\n      sound: config.audio === true ? "on" : "off",\r\n    };\r\n\r\n    if (isSingleImage) {\r\n      requestBody.image = extractRawBase64(imageRefs[0]);\r\n    } else if (isStartEndRequired && imageRefs.length >= 2) {\r\n      requestBody.image = extractRawBase64(imageRefs[0]);\r\n      requestBody.image_tail = extractRawBase64(imageRefs[1]);\r\n    } else if (isEndFrameOptional) {\r\n      requestBody.image = extractRawBase64(imageRefs[0]);\r\n      if (imageRefs.length >= 2) {\r\n        requestBody.image_tail = extractRawBase64(imageRefs[1]);\r\n      }\r\n    } else if (isStartFrameOptional) {\r\n      if (imageRefs.length >= 2) {\r\n        requestBody.image = extractRawBase64(imageRefs[0]);\r\n        requestBody.image_tail = extractRawBase64(imageRefs[1]);\r\n      } else {\r\n        requestBody.image = extractRawBase64(imageRefs[0]);\r\n      }\r\n    }\r\n\r\n    const apiPath = "/v1/videos/image2video";\r\n    return await submitAndPoll(`${baseUrl}${apiPath}`, `${baseUrl}${apiPath}`, requestBody);\r\n  }\r\n\r\n  throw new Error("\u4E0D\u652F\u6301\u7684\u89C6\u9891\u751F\u6210\u6A21\u5F0F\u6216\u7F3A\u5C11\u5FC5\u8981\u7684\u8F93\u5165\u53C2\u6570");\r\n};\r\n\r\nconst ttsRequest = async (config: TTSConfig, model: TTSModel): Promise<string> => {\r\n  return "";\r\n};\r\n\r\n// ============================================================\r\n// \u5BFC\u51FA\r\n// ============================================================\r\n\r\nexports.vendor = vendor;\r\nexports.textRequest = textRequest;\r\nexports.imageRequest = imageRequest;\r\nexports.videoRequest = videoRequest;\r\nexports.ttsRequest = ttsRequest;\r\n\r\n// \u8FD9\u884C\u4EE3\u7801\u7528\u4E8E\u786E\u4FDD\u5F53\u524D\u6587\u4EF6\u88AB\u8BC6\u522B\u4E3A\u6A21\u5757\uFF0C\u907F\u514D\u5168\u5C40\u53D8\u91CF\u51B2\u7A81\r\nexport {};\r\n',
+      "minimax.ts": '/**\r\n * DramaStudio AI\u4F9B\u5E94\u5546\u6A21\u677F - MiniMax(\u6D77\u87BAAI)\r\n * @version 2.0\r\n */\r\n\r\n// ============================================================\r\n// \u7C7B\u578B\u5B9A\u4E49\r\n// ============================================================\r\n\r\ntype VideoMode =\r\n  | "singleImage"\r\n  | "startEndRequired"\r\n  | "endFrameOptional"\r\n  | "startFrameOptional"\r\n  | "text"\r\n  | (`videoReference:${number}` | `imageReference:${number}` | `audioReference:${number}`)[];\r\n\r\ninterface TextModel {\r\n  name: string;\r\n  modelName: string;\r\n  type: "text";\r\n  think: boolean;\r\n}\r\n\r\ninterface ImageModel {\r\n  name: string;\r\n  modelName: string;\r\n  type: "image";\r\n  mode: ("text" | "singleImage" | "multiReference")[];\r\n  associationSkills?: string;\r\n}\r\n\r\ninterface VideoModel {\r\n  name: string;\r\n  modelName: string;\r\n  type: "video";\r\n  mode: VideoMode[];\r\n  associationSkills?: string;\r\n  audio: "optional" | false | true;\r\n  durationResolutionMap: { duration: number[]; resolution: string[] }[];\r\n}\r\n\r\ninterface TTSModel {\r\n  name: string;\r\n  modelName: string;\r\n  type: "tts";\r\n  voices: { title: string; voice: string }[];\r\n}\r\n\r\ninterface VendorConfig {\r\n  id: string;\r\n  version: string;\r\n  name: string;\r\n  author: string;\r\n  description?: string;\r\n  icon?: string;\r\n  inputs: { key: string; label: string; type: "text" | "password" | "url"; required: boolean; placeholder?: string }[];\r\n  inputValues: Record<string, string>;\r\n  models: (TextModel | ImageModel | VideoModel | TTSModel)[];\r\n}\r\n\r\ntype ReferenceList =\r\n  | { type: "image"; sourceType: "base64"; base64: string }\r\n  | { type: "audio"; sourceType: "base64"; base64: string }\r\n  | { type: "video"; sourceType: "base64"; base64: string };\r\n\r\ninterface ImageConfig {\r\n  prompt: string;\r\n  referenceList?: Extract<ReferenceList, { type: "image" }>[];\r\n  size: "1K" | "2K" | "4K";\r\n  aspectRatio: `${number}:${number}`;\r\n}\r\n\r\ninterface VideoConfig {\r\n  duration: number;\r\n  resolution: string;\r\n  aspectRatio: "16:9" | "9:16";\r\n  prompt: string;\r\n  referenceList?: ReferenceList[];\r\n  audio?: boolean;\r\n  mode: VideoMode[];\r\n}\r\n\r\ninterface TTSConfig {\r\n  text: string;\r\n  voice: string;\r\n  speechRate: number;\r\n  pitchRate: number;\r\n  volume: number;\r\n  referenceList?: Extract<ReferenceList, { type: "audio" }>[];\r\n}\r\n\r\ninterface PollResult {\r\n  completed: boolean;\r\n  data?: string;\r\n  error?: string;\r\n}\r\n\r\n// ============================================================\r\n// \u5168\u5C40\u58F0\u660E\r\n// ============================================================\r\n\r\ndeclare const axios: any;\r\ndeclare const logger: (msg: string) => void;\r\ndeclare const jsonwebtoken: any;\r\ndeclare const zipImage: (base64: string, size: number) => Promise<string>;\r\ndeclare const zipImageResolution: (base64: string, w: number, h: number) => Promise<string>;\r\ndeclare const mergeImages: (base64Arr: string[], maxSize?: string) => Promise<string>;\r\ndeclare const urlToBase64: (url: string) => Promise<string>;\r\ndeclare const pollTask: (fn: () => Promise<PollResult>, interval?: number, timeout?: number) => Promise<PollResult>;\r\ndeclare const createOpenAI: any;\r\ndeclare const createDeepSeek: any;\r\ndeclare const createZhipu: any;\r\ndeclare const createQwen: any;\r\ndeclare const createAnthropic: any;\r\ndeclare const createOpenAICompatible: any;\r\ndeclare const createXai: any;\r\ndeclare const createMinimax: any;\r\ndeclare const createGoogleGenerativeAI: any;\r\ndeclare const exports: {\r\n  vendor: VendorConfig;\r\n  textRequest: (m: TextModel, t: boolean, tl: 0 | 1 | 2 | 3) => any;\r\n  uploadReference: (base64: string, fileType: "image" | "audio" | "video") => Promise<ReferenceList>;\r\n  imageRequest: (c: ImageConfig, m: ImageModel) => Promise<string>;\r\n  videoRequest: (c: VideoConfig, m: VideoModel) => Promise<string>;\r\n  ttsRequest: (c: TTSConfig, m: TTSModel) => Promise<string>;\r\n  checkForUpdates?: () => Promise<{ hasUpdate: boolean; latestVersion: string; notice: string }>;\r\n  updateVendor?: () => Promise<string>;\r\n};\r\n\r\n// ============================================================\r\n// \u4F9B\u5E94\u5546\u914D\u7F6E\r\n// ============================================================\r\n\r\nconst vendor: VendorConfig = {\r\n  id: "minimax",\r\n  version: "2.1",\r\n  author: "DramaStudio",\r\n  name: "MiniMax(\u6D77\u87BAAI)",\r\n  description: "MiniMax\u5B98\u65B9\u63A5\u53E3\u9002\u914D\uFF0C\u652F\u6301M\u7CFB\u5217\u63A8\u7406\u6587\u672C\u6A21\u578B\u3001\u6587\u751F\u56FE/\u56FE\u751F\u56FE\u3001\u89C6\u9891\u751F\u6210\uFF08\u6587\u751F\u89C6\u9891\u3001\u56FE\u751F\u89C6\u9891\u3001\u9996\u5C3E\u5E27\u751F\u6210\uFF09\u80FD\u529B \\n [\u524D\u5F80\u5E73\u53F0](https://minimaxi.com/)",\r\n  inputs: [\r\n    { key: "apiKey", label: "API\u5BC6\u94A5", type: "password", required: true },\r\n    { key: "baseUrl", label: "\u8BF7\u6C42\u5730\u5740", type: "url", required: true, placeholder: "\u793A\u4F8B\uFF1Ahttps://api.minimaxi.com" },\r\n  ],\r\n  inputValues: { apiKey: "", baseUrl: "https://api.minimaxi.com" },\r\n  models: [\r\n    // \u6587\u672C\u6A21\u578B\r\n    { name: "MiniMax-M2.7 (\u63A8\u7406\u7248)", modelName: "MiniMax-M2.7", type: "text", think: true },\r\n    { name: "MiniMax-M2.7 \u6781\u901F\u7248 (\u63A8\u7406\u7248)", modelName: "MiniMax-M2.7-highspeed", type: "text", think: true },\r\n    { name: "MiniMax-M2.5 (\u63A8\u7406\u7248)", modelName: "MiniMax-M2.5", type: "text", think: true },\r\n    { name: "MiniMax-M2.5 \u6781\u901F\u7248 (\u63A8\u7406\u7248)", modelName: "MiniMax-M2.5-highspeed", type: "text", think: true },\r\n    { name: "MiniMax-M2.1 (\u7F16\u7A0B\u7248)", modelName: "MiniMax-M2.1", type: "text", think: true },\r\n    { name: "MiniMax-M2.1 \u6781\u901F\u7248 (\u7F16\u7A0B\u7248)", modelName: "MiniMax-M2.1-highspeed", type: "text", think: true },\r\n    { name: "MiniMax-M2 (Agent\u7248)", modelName: "MiniMax-M2", type: "text", think: false },\r\n    // \u56FE\u7247\u6A21\u578B\r\n    { name: "\u6D77\u87BA\u56FE\u50CFV1", modelName: "image-01", type: "image", mode: ["text", "singleImage"] },\r\n    { name: "\u6D77\u87BA\u56FE\u50CFV1 Live\u7248", modelName: "image-01-live", type: "image", mode: ["text", "singleImage"], associationSkills: "\u652F\u6301\u81EA\u5B9A\u4E49\u753B\u98CE" },\r\n    // \u89C6\u9891\u6A21\u578B\r\n    {\r\n      name: "\u6D77\u87BA2.3",\r\n      modelName: "MiniMax-Hailuo-2.3",\r\n      type: "video",\r\n      mode: ["text", "singleImage"],\r\n      audio: false,\r\n      durationResolutionMap: [\r\n        { duration: [6], resolution: ["768P", "1080P"] },\r\n        { duration: [10], resolution: ["768P"] },\r\n      ],\r\n    },\r\n    {\r\n      name: "\u6D77\u87BA2.3\u6781\u901F\u7248",\r\n      modelName: "MiniMax-Hailuo-2.3-Fast",\r\n      type: "video",\r\n      mode: ["text", "singleImage"],\r\n      audio: false,\r\n      durationResolutionMap: [\r\n        { duration: [6], resolution: ["768P", "1080P"] },\r\n        { duration: [10], resolution: ["768P"] },\r\n      ],\r\n    },\r\n    {\r\n      name: "\u6D77\u87BA02",\r\n      modelName: "MiniMax-Hailuo-02",\r\n      type: "video",\r\n      mode: ["text", "singleImage", "startEndRequired"],\r\n      audio: false,\r\n      durationResolutionMap: [\r\n        { duration: [6], resolution: ["512P", "768P", "1080P"] },\r\n        { duration: [10], resolution: ["512P", "768P"] },\r\n      ],\r\n    },\r\n  ],\r\n};\r\n\r\n// ============================================================\r\n// \u8F85\u52A9\u5DE5\u5177\r\n// ============================================================\r\n\r\n/**\r\n * \u83B7\u53D6\u8BF7\u6C42\u5934\r\n */\r\nconst getHeaders = (): Record<string, string> => {\r\n  const apiKey = vendor.inputValues.apiKey.replace(/^Bearer\\s+/i, "");\r\n  return {\r\n    Authorization: `Bearer ${apiKey}`,\r\n    "Content-Type": "application/json",\r\n  };\r\n};\r\n\r\n/**\r\n * \u83B7\u53D6\u57FA\u7840\u8BF7\u6C42\u5730\u5740\r\n */\r\nconst getBaseUrl = (): string => {\r\n  return vendor.inputValues.baseUrl.replace(/\\/$/, "");\r\n};\r\n\r\n/**\r\n * \u4ECE ReferenceList \u6761\u76EE\u4E2D\u63D0\u53D6\u6709\u5934 base64 \u5B57\u7B26\u4E32\r\n */\r\nconst extractBase64WithHead = (ref: ReferenceList): string => {\r\n  return ref.base64.startsWith("data:") ? ref.base64 : `data:image/png;base64,${ref.base64}`;\r\n};\r\n\r\n// ============================================================\r\n// \u9002\u914D\u5668\u51FD\u6570\r\n// ============================================================\r\n\r\nconst textRequest = (model: TextModel, think: boolean, thinkLevel: 0 | 1 | 2 | 3) => {\r\n  if (!vendor.inputValues.apiKey) throw new Error("\u7F3A\u5C11API Key");\r\n  const apiKey = vendor.inputValues.apiKey.replace(/^Bearer\\s+/i, "");\r\n  const baseUrl = getBaseUrl();\r\n\r\n  const openaiBaseUrl = `${baseUrl}/v1`;\r\n  const extraBody = model.think ? { reasoning_split: true } : {};\r\n  return createOpenAI({ baseURL: openaiBaseUrl, apiKey, extraBody }).chat(model.modelName);\r\n};\r\n\r\nconst uploadReference = async (base64: string, fileType: "image" | "audio" | "video"): Promise<ReferenceList> => {\r\n  // MiniMax\u7684\u56FE\u7247\u63A5\u53E3\u76F4\u63A5\u63A5\u53D7 base64\uFF0C\u538B\u7F29\u540E\u539F\u6837\u8FD4\u56DE\r\n  if (fileType === "image") {\r\n    const compressed = await zipImage(base64, 10 * 1024);\r\n    return { type: "image", sourceType: "base64", base64: compressed };\r\n  }\r\n  // \u89C6\u9891\u63A5\u53E3\u7684\u56FE\u7247\u53C2\u6570\u4E5F\u662F base64\uFF0C\u538B\u7F29\u523020MB\r\n  return { type: fileType, sourceType: "base64", base64 } as ReferenceList;\r\n};\r\n\r\nconst imageRequest = async (config: ImageConfig, model: ImageModel): Promise<string> => {\r\n  if (!vendor.inputValues.apiKey) throw new Error("\u7F3A\u5C11API Key");\r\n  const baseUrl = getBaseUrl();\r\n  const headers = getHeaders();\r\n\r\n  const reqBody: any = {\r\n    model: model.modelName,\r\n    prompt: config.prompt,\r\n    aspect_ratio: config.aspectRatio,\r\n    response_format: "base64",\r\n    n: 1,\r\n    prompt_optimizer: true,\r\n    aigc_watermark: false,\r\n  };\r\n\r\n  // \u5904\u7406\u56FE\u751F\u56FE\u53C2\u8003\r\n  const imageRefs = config.referenceList || [];\r\n  if (imageRefs.length > 0) {\r\n    const refBase64 = extractBase64WithHead(imageRefs[0]);\r\n    reqBody.subject_reference = [{ type: "character", image_file: refBase64 }];\r\n  }\r\n\r\n  logger("\u5F00\u59CB\u63D0\u4EA4MiniMax\u56FE\u50CF\u751F\u6210\u4EFB\u52A1");\r\n  const resp = await axios.post(`${baseUrl}/v1/image_generation`, reqBody, { headers });\r\n  if (resp.data.base_resp.status_code !== 0) {\r\n    throw new Error(`\u56FE\u50CF\u751F\u6210\u5931\u8D25\uFF1A${resp.data.base_resp.status_msg}`);\r\n  }\r\n  if (resp.data.metadata.success_count === 0) {\r\n    throw new Error("\u56FE\u50CF\u751F\u6210\u88AB\u5B89\u5168\u7B56\u7565\u62E6\u622A\uFF0C\u8BF7\u8C03\u6574prompt\u6216\u53C2\u8003\u56FE");\r\n  }\r\n\r\n  const imgBase64 = resp.data.data.image_base64[0];\r\n  return imgBase64.startsWith("data:") ? imgBase64 : `data:image/png;base64,${imgBase64}`;\r\n};\r\n\r\nconst videoRequest = async (config: VideoConfig, model: VideoModel): Promise<string> => {\r\n  if (!vendor.inputValues.apiKey) throw new Error("\u7F3A\u5C11API Key");\r\n  const baseUrl = getBaseUrl();\r\n  const headers = getHeaders();\r\n\r\n  const reqBody: any = {\r\n    model: model.modelName,\r\n    prompt: config.prompt,\r\n    duration: config.duration,\r\n    resolution: config.resolution,\r\n    aigc_watermark: false,\r\n    prompt_optimizer: true,\r\n  };\r\n\r\n  // \u63D0\u53D6\u56FE\u7247\u7C7B\u578B\u7684\u5F15\u7528\r\n  const imageRefs = (config.referenceList || []).filter((r) => r.type === "image");\r\n\r\n  if (imageRefs.length > 0) {\r\n    // \u538B\u7F29\u56FE\u7247\u523020MB\u4EE5\u5185\r\n    const compressedImages: string[] = [];\r\n    for (const ref of imageRefs) {\r\n      const base64 = extractBase64WithHead(ref);\r\n      const compressed = await zipImage(base64, 20 * 1024);\r\n      compressedImages.push(compressed);\r\n    }\r\n\r\n    if (config.mode.includes("startEndRequired")) {\r\n      if (compressedImages.length < 2) throw new Error("\u9996\u5C3E\u5E27\u6A21\u5F0F\u9700\u8981\u4E0A\u4F20\u4E24\u5F20\u56FE\u7247");\r\n      reqBody.first_frame_image = compressedImages[0];\r\n      reqBody.last_frame_image = compressedImages[1];\r\n    } else if (config.mode.includes("singleImage")) {\r\n      reqBody.first_frame_image = compressedImages[0];\r\n    }\r\n  }\r\n\r\n  logger("\u5F00\u59CB\u63D0\u4EA4MiniMax\u89C6\u9891\u751F\u6210\u4EFB\u52A1");\r\n  const submitResp = await axios.post(`${baseUrl}/v1/video_generation`, reqBody, { headers });\r\n  if (submitResp.data.base_resp.status_code !== 0) {\r\n    throw new Error(`\u4EFB\u52A1\u63D0\u4EA4\u5931\u8D25\uFF1A${submitResp.data.base_resp.status_msg}`);\r\n  }\r\n  const taskId = submitResp.data.task_id;\r\n  logger(`\u89C6\u9891\u4EFB\u52A1\u63D0\u4EA4\u6210\u529F\uFF0C\u4EFB\u52A1ID: ${taskId}`);\r\n\r\n  // \u8F6E\u8BE2\u4EFB\u52A1\u72B6\u6001\r\n  const pollResult = await pollTask(\r\n    async () => {\r\n      const queryResp = await axios.get(`${baseUrl}/v1/query/video_generation`, {\r\n        headers: getHeaders(),\r\n        params: { task_id: taskId },\r\n      });\r\n      if (queryResp.data.base_resp.status_code !== 0) {\r\n        return { completed: true, error: queryResp.data.base_resp.status_msg };\r\n      }\r\n      const status = queryResp.data.status;\r\n      if (status === "Success") {\r\n        return { completed: true, data: queryResp.data.file_id };\r\n      }\r\n      if (status === "Fail") {\r\n        return { completed: true, error: "\u89C6\u9891\u751F\u6210\u5931\u8D25" };\r\n      }\r\n      logger(`\u89C6\u9891\u4EFB\u52A1\u751F\u6210\u4E2D\uFF0C\u5F53\u524D\u72B6\u6001\uFF1A${status}`);\r\n      return { completed: false };\r\n    },\r\n    5000,\r\n    600000,\r\n  );\r\n\r\n  if (pollResult.error) throw new Error(pollResult.error);\r\n  const fileId = pollResult.data!;\r\n  logger(`\u89C6\u9891\u4EFB\u52A1\u751F\u6210\u6210\u529F\uFF0C\u6587\u4EF6ID: ${fileId}`);\r\n\r\n  // \u83B7\u53D6\u4E0B\u8F7D\u5730\u5740\r\n  const fileResp = await axios.get(`${baseUrl}/v1/files/retrieve`, {\r\n    headers: getHeaders(),\r\n    params: { file_id: fileId },\r\n  });\r\n  if (fileResp.data.base_resp.status_code !== 0) {\r\n    throw new Error(`\u83B7\u53D6\u6587\u4EF6\u5730\u5740\u5931\u8D25\uFF1A${fileResp.data.base_resp.status_msg}`);\r\n  }\r\n  const downloadUrl = fileResp.data.file.download_url;\r\n  logger(`\u89C6\u9891\u4E0B\u8F7D\u5730\u5740\u83B7\u53D6\u6210\u529F\uFF0C\u5F00\u59CB\u8F6CBase64`);\r\n\r\n  return await urlToBase64(downloadUrl);\r\n};\r\n\r\nconst ttsRequest = async (config: TTSConfig, model: TTSModel): Promise<string> => {\r\n  return "";\r\n};\r\n\r\nconst checkForUpdates = async (): Promise<{ hasUpdate: boolean; latestVersion: string; notice: string }> => {\r\n  return {\r\n    hasUpdate: false,\r\n    latestVersion: "2.0",\r\n    notice:\r\n      "## \u65B0\u7248\u672C\u66F4\u65B0\u516C\u544A\\n1. \u9002\u914D\u65B0\u7248\u6A21\u677F\u67B6\u6784\uFF0C\u652F\u6301 ReferenceList \u7EDF\u4E00\u5F15\u7528\u7C7B\u578B\\n2. \u65B0\u589E uploadReference \u524D\u7F6E\u5904\u7406\u5668\\n3. \u4F18\u5316\u56FE\u7247\u538B\u7F29\u548C\u5F15\u7528\u63D0\u53D6\u903B\u8F91",\r\n  };\r\n};\r\n\r\nconst updateVendor = async (): Promise<string> => {\r\n  return "";\r\n};\r\n\r\n// ============================================================\r\n// \u5BFC\u51FA\r\n// ============================================================\r\n\r\nexports.vendor = vendor;\r\nexports.textRequest = textRequest;\r\nexports.uploadReference = uploadReference;\r\nexports.imageRequest = imageRequest;\r\nexports.videoRequest = videoRequest;\r\nexports.ttsRequest = ttsRequest;\r\nexports.checkForUpdates = checkForUpdates;\r\nexports.updateVendor = updateVendor;\r\n\r\n// \u8FD9\u884C\u4EE3\u7801\u7528\u4E8E\u786E\u4FDD\u5F53\u524D\u6587\u4EF6\u88AB\u8BC6\u522B\u4E3A\u6A21\u5757\uFF0C\u907F\u514D\u5168\u5C40\u53D8\u91CF\u51B2\u7A81\r\nexport {};',
+      "null.ts": '/**\r\n * DramaStudio AI\u4F9B\u5E94\u5546\u6A21\u677F\r\n * @version 2.0\r\n */\r\n\r\n// ============================================================\r\n// \u7C7B\u578B\u5B9A\u4E49\r\n// ============================================================\r\n\r\ntype VideoMode =\r\n  | "singleImage" //\u5355\u56FE\u53C2\u8003\r\n  | "startEndRequired" //\u9996\u5C3E\u5E27\uFF08\u4E24\u5F20\u90FD\u5F97\u6709\uFF09\r\n  | "endFrameOptional" //\u9996\u5C3E\u5E27\uFF08\u5C3E\u5E27\u53EF\u9009\uFF09\r\n  | "startFrameOptional" //\u9996\u5C3E\u5E27\uFF08\u9996\u5E27\u53EF\u9009\uFF09\r\n  | "text" //\u6587\u672C\r\n  | (`videoReference:${number}` | `imageReference:${number}` | `audioReference:${number}`)[]; //\u591A\u53C2\u8003\uFF08\u6570\u5B57\u4EE3\u8868\u9650\u5236\u6570\u91CF\uFF09\r\n\r\ninterface TextModel {\r\n  name: string;\r\n  modelName: string;\r\n  type: "text";\r\n  think: boolean;\r\n}\r\n\r\ninterface ImageModel {\r\n  name: string;\r\n  modelName: string;\r\n  type: "image";\r\n  mode: ("text" | "singleImage" | "multiReference")[];\r\n  associationSkills?: string;\r\n}\r\n\r\ninterface VideoModel {\r\n  name: string;\r\n  modelName: string;\r\n  type: "video";\r\n  mode: VideoMode[];\r\n  associationSkills?: string;\r\n  audio: "optional" | false | true;\r\n  durationResolutionMap: { duration: number[]; resolution: string[] }[];\r\n}\r\n\r\ninterface TTSModel {\r\n  name: string;\r\n  modelName: string;\r\n  type: "tts";\r\n  voices: { title: string; voice: string }[];\r\n}\r\n\r\ninterface VendorConfig {\r\n  id: string; //\u552F\u4E00ID\uFF0C\u4F5C\u4E3A\u6587\u4EF6\u540D\u5B58\u50A8\u7528\u6237\u78C1\u76D8\u4E0A\uFF0C\u7981\u6B62\u7B26\u53F7\r\n  version: string; //\u7248\u672C\u53F7\uFF0C\u683C\u5F0F\u4E3Ax.y\uFF0C\u9700\u9075\u5B88\u8BED\u4E49\u5316\u7248\u672C\u63A7\u5236\r\n  name: string; //\u4F9B\u5E94\u5546\u540D\u79F0\r\n  author: string; //\u4F5C\u8005\r\n  description?: string; //\u63CF\u8FF0\uFF0C\u652F\u6301Markdown\u683C\u5F0F\r\n  icon?: string; //\u56FE\u6807\uFF0C\u4EC5\u652F\u6301Base64\u683C\u5F0F\uFF0C\u5EFA\u8BAE\u5C3A\u5BF8\u4E3A128x128\u50CF\u7D20\r\n  inputs: { key: string; label: string; type: "text" | "password" | "url"; required: boolean; placeholder?: string }[];\r\n  inputValues: Record<string, string>;\r\n  models: (TextModel | ImageModel | VideoModel | TTSModel)[];\r\n}\r\n\r\ntype ReferenceList =\r\n  | { type: "image"; sourceType: "base64"; base64: string }\r\n  | { type: "audio"; sourceType: "base64"; base64: string }\r\n  | { type: "video"; sourceType: "base64"; base64: string };\r\n\r\ninterface ImageConfig {\r\n  prompt: string;\r\n  referenceList?: Extract<ReferenceList, { type: "image" }>[];\r\n  size: "1K" | "2K" | "4K";\r\n  aspectRatio: `${number}:${number}`;\r\n}\r\n\r\ninterface VideoConfig {\r\n  duration: number;\r\n  resolution: string;\r\n  aspectRatio: "16:9" | "9:16";\r\n  prompt: string;\r\n  referenceList?: ReferenceList[];\r\n  audio?: boolean;\r\n  mode: VideoMode[];\r\n}\r\n\r\ninterface TTSConfig {\r\n  text: string;\r\n  voice: string;\r\n  speechRate: number;\r\n  pitchRate: number;\r\n  volume: number;\r\n  referenceList?: Extract<ReferenceList, { type: "audio" }>[];\r\n}\r\n\r\ninterface PollResult {\r\n  completed: boolean;\r\n  data?: string;\r\n  error?: string;\r\n}\r\n\r\n// ============================================================\r\n// \u5168\u5C40\u58F0\u660E\r\n// ============================================================\r\n\r\ndeclare const axios: any; // HTTP\u8BF7\u6C42\u5E93\r\ndeclare const logger: (msg: string) => void; // \u65E5\u5FD7\u51FD\u6570\r\ndeclare const jsonwebtoken: any; // JWT\u5904\u7406\u5E93\r\ndeclare const zipImage: (base64: string, size: number) => Promise<string>; // \u56FE\u7247\u538B\u7F29\u51FD\u6570\uFF0C\u8FD4\u56DE\u6709\u5934base64\u5B57\u7B26\u4E32\r\ndeclare const zipImageResolution: (base64: string, w: number, h: number) => Promise<string>; // \u56FE\u7247\u5206\u8FA8\u7387\u8C03\u6574\u51FD\u6570\uFF0C\u8FD4\u56DE\u6709\u5934base64\u5B57\u7B26\u4E32\r\ndeclare const mergeImages: (base64Arr: string[], maxSize?: string) => Promise<string>; // \u56FE\u7247\u5408\u6210\u51FD\u6570\uFF0C\u8FD4\u56DE\u6709\u5934base64\u5B57\u7B26\u4E32\r\ndeclare const urlToBase64: (url: string) => Promise<string>; // URL\u8F6CBase64\u51FD\u6570\uFF0C\u8FD4\u56DE\u6709\u5934base64\u5B57\u7B26\u4E32\r\ndeclare const pollTask: (fn: () => Promise<PollResult>, interval?: number, timeout?: number) => Promise<PollResult>; // \u8F6E\u8BE2\u51FD\u6570\uFF0Cfn\u4E3A\u5F02\u6B65\u51FD\u6570\uFF0Cinterval\u4E3A\u8F6E\u8BE2\u95F4\u9694\uFF0Ctimeout\u4E3A\u8D85\u65F6\u65F6\u95F4\uFF0C\u8FD4\u56DEfn\u7684\u7ED3\u679C\r\ndeclare const createOpenAI: any;\r\ndeclare const createDeepSeek: any;\r\ndeclare const createZhipu: any;\r\ndeclare const createQwen: any;\r\ndeclare const createAnthropic: any;\r\ndeclare const createOpenAICompatible: any;\r\ndeclare const createXai: any;\r\ndeclare const createMinimax: any;\r\ndeclare const createGoogleGenerativeAI: any;\r\ndeclare const exports: {\r\n  vendor: VendorConfig;\r\n  textRequest: (m: TextModel, t: boolean, tl: 0 | 1 | 2 | 3) => any; //\u6587\u672C\u6A21\u578B\r\n  imageRequest: (c: ImageConfig, m: ImageModel) => Promise<string>; //\u56FE\u7247\u6A21\u578B\uFF0C\u8FD4\u56DE\u6709\u5934base64\u5B57\u7B26\u4E32\r\n  videoRequest: (c: VideoConfig, m: VideoModel) => Promise<string>; //\u89C6\u9891\u6A21\u578B\uFF0C\u8FD4\u56DE\u6709\u5934base64\u5B57\u7B26\u4E32\r\n  ttsRequest: (c: TTSConfig, m: TTSModel) => Promise<string>; //\uFF08\u6682\u672A\u5F00\u653E\uFF09\u8BED\u97F3\u6A21\u578B\uFF0C\u8FD4\u56DE\u6709\u5934base64\u5B57\u7B26\u4E32\r\n  checkForUpdates?: () => Promise<{ hasUpdate: boolean; latestVersion: string; notice: string }>; //\u68C0\u67E5\u66F4\u65B0\u51FD\u6570\uFF0C\u8FD4\u56DE\u662F\u5426\u6709\u66F4\u65B0\u548C\u6700\u65B0\u7248\u672C\u53F7\u548C\u66F4\u516C\u544A\uFF08\u652F\u6301Markdown\u683C\u5F0F\uFF09\r\n  updateVendor?: () => Promise<string>; //\u66F4\u65B0\u51FD\u6570\uFF0C\u8FD4\u56DE\u6700\u65B0\u7684\u4EE3\u7801\u6587\u672C\r\n};\r\n\r\n// ============================================================\r\n// \u4F9B\u5E94\u5546\u914D\u7F6E\r\n// ============================================================\r\n\r\nconst vendor: VendorConfig = {\r\n  id: "null",\r\n  version: "2.0",\r\n  author: "DramaStudio",\r\n  name: "\u7A7A\u6A21\u677F",\r\n  description: "## \u5F00\u53D1\u6A21\u677F\uFF0C\u60A8\u53EF\u4EE5\u4F7F\u7528\u6B64\u6A21\u677F\u8FDB\u884CVibe Coding",\r\n  inputs: [\r\n    { key: "apiKey", label: "API\u5BC6\u94A5", type: "password", required: true },\r\n    { key: "baseUrl", label: "\u8BF7\u6C42\u5730\u5740", type: "url", required: true, placeholder: "\u793A\u4F8B\uFF1Ahttps://api.openai.com/v1" },\r\n  ],\r\n  inputValues: { apiKey: "", baseUrl: "https://api.openai.com/v1" },\r\n  models: [{ name: "GPT-4o", modelName: "gpt-4o", type: "text", think: false }],\r\n};\r\n\r\n// ============================================================\r\n// \u9002\u914D\u5668\u51FD\u6570\r\n// ============================================================\r\n\r\nconst textRequest = (model: TextModel, think: boolean, thinkLevel: 0 | 1 | 2 | 3) => {\r\n  if (!vendor.inputValues.apiKey) throw new Error("\u7F3A\u5C11API Key");\r\n  const apiKey = vendor.inputValues.apiKey.replace(/^Bearer\\s+/i, "");\r\n  return createOpenAI({ baseURL: vendor.inputValues.baseUrl, apiKey }).chat(model.modelName);\r\n};\r\n\r\nconst imageRequest = async (config: ImageConfig, model: ImageModel): Promise<string> => {\r\n  return "";\r\n};\r\n\r\nconst videoRequest = async (config: VideoConfig, model: VideoModel): Promise<string> => {\r\n  return "";\r\n};\r\n\r\nconst ttsRequest = async (config: TTSConfig, model: TTSModel): Promise<string> => {\r\n  return "";\r\n};\r\n\r\nconst checkForUpdates = async (): Promise<{ hasUpdate: boolean; latestVersion: string; notice: string }> => {\r\n  return { hasUpdate: false, latestVersion: "2.0", notice: "## \u65B0\u7248\u672C\u66F4\u65B0\u516C\u544A" };\r\n};\r\n\r\nconst updateVendor = async (): Promise<string> => {\r\n  return "";\r\n};\r\n\r\n// ============================================================\r\n// \u5BFC\u51FA\r\n// ============================================================\r\n\r\nexports.vendor = vendor;\r\nexports.textRequest = textRequest;\r\nexports.imageRequest = imageRequest;\r\nexports.videoRequest = videoRequest;\r\nexports.ttsRequest = ttsRequest;\r\nexports.checkForUpdates = checkForUpdates;\r\nexports.updateVendor = updateVendor;\r\n\r\n// \u8FD9\u884C\u4EE3\u7801\u7528\u4E8E\u786E\u4FDD\u5F53\u524D\u6587\u4EF6\u88AB\u8BC6\u522B\u4E3A\u6A21\u5757\uFF0C\u907F\u514D\u5168\u5C40\u53D8\u91CF\u51B2\u7A81\r\nexport {};\r\n\r\n/**\r\n * ============================================================\r\n * AI \u4EE3\u7801\u751F\u6210\u6307\u5357\r\n * ============================================================\r\n *\r\n * \u3010\u6982\u8FF0\u3011\r\n * \u672C\u6587\u4EF6\u662F DramaStudio AI \u4F9B\u5E94\u5546\u9002\u914D\u6A21\u677F\u3002AI \u5728\u751F\u6210\u65B0\u4F9B\u5E94\u5546\u9002\u914D\u4EE3\u7801\u65F6\uFF0C\r\n * \u5FC5\u987B\u4E25\u683C\u9075\u5B88\u4EE5\u4E0B\u89C4\u5219\uFF0C\u5E76\u8981\u6C42\u7528\u6237\u63D0\u4F9B\u76EE\u6807\u5E73\u53F0\u7684 curl \u8C03\u7528\u793A\u4F8B\u6216 API \u6587\u6863\u4FE1\u606F\u4F5C\u4E3A\u8F93\u5165\u4F9D\u636E\u3002\r\n *\r\n * \u3010\u524D\u7F6E\u8981\u6C42\u3011\r\n * \u5728\u751F\u6210\u4EE3\u7801\u524D\uFF0C\u8BF7\u5411\u7528\u6237\u7D22\u8981\u4EE5\u4E0B\u4FE1\u606F\uFF08\u81F3\u5C11\u5176\u4E00\uFF09\uFF1A\r\n *   1. \u76EE\u6807 API \u7684 curl \u8BF7\u6C42\u793A\u4F8B\uFF08\u5305\u542B\u8BF7\u6C42\u5730\u5740\u3001Headers\u3001Body \u7ED3\u6784\u3001\u54CD\u5E94\u7ED3\u6784\uFF09\r\n *   2. \u76EE\u6807 API \u7684\u5B98\u65B9\u6587\u6863\u94FE\u63A5\u6216\u6587\u6863\u622A\u56FE/\u6587\u672C\u5185\u5BB9\r\n *   3. \u9700\u8981\u9002\u914D\u7684\u6A21\u578B\u7C7B\u578B\uFF08text / image / video / tts\uFF09\u53CA\u5176\u80FD\u529B\u8BF4\u660E\r\n * \u6CA1\u6709\u8DB3\u591F\u4FE1\u606F\u65F6\uFF0C\u5E94\u4E3B\u52A8\u8FFD\u95EE\uFF0C\u4E0D\u8981\u51ED\u7A7A\u7F16\u9020 API \u7ED3\u6784\u3002\r\n *\r\n * \u3010\u4EE3\u7801\u89C4\u5219\u3011\r\n *\r\n * 1. \u7981\u6B62\u5F15\u5165\u4EFB\u4F55\u5916\u90E8\u5305\r\n *    \u4E0D\u53EF\u4F7F\u7528 import / require\uFF0C\u4EC5\u80FD\u4F7F\u7528\u672C\u6587\u4EF6\u300C\u5168\u5C40\u58F0\u660E\u300D\u533A\u57DF\u4E2D\u5DF2\u58F0\u660E\u7684\u65B9\u6CD5\u548C\u5BF9\u8C61\uFF0C\r\n *    \u5305\u62EC\uFF1Aaxios\u3001logger\u3001jsonwebtoken\u3001zipImage\u3001zipImageResolution\u3001mergeImages\u3001\r\n *    urlToBase64\u3001pollTask\uFF0C\u4EE5\u53CA createOpenAI\u3001createDeepSeek\u3001createZhipu\u3001createQwen\u3001\r\n *    createAnthropic\u3001createOpenAICompatible\u3001createXai\u3001createMinimax\u3001\r\n *    createGoogleGenerativeAI \u7B49 AI SDK \u5DE5\u5382\u51FD\u6570\u3002\r\n *\r\n * 2. \u7981\u6B62\u5728 exports.* \u51FD\u6570\u5916\u90E8\u58F0\u660E\u79BB\u6563\u7684\u5168\u5927\u5199\u5E38\u91CF\r\n *    \u9519\u8BEF\u793A\u4F8B\uFF1Aconst API_URL = "https://..."; const MAX_RETRY = 3;\r\n *    \u5982\u679C\u786E\u5B9E\u9700\u8981\u53EF\u914D\u7F6E\u7684\u5E38\u91CF\u503C\uFF0C\u5FC5\u987B\u5C06\u5176\u58F0\u660E\u5728 vendor.inputValues \u4E2D\uFF0C\r\n *    \u901A\u8FC7 vendor.inputValues.xxx \u8BBF\u95EE\uFF0C\u8BA9\u7528\u6237\u53EF\u5728\u754C\u9762\u4E0A\u914D\u7F6E\u3002\r\n *    \u5982\u679C\u662F\u7EAF\u903B\u8F91\u5185\u90E8\u4F7F\u7528\u7684\u4E34\u65F6\u53D8\u91CF\uFF0C\u5E94\u5185\u8054\u5728\u5BF9\u5E94\u7684 exports.* \u51FD\u6570\u4F53\u5185\u90E8\uFF0C\u4F7F\u7528\u5C0F\u9A7C\u5CF0\u547D\u540D\u3002\r\n *\r\n * 3. \u903B\u8F91\u5C3D\u91CF\u805A\u5408\u5728 exports.* \u5BF9\u5E94\u7684\u51FD\u6570\u5185\u90E8\r\n *    \u6BCF\u4E2A\u9002\u914D\u51FD\u6570\uFF08textRequest / imageRequest / videoRequest / ttsRequest\uFF09\r\n *    \u5E94\u81EA\u5305\u542B\uFF0C\u5C06\u8BF7\u6C42\u6784\u9020\u3001\u53D1\u9001\u3001\u8F6E\u8BE2\u3001\u7ED3\u679C\u89E3\u6790\u7B49\u903B\u8F91\u5199\u5728\u51FD\u6570\u4F53\u5185\uFF0C\u907F\u514D\u62C6\u5206\u51FA\u5927\u91CF\u5916\u90E8\u8F85\u52A9\u51FD\u6570\u3002\r\n *    \u5982\u679C\u591A\u4E2A\u51FD\u6570\u786E\u5B9E\u5B58\u5728\u516C\u5171\u903B\u8F91\uFF08\u5982\u7B7E\u540D\u8BA1\u7B97\u3001Token \u751F\u6210\u3001\u8BF7\u6C42\u5934\u6784\u9020\uFF09\uFF0C\r\n *    \u53EF\u63D0\u53D6\u4E3A\u6587\u4EF6\u5185\u7684\u5C0F\u9A7C\u5CF0\u547D\u540D\u51FD\u6570\uFF0C\u653E\u5728\u300C\u9002\u914D\u5668\u51FD\u6570\u300D\u533A\u5757\u4E4B\u524D\u7684\u300C\u8F85\u52A9\u5DE5\u5177\u300D\u533A\u5757\u4E2D\uFF0C\r\n *    \u4E14\u4E0D\u53EF\u4F7F\u7528\u5168\u5927\u5199\u547D\u540D\u3002\r\n *\r\n * 4. \u547D\u540D\u89C4\u8303\r\n *    \u6240\u6709\u53D8\u91CF\u3001\u51FD\u6570\u4E00\u5F8B\u4F7F\u7528\u5C0F\u9A7C\u5CF0\u547D\u540D\uFF08camelCase\uFF09\uFF0C\u7981\u6B62\u4F7F\u7528 UPPER_SNAKE_CASE\u3002\r\n *\r\n * 5. \u4E0D\u9700\u8981\u91CD\u65B0\u58F0\u660E\u7C7B\u578B\r\n *    \u672C\u6587\u4EF6\u9876\u90E8\u5DF2\u5B8C\u6574\u5B9A\u4E49\u4E86\u6240\u6709\u63A5\u53E3\u548C\u7C7B\u578B\uFF08VendorConfig\u3001ImageConfig\u3001VideoConfig\u3001\r\n *    TTSConfig\u3001TextModel\u3001ImageModel\u3001VideoModel\u3001TTSModel\u3001ReferenceList\u3001PollResult \u7B49\uFF09\uFF0C\r\n *    AI \u751F\u6210\u4EE3\u7801\u65F6\u76F4\u63A5\u4F7F\u7528\u5373\u53EF\uFF0C\u4E0D\u8981\u91CD\u590D\u58F0\u660E\u3002\r\n *\r\n * 6. \u8FD4\u56DE\u503C\u89C4\u8303\r\n *    - textRequest(model)\uFF1A\u8FD4\u56DE AI SDK \u7684 chat model \u5B9E\u4F8B\uFF08\u901A\u8FC7 createOpenAI \u7B49\u5DE5\u5382\u51FD\u6570\u521B\u5EFA\uFF09\u3002\r\n *    - imageRequest(config, model)\uFF1A\u8FD4\u56DE\u6709\u5934 base64 \u5B57\u7B26\u4E32\uFF08\u5982 "data:image/png;base64,..."\uFF09\u3002\r\n *      config.referenceList \u4E3A Extract<ReferenceList, { type: "image" }>[] \u7C7B\u578B\uFF0C\r\n *      \u6BCF\u4E2A\u5F15\u7528\u6761\u76EE\u5747\u4E3A base64 \u5F62\u5F0F\uFF08sourceType \u56FA\u5B9A\u4E3A "base64"\uFF09\u3002\r\n *    - videoRequest(config, model)\uFF1A\u8FD4\u56DE\u6709\u5934 base64 \u5B57\u7B26\u4E32\uFF08\u5982 "data:video/mp4;base64,..."\uFF09\u3002\r\n *      config.referenceList \u4E3A ReferenceList[] \u7C7B\u578B\uFF0C\u53EF\u5305\u542B image / video / audio \u4E09\u79CD\u5F15\u7528\uFF0C\r\n *      \u6BCF\u4E2A\u5F15\u7528\u6761\u76EE\u5747\u4E3A base64 \u5F62\u5F0F\uFF08sourceType \u56FA\u5B9A\u4E3A "base64"\uFF09\u3002\r\n *      config.mode \u4E3A\u5F53\u524D\u6FC0\u6D3B\u7684\u89C6\u9891\u6A21\u5F0F\u6570\u7EC4\uFF0C\u9700\u6839\u636E mode \u51B3\u5B9A\u5982\u4F55\u4F7F\u7528 referenceList\u3002\r\n *    - ttsRequest(config, model)\uFF1A\u8FD4\u56DE\u6709\u5934 base64 \u5B57\u7B26\u4E32\uFF08\u5982 "data:audio/mp3;base64,..."\uFF09\u3002\r\n *      config.referenceList \u4E3A Extract<ReferenceList, { type: "audio" }>[] \u7C7B\u578B\uFF08\u97F3\u9891\u53C2\u8003\uFF09\u3002\r\n *    \u5F53 API \u8FD4\u56DE\u7684\u662F URL \u800C\u975E\u4E8C\u8FDB\u5236\u6570\u636E\u65F6\uFF0C\u4F7F\u7528 urlToBase64(url) \u8F6C\u6362\u3002\r\n *\r\n * 7. ReferenceList \u4E0E VideoMode \u8BF4\u660E\r\n *    ReferenceList \u662F\u7EDF\u4E00\u7684\u591A\u5A92\u4F53\u5F15\u7528\u7C7B\u578B\uFF0C\u6BCF\u4E2A\u6761\u76EE\u5305\u542B\uFF1A\r\n *      - type: "image" | "audio" | "video"\uFF08\u5A92\u4F53\u7C7B\u578B\uFF09\r\n *      - sourceType: "base64"\uFF08\u5F53\u524D\u6A21\u677F\u56FA\u5B9A\u4E3A base64\uFF09\r\n *      - base64\uFF08\u5BF9\u5E94\u7684\u6570\u636E\uFF09\r\n *\r\n *    VideoMode \u5B9A\u4E49\u4E86\u89C6\u9891\u6A21\u578B\u652F\u6301\u7684\u8F93\u5165\u6A21\u5F0F\uFF1A\r\n *      - "text"\uFF1A\u7EAF\u6587\u672C\u751F\u6210\u89C6\u9891\r\n *      - "singleImage"\uFF1A\u5355\u5F20\u9996\u5E27\u56FE\u7247\r\n *      - "startEndRequired"\uFF1A\u9996\u5C3E\u5E27\uFF08\u4E24\u5F20\u90FD\u5FC5\u987B\u63D0\u4F9B\uFF09\r\n *      - "endFrameOptional"\uFF1A\u9996\u5C3E\u5E27\uFF08\u5C3E\u5E27\u53EF\u9009\uFF09\r\n *      - "startFrameOptional"\uFF1A\u9996\u5C3E\u5E27\uFF08\u9996\u5E27\u53EF\u9009\uFF09\r\n *      - \u6570\u7EC4\u5F62\u5F0F\u5982 ["imageReference:9", "videoReference:3", "audioReference:3"]\uFF1A\r\n *        \u591A\u6A21\u6001\u53C2\u8003\u6A21\u5F0F\uFF0C\u6570\u5B57\u8868\u793A\u8BE5\u7C7B\u578B\u7684\u6700\u5927\u6570\u91CF\u9650\u5236\u3002\r\n *\r\n *    \u5728 videoRequest \u4E2D\uFF0Cconfig.mode \u8868\u793A\u5F53\u524D\u9009\u62E9\u7684\u6A21\u5F0F\uFF0C\u9700\u6839\u636E\u5176\u503C\u51B3\u5B9A\uFF1A\r\n *      - \u5982\u4F55\u4ECE config.referenceList \u4E2D\u63D0\u53D6\u5BF9\u5E94\u7C7B\u578B\u7684\u5F15\u7528\r\n *      - \u5982\u4F55\u6784\u9020 API \u8BF7\u6C42\u4F53\u4E2D\u7684\u56FE\u7247/\u89C6\u9891/\u97F3\u9891\u53C2\u6570\r\n *\r\n * 8. \u5F02\u6B65\u4EFB\u52A1\u5904\u7406\r\n *    \u5BF9\u4E8E\u89C6\u9891\u751F\u6210\u7B49\u9700\u8981\u8F6E\u8BE2\u7684\u5F02\u6B65\u4EFB\u52A1\uFF0C\u4F7F\u7528\u5168\u5C40\u7684 pollTask \u51FD\u6570\uFF1A\r\n *    const result = await pollTask(async () => {\r\n *      const resp = await axios.get(...);\r\n *      if (resp.data.status === "SUCCESS") return { completed: true, data: resp.data.url };\r\n *      if (resp.data.status === "FAILED") return { completed: true, error: resp.data.message };\r\n *      return { completed: false };\r\n *    }, 5000, 600000); // \u6BCF5\u79D2\u8F6E\u8BE2\uFF0C10\u5206\u949F\u8D85\u65F6\r\n *    if (result.error) throw new Error(result.error);\r\n *    return await urlToBase64(result.data!);\r\n *\r\n * 9. \u9519\u8BEF\u5904\u7406\r\n *    \u5728\u6BCF\u4E2A\u51FD\u6570\u5F00\u5934\u6821\u9A8C\u5FC5\u9700\u53C2\u6570\uFF08\u5982 API Key\uFF09\uFF0C\u7F3A\u5931\u65F6\u4F7F\u7528 throw new Error("...") \u629B\u51FA\u3002\r\n *    API \u8BF7\u6C42\u5931\u8D25\u65F6\uFF0C\u4ECE\u54CD\u5E94\u4E2D\u63D0\u53D6\u6709\u610F\u4E49\u7684\u9519\u8BEF\u4FE1\u606F\u629B\u51FA\uFF0C\u4E0D\u8981\u541E\u6389\u5F02\u5E38\u3002\r\n *\r\n * 10. \u65E5\u5FD7\u8F93\u51FA\r\n *     \u5728\u5173\u952E\u6B65\u9AA4\u4F7F\u7528 logger("...") \u8F93\u51FA\u65E5\u5FD7\uFF08\u5982"\u5F00\u59CB\u63D0\u4EA4\u4EFB\u52A1"\u3001"\u4EFB\u52A1ID: xxx"\u3001"\u8F6E\u8BE2\u4E2D..."\uFF09\uFF0C\r\n *     \u4FBF\u4E8E\u8C03\u8BD5\u3002\r\n *\r\n * 11. vendor \u914D\u7F6E\u586B\u5199\r\n *     - id\uFF1A\u7EAF\u82F1\u6587\u5C0F\u5199\uFF0C\u4F5C\u4E3A\u6587\u4EF6\u540D\u4F7F\u7528\uFF0C\u7981\u6B62\u7279\u6B8A\u7B26\u53F7\u548C\u7A7A\u683C\u3002\r\n *     - version\uFF1A\u8BED\u4E49\u5316\u7248\u672C\u683C\u5F0F "x.y"\u3002\r\n *     - inputs\uFF1A\u6839\u636E\u76EE\u6807 API \u6240\u9700\u7684\u8BA4\u8BC1\u4FE1\u606F\u914D\u7F6E\uFF08API Key\u3001Secret\u3001\u8BF7\u6C42\u5730\u5740\u7B49\uFF09\u3002\r\n *     - models\uFF1A\u6839\u636E\u76EE\u6807\u5E73\u53F0\u652F\u6301\u7684\u6A21\u578B\u5217\u8868\u586B\u5199\uFF0C\u6CE8\u610F\u6B63\u786E\u8BBE\u7F6E type \u548C\u5404\u6A21\u578B\u7279\u6709\u5B57\u6BB5\u3002\r\n *       - VideoModel \u7684 mode \u5BF9\u5E94 API \u652F\u6301\u7684\u8F93\u5165\u6A21\u5F0F\uFF08\u53C2\u89C1\u89C4\u5219 7 \u7684 VideoMode \u8BF4\u660E\uFF09\u3002\r\n *       - VideoModel \u7684 audio \u5B57\u6BB5\uFF1Atrue\uFF08\u59CB\u7EC8\u751F\u6210\u97F3\u9891\uFF09\u3001false\uFF08\u4E0D\u751F\u6210\uFF09\u3001"optional"\uFF08\u7528\u6237\u53EF\u9009\uFF09\u3002\r\n *       - VideoModel \u7684 durationResolutionMap \u5BF9\u5E94\u5404\u65F6\u957F\u4E0B\u53EF\u9009\u7684\u5206\u8FA8\u7387\u3002\r\n *       - VideoModel \u7684 associationSkills \u53EF\u9009\uFF0C\u7528\u4E8E\u63CF\u8FF0\u6A21\u578B\u7684\u7279\u6B8A\u80FD\u529B\u3002\r\n *       - ImageModel \u7684 mode \u5BF9\u5E94 API \u652F\u6301\u7684\u751F\u56FE\u6A21\u5F0F\uFF08"text" \u7EAF\u6587\u672C\u3001"singleImage" \u5355\u56FE\u53C2\u8003\u3001"multiReference" \u591A\u56FE\u53C2\u8003\uFF09\u3002\r\n *       - TTSModel \u7684 voices \u5BF9\u5E94\u53EF\u9009\u7684\u97F3\u8272\u5217\u8868\u3002\r\n *\r\n * 12. \u56FE\u7247\u5904\u7406\r\n *     - \u9700\u8981\u538B\u7F29\u56FE\u7247\u4F53\u79EF\u65F6\u4F7F\u7528 zipImage(base64, maxSizeKB)\u3002\r\n *     - \u9700\u8981\u8C03\u6574\u56FE\u7247\u5206\u8FA8\u7387\u65F6\u4F7F\u7528 zipImageResolution(base64, width, height)\u3002\r\n *     - \u9700\u8981\u5C06\u591A\u5F20\u56FE\u7247\u62FC\u5408\u4E3A\u4E00\u5F20\u65F6\u4F7F\u7528 mergeImages(base64Arr, maxSize)\u3002\r\n *     - \u4EE5\u4E0A\u51FD\u6570\u5747\u63A5\u6536\u548C\u8FD4\u56DE\u6709\u5934 base64 \u5B57\u7B26\u4E32\u3002\r\n *\r\n * 13. \u6587\u4EF6\u7ED3\u6784\r\n *     \u751F\u6210\u7684\u4EE3\u7801\u5FC5\u987B\u4FDD\u6301\u672C\u6A21\u677F\u7684\u6574\u4F53\u7ED3\u6784\uFF1A\r\n *     \u7C7B\u578B\u5B9A\u4E49\u533A \u2192 \u5168\u5C40\u58F0\u660E\u533A \u2192 \u4F9B\u5E94\u5546\u914D\u7F6E\u533A \u2192 [\u8F85\u52A9\u5DE5\u5177\u533A\uFF08\u53EF\u9009\uFF09] \u2192 \u9002\u914D\u5668\u51FD\u6570\u533A \u2192 \u5BFC\u51FA\u533A\r\n *     \u4E0D\u8981\u6253\u4E71\u987A\u5E8F\uFF0C\u4E0D\u8981\u5220\u9664\u5DF2\u6709\u7684\u7ED3\u6784\u6CE8\u91CA\u5206\u9694\u7EBF\u3002\r\n *     \u8F85\u52A9\u5DE5\u5177\u533A\u7528\u4E8E\u653E\u7F6E\u591A\u4E2A\u9002\u914D\u5668\u51FD\u6570\u5171\u4EAB\u7684\u5C0F\u9A7C\u5CF0\u547D\u540D\u8F85\u52A9\u51FD\u6570\uFF08\u5982 getHeaders\u3001getBaseUrl\uFF09\u3002\r\n *\r\n * 14. \u5BFC\u51FA\u89C4\u8303\r\n *     \u5FC5\u987B\u5BFC\u51FA\u4EE5\u4E0B\u5B57\u6BB5\uFF08\u901A\u8FC7 exports.xxx = xxx \u8D4B\u503C\uFF09\uFF1A\r\n *       - exports.vendor\uFF08\u5FC5\u987B\uFF09\r\n *       - exports.textRequest\uFF08\u5FC5\u987B\uFF09\r\n *       - exports.imageRequest\uFF08\u5FC5\u987B\uFF09\r\n *       - exports.videoRequest\uFF08\u5FC5\u987B\uFF09\r\n *       - exports.ttsRequest\uFF08\u5FC5\u987B\uFF09\r\n *       - exports.checkForUpdates\uFF08\u53EF\u9009\uFF09\r\n *       - exports.updateVendor\uFF08\u53EF\u9009\uFF09\r\n *     \u672A\u5B9E\u73B0\u7684\u9002\u914D\u5668\u51FD\u6570\u4FDD\u7559\u7A7A\u5B9E\u73B0\uFF08return ""\uFF09\uFF0C\u4E0D\u53EF\u7701\u7565\u5BFC\u51FA\u3002\r\n *     \u6587\u4EF6\u672B\u5C3E\u5FC5\u987B\u5305\u542B export {}; \u4EE5\u786E\u4FDD\u6587\u4EF6\u88AB\u8BC6\u522B\u4E3A\u6A21\u5757\u3002\r\n *\r\n * \u3010\u751F\u6210\u6D41\u7A0B\u3011\r\n * \u5F53\u7528\u6237\u8BF7\u6C42\u751F\u6210\u65B0\u7684\u4F9B\u5E94\u5546\u9002\u914D\u65F6\uFF1A\r\n *   1. \u786E\u8BA4\u7528\u6237\u5DF2\u63D0\u4F9B curl \u793A\u4F8B\u6216 API \u6587\u6863\u3002\r\n *   2. \u5206\u6790 API \u7684\u8BA4\u8BC1\u65B9\u5F0F\u3001\u7AEF\u70B9\u5730\u5740\u3001\u8BF7\u6C42/\u54CD\u5E94\u7ED3\u6784\u3002\r\n *   3. \u57FA\u4E8E\u672C\u6A21\u677F\u7ED3\u6784\uFF0C\u586B\u5145 vendor \u914D\u7F6E\u548C\u5BF9\u5E94\u7684\u9002\u914D\u5668\u51FD\u6570\u3002\r\n *   4. \u6839\u636E\u5F53\u524D\u6A21\u677F\u7684 ReferenceList \u5B9A\u4E49\uFF0C\u6309 base64 \u5F62\u5F0F\u6784\u9020\u548C\u6D88\u8D39 referenceList\u3002\r\n *   5. \u4EC5\u5B9E\u73B0\u7528\u6237\u9700\u8981\u7684\u6A21\u578B\u7C7B\u578B\uFF0C\u672A\u7528\u5230\u7684\u51FD\u6570\u4FDD\u7559\u7A7A\u5B9E\u73B0\uFF08return ""\uFF09\u3002\r\n *   6. \u751F\u6210\u5B8C\u6574\u53EF\u7528\u7684\u4EE3\u7801\uFF0C\u786E\u4FDD\u65E0\u8BED\u6CD5\u9519\u8BEF\u3001\u65E0\u9057\u6F0F\u5BFC\u51FA\u3002\r\n */\r\n',
+      "openai.ts": '/**\r\n * DramaStudio AI\u4F9B\u5E94\u5546\u6A21\u677F\r\n * @version 2.0\r\n */\r\n// ============================================================\r\n// \u7C7B\u578B\u5B9A\u4E49\r\n// ============================================================\r\ntype VideoMode =\r\n  | "singleImage"\r\n  | "startEndRequired"\r\n  | "endFrameOptional"\r\n  | "startFrameOptional"\r\n  | "text"\r\n  | (`videoReference:${number}` | `imageReference:${number}` | `audioReference:${number}`)[];\r\ninterface TextModel {\r\n  name: string;\r\n  modelName: string;\r\n  type: "text";\r\n  think: boolean;\r\n}\r\ninterface ImageModel {\r\n  name: string;\r\n  modelName: string;\r\n  type: "image";\r\n  mode: ("text" | "singleImage" | "multiReference")[];\r\n  associationSkills?: string;\r\n}\r\ninterface VideoModel {\r\n  name: string;\r\n  modelName: string;\r\n  type: "video";\r\n  mode: VideoMode[];\r\n  associationSkills?: string;\r\n  audio: "optional" | false | true;\r\n  durationResolutionMap: { duration: number[]; resolution: string[] }[];\r\n}\r\ninterface TTSModel {\r\n  name: string;\r\n  modelName: string;\r\n  type: "tts";\r\n  voices: { title: string; voice: string }[];\r\n}\r\ninterface VendorConfig {\r\n  id: string;\r\n  version: string;\r\n  name: string;\r\n  author: string;\r\n  description?: string;\r\n  icon?: string;\r\n  inputs: { key: string; label: string; type: "text" | "password" | "url"; required: boolean; placeholder?: string }[];\r\n  inputValues: Record<string, string>;\r\n  models: (TextModel | ImageModel | VideoModel | TTSModel)[];\r\n}\r\ninterface ImageConfig {\r\n  prompt: string;\r\n  imageBase64: string[];\r\n  size: "1K" | "2K" | "4K";\r\n  aspectRatio: `${number}:${number}`;\r\n}\r\ninterface VideoConfig {\r\n  duration: number;\r\n  resolution: string;\r\n  aspectRatio: "16:9" | "9:16";\r\n  prompt: string;\r\n  imageBase64?: string[];\r\n  audio?: boolean;\r\n  mode: VideoMode[];\r\n}\r\ninterface TTSConfig {\r\n  text: string;\r\n  voice: string;\r\n  speechRate: number;\r\n  pitchRate: number;\r\n  volume: number;\r\n}\r\ninterface PollResult {\r\n  completed: boolean;\r\n  data?: string;\r\n  error?: string;\r\n}\r\n// ============================================================\r\n// \u5168\u5C40\u58F0\u660E\r\n// ============================================================\r\ndeclare const axios: any;\r\ndeclare const logger: (msg: string) => void;\r\ndeclare const jsonwebtoken: any;\r\ndeclare const zipImage: (base64: string, size: number) => Promise<string>;\r\ndeclare const zipImageResolution: (base64: string, w: number, h: number) => Promise<string>;\r\ndeclare const mergeImages: (base64Arr: string[], maxSize?: string) => Promise<string>;\r\ndeclare const urlToBase64: (url: string) => Promise<string>;\r\ndeclare const pollTask: (fn: () => Promise<PollResult>, interval?: number, timeout?: number) => Promise<PollResult>;\r\ndeclare const createOpenAI: any;\r\ndeclare const createDeepSeek: any;\r\ndeclare const createZhipu: any;\r\ndeclare const createQwen: any;\r\ndeclare const createAnthropic: any;\r\ndeclare const createOpenAICompatible: any;\r\ndeclare const createXai: any;\r\ndeclare const createMinimax: any;\r\ndeclare const createGoogleGenerativeAI: any;\r\ndeclare const exports: {\r\n  vendor: VendorConfig;\r\n  textRequest: (m: TextModel, t: boolean, tl: 0 | 1 | 2 | 3) => any;\r\n  imageRequest: (c: ImageConfig, m: ImageModel) => Promise<string>;\r\n  videoRequest: (c: VideoConfig, m: VideoModel) => Promise<string>;\r\n  ttsRequest: (c: TTSConfig, m: TTSModel) => Promise<string>;\r\n  checkForUpdates?: () => Promise<{ hasUpdate: boolean; latestVersion: string; notice: string }>;\r\n  updateVendor?: () => Promise<string>;\r\n};\r\n// ============================================================\r\n// \u4F9B\u5E94\u5546\u914D\u7F6E\r\n// ============================================================\r\nconst vendor: VendorConfig = {\r\n  id: "openai",\r\n  version: "2.0",\r\n  author: "DramaStudio",\r\n  name: "OpenAI\u6807\u51C6\u63A5\u53E3",\r\n  description: "OpenAI\u6807\u51C6\u683C\u5F0F\u63A5\u53E3\uFF0C\u53EF\u4FEE\u6539\u8BF7\u6C42\u5730\u5740\u5E76\u624B\u52A8\u6DFB\u52A0\u6A21\u578B\u3002",\r\n  icon: "",\r\n  inputs: [\r\n    { key: "apiKey", label: "API\u5BC6\u94A5", type: "password", required: true },\r\n    { key: "baseUrl", label: "\u8BF7\u6C42\u5730\u5740", type: "url", required: true, placeholder: "\u4EE5v1\u7ED3\u675F\uFF0C\u793A\u4F8B\uFF1Ahttps://api.openai.com/v1" },\r\n  ],\r\n  inputValues: {\r\n    apiKey: "",\r\n    baseUrl: "https://api.openai.com/v1",\r\n  },\r\n  models: [\r\n    { name: "GPT-4o", modelName: "gpt-4o", type: "text", think: false },\r\n    { name: "GPT-4.1", modelName: "gpt-4.1", type: "text", think: false },\r\n    { name: "GPT-5.1", modelName: "gpt-5.1", type: "text", think: false },\r\n    { name: "GPT-5.2", modelName: "gpt-5.2", type: "text", think: false },\r\n    { name: "GPT-5.4", modelName: "gpt-5.4", type: "text", think: false },\r\n  ],\r\n};\r\n// ============================================================\r\n// \u9002\u914D\u5668\u51FD\u6570\r\n// ============================================================\r\nconst textRequest = (model: TextModel, think: boolean, thinkLevel: 0 | 1 | 2 | 3) => {\r\n  if (!vendor.inputValues.apiKey) throw new Error("\u7F3A\u5C11API Key");\r\n  const apiKey = vendor.inputValues.apiKey.replace(/^Bearer\\s+/i, "");\r\n  return createOpenAI({ baseURL: vendor.inputValues.baseUrl, apiKey }).chat(model.modelName);\r\n};\r\nconst imageRequest = async (config: ImageConfig, model: ImageModel): Promise<string> => {\r\n  return "";\r\n};\r\nconst videoRequest = async (config: VideoConfig, model: VideoModel): Promise<string> => {\r\n  return "";\r\n};\r\nconst ttsRequest = async (config: TTSConfig, model: TTSModel): Promise<string> => {\r\n  return "";\r\n};\r\nconst checkForUpdates = async (): Promise<{ hasUpdate: boolean; latestVersion: string; notice: string }> => {\r\n  return { hasUpdate: false, latestVersion: "2.0", notice: "" };\r\n};\r\nconst updateVendor = async (): Promise<string> => {\r\n  return "";\r\n};\r\n// ============================================================\r\n// \u5BFC\u51FA\r\n// ============================================================\r\nexports.vendor = vendor;\r\nexports.textRequest = textRequest;\r\nexports.imageRequest = imageRequest;\r\nexports.videoRequest = videoRequest;\r\nexports.ttsRequest = ttsRequest;\r\nexports.checkForUpdates = checkForUpdates;\r\nexports.updateVendor = updateVendor;\r\nexport {};',
+      "dramastudio.ts": '/**\r\n * DramaStudio\u5B98\u65B9\u4E2D\u8F6C\u5E73\u53F0 \u4F9B\u5E94\u5546\u9002\u914D\r\n * @version 2.0\r\n */\r\n\r\n// ============================================================\r\n// \u7C7B\u578B\u5B9A\u4E49\r\n// ============================================================\r\n\r\ntype VideoMode =\r\n  | "singleImage"\r\n  | "startEndRequired"\r\n  | "endFrameOptional"\r\n  | "startFrameOptional"\r\n  | "text"\r\n  | (`videoReference:${number}` | `imageReference:${number}` | `audioReference:${number}`)[];\r\n\r\ninterface TextModel {\r\n  name: string;\r\n  modelName: string;\r\n  type: "text";\r\n  think: boolean;\r\n}\r\n\r\ninterface ImageModel {\r\n  name: string;\r\n  modelName: string;\r\n  type: "image";\r\n  mode: ("text" | "singleImage" | "multiReference")[];\r\n  associationSkills?: string;\r\n}\r\n\r\ninterface VideoModel {\r\n  name: string;\r\n  modelName: string;\r\n  type: "video";\r\n  mode: VideoMode[];\r\n  associationSkills?: string;\r\n  audio: "optional" | false | true;\r\n  durationResolutionMap: { duration: number[]; resolution: string[] }[];\r\n}\r\n\r\ninterface TTSModel {\r\n  name: string;\r\n  modelName: string;\r\n  type: "tts";\r\n  voices: { title: string; voice: string }[];\r\n}\r\n\r\ninterface VendorConfig {\r\n  id: string;\r\n  version: string;\r\n  name: string;\r\n  author: string;\r\n  description?: string;\r\n  icon?: string;\r\n  inputs: { key: string; label: string; type: "text" | "password" | "url"; required: boolean; placeholder?: string }[];\r\n  inputValues: Record<string, string>;\r\n  models: (TextModel | ImageModel | VideoModel | TTSModel)[];\r\n}\r\n\r\ntype ReferenceList =\r\n  | { type: "image"; sourceType: "base64"; base64: string }\r\n  | { type: "audio"; sourceType: "base64"; base64: string }\r\n  | { type: "video"; sourceType: "base64"; base64: string };\r\n\r\ninterface ImageConfig {\r\n  prompt: string;\r\n  referenceList?: Extract<ReferenceList, { type: "image" }>[];\r\n  size: "1K" | "2K" | "4K";\r\n  aspectRatio: `${number}:${number}`;\r\n}\r\n\r\ninterface VideoConfig {\r\n  duration: number;\r\n  resolution: string;\r\n  aspectRatio: "16:9" | "9:16";\r\n  prompt: string;\r\n  referenceList?: ReferenceList[];\r\n  audio?: boolean;\r\n  mode: VideoMode[];\r\n}\r\n\r\ninterface TTSConfig {\r\n  text: string;\r\n  voice: string;\r\n  speechRate: number;\r\n  pitchRate: number;\r\n  volume: number;\r\n  referenceList?: Extract<ReferenceList, { type: "audio" }>[];\r\n}\r\n\r\ninterface PollResult {\r\n  completed: boolean;\r\n  data?: string;\r\n  error?: string;\r\n}\r\n\r\n// ============================================================\r\n// \u5168\u5C40\u58F0\u660E\r\n// ============================================================\r\n\r\ndeclare const axios: any;\r\ndeclare const logger: (msg: string) => void;\r\ndeclare const jsonwebtoken: any;\r\ndeclare const zipImage: (base64: string, size: number) => Promise<string>;\r\ndeclare const zipImageResolution: (base64: string, w: number, h: number) => Promise<string>;\r\ndeclare const mergeImages: (base64Arr: string[], maxSize?: string) => Promise<string>;\r\ndeclare const urlToBase64: (url: string) => Promise<string>;\r\ndeclare const pollTask: (fn: () => Promise<PollResult>, interval?: number, timeout?: number) => Promise<PollResult>;\r\ndeclare const createOpenAI: any;\r\ndeclare const createDeepSeek: any;\r\ndeclare const createZhipu: any;\r\ndeclare const createQwen: any;\r\ndeclare const createAnthropic: any;\r\ndeclare const createOpenAICompatible: any;\r\ndeclare const createXai: any;\r\ndeclare const createMinimax: any;\r\ndeclare const createGoogleGenerativeAI: any;\r\ndeclare const exports: {\r\n  vendor: VendorConfig;\r\n  textRequest: (m: TextModel, t: boolean, tl: 0 | 1 | 2 | 3) => any;\r\n  imageRequest: (c: ImageConfig, m: ImageModel) => Promise<string>;\r\n  videoRequest: (c: VideoConfig, m: VideoModel) => Promise<string>;\r\n  ttsRequest: (c: TTSConfig, m: TTSModel) => Promise<string>;\r\n  checkForUpdates?: () => Promise<{ hasUpdate: boolean; latestVersion: string; notice: string }>;\r\n  updateVendor?: () => Promise<string>;\r\n};\r\n\r\n// ============================================================\r\n// \u4F9B\u5E94\u5546\u914D\u7F6E\r\n// ============================================================\r\n\r\nconst vendor: VendorConfig = {\r\n  id: "dramastudio",\r\n  version: "2.0",\r\n  author: "DramaStudio",\r\n  name: "DramaStudio\u5B98\u65B9\u4E2D\u8F6C\u5E73\u53F0",\r\n  description:\r\n    "## DramaStudio\u5B98\u65B9\u4E2D\u8F6C\u5E73\u53F0\\n\\nDramaStudio\u5B98\u65B9\u4E2D\u8F6C\u5E73\u53F0\uFF0C\u63D0\u4F9B**\u6587\u672C\u3001\u56FE\u50CF\u3001\u89C6\u9891\u3001\u97F3\u9891**\u7B49\u591A\u6A21\u6001\u751F\u6210\u80FD\u529B\u7684\u4E2D\u8F6C\u670D\u52A1\uFF0C\u652F\u6301\u63A5\u5165\u591A\u4E2A\u5927\u6A21\u578B\u4F9B\u5E94\u5546\uFF0C\u65B9\u4FBF\u7528\u6237\u7EDF\u4E00\u7BA1\u7406\u548C\u8C03\u7528\u4E0D\u540C\u4F9B\u5E94\u5546\u7684\u751F\u6210\u80FD\u529B\u3002\\n\\n\u{1F517} [\u524D\u5F80\u4E2D\u8F6C\u5E73\u53F0](https://api.dramastudio.net/)\\n\\n\u5982\u679C\u8FD9\u4E2A\u9879\u76EE\u5BF9\u4F60\u6709\u5E2E\u52A9\uFF0C\u53EF\u4EE5\u8003\u8651\u652F\u6301\u4E00\u4E0B\u6211\u4EEC\u7684\u5F00\u53D1\u5DE5\u4F5C \u2615",\r\n  icon: "",\r\n  inputs: [{ key: "apiKey", label: "API\u5BC6\u94A5", type: "password", required: true }],\r\n  inputValues: {\r\n    apiKey: "",\r\n    baseUrl: "https://api.dramastudio.net/v1",\r\n  },\r\n  models: [\r\n    { name: "claude-sonnet-4-6", type: "text", modelName: "claude-sonnet-4-6", think: false },\r\n    { name: "claude-opus-4-6", type: "text", modelName: "claude-opus-4-6", think: false },\r\n    { name: "claude-sonnet-4-5-20250929", type: "text", modelName: "claude-sonnet-4-5-20250929", think: false },\r\n    { name: "claude-opus-4-5-20251101", type: "text", modelName: "claude-opus-4-5-20251101", think: false },\r\n    { name: "claude-haiku-4-5-20251001", type: "text", modelName: "claude-haiku-4-5-20251001", think: false },\r\n    { name: "gpt-5.4", type: "text", modelName: "gpt-5.4", think: false },\r\n    { name: "gpt-5.2", type: "text", modelName: "gpt-5.2", think: false },\r\n    { name: "MiniMax-M2.7", type: "text", modelName: "MiniMax-M2.7", think: true },\r\n    { name: "MiniMax-M2.5", type: "text", modelName: "MiniMax-M2.5", think: true },\r\n    {\r\n      name: "Wan2.6 I2V 1080P (\u652F\u6301\u771F\u4EBA)",\r\n      type: "video",\r\n      modelName: "Wan2.6-I2V-1080P",\r\n      mode: ["text", "startEndRequired"],\r\n      durationResolutionMap: [{ duration: [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15], resolution: ["1080p"] }],\r\n      audio: true,\r\n    },\r\n    {\r\n      name: "Wan2.6 I2V 720P (\u652F\u6301\u771F\u4EBA)",\r\n      type: "video",\r\n      modelName: "Wan2.6-I2V-720P",\r\n      mode: ["text", "startEndRequired"],\r\n      durationResolutionMap: [{ duration: [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15], resolution: ["720p"] }],\r\n      audio: true,\r\n    },\r\n    {\r\n      name: "Seedance 1.5 Pro",\r\n      type: "video",\r\n      modelName: "doubao-seedance-1-5-pro-251215",\r\n      mode: ["text", "endFrameOptional"],\r\n      durationResolutionMap: [{ duration: [4, 5, 6, 7, 8, 9, 10, 11, 12], resolution: ["480p", "720p", "1080p"] }],\r\n      audio: true,\r\n    },\r\n    {\r\n      name: "vidu2 turbo",\r\n      type: "video",\r\n      modelName: "ViduQ2-turbo",\r\n      mode: ["singleImage", "startEndRequired"],\r\n      durationResolutionMap: [{ duration: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10], resolution: ["540p", "720p", "1080p"] }],\r\n      audio: false,\r\n    },\r\n    {\r\n      name: "ViduQ3 pro",\r\n      type: "video",\r\n      modelName: "ViduQ3-pro",\r\n      mode: ["singleImage", "startEndRequired"],\r\n      durationResolutionMap: [{ duration: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16], resolution: ["540p", "720p", "1080p"] }],\r\n      audio: false,\r\n    },\r\n    {\r\n      name: "ViduQ2 pro",\r\n      type: "video",\r\n      modelName: "ViduQ2-pro",\r\n      mode: ["singleImage", "startEndRequired"],\r\n      durationResolutionMap: [{ duration: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10], resolution: ["540p", "720p", "1080p"] }],\r\n      audio: false,\r\n    },\r\n    {\r\n      name: "Doubao Seedream 5.0 Lite",\r\n      type: "image",\r\n      modelName: "Doubao-Seedream-5.0-Lite",\r\n      mode: ["text", "singleImage", "multiReference"],\r\n    },\r\n    {\r\n      name: "Doubao Seedream 4.5",\r\n      type: "image",\r\n      modelName: "doubao-seedream-4-5-251128",\r\n      mode: ["text", "singleImage", "multiReference"],\r\n    },\r\n  ],\r\n};\r\n\r\n// ============================================================\r\n// \u8F85\u52A9\u5DE5\u5177\r\n// ============================================================\r\n\r\n// \u4ECE markdown \u5185\u5BB9\u4E2D\u63D0\u53D6\u7B2C\u4E00\u5F20\u56FE\u7247\r\nfunction extractFirstImageFromMd(content: string) {\r\n  const regex = /!\\[([^\\]]*)\\]\\((data:image\\/[^;]+;base64,[A-Za-z0-9+/=]+|https?:\\/\\/[^\\s)]+|\\/\\/[^\\s)]+|[^\\s)]+)\\)/;\r\n  const match = content.match(regex);\r\n  if (!match) return null;\r\n  const raw = match[2].trim();\r\n  const url = raw.startsWith("data:") ? raw : raw.split(/\\s+/)[0];\r\n  return { alt: match[1], url, type: url.startsWith("data:image") ? "base64" : "url" };\r\n}\r\n\r\n// ============================================================\r\n// \u9002\u914D\u5668\u51FD\u6570\r\n// ============================================================\r\n\r\nconst textRequest = (model: TextModel, think: boolean, thinkLevel: 0 | 1 | 2 | 3) => {\r\n  if (!vendor.inputValues.apiKey) throw new Error("\u7F3A\u5C11API Key");\r\n  const apiKey = vendor.inputValues.apiKey.replace(/^Bearer\\s+/i, "");\r\n  return createOpenAI({ baseURL: vendor.inputValues.baseUrl, apiKey }).chat(model.modelName);\r\n};\r\n\r\nconst imageRequest = async (config: ImageConfig, model: ImageModel): Promise<string> => {\r\n  if (!vendor.inputValues.apiKey) throw new Error("\u7F3A\u5C11API Key");\r\n  const apiKey = vendor.inputValues.apiKey.replace(/^Bearer\\s+/i, "");\r\n  const baseUrl = vendor.inputValues.baseUrl;\r\n  const lowerName = model.modelName.toLowerCase();\r\n  const imageBase64List = (config.referenceList ?? []).map((r) => r.base64);\r\n\r\n  // Gemini / nano \u7CFB\u6A21\u578B\uFF1A\u8D70 chat/completions \u63A5\u53E3\uFF0C\u4ECE\u8FD4\u56DE\u7684 markdown \u4E2D\u63D0\u53D6\u56FE\u7247\r\n  if (lowerName.includes("gemini") || lowerName.includes("nano")) {\r\n    const imageConfigGoogle: Record<string, string> = {\r\n      aspect_ratio: config.aspectRatio,\r\n      image_size: config.size,\r\n    };\r\n    const messages: any[] = [];\r\n    if (imageBase64List.length) {\r\n      messages.push({\r\n        role: "user",\r\n        content: imageBase64List.map((b) => ({ type: "image_url", image_url: { url: b } })),\r\n      });\r\n    }\r\n    messages.push({ role: "user", content: config.prompt + "\u8BF7\u76F4\u63A5\u8F93\u51FA\u56FE\u7247" });\r\n    const body = {\r\n      model: model.modelName,\r\n      messages,\r\n      extra_body: { google: { image_config: imageConfigGoogle } },\r\n    };\r\n    logger(`[imageRequest] \u4F7F\u7528 gemini \u9002\u914D\u5668\uFF0C\u6A21\u578B: ${model.modelName}`);\r\n    const response = await fetch(`${baseUrl}/chat/completions`, {\r\n      method: "POST",\r\n      headers: { Authorization: `Bearer ${apiKey}`, "Content-Type": "application/json" },\r\n      body: JSON.stringify(body),\r\n    });\r\n    if (!response.ok) {\r\n      const errorText = await response.text();\r\n      throw new Error(`\u8BF7\u6C42\u5931\u8D25\uFF0C\u72B6\u6001\u7801: ${response.status}, \u9519\u8BEF\u4FE1\u606F: ${errorText}`);\r\n    }\r\n    const data = await response.json();\r\n    const imageResult = extractFirstImageFromMd(data.choices[0].message.content);\r\n    if (!imageResult) throw new Error("\u672A\u80FD\u4ECE\u54CD\u5E94\u4E2D\u63D0\u53D6\u56FE\u7247");\r\n    if (imageResult.type === "base64") return imageResult.url;\r\n    return await urlToBase64(imageResult.url);\r\n  }\r\n\r\n  // \u8C46\u5305 / seedream \u7CFB\u6A21\u578B\uFF1A\u8D70 images/generations \u63A5\u53E3\r\n  if (lowerName.includes("doubao") || lowerName.includes("seedream")) {\r\n    const effectiveSize = config.size === "1K" ? "2K" : config.size;\r\n    const sizeMap: Record<string, Record<string, string>> = {\r\n      "16:9": { "2K": "2848x1600", "4K": "4096x2304" },\r\n      "9:16": { "2K": "1600x2848", "4K": "2304x4096" },\r\n    };\r\n    const resolvedSize = sizeMap[config.aspectRatio]?.[effectiveSize];\r\n    const body: Record<string, any> = {\r\n      model: model.modelName,\r\n      prompt: config.prompt,\r\n      size: resolvedSize,\r\n      response_format: "url",\r\n      sequential_image_generation: "disabled",\r\n      stream: false,\r\n      watermark: false,\r\n      ...(imageBase64List.length && { image: imageBase64List }),\r\n    };\r\n    logger(`[imageRequest] \u4F7F\u7528 doubao \u9002\u914D\u5668\uFF0C\u6A21\u578B: ${model.modelName}`);\r\n    const response = await fetch(`${baseUrl}/images/generations`, {\r\n      method: "POST",\r\n      headers: { Authorization: `Bearer ${apiKey}`, "Content-Type": "application/json" },\r\n      body: JSON.stringify(body),\r\n    });\r\n    if (!response.ok) {\r\n      const errorText = await response.text();\r\n      throw new Error(`\u8BF7\u6C42\u5931\u8D25\uFF0C\u72B6\u6001\u7801: ${response.status}, \u9519\u8BEF\u4FE1\u606F: ${errorText}`);\r\n    }\r\n    const data = await response.json();\r\n    const resultUrl = data.data[0].url;\r\n    return await urlToBase64(resultUrl);\r\n  }\r\n\r\n  throw new Error(`\u4E0D\u652F\u6301\u7684\u56FE\u50CF\u6A21\u578B: ${model.modelName}`);\r\n};\r\n\r\nconst videoRequest = async (config: VideoConfig, model: VideoModel): Promise<string> => {\r\n  if (!vendor.inputValues.apiKey) throw new Error("\u7F3A\u5C11API Key");\r\n  const apiKey = vendor.inputValues.apiKey.replace(/^Bearer\\s+/i, "");\r\n  const baseUrl = vendor.inputValues.baseUrl;\r\n  const lowerName = model.modelName.toLowerCase();\r\n\r\n  // \u5F53\u524D\u6FC0\u6D3B\u7684\u5355\u4E00 VideoMode\uFF08\u53D6\u7B2C\u4E00\u4E2A\u975E\u6570\u7EC4\u6A21\u5F0F\uFF0C\u6216\u6570\u7EC4\u6A21\u5F0F\uFF09\r\n  const activeMode = config.mode;\r\n  const imageRefs = (config.referenceList ?? []).filter((r) => r.type === "image").map((r) => r.base64);\r\n  const videoRefs = (config.referenceList ?? []).filter((r) => r.type === "video").map((r) => r.base64);\r\n  const audioRefs = (config.referenceList ?? []).filter((r) => r.type === "audio").map((r) => r.base64);\r\n\r\n  // \u6784\u5EFA\u6A21\u578B\u4E13\u5C5E metadata\r\n  let metadata: Record<string, any> = {};\r\n\r\n  if (lowerName.includes("wan")) {\r\n    // \u4E07\u8C61\u7CFB\u5217\r\n    if ((activeMode === "startEndRequired" || activeMode === "endFrameOptional" || activeMode === "startFrameOptional") && imageRefs.length >= 2) {\r\n      if (imageRefs[0]) metadata.first_frame_url = imageRefs[0];\r\n      if (imageRefs[1]) metadata.last_frame_url = imageRefs[1];\r\n    } else if (imageRefs.length) {\r\n      metadata.img_url = imageRefs[0];\r\n    }\r\n    if (typeof config.audio === "boolean") metadata.audio = config.audio;\r\n\r\n    // \u4E07\u8C61\u9700\u8981\u989D\u5916\u4F20 size \u5B57\u6BB5\r\n    const wanSizeMap: Record<string, Record<string, string>> = {\r\n      "480p": { "16:9": "832*480", "9:16": "480*832" },\r\n      "720p": { "16:9": "1280*720", "9:16": "720*1280" },\r\n      "1080p": { "16:9": "1920*1080", "9:16": "1080*1920" },\r\n    };\r\n    const wanSize = wanSizeMap[config.resolution]?.[config.aspectRatio];\r\n    const body: Record<string, any> = {\r\n      model: model.modelName,\r\n      prompt: config.prompt,\r\n      duration: config.duration,\r\n      size: wanSize,\r\n      metadata,\r\n    };\r\n    logger(`[videoRequest] \u63D0\u4EA4\u4E07\u8C61\u89C6\u9891\u4EFB\u52A1\uFF0C\u6A21\u578B: ${model.modelName}`);\r\n    const response = await fetch(`${baseUrl}/video/generations`, {\r\n      method: "POST",\r\n      headers: { Authorization: `Bearer ${apiKey}`, "Content-Type": "application/json" },\r\n      body: JSON.stringify(body),\r\n    });\r\n    if (!response.ok) {\r\n      const errorText = await response.text();\r\n      throw new Error(`\u8BF7\u6C42\u5931\u8D25\uFF0C\u72B6\u6001\u7801: ${response.status}, \u9519\u8BEF\u4FE1\u606F: ${errorText}`);\r\n    }\r\n    const data = await response.json();\r\n    const taskId = data.id;\r\n    logger(`[videoRequest] \u4E07\u8C61\u4EFB\u52A1ID: ${taskId}`);\r\n    const res = await pollTask(async () => {\r\n      const queryResponse = await fetch(`${baseUrl}/video/generations/${taskId}`, {\r\n        method: "GET",\r\n        headers: { Authorization: `Bearer ${apiKey}`, "Content-Type": "application/json" },\r\n      });\r\n      if (!queryResponse.ok) {\r\n        const errorText = await queryResponse.text();\r\n        throw new Error(`\u8F6E\u8BE2\u5931\u8D25\uFF0C\u72B6\u6001\u7801: ${queryResponse.status}, \u9519\u8BEF\u4FE1\u606F: ${errorText}`);\r\n      }\r\n      const queryData = await queryResponse.json();\r\n      const status = queryData?.status ?? queryData?.data?.status;\r\n      switch (status) {\r\n        case "completed":\r\n        case "SUCCESS":\r\n        case "success":\r\n          return { completed: true, data: queryData.data.result_url };\r\n        case "FAILURE":\r\n        case "failed":\r\n          return { completed: true, error: queryData?.data?.fail_reason ?? "\u89C6\u9891\u751F\u6210\u5931\u8D25" };\r\n        default:\r\n          return { completed: false };\r\n      }\r\n    });\r\n    if (res.error) throw new Error(res.error);\r\n    return await urlToBase64(res.data!);\r\n  }\r\n\r\n  if (lowerName.includes("doubao") || lowerName.includes("seedance")) {\r\n    // \u8C46\u5305/Seedance \u7CFB\u5217\r\n    metadata = {\r\n      ...(typeof config.audio === "boolean" && { generate_audio: config.audio }),\r\n      ratio: config.aspectRatio,\r\n      image_roles: [] as string[],\r\n      references: [] as string[],\r\n    };\r\n    if (Array.isArray(activeMode)) {\r\n      // \u591A\u53C2\u8003\u6A21\u5F0F\r\n      imageRefs.forEach((b) => metadata.references.push(b));\r\n      videoRefs.forEach((b) => metadata.references.push(b));\r\n      audioRefs.forEach((b) => metadata.references.push(b));\r\n    } else if (activeMode === "startEndRequired" || activeMode === "endFrameOptional" || activeMode === "startFrameOptional") {\r\n      imageRefs.forEach((_, i) => (metadata.image_roles as string[]).push(i === 0 ? "first_frame" : "last_frame"));\r\n    } else if (activeMode === "singleImage") {\r\n      imageRefs.forEach(() => (metadata.image_roles as string[]).push("reference_image"));\r\n    }\r\n  } else if (lowerName.includes("vidu")) {\r\n    // Vidu \u7CFB\u5217\r\n    metadata = {\r\n      aspect_ratio: config.aspectRatio,\r\n      audio: config.audio ?? false,\r\n      off_peak: false,\r\n    };\r\n  } else if (lowerName.includes("kling")) {\r\n    // \u53EF\u7075\u7CFB\u5217\r\n    metadata = { aspect_ratio: config.aspectRatio };\r\n    if (Array.isArray(activeMode)) {\r\n      metadata.reference = [...imageRefs, ...videoRefs, ...audioRefs];\r\n    } else if (activeMode === "endFrameOptional" && imageRefs.length) {\r\n      metadata.image_tail = imageRefs[0];\r\n    } else if (activeMode === "startEndRequired" && imageRefs.length >= 2) {\r\n      metadata.image_list = [\r\n        { image_url: imageRefs[0], type: "first_frame" },\r\n        { image_url: imageRefs[1], type: "last_frame" },\r\n      ];\r\n    } else if (activeMode === "singleImage" && imageRefs.length) {\r\n      metadata.image = imageRefs[0];\r\n    }\r\n  }\r\n\r\n  // \u516C\u5171\u8BF7\u6C42\u4F53\uFF08\u975E\u4E07\u8C61\u901A\u7528\u8DEF\u5F84\uFF09\r\n  const publicBody: Record<string, any> = {\r\n    model: model.modelName,\r\n    ...(!Array.isArray(activeMode) && imageRefs.length ? { images: imageRefs } : {}),\r\n    prompt: config.prompt,\r\n    duration: config.duration,\r\n    metadata,\r\n  };\r\n\r\n  logger(`[videoRequest] \u63D0\u4EA4\u89C6\u9891\u4EFB\u52A1\uFF0C\u6A21\u578B: ${model.modelName}`);\r\n  const response = await fetch(`${baseUrl}/video/generations`, {\r\n    method: "POST",\r\n    headers: { Authorization: `Bearer ${apiKey}`, "Content-Type": "application/json" },\r\n    body: JSON.stringify(publicBody),\r\n  });\r\n  if (!response.ok) {\r\n    const errorText = await response.text();\r\n    throw new Error(`\u8BF7\u6C42\u5931\u8D25\uFF0C\u72B6\u6001\u7801: ${response.status}, \u9519\u8BEF\u4FE1\u606F: ${errorText}`);\r\n  }\r\n  const data = await response.json();\r\n  const taskId = data.id;\r\n  logger(`[videoRequest] \u4EFB\u52A1ID: ${taskId}`);\r\n\r\n  const res = await pollTask(async () => {\r\n    const queryResponse = await fetch(`${baseUrl}/video/generations/${taskId}`, {\r\n      method: "GET",\r\n      headers: { Authorization: `Bearer ${apiKey}`, "Content-Type": "application/json" },\r\n    });\r\n    if (!queryResponse.ok) {\r\n      const errorText = await queryResponse.text();\r\n      throw new Error(`\u8F6E\u8BE2\u5931\u8D25\uFF0C\u72B6\u6001\u7801: ${queryResponse.status}, \u9519\u8BEF\u4FE1\u606F: ${errorText}`);\r\n    }\r\n    const queryData = await queryResponse.json();\r\n    const status = queryData?.status ?? queryData?.data?.status;\r\n    switch (status) {\r\n      case "completed":\r\n      case "SUCCESS":\r\n      case "success":\r\n        return { completed: true, data: queryData.data.result_url };\r\n      case "FAILURE":\r\n      case "failed":\r\n        return { completed: true, error: queryData?.data?.fail_reason ?? "\u89C6\u9891\u751F\u6210\u5931\u8D25" };\r\n      default:\r\n        return { completed: false };\r\n    }\r\n  });\r\n\r\n  if (res.error) throw new Error(res.error);\r\n  return await urlToBase64(res.data!);\r\n};\r\n\r\nconst ttsRequest = async (config: TTSConfig, model: TTSModel): Promise<string> => {\r\n  return "";\r\n};\r\n\r\nconst checkForUpdates = async (): Promise<{ hasUpdate: boolean; latestVersion: string; notice: string }> => {\r\n  return { hasUpdate: false, latestVersion: "2.0", notice: "" };\r\n};\r\n\r\nconst updateVendor = async (): Promise<string> => {\r\n  return "";\r\n};\r\n\r\n// ============================================================\r\n// \u5BFC\u51FA\r\n// ============================================================\r\n\r\nexports.vendor = vendor;\r\nexports.textRequest = textRequest;\r\nexports.imageRequest = imageRequest;\r\nexports.videoRequest = videoRequest;\r\nexports.ttsRequest = ttsRequest;\r\nexports.checkForUpdates = checkForUpdates;\r\nexports.updateVendor = updateVendor;\r\n\r\nexport {};\r\n',
+      "vidu.ts": '//\u5982\u9700\u9065\u6D4BAI\u8BF7\u4F7F\u7528\u5728dramastudio\u5B89\u88C5\u76EE\u5F55\u8FD0\u884Cnpx @ai-sdk/devtools \uFF08\u8981\u6C42\u5728\u5176\u4ED6\u8BBE\u7F6E\u4E2D\u6253\u5F00\u9065\u6D4B\u529F\u80FD\uFF0C\u4E14dramastudio\u6709\u6743\u9650\u5728\u5B89\u88C5\u76EE\u5F55\u521B\u5EFA.devtools\u6587\u4EF6\u5939\uFF09\r\n// ==================== \u7C7B\u578B\u5B9A\u4E49 ====================\r\n// \u6587\u672C\u6A21\u578B\r\ninterface TextModel {\r\n  name: string; // \u663E\u793A\u540D\u79F0\r\n  modelName: string;\r\n  type: "text";\r\n  think: boolean; // \u524D\u7AEF\u663E\u793A\u7528\r\n}\r\n\r\n// \u56FE\u50CF\u6A21\u578B\r\ninterface ImageModel {\r\n  name: string; // \u663E\u793A\u540D\u79F0\r\n  modelName: string;\r\n  type: "image";\r\n  mode: ("text" | "singleImage" | "multiReference")[];\r\n  associationSkills?: string; // \u5173\u8054\u6280\u80FD\uFF0C\u591A\u4E2A\u6280\u80FD\u7528\u9017\u53F7\u5206\u9694\r\n}\r\n// \u89C6\u9891\u6A21\u578B\r\ninterface VideoModel {\r\n  name: string; // \u663E\u793A\u540D\u79F0\r\n  modelName: string; //\u5168\u5C40\u552F\u4E00\r\n  type: "video";\r\n  mode: (\r\n    | "singleImage" // \u5355\u56FE\r\n    | "startEndRequired" // \u9996\u5C3E\u5E27\uFF08\u4E24\u5F20\u90FD\u5F97\u6709\uFF09\r\n    | "endFrameOptional" // \u9996\u5C3E\u5E27\uFF08\u5C3E\u5E27\u53EF\u9009\uFF09\r\n    | "startFrameOptional" // \u9996\u5C3E\u5E27\uFF08\u9996\u5E27\u53EF\u9009\uFF09\r\n    | "text" // \u6587\u672C\u751F\u89C6\u9891\r\n    | ("videoReference" | "imageReference" | "audioReference" | "textReference")[] // \u6DF7\u5408\u53C2\u8003\r\n  )[];\r\n  associationSkills?: string; // \u5173\u8054\u6280\u80FD\uFF0C\u591A\u4E2A\u6280\u80FD\u7528\u9017\u53F7\u5206\u9694\r\n  audio: "optional" | false | true; // \u97F3\u9891\u914D\u7F6E\r\n  durationResolutionMap: { duration: number[]; resolution: string[] }[];\r\n}\r\n\r\ninterface TTSModel {\r\n  name: string; // \u663E\u793A\u540D\u79F0\r\n  modelName: string;\r\n  type: "tts";\r\n  voices: {\r\n    title: string; //\u663E\u793A\u540D\u79F0\r\n    voice: string; //\u8BF4\u8BDD\u4EBA\r\n  }[];\r\n}\r\n// \u4F9B\u5E94\u5546\u914D\u7F6E\r\ninterface VendorConfig {\r\n  id: string; //\u4F9B\u5E94\u5546\u552F\u4E00\u6807\u8BC6\uFF0C\u5FC5\u987B\u5168\u5C40\u552F\u4E00\r\n  author: string;\r\n  description?: string; //md5\u683C\u5F0F\r\n  name: string;\r\n  icon?: string; //\u4EC5\u652F\u6301base64\u683C\u5F0F\r\n  inputs: {\r\n    key: string;\r\n    label: string;\r\n    type: "text" | "password" | "url";\r\n    required: boolean;\r\n    placeholder?: string;\r\n  }[];\r\n  inputValues: Record<string, string>;\r\n  models: (TextModel | ImageModel | VideoModel)[];\r\n}\r\n// ==================== \u5168\u5C40\u5DE5\u5177\u51FD\u6570 ====================\r\n//Axios\u5B9E\u4F8B\r\n//\u538B\u7F29\u56FE\u7247\u5927\u5C0F(1MB = 1 * 1024 * 1024)\r\ndeclare const zipImage: (completeBase64: string, size: number) => Promise<string>;\r\n//\u538B\u7F29\u56FE\u7247\u5206\u8FA8\u7387\r\ndeclare const zipImageResolution: (completeBase64: string, width: number, height: number) => Promise<string>;\r\n//\u591A\u56FE\u62FC\u63A5\u4E58\u5355\u56FE maxSize  \u6700\u5927\u8F93\u51FA\u5927\u5C0F\uFF0C\u9ED8\u8BA4\u4E3A 10mb\r\ndeclare const mergeImages: (completeBase64: string[], maxSize?: string) => Promise<string>;\r\n//Url\u8F6CBase64\r\ndeclare const urlToBase64: (url: string) => Promise<string>;\r\n//\u8F6E\u8BE2\u51FD\u6570\r\ndeclare const pollTask: (\r\n  fn: () => Promise<{ completed: boolean; data?: string; error?: string }>,\r\n  interval?: number,\r\n  timeout?: number,\r\n) => Promise<{ completed: boolean; data?: string; error?: string }>;\r\ndeclare const axios: any;\r\ndeclare const createOpenAI: any;\r\ndeclare const createDeepSeek: any;\r\ndeclare const createZhipu: any;\r\ndeclare const createQwen: any;\r\ndeclare const createAnthropic: any;\r\ndeclare const createOpenAICompatible: any;\r\ndeclare const createXai: any;\r\ndeclare const createMinimax: any;\r\ndeclare const createGoogleGenerativeAI: any;\r\ndeclare const logger: (logstring: string) => void;\r\ndeclare const jsonwebtoken: any;\r\n// ==================== \u4F9B\u5E94\u5546\u6570\u636E ====================\r\nconst vendor: VendorConfig = {\r\n  id: "vidu",\r\n  author: "\u642C\u7816\u7684Coder",\r\n  description:\r\n    "Vidu \u5B98\u65B9\u89C6\u9891\u751F\u6210\u5E73\u53F0\u3002 [\u524D\u5F80\u5E73\u53F0](https://platform.vidu.cn/login/)",\r\n  name: "Vidu \u5F00\u653E\u5E73\u53F0",\r\n  inputs: [\r\n    { key: "apiKey", label: "API\u5BC6\u94A5", type: "password", required: true, placeholder: "\u8BF7\u5230Vidu\u5B98\u65B9\u7533\u8BF7" },\r\n    { key: "baseUrl", label: "\u63A5\u53E3\u8DEF\u5F84", type: "url", required: true, placeholder: "https://api.vidu.cn/ent/v2" },\r\n  ],\r\n  inputValues: {\r\n    apiKey: "",\r\n    baseUrl: "https://api.vidu.cn/ent/v2",\r\n  },\r\n  models: [\r\n    {\r\n      name: "ViduQ3 turbo",\r\n      type: "video",\r\n      modelName: "ViduQ3-turbo",\r\n      durationResolutionMap: [{ duration: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16], resolution: ["540p", "720p", "1080p"] }],\r\n      mode: ["singleImage", "startEndRequired", "text"],\r\n      audio: true,\r\n    },\r\n    {\r\n      name: "ViduQ3 pro",\r\n      type: "video",\r\n      modelName: "ViduQ3-pro",\r\n      durationResolutionMap: [{ duration: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16], resolution: ["540p", "720p", "1080p"] }],\r\n      mode: ["singleImage", "startEndRequired", "text"],\r\n      audio: true,\r\n    },\r\n    {\r\n      name: "ViduQ2 pro fast",\r\n      type: "video",\r\n      modelName: "ViduQ2-pro-fast",\r\n      durationResolutionMap: [{ duration: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10], resolution: ["720p", "1080p"] }],\r\n      mode: ["singleImage", "startEndRequired"],\r\n      audio: true,\r\n    },\r\n    {\r\n      name: "viduQ2 turbo",\r\n      type: "video",\r\n      modelName: "ViduQ2-turbo",\r\n      durationResolutionMap: [{ duration: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10], resolution: ["540p", "720p", "1080p"] }],\r\n      mode: ["singleImage", "startEndRequired"],\r\n      audio: true,\r\n    },\r\n    {\r\n      name: "ViduQ2 pro",\r\n      type: "video",\r\n      modelName: "ViduQ2-pro",\r\n      durationResolutionMap: [{ duration: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10], resolution: ["540p", "720p", "1080p"] }],\r\n      mode: ["singleImage", "startEndRequired"], //\u53C2\u8003\u751F\u89C6\u9891\u65E0\u6709\u6548\u8BBE\u7F6E\u503C\r\n      audio: true,\r\n    },\r\n    {\r\n      name: "ViduQ2",\r\n      type: "video",\r\n      modelName: "ViduQ2",\r\n      durationResolutionMap: [{ duration: [5], resolution: ["1080p"] }],\r\n      mode: ["text"],\r\n      audio: true,\r\n    },\r\n    {\r\n      name: "ViduQ1",\r\n      type: "video",\r\n      modelName: "ViduQ1",\r\n      durationResolutionMap: [{ duration: [5], resolution: ["1080p"] }],\r\n      mode: ["singleImage", "startEndRequired", "text"],\r\n      audio: true,\r\n    },\r\n    {\r\n      name: "ViduQ1 classic",\r\n      type: "video",\r\n      modelName: "viduQ1-classic",\r\n      durationResolutionMap: [{ duration: [5], resolution: ["1080p"] }],\r\n      mode: ["singleImage", "startEndRequired"],\r\n      audio: true,\r\n    },\r\n    {\r\n      name: "Vidu2.0",\r\n      type: "video",\r\n      modelName: "vidu2.0",\r\n      durationResolutionMap: [{ duration: [4, 8], resolution: ["360p", "720p", "1080p"] }],\r\n      mode: ["singleImage", "startEndRequired"],\r\n      audio: true,\r\n    },\r\n    {\r\n      name: "viduq1 for image",\r\n      type: "image",\r\n      modelName: "viduq1",\r\n      mode: ["text"],\r\n    },\r\n    {\r\n      name: "viduq2 for image",\r\n      type: "image",\r\n      modelName: "viduq2",\r\n      mode: ["text", "singleImage", "multiReference"],\r\n    },\r\n  ],\r\n};\r\nexports.vendor = vendor;\r\n\r\n// ==================== \u9002\u914D\u5668\u51FD\u6570 ====================\r\n\r\n// \u6587\u672C\u8BF7\u6C42\u51FD\u6570\r\nconst textRequest: (textModel: TextModel) => { url: string; model: string } = (textModel) => {\r\n  throw new Error("\u5F53\u524D\u4F9B\u5E94\u5546\u4EC5\u652F\u6301\u89C6\u9891\u5927\u6A21\u578B\uFF0C\u8C22\u8C22\uFF01");\r\n};\r\nexports.textRequest = textRequest;\r\n\r\n//\u56FE\u7247\u8BF7\u6C42\u51FD\u6570\r\ninterface ImageConfig {\r\n  prompt: string; //\u56FE\u7247\u63D0\u793A\u8BCD\r\n  imageBase64: string[]; //\u8F93\u5165\u7684\u56FE\u7247\u63D0\u793A\u8BCD\r\n  size: "1K" | "2K" | "4K"; // \u56FE\u7247\u5C3A\u5BF8\r\n  aspectRatio: `${number}:${number}`; // \u957F\u5BBD\u6BD4\r\n}\r\nconst imageRequest = async (imageConfig: ImageConfig, imageModel: ImageModel) => {\r\n  if (!vendor.inputValues.apiKey) throw new Error("\u7F3A\u5C11API Key");\r\n  const apiKey = vendor.inputValues.apiKey.replace("Token ", "");\r\n\r\n  const size = imageConfig.size === "1K" ? "2K" : imageConfig.size;\r\n  const sizeMap: Record<string, Record<string, string>> = {\r\n    "16:9": {\r\n      "1k": "1920x1080",\r\n      "2K": "2848x1600",\r\n      "4K": "4096x2304",\r\n    },\r\n    "9:16": {\r\n      "1k": "1920x1080",\r\n      "2K": "1600x2848",\r\n      "4K": "2304x4096",\r\n    },\r\n  };\r\n\r\n  const body: Record<string, any> = {\r\n    model: imageModel.modelName,\r\n    prompt: imageConfig.prompt,\r\n    aspect_ratio: sizeMap[imageConfig.aspectRatio][size],\r\n    seed: 0,\r\n    resolution: size,\r\n    ...(imageConfig.imageBase64 && { image: imageConfig.imageBase64 }),\r\n  };\r\n\r\n  const createImageUrl = vendor.inputValues.baseUrl + "/reference2image";\r\n  const response = await fetch(createImageUrl, {\r\n    method: "POST",\r\n    headers: { Authorization: `Token ${apiKey}`, "Content-Type": "application/json" },\r\n    body: JSON.stringify(body),\r\n  });\r\n  if (!response.ok) {\r\n    const errorText = await response.text(); // \u83B7\u53D6\u9519\u8BEF\u4FE1\u606F\r\n    console.error("\u8BF7\u6C42\u5931\u8D25\uFF0C\u72B6\u6001\u7801:", response.status, ", \u9519\u8BEF\u4FE1\u606F:", errorText);\r\n    throw new Error(`\u8BF7\u6C42\u5931\u8D25\uFF0C\u72B6\u6001\u7801: ${response.status}, \u9519\u8BEF\u4FE1\u606F: ${errorText}`);\r\n  }\r\n  const data = await response.json();\r\n  const res = await checkTaskResult(data.task_id);\r\n  if (!res.data) {\r\n    throw new Error("\u56FE\u7247\u672A\u80FD\u751F\u6210");\r\n  }\r\n  const list = JSON.parse(JSON.stringify(res.data));\r\n  return list[0].url;\r\n};\r\nexports.imageRequest = imageRequest;\r\n\r\ninterface VideoConfig {\r\n  duration: number;\r\n  resolution: string;\r\n  aspectRatio: "16:9" | "9:16";\r\n  prompt: string;\r\n  imageBase64?: string[];\r\n  audio?: boolean;\r\n  mode:\r\n    | "singleImage" // \u5355\u56FE\r\n    | "multiImage" // \u591A\u56FE\u6A21\u5F0F\r\n    | "gridImage" // \u7F51\u683C\u5355\u56FE\uFF08\u4F20\u5165\u4E00\u5F20\u56FE\u7247\uFF0C\u4F46\u8BE5\u56FE\u7247\u662F\u7F51\u683C\u56FE\uFF09\r\n    | "startEndRequired" // \u9996\u5C3E\u5E27\uFF08\u4E24\u5F20\u90FD\u5F97\u6709\uFF09\r\n    | "endFrameOptional" // \u9996\u5C3E\u5E27\uFF08\u5C3E\u5E27\u53EF\u9009\uFF09\r\n    | "startFrameOptional" // \u9996\u5C3E\u5E27\uFF08\u9996\u5E27\u53EF\u9009\uFF09\r\n    | "text" // \u6587\u672C\u751F\u89C6\u9891\r\n    | ("video" | "image" | "audio" | "text")[]; // \u6DF7\u5408\u53C2\u8003\r\n}\r\n\r\n// \u6784\u5EFA \u5404\u4E2A\u5E73\u53F0\u7684metadata\u53C2\u6570\r\n\r\nconst buildViduMetadata = (videoConfig: VideoConfig) => ({\r\n  aspect_ratio: videoConfig.aspectRatio,\r\n  audio: videoConfig.audio ?? false,\r\n  off_peak: false,\r\n});\r\n\r\ntype MetadataBuilder = (config: VideoConfig) => Record<string, any>;\r\nconst METADATA_BUILDERS: Array<[string, MetadataBuilder]> = [["vidu", buildViduMetadata]];\r\nconst buildModelMetadata = (modelName: string, videoConfig: VideoConfig) => {\r\n  const lowerName = modelName.toLowerCase();\r\n  const match = METADATA_BUILDERS.find(([key]) => lowerName.includes(key));\r\n  return match ? match[1](videoConfig) : {};\r\n};\r\n// \u68C0\u67E5\u751F\u6210\u7269\u7ED3\u679C\r\nconst checkTaskResult = async (taskId: string) => {\r\n  const queryUrl = vendor.inputValues.baseUrl + "/tasks/{id}/creations";\r\n  const apiKey = vendor.inputValues.apiKey;\r\n  const res = await pollTask(async () => {\r\n    const queryResponse = await fetch(queryUrl.replace("{id}", taskId), {\r\n      method: "GET",\r\n      headers: { Authorization: `Token ${apiKey}`, "Content-Type": "application/json" },\r\n    });\r\n    if (!queryResponse.ok) {\r\n      const errorText = await queryResponse.text(); // \u83B7\u53D6\u9519\u8BEF\u4FE1\u606F\r\n      console.error("\u8BF7\u6C42\u5931\u8D25\uFF0C\u72B6\u6001\u7801:", queryResponse.status, ", \u9519\u8BEF\u4FE1\u606F:", errorText);\r\n      throw new Error(`\u8BF7\u6C42\u5931\u8D25\uFF0C\u72B6\u6001\u7801: ${queryResponse.status}, \u9519\u8BEF\u4FE1\u606F: ${errorText}`);\r\n    }\r\n    const queryData = await queryResponse.json();\r\n    const status = queryData?.state ?? queryData?.data?.state;\r\n    const fail_reason = queryData?.data?.err_code ?? queryData?.data;\r\n    switch (status) {\r\n      case "completed":\r\n      case "SUCCESS":\r\n      case "success":\r\n        return { completed: true, data: queryData.creations };\r\n      case "FAILURE":\r\n      case "failed":\r\n        return { completed: false, error: fail_reason || "\u751F\u6210\u5931\u8D25" };\r\n      default:\r\n        return { completed: false };\r\n    }\r\n  });\r\n  if (res.error) throw new Error(res.error);\r\n  return res;\r\n};\r\n\r\nconst videoRequest = async (videoConfig: VideoConfig, videoModel: VideoModel) => {\r\n  if (!vendor.inputValues.apiKey) throw new Error("\u7F3A\u5C11API Key");\r\n  const apiKey = vendor.inputValues.apiKey.replace("Token ", "");\r\n\r\n  // \u6784\u5EFA\u6BCF\u4E2A\u6A21\u578B\u5BF9\u5E94\u7684\u9644\u52A0\u53C2\u6570\r\n  const metadata = buildModelMetadata(videoModel.modelName, videoConfig);\r\n\r\n  //\u516C\u5171\u8BF7\u6C42\u53C2\u6570\r\n  const publicBody = {\r\n    model: videoModel.modelName,\r\n    ...(videoConfig.imageBase64 && videoConfig.imageBase64.length ? { images: videoConfig.imageBase64 } : {}),\r\n    prompt: videoConfig.prompt,\r\n    size: videoConfig.resolution,\r\n    duration: videoConfig.duration,\r\n    metadata: metadata,\r\n  };\r\n\r\n  const requestUrl = vendor.inputValues.baseUrl + "/start-end2video";\r\n  const response = await fetch(requestUrl, {\r\n    method: "POST",\r\n    headers: { Authorization: `Token ${apiKey}`, "Content-Type": "application/json" },\r\n    body: JSON.stringify(publicBody),\r\n  });\r\n  if (!response.ok) {\r\n    const errorText = await response.text(); // \u83B7\u53D6\u9519\u8BEF\u4FE1\u606F\r\n    console.error("\u8BF7\u6C42\u5931\u8D25\uFF0C\u72B6\u6001\u7801:", response.status, ", \u9519\u8BEF\u4FE1\u606F:", errorText);\r\n    throw new Error(`\u8BF7\u6C42\u5931\u8D25\uFF0C\u72B6\u6001\u7801: ${response.status}, \u9519\u8BEF\u4FE1\u606F: ${errorText}`);\r\n  }\r\n  const data = await response.json();\r\n  const taskId = data.id;\r\n  const result = await checkTaskResult(taskId);\r\n  return result.data;\r\n};\r\nexports.videoRequest = videoRequest;\r\n\r\ninterface TTSConfig {\r\n  text: string;\r\n  voice: string;\r\n  speechRate: number;\r\n  pitchRate: number;\r\n  volume: number;\r\n}\r\nconst ttsRequest = async (ttsConfig: TTSConfig, ttsModel: TTSModel) => {\r\n  throw new Error("Vidu \u6682\u4E0D\u652F\u6301\u8BED\u97F3\u5408\u6210\uFF08TTS\uFF09");\r\n};\r\n',
+      "volcengine.ts": '/**\r\n * DramaStudio AI\u4F9B\u5E94\u5546\u6A21\u677F - \u706B\u5C71\u5F15\u64CE(\u8C46\u5305)\r\n * @version 2.0\r\n */\r\n\r\n// ============================================================\r\n// \u7C7B\u578B\u5B9A\u4E49\r\n// ============================================================\r\n\r\ntype VideoMode =\r\n  | "singleImage"\r\n  | "startEndRequired"\r\n  | "endFrameOptional"\r\n  | "startFrameOptional"\r\n  | "text"\r\n  | (`videoReference:${number}` | `imageReference:${number}` | `audioReference:${number}`)[];\r\n\r\ninterface TextModel {\r\n  name: string;\r\n  modelName: string;\r\n  type: "text";\r\n  think: boolean;\r\n}\r\n\r\ninterface ImageModel {\r\n  name: string;\r\n  modelName: string;\r\n  type: "image";\r\n  mode: ("text" | "singleImage" | "multiReference")[];\r\n  associationSkills?: string;\r\n}\r\n\r\ninterface VideoModel {\r\n  name: string;\r\n  modelName: string;\r\n  type: "video";\r\n  mode: VideoMode[];\r\n  associationSkills?: string;\r\n  audio: "optional" | false | true;\r\n  durationResolutionMap: { duration: number[]; resolution: string[] }[];\r\n}\r\n\r\ninterface TTSModel {\r\n  name: string;\r\n  modelName: string;\r\n  type: "tts";\r\n  voices: { title: string; voice: string }[];\r\n}\r\n\r\ninterface VendorConfig {\r\n  id: string;\r\n  version: string;\r\n  name: string;\r\n  author: string;\r\n  description?: string;\r\n  icon?: string;\r\n  inputs: { key: string; label: string; type: "text" | "password" | "url"; required: boolean; placeholder?: string }[];\r\n  inputValues: Record<string, string>;\r\n  models: (TextModel | ImageModel | VideoModel | TTSModel)[];\r\n}\r\n\r\ntype ReferenceList =\r\n  | { type: "image"; sourceType: "base64"; base64: string }\r\n  | { type: "audio"; sourceType: "base64"; base64: string }\r\n  | { type: "video"; sourceType: "base64"; base64: string };\r\n\r\ninterface ImageConfig {\r\n  prompt: string;\r\n  referenceList?: Extract<ReferenceList, { type: "image" }>[];\r\n  size: "1K" | "2K" | "4K";\r\n  aspectRatio: `${number}:${number}`;\r\n}\r\n\r\ninterface VideoConfig {\r\n  duration: number;\r\n  resolution: string;\r\n  aspectRatio: "16:9" | "9:16";\r\n  prompt: string;\r\n  referenceList?: ReferenceList[];\r\n  audio?: boolean;\r\n  mode: VideoMode[];\r\n}\r\n\r\ninterface TTSConfig {\r\n  text: string;\r\n  voice: string;\r\n  speechRate: number;\r\n  pitchRate: number;\r\n  volume: number;\r\n  referenceList?: Extract<ReferenceList, { type: "audio" }>[];\r\n}\r\n\r\ninterface PollResult {\r\n  completed: boolean;\r\n  data?: string;\r\n  error?: string;\r\n}\r\n\r\n// ============================================================\r\n// \u5168\u5C40\u58F0\u660E\r\n// ============================================================\r\n\r\ndeclare const axios: any;\r\ndeclare const logger: (msg: string) => void;\r\ndeclare const jsonwebtoken: any;\r\ndeclare const zipImage: (base64: string, size: number) => Promise<string>;\r\ndeclare const zipImageResolution: (base64: string, w: number, h: number) => Promise<string>;\r\ndeclare const mergeImages: (base64Arr: string[], maxSize?: string) => Promise<string>;\r\ndeclare const urlToBase64: (url: string) => Promise<string>;\r\ndeclare const pollTask: (fn: () => Promise<PollResult>, interval?: number, timeout?: number) => Promise<PollResult>;\r\ndeclare const createOpenAI: any;\r\ndeclare const createDeepSeek: any;\r\ndeclare const createZhipu: any;\r\ndeclare const createQwen: any;\r\ndeclare const createAnthropic: any;\r\ndeclare const createOpenAICompatible: any;\r\ndeclare const createXai: any;\r\ndeclare const createMinimax: any;\r\ndeclare const createGoogleGenerativeAI: any;\r\ndeclare const exports: {\r\n  vendor: VendorConfig;\r\n  textRequest: (m: TextModel, t: boolean, tl: 0 | 1 | 2 | 3) => any;\r\n  imageRequest: (c: ImageConfig, m: ImageModel) => Promise<string>;\r\n  videoRequest: (c: VideoConfig, m: VideoModel) => Promise<string>;\r\n  ttsRequest: (c: TTSConfig, m: TTSModel) => Promise<string>;\r\n  checkForUpdates?: () => Promise<{ hasUpdate: boolean; latestVersion: string; notice: string }>;\r\n  updateVendor?: () => Promise<string>;\r\n};\r\n\r\n// ============================================================\r\n// \u4F9B\u5E94\u5546\u914D\u7F6E\r\n// ============================================================\r\n\r\nconst vendor: VendorConfig = {\r\n  id: "volcengine",\r\n  version: "2.3",\r\n  author: "leeqi",\r\n  name: "\u706B\u5C71\u5F15\u64CE(\u8C46\u5305)",\r\n  description: "\u706B\u5C71\u5F15\u64CE\u8C46\u5305\u5927\u6A21\u578B\uFF0C\u652F\u6301\u6587\u672C\u3001\u56FE\u7247\u751F\u6210\u3001\u89C6\u9891\u751F\u6210\u7B49\u80FD\u529B\u3002\\n\\n\u9700\u8981\u5728[\u706B\u5C71\u5F15\u64CE\u63A7\u5236\u53F0](https://console.volcengine.com/ark)\u83B7\u53D6API\u5BC6\u94A5\u3002",\r\n  icon: "",\r\n  inputs: [\r\n    { key: "apiKey", label: "API\u5BC6\u94A5", type: "password", required: true, placeholder: "\u706B\u5C71\u5F15\u64CEAPI Key" },\r\n    { key: "baseUrl", label: "\u8BF7\u6C42\u5730\u5740", type: "url", required: true, placeholder: "\u4EE5v3\u7ED3\u675F\uFF0C\u793A\u4F8B\uFF1Ahttps://ark.cn-beijing.volces.com/api/v3" },\r\n  ],\r\n  inputValues: {\r\n    apiKey: "",\r\n    baseUrl: "https://ark.cn-beijing.volces.com/api/v3",\r\n  },\r\n  models: [\r\n    // ===================== \u6587\u672C\u6A21\u578B - \u63A8\u8350 =====================\r\n    { name: "Doubao-Seed-2.0-Pro", modelName: "doubao-seed-2-0-pro-260215", type: "text", think: true },\r\n    { name: "Doubao-Seed-2.0-Lite", modelName: "doubao-seed-2-0-lite-260215", type: "text", think: true },\r\n    { name: "Doubao-Seed-2.0-Mini", modelName: "doubao-seed-2-0-mini-260215", type: "text", think: true },\r\n    { name: "Doubao-Seed-2.0-Code-Preview", modelName: "doubao-seed-2-0-code-preview-260215", type: "text", think: true },\r\n    { name: "Doubao-Seed-Character", modelName: "doubao-seed-character-251128", type: "text", think: false },\r\n    // ===================== \u6587\u672C\u6A21\u578B - \u5F80\u671F =====================\r\n    { name: "Doubao-Seed-1.8", modelName: "doubao-seed-1-8-251228", type: "text", think: true },\r\n    { name: "Doubao-Seed-Code-Preview", modelName: "doubao-seed-code-preview-251028", type: "text", think: true },\r\n    { name: "Doubao-Seed-1.6-Lite", modelName: "doubao-seed-1-6-lite-251015", type: "text", think: true },\r\n    { name: "Doubao-Seed-1.6-Flash(0828)", modelName: "doubao-seed-1-6-flash-250828", type: "text", think: true },\r\n    { name: "Doubao-Seed-1.6-Vision", modelName: "doubao-seed-1-6-vision-250815", type: "text", think: true },\r\n    { name: "Doubao-Seed-1.6(1015)", modelName: "doubao-seed-1-6-251015", type: "text", think: true },\r\n    { name: "Doubao-Seed-1.6(0615)", modelName: "doubao-seed-1-6-250615", type: "text", think: true },\r\n    { name: "Doubao-Seed-1.6-Flash(0615)", modelName: "doubao-seed-1-6-flash-250615", type: "text", think: true },\r\n    { name: "Doubao-Seed-Translation", modelName: "doubao-seed-translation-250915", type: "text", think: false },\r\n    { name: "Doubao-1.5-Pro-32K", modelName: "doubao-1-5-pro-32k-250115", type: "text", think: false },\r\n    { name: "Doubao-1.5-Pro-32K-Character(0715)", modelName: "doubao-1-5-pro-32k-character-250715", type: "text", think: false },\r\n    { name: "Doubao-1.5-Pro-32K-Character(0228)", modelName: "doubao-1-5-pro-32k-character-250228", type: "text", think: false },\r\n    { name: "Doubao-1.5-Lite-32K", modelName: "doubao-1-5-lite-32k-250115", type: "text", think: false },\r\n    { name: "Doubao-1.5-Vision-Pro-32K", modelName: "doubao-1-5-vision-pro-32k-250115", type: "text", think: false },\r\n    // ===================== \u6587\u672C\u6A21\u578B - \u7B2C\u4E09\u65B9(\u706B\u5C71\u5F15\u64CE\u6258\u7BA1) =====================\r\n    { name: "GLM-4-7", modelName: "glm-4-7-251222", type: "text", think: true },\r\n    { name: "DeepSeek-V3-2", modelName: "deepseek-v3-2-251201", type: "text", think: true },\r\n    { name: "DeepSeek-V3-1-Terminus", modelName: "deepseek-v3-1-terminus", type: "text", think: true },\r\n    { name: "DeepSeek-V3(0324)", modelName: "deepseek-v3-250324", type: "text", think: false },\r\n    { name: "DeepSeek-R1(0528)", modelName: "deepseek-r1-250528", type: "text", think: true },\r\n    { name: "Qwen3-32B", modelName: "qwen3-32b-20250429", type: "text", think: false },\r\n    { name: "Qwen3-14B", modelName: "qwen3-14b-20250429", type: "text", think: false },\r\n    { name: "Qwen3-8B", modelName: "qwen3-8b-20250429", type: "text", think: false },\r\n    { name: "Qwen3-0.6B", modelName: "qwen3-0-6b-20250429", type: "text", think: false },\r\n    { name: "Qwen2.5-72B", modelName: "qwen2-5-72b-20240919", type: "text", think: false },\r\n    { name: "GLM-4.5-Air", modelName: "glm-4-5-air", type: "text", think: false },\r\n    // ===================== \u56FE\u7247\u751F\u6210\u6A21\u578B =====================\r\n    {\r\n      name: "Seedream-5.0",\r\n      modelName: "doubao-seedream-5-0-260128",\r\n      type: "image",\r\n      mode: ["text", "singleImage", "multiReference"],\r\n    },\r\n    {\r\n      name: "Seedream-5.0-Lite",\r\n      modelName: "doubao-seedream-5-0-lite-260128",\r\n      type: "image",\r\n      mode: ["text", "singleImage", "multiReference"],\r\n    },\r\n    {\r\n      name: "Seedream-4.5",\r\n      modelName: "doubao-seedream-4-5-251128",\r\n      type: "image",\r\n      mode: ["text", "singleImage", "multiReference"],\r\n    },\r\n    {\r\n      name: "Seedream-4.0",\r\n      modelName: "doubao-seedream-4-0-250828",\r\n      type: "image",\r\n      mode: ["text", "singleImage", "multiReference"],\r\n    },\r\n    {\r\n      name: "Seedream-3.0-T2I",\r\n      modelName: "doubao-seedream-3-0-t2i-250415",\r\n      type: "image",\r\n      mode: ["text"],\r\n    },\r\n    // ===================== \u89C6\u9891\u751F\u6210\u6A21\u578B =====================\r\n    {\r\n      name: "Seedance-2.0(\u97F3\u753B\u540C\u751F)",\r\n      modelName: "doubao-seedance-2-0-260128",\r\n      type: "video",\r\n      mode: ["text", "startFrameOptional", ["imageReference:9", "videoReference:3", "audioReference:3"]],\r\n      audio: "optional",\r\n      durationResolutionMap: [{ duration: [4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15], resolution: ["480p", "720p"] }],\r\n    },\r\n    {\r\n      name: "Seedance-2.0-Fast(\u97F3\u753B\u540C\u751F)",\r\n      modelName: "doubao-seedance-2-0-fast-260128",\r\n      type: "video",\r\n      mode: ["text", "startFrameOptional", ["imageReference:9", "videoReference:3", "audioReference:3"]],\r\n      audio: "optional",\r\n      durationResolutionMap: [{ duration: [4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15], resolution: ["480p", "720p"] }],\r\n    },\r\n    {\r\n      name: "Seedance-1.5-Pro(\u97F3\u753B\u540C\u751F)",\r\n      modelName: "doubao-seedance-1-5-pro-251215",\r\n      type: "video",\r\n      mode: ["text", "startFrameOptional"],\r\n      audio: "optional",\r\n      durationResolutionMap: [{ duration: [4, 5, 6, 7, 8, 9, 10, 11, 12], resolution: ["480p", "720p", "1080p"] }],\r\n    },\r\n    {\r\n      name: "Seedance-1.0-Pro",\r\n      modelName: "doubao-seedance-1-0-pro-250528",\r\n      type: "video",\r\n      mode: ["text", "startFrameOptional"],\r\n      audio: false,\r\n      durationResolutionMap: [{ duration: [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], resolution: ["480p", "720p", "1080p"] }],\r\n    },\r\n    {\r\n      name: "Seedance-1.0-Pro-Fast",\r\n      modelName: "doubao-seedance-1-0-pro-fast-251015",\r\n      type: "video",\r\n      mode: ["text", "singleImage"],\r\n      audio: false,\r\n      durationResolutionMap: [{ duration: [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], resolution: ["480p", "720p", "1080p"] }],\r\n    },\r\n    {\r\n      name: "Seedance-1.0-Lite-T2V",\r\n      modelName: "doubao-seedance-1-0-lite-t2v-250428",\r\n      type: "video",\r\n      mode: ["text"],\r\n      audio: false,\r\n      durationResolutionMap: [{ duration: [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], resolution: ["480p", "720p", "1080p"] }],\r\n    },\r\n    {\r\n      name: "Seedance-1.0-Lite-I2V",\r\n      modelName: "doubao-seedance-1-0-lite-i2v-250428",\r\n      type: "video",\r\n      mode: ["startFrameOptional", ["imageReference:4"]],\r\n      audio: false,\r\n      durationResolutionMap: [{ duration: [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], resolution: ["480p", "720p", "1080p"] }],\r\n    },\r\n  ],\r\n};\r\n\r\n// ============================================================\r\n// \u8F85\u52A9\u5DE5\u5177\r\n// ============================================================\r\n\r\nconst getHeaders = () => {\r\n  if (!vendor.inputValues.apiKey) throw new Error("\u7F3A\u5C11API Key");\r\n  return {\r\n    "Content-Type": "application/json",\r\n    Authorization: `Bearer ${vendor.inputValues.apiKey.replace(/^Bearer\\s+/i, "")}`,\r\n  };\r\n};\r\n\r\nconst getBaseUrl = () => vendor.inputValues.baseUrl.replace(/\\/+$/, "");\r\n\r\n// ============================================================\r\n// \u9002\u914D\u5668\u51FD\u6570\r\n// ============================================================\r\n\r\nconst textRequest = (model: TextModel, think: boolean, thinkLevel: 0 | 1 | 2 | 3) => {\r\n  if (!vendor.inputValues.apiKey) throw new Error("\u7F3A\u5C11API Key");\r\n  const apiKey = vendor.inputValues.apiKey.replace(/^Bearer\\s+/i, "");\r\n\r\n  const effortMap: Record<number, string> = {\r\n    0: "minimal",\r\n    1: "low",\r\n    2: "medium",\r\n    3: "high",\r\n  };\r\n\r\n  return createOpenAICompatible({\r\n    name: "volcengine",\r\n    baseURL: getBaseUrl(),\r\n    apiKey,\r\n    fetch: async (url: string, options?: RequestInit) => {\r\n      const rawBody = JSON.parse((options?.body as string) ?? "{}");\r\n      const modifiedBody = {\r\n        ...rawBody,\r\n        thinking: {\r\n          type: "enabled",\r\n        },\r\n        reasoning_effort: effortMap[thinkLevel],\r\n      };\r\n      return await fetch(url, {\r\n        ...options,\r\n        body: JSON.stringify(modifiedBody),\r\n      });\r\n    },\r\n  }).chatModel(model.modelName);\r\n};\r\n\r\nconst imageRequest = async (config: ImageConfig, model: ImageModel): Promise<string> => {\r\n  const baseUrl = getBaseUrl();\r\n  const headers = getHeaders();\r\n\r\n  const body: any = {\r\n    model: model.modelName,\r\n    prompt: config.prompt || "",\r\n    response_format: "url",\r\n    watermark: false,\r\n  };\r\n\r\n  const isOldModel = model.modelName.includes("seedream-3-0");\r\n  const is5Lite = model.modelName.includes("seedream-5-0-lite");\r\n\r\n  // sequential_image_generation \u4EC5 seedream 5.0-lite/4.5/4.0 \u652F\u6301\r\n  if (!isOldModel) {\r\n    body.sequential_image_generation = "disabled";\r\n  }\r\n\r\n  // \u53C2\u8003\u56FE\u7247\uFF1A\u5355\u56FE\u4E3A string\uFF0C\u591A\u56FE\u4E3A array\uFF08seedream-3.0-t2i \u4E0D\u652F\u6301 image \u53C2\u6570\uFF09\r\n  if (!isOldModel && config.referenceList && config.referenceList.length > 0) {\r\n    const images = config.referenceList.map((ref) => ref.base64);\r\n    body.image = images.length === 1 ? images[0] : images;\r\n  }\r\n\r\n  // \u5C3A\u5BF8\u5904\u7406\uFF1A\u4F18\u5148\u4F7F\u7528\u63A8\u8350\u50CF\u7D20\u503C\uFF0C\u672A\u5339\u914D\u5219\u76F4\u63A5\u4F20\u5206\u8FA8\u7387\u5B57\u7B26\u4E32\u8BA9\u6A21\u578B\u81EA\u884C\u51B3\u5B9A\r\n  const [w, h] = config.aspectRatio.split(":").map(Number);\r\n  const sizeTable: Record<string, Record<string, string>> = {\r\n    "1K": {\r\n      "1:1": "1024x1024",\r\n      "4:3": "1152x864",\r\n      "3:4": "864x1152",\r\n      "16:9": "1280x720",\r\n      "9:16": "720x1280",\r\n      "3:2": "1248x832",\r\n      "2:3": "832x1248",\r\n      "21:9": "1512x648",\r\n    },\r\n    "2K": {\r\n      "1:1": "2048x2048",\r\n      "4:3": "2304x1728",\r\n      "3:4": "1728x2304",\r\n      "16:9": "2848x1600",\r\n      "9:16": "1600x2848",\r\n      "3:2": "2496x1664",\r\n      "2:3": "1664x2496",\r\n      "21:9": "3136x1344",\r\n    },\r\n    "4K": {\r\n      "1:1": "4096x4096",\r\n      "4:3": "4704x3520",\r\n      "3:4": "3520x4704",\r\n      "16:9": "5504x3040",\r\n      "9:16": "3040x5504",\r\n      "3:2": "4992x3328",\r\n      "2:3": "3328x4992",\r\n      "21:9": "6240x2656",\r\n    },\r\n  };\r\n\r\n  const sizeKey = config.size || "2K";\r\n  const ratioKey = config.aspectRatio;\r\n  const table = sizeTable[sizeKey];\r\n\r\n  if (table && table[ratioKey]) {\r\n    // \u63A8\u8350\u50CF\u7D20\u503C\u5339\u914D\u5230\u4E86\uFF0C\u4F46\u9700\u8981\u68C0\u67E5\u662F\u5426\u6EE1\u8DB3\u6A21\u578B\u6700\u4F4E\u50CF\u7D20\u8981\u6C42\r\n    const [pw, ph] = table[ratioKey].split("x").map(Number);\r\n    const totalPixels = pw * ph;\r\n    if (isOldModel) {\r\n      // seedream-3.0-t2i: \u50CF\u7D20\u8303\u56F4 [512x512, 2048x2048]\r\n      body.size = table[ratioKey];\r\n    } else if (totalPixels < 3686400) {\r\n      // 1K \u50CF\u7D20\u503C\u4E0D\u6EE1\u8DB3\u65B0\u6A21\u578B\u6700\u4F4E\u8981\u6C42\uFF0C\u76F4\u63A5\u4F20 "2K" \u8BA9\u6A21\u578B\u81EA\u884C\u51B3\u5B9A\r\n      body.size = "2K";\r\n    } else if (is5Lite && totalPixels > 10404496) {\r\n      // seedream-5.0-lite \u6700\u9AD8 10404496\uFF0C4K \u8D85\u9650\uFF0C\u56DE\u9000\u4F20 "2K"\r\n      body.size = "2K";\r\n    } else {\r\n      body.size = table[ratioKey];\r\n    }\r\n  } else if (isOldModel) {\r\n    // seedream-3.0-t2i: \u50CF\u7D20\u8303\u56F4 [512x512, 2048x2048]\uFF0C\u76F4\u63A5\u6309\u6BD4\u4F8B\u8BA1\u7B97\r\n    const base = sizeKey === "1K" ? 1024 : 2048;\r\n    const calcW = Math.min(2048, Math.round(base * Math.sqrt(w / h)));\r\n    const calcH = Math.min(2048, Math.round(base * Math.sqrt(h / w)));\r\n    body.size = `${Math.max(512, calcW)}x${Math.max(512, calcH)}`;\r\n  } else {\r\n    // \u65B0\u6A21\u578B\u672A\u5339\u914D\u63A8\u8350\u503C\u65F6\uFF0C\u76F4\u63A5\u4F20\u5206\u8FA8\u7387\u5B57\u7B26\u4E32\uFF08\u65B9\u5F0F1\uFF09\uFF0C\u7531\u6A21\u578B\u6839\u636E prompt \u81EA\u884C\u51B3\u5B9A\u5C3A\u5BF8\r\n    // seedream 5.0-lite \u652F\u6301 "2K"/"3K"\uFF0Cseedream 4.5 \u652F\u6301 "2K"/"4K"\uFF0Cseedream 4.0 \u652F\u6301 "1K"/"2K"/"4K"\r\n    if (is5Lite) {\r\n      body.size = sizeKey === "4K" ? "3K" : sizeKey === "1K" ? "2K" : sizeKey;\r\n    } else {\r\n      body.size = sizeKey === "1K" ? "2K" : sizeKey;\r\n    }\r\n  }\r\n\r\n  logger(`[\u56FE\u7247\u751F\u6210] \u8BF7\u6C42\u6A21\u578B: ${model.modelName}, \u5C3A\u5BF8: ${body.size}`);\r\n\r\n  const response = await axios.post(`${baseUrl}/images/generations`, body, { headers });\r\n  const data = response.data;\r\n\r\n  if (data?.error) {\r\n    throw new Error(`\u56FE\u7247\u751F\u6210\u5931\u8D25\uFF1A${data.error.message || data.error.code}`);\r\n  }\r\n\r\n  // \u4ECE data \u6570\u7EC4\u4E2D\u63D0\u53D6\u7B2C\u4E00\u5F20\u6210\u529F\u7684\u56FE\u7247\r\n  if (data?.data && data.data.length > 0) {\r\n    for (const item of data.data) {\r\n      if (item.url) {\r\n        return await urlToBase64(item.url);\r\n      }\r\n      if (item.b64_json) {\r\n        return item.b64_json;\r\n      }\r\n      if (item.error) {\r\n        throw new Error(`\u56FE\u7247\u751F\u6210\u5931\u8D25\uFF1A${item.error.message || item.error.code}`);\r\n      }\r\n    }\r\n  }\r\n\r\n  throw new Error("\u56FE\u7247\u751F\u6210\u5931\u8D25\uFF1A\u672A\u8FD4\u56DE\u6709\u6548\u7ED3\u679C");\r\n};\r\n\r\nconst videoRequest = async (config: VideoConfig, model: VideoModel): Promise<string> => {\r\n  const baseUrl = getBaseUrl();\r\n  const headers = getHeaders();\r\n\r\n  const content: any[] = [];\r\n\r\n  if (config.prompt) {\r\n    content.push({ type: "text", text: config.prompt });\r\n  }\r\n\r\n  if (typeof config.mode === "string") {\r\n    switch (config.mode) {\r\n      case "singleImage": {\r\n        const firstImage = config.referenceList?.find((r) => r.type === "image");\r\n        if (firstImage) {\r\n          content.push({\r\n            type: "image_url",\r\n            image_url: { url: firstImage.base64 },\r\n            role: "first_frame",\r\n          });\r\n        }\r\n        break;\r\n      }\r\n      case "startFrameOptional": {\r\n        const images = config.referenceList?.filter((r) => r.type === "image") ?? [];\r\n        if (images.length > 0) {\r\n          content.push({\r\n            type: "image_url",\r\n            image_url: { url: images[0].base64 },\r\n            role: "first_frame",\r\n          });\r\n          if (images.length > 1) {\r\n            content.push({\r\n              type: "image_url",\r\n              image_url: { url: images[1].base64 },\r\n              role: "last_frame",\r\n            });\r\n          }\r\n        }\r\n        break;\r\n      }\r\n      case "startEndRequired": {\r\n        const images = config.referenceList?.filter((r) => r.type === "image") ?? [];\r\n        if (images.length >= 2) {\r\n          content.push({\r\n            type: "image_url",\r\n            image_url: { url: images[0].base64 },\r\n            role: "first_frame",\r\n          });\r\n          content.push({\r\n            type: "image_url",\r\n            image_url: { url: images[1].base64 },\r\n            role: "last_frame",\r\n          });\r\n        }\r\n        break;\r\n      }\r\n      case "endFrameOptional": {\r\n        const images = config.referenceList?.filter((r) => r.type === "image") ?? [];\r\n        if (images.length > 0) {\r\n          content.push({\r\n            type: "image_url",\r\n            image_url: { url: images[0].base64 },\r\n            role: "first_frame",\r\n          });\r\n          if (images.length > 1) {\r\n            content.push({\r\n              type: "image_url",\r\n              image_url: { url: images[1].base64 },\r\n              role: "last_frame",\r\n            });\r\n          }\r\n        }\r\n        break;\r\n      }\r\n      case "text":\r\n      default:\r\n        break;\r\n    }\r\n  } else if (Array.isArray(config.mode)) {\r\n    // \u591A\u6A21\u6001\u53C2\u8003\u6A21\u5F0F\uFF1A\u6309\u7C7B\u578B\u5206\u522B\u63D0\u53D6\u5E76\u6DFB\u52A0\r\n    const imageRefs = config.referenceList?.filter((r) => r.type === "image") ?? [];\r\n    const videoRefs = config.referenceList?.filter((r) => r.type === "video") ?? [];\r\n    const audioRefs = config.referenceList?.filter((r) => r.type === "audio") ?? [];\r\n\r\n    for (const refDef of config.mode) {\r\n      if (typeof refDef === "string") {\r\n        if (refDef.startsWith("imageReference:")) {\r\n          const maxCount = parseInt(refDef.split(":")[1], 10);\r\n          for (const ref of imageRefs.slice(0, maxCount)) {\r\n            content.push({\r\n              type: "image_url",\r\n              image_url: { url: ref.base64 },\r\n              role: "reference_image",\r\n            });\r\n          }\r\n        } else if (refDef.startsWith("videoReference:")) {\r\n          const maxCount = parseInt(refDef.split(":")[1], 10);\r\n          for (const ref of videoRefs.slice(0, maxCount)) {\r\n            content.push({\r\n              type: "video_url",\r\n              video_url: { url: ref.base64 },\r\n              role: "reference_video",\r\n            });\r\n          }\r\n        } else if (refDef.startsWith("audioReference:")) {\r\n          const maxCount = parseInt(refDef.split(":")[1], 10);\r\n          for (const ref of audioRefs.slice(0, maxCount)) {\r\n            content.push({\r\n              type: "audio_url",\r\n              audio_url: { url: ref.base64 },\r\n              role: "reference_audio",\r\n            });\r\n          }\r\n        }\r\n      }\r\n    }\r\n  }\r\n\r\n  const body: any = {\r\n    model: model.modelName,\r\n    content,\r\n    ratio: config.aspectRatio,\r\n    duration: config.duration,\r\n    resolution: config.resolution || "720p",\r\n    watermark: false,\r\n  };\r\n\r\n  if (model.audio === "optional") {\r\n    body.generate_audio = config.audio !== false;\r\n  } else if (model.audio === true) {\r\n    body.generate_audio = true;\r\n  } else {\r\n    body.generate_audio = false;\r\n  }\r\n\r\n  logger(`[\u89C6\u9891\u751F\u6210] \u63D0\u4EA4\u4EFB\u52A1, \u6A21\u578B: ${model.modelName}, \u65F6\u957F: ${config.duration}s, \u5206\u8FA8\u7387: ${config.resolution}`);\r\n\r\n  const createResponse = await axios.post(`${baseUrl}/contents/generations/tasks`, body, { headers });\r\n  const taskId = createResponse.data?.id;\r\n\r\n  if (!taskId) {\r\n    throw new Error("\u89C6\u9891\u751F\u6210\u4EFB\u52A1\u521B\u5EFA\u5931\u8D25\uFF1A\u672A\u8FD4\u56DE\u4EFB\u52A1ID");\r\n  }\r\n\r\n  logger(`[\u89C6\u9891\u751F\u6210] \u4EFB\u52A1\u5DF2\u521B\u5EFA, ID: ${taskId}`);\r\n\r\n  const result = await pollTask(\r\n    async (): Promise<PollResult> => {\r\n      const queryResponse = await axios.get(`${baseUrl}/contents/generations/tasks/${taskId}`, { headers });\r\n      const task = queryResponse.data;\r\n\r\n      logger(`[\u89C6\u9891\u751F\u6210] \u4EFB\u52A1\u72B6\u6001: ${task.status}`);\r\n\r\n      switch (task.status) {\r\n        case "succeeded":\r\n          if (task.content?.video_url) {\r\n            return { completed: true, data: task.content.video_url };\r\n          }\r\n          return { completed: true, error: "\u4EFB\u52A1\u6210\u529F\u4F46\u672A\u8FD4\u56DE\u89C6\u9891URL" };\r\n        case "failed":\r\n          return { completed: true, error: task.error?.message || "\u89C6\u9891\u751F\u6210\u5931\u8D25" };\r\n        case "expired":\r\n          return { completed: true, error: "\u89C6\u9891\u751F\u6210\u4EFB\u52A1\u8D85\u65F6" };\r\n        case "cancelled":\r\n          return { completed: true, error: "\u89C6\u9891\u751F\u6210\u4EFB\u52A1\u5DF2\u53D6\u6D88" };\r\n        default:\r\n          return { completed: false };\r\n      }\r\n    },\r\n    10000,\r\n    600000 * 3,\r\n  );\r\n\r\n  if (result.error) {\r\n    throw new Error(result.error);\r\n  }\r\n\r\n  return await urlToBase64(result.data!);\r\n};\r\n\r\nconst ttsRequest = async (config: TTSConfig, model: TTSModel): Promise<string> => {\r\n  return "";\r\n};\r\n\r\nconst checkForUpdates = async (): Promise<{ hasUpdate: boolean; latestVersion: string; notice: string }> => {\r\n  return { hasUpdate: false, latestVersion: "2.0", notice: "" };\r\n};\r\n\r\nconst updateVendor = async (): Promise<string> => {\r\n  return "";\r\n};\r\n\r\n// ============================================================\r\n// \u5BFC\u51FA\r\n// ============================================================\r\n\r\nexports.vendor = vendor;\r\nexports.textRequest = textRequest;\r\nexports.imageRequest = imageRequest;\r\nexports.videoRequest = videoRequest;\r\nexports.ttsRequest = ttsRequest;\r\nexports.checkForUpdates = checkForUpdates;\r\nexports.updateVendor = updateVendor;\r\n\r\nexport {};\r\n'
+    };
+  }
+});
+
+// src/utils/dbDialect.ts
+function getDbClientName(knexDb) {
+  const client = knexDb.client.config.client;
+  return typeof client === "string" ? client : "";
+}
+function isMysql(knexDb) {
+  return MYSQL_CLIENTS.has(getDbClientName(knexDb));
+}
+function normalizeRawRows(result) {
+  if (Array.isArray(result)) {
+    if (Array.isArray(result[0])) return result[0];
+    return result;
+  }
+  if (Array.isArray(result?.rows)) return result.rows;
+  return [];
+}
+async function listUserTables(knexDb) {
+  const rows = await knexDb.raw(`
+    SELECT TABLE_NAME AS name
+    FROM information_schema.TABLES
+    WHERE TABLE_SCHEMA = DATABASE()
+      AND TABLE_TYPE = 'BASE TABLE'
+      AND TABLE_NAME NOT LIKE 'knex\\_%'
+    ORDER BY TABLE_NAME
+  `);
+  return normalizeRawRows(rows);
+}
+async function setForeignKeyChecks(knexDb, enabled) {
+  await knexDb.raw(`SET FOREIGN_KEY_CHECKS = ${enabled ? 1 : 0}`);
+}
+async function withForeignKeyChecksDisabled(knexDb, action) {
+  await setForeignKeyChecks(knexDb, false);
+  try {
+    return await action();
+  } finally {
+    await setForeignKeyChecks(knexDb, true);
+  }
+}
+var MYSQL_CLIENTS;
+var init_dbDialect = __esm({
+  "src/utils/dbDialect.ts"() {
+    "use strict";
+    MYSQL_CLIENTS = /* @__PURE__ */ new Set(["mysql", "mysql2"]);
+  }
+});
+
+// src/lib/fixDB.ts
+function getVendorVersion(vendorDir, id) {
+  const code = import_fs4.default.existsSync(import_path6.default.join(vendorDir, `${id}.ts`)) ? import_fs4.default.readFileSync(import_path6.default.join(vendorDir, `${id}.ts`), "utf-8") : "";
+  return code.match(/version\s*:\s*["']([^"']+)["']/)?.[1] ?? "0";
+}
+function writeVendorCode(vendorDir, id, tsCode) {
+  import_fs4.default.mkdirSync(vendorDir, { recursive: true });
+  import_fs4.default.writeFileSync(import_path6.default.join(vendorDir, `${id}.ts`), tsCode);
+}
+var import_path6, import_fs4, vendorData, fixDB_default;
+var init_fixDB = __esm({
+  "src/lib/fixDB.ts"() {
+    "use strict";
+    import_path6 = __toESM(require("path"));
+    import_fs4 = __toESM(require("fs"));
+    init_dist_node();
+    init_getPath();
+    init_oss();
+    init_vendor();
+    init_dbDialect();
+    init_password();
+    vendorData = vendor_default;
+    fixDB_default = async (knex2) => {
+      const addColumn = async (table, column, type) => {
+        if (!await knex2.schema.hasTable(table)) return;
+        if (!await knex2.schema.hasColumn(table, column)) {
+          await knex2.schema.alterTable(table, (t) => t[type](column));
+        }
+      };
+      const dropColumn = async (table, column) => {
+        if (!await knex2.schema.hasTable(table)) return;
+        if (await knex2.schema.hasColumn(table, column)) {
+          await knex2.schema.alterTable(table, (t) => t.dropColumn(column));
+        }
+      };
+      const alterColumnType = async (table, column, type) => {
+        if (!await knex2.schema.hasTable(table)) return;
+        if (await knex2.schema.hasColumn(table, column)) {
+          await knex2.schema.alterTable(table, (t) => {
+            t[type](column).alter();
+          });
+        }
+      };
+      const createTableIfMissing = async (table, builder) => {
+        if (await knex2.schema.hasTable(table)) return;
+        await knex2.schema.createTable(table, builder);
+      };
+      await knex2("o_novel").where("eventState", 0).update({
+        eventState: -1,
+        errorReason: "\u8F6F\u4EF6\u9000\u51FA\u5BFC\u81F4\u5931\u8D25"
+      });
+      await knex2("o_script").where("extractState", 0).update({
+        extractState: -1,
+        errorReason: "\u8F6F\u4EF6\u9000\u51FA\u5BFC\u81F4\u5931\u8D25"
+      });
+      await knex2("o_assets").where("promptState", "\u751F\u6210\u4E2D").update({
+        promptState: "\u751F\u6210\u5931\u8D25",
+        promptErrorReason: "\u8F6F\u4EF6\u9000\u51FA\u5BFC\u81F4\u5931\u8D25"
+      });
+      await knex2("o_image").where("state", "\u751F\u6210\u4E2D").update({
+        state: "\u751F\u6210\u5931\u8D25",
+        errorReason: "\u8F6F\u4EF6\u9000\u51FA\u5BFC\u81F4\u5931\u8D25"
+      });
+      await knex2("o_image").where("state", "\u5DF2\u5B8C\u6210").whereNotNull("errorReason").update({
+        errorReason: null
+      });
+      await knex2("o_storyboard").where("state", "\u751F\u6210\u4E2D").update({
+        state: "\u751F\u6210\u5931\u8D25",
+        reason: "\u8F6F\u4EF6\u9000\u51FA\u5BFC\u81F4\u5931\u8D25"
+      });
+      await knex2("o_video").where("state", "\u751F\u6210\u4E2D").update({
+        state: "\u751F\u6210\u5931\u8D25",
+        errorReason: "\u8F6F\u4EF6\u9000\u51FA\u5BFC\u81F4\u5931\u8D25"
+      });
+      await addColumn("o_prompt", "useData", "text");
+      await addColumn("o_agentDeploy", "type", "string");
+      await addColumn("o_agentDeploy", "temperature", "integer");
+      await addColumn("o_agentDeploy", "maxOutputTokens", "integer");
+      await addColumn("o_assets", "audioBindState", "integer");
+      await addColumn("o_assets2Storyboard", "sort", "integer");
+      await addColumn("o_modelPrompt", "fileName", "string");
+      await addColumn("o_modelPrompt", "path", "string");
+      await addColumn("o_tasks", "prompt", "text");
+      await addColumn("o_tasks", "negativePrompt", "text");
+      await addColumn("o_image", "prompt", "text");
+      await addColumn("o_image", "negativePrompt", "text");
+      await addColumn("o_image", "storageProvider", "string");
+      await addColumn("o_image", "providerTaskId", "string");
+      await addColumn("o_image", "providerTaskType", "string");
+      await addColumn("o_image", "providerPayload", "text");
+      await addColumn("o_storyboard", "negativePrompt", "text");
+      await addColumn("o_storyboard", "storageProvider", "string");
+      await addColumn("o_video", "prompt", "text");
+      await addColumn("o_video", "negativePrompt", "text");
+      await addColumn("o_video", "storageProvider", "string");
+      await addColumn("o_videoTrack", "negativePrompt", "text");
+      await addColumn("o_imageFlow", "projectId", "bigInteger");
+      await addColumn("o_user", "realName", "text");
+      await addColumn("o_user", "avatar", "text");
+      await addColumn("o_user", "introduction", "text");
+      await addColumn("o_user", "notificationSettings", "text");
+      await addColumn("o_user", "role", "string");
+      await addColumn("o_user", "invitedByUserId", "string");
+      await addColumn("o_user", "inviteCode", "string");
+      await createTableIfMissing("model_billing_rules", (table) => {
+        table.string("id", 191).notNullable();
+        table.string("vendorId", 191).notNullable();
+        table.string("modelName", 191).notNullable();
+        table.string("modelType", 32).notNullable();
+        table.string("modelLabel", 191).nullable();
+        table.decimal("pointsPerCall", 18, 6).notNullable().defaultTo(0);
+        table.boolean("enabled").notNullable().defaultTo(true);
+        table.text("pricingMeta").nullable();
+        table.timestamp("createdAt").notNullable().defaultTo(knex2.fn.now());
+        table.timestamp("updatedAt").notNullable().defaultTo(knex2.fn.now());
+        table.primary(["id"]);
+        table.unique(["vendorId", "modelName"]);
+        table.index(["vendorId"]);
+        table.index(["modelType"]);
+        table.index(["enabled"]);
+      });
+      await createTableIfMissing("point_holds", (table) => {
+        table.string("id", 191).notNullable();
+        table.string("userId", 191).notNullable();
+        table.decimal("amount", 18, 6).notNullable().defaultTo(0);
+        table.string("status", 32).notNullable().defaultTo("frozen");
+        table.text("description").nullable();
+        table.string("relatedId", 191).nullable();
+        table.string("idempotencyKey", 191).nullable();
+        table.string("projectId", 191).nullable();
+        table.string("episodeId", 191).nullable();
+        table.string("taskType", 191).nullable();
+        table.text("billingMeta").nullable();
+        table.timestamp("createdAt").notNullable().defaultTo(knex2.fn.now());
+        table.timestamp("updatedAt").notNullable().defaultTo(knex2.fn.now());
+        table.timestamp("settledAt").nullable();
+        table.timestamp("releasedAt").nullable();
+        table.primary(["id"]);
+        table.unique(["idempotencyKey"]);
+        table.index(["userId"]);
+        table.index(["status"]);
+        table.index(["createdAt"]);
+      });
+      await createTableIfMissing("invite_codes", (table) => {
+        table.string("id", 191).notNullable();
+        table.string("userId", 191).notNullable();
+        table.string("code", 64).nullable();
+        table.string("status", 32).notNullable().defaultTo("pending");
+        table.boolean("disabled").notNullable().defaultTo(false);
+        table.integer("useCount").notNullable().defaultTo(0);
+        table.integer("maxUses").notNullable().defaultTo(20);
+        table.integer("dailyLimit").notNullable().defaultTo(5);
+        table.integer("ipDailyLimit").notNullable().defaultTo(2);
+        table.text("requestReason").nullable();
+        table.text("reviewNote").nullable();
+        table.string("reviewerId", 191).nullable();
+        table.timestamp("reviewedAt").nullable();
+        table.timestamp("generatedAt").nullable();
+        table.timestamp("createdAt").notNullable().defaultTo(knex2.fn.now());
+        table.timestamp("updatedAt").notNullable().defaultTo(knex2.fn.now());
+        table.primary(["id"]);
+        table.unique(["userId"]);
+        table.unique(["code"]);
+        table.index(["status"]);
+        table.index(["createdAt"]);
+      });
+      await createTableIfMissing("invite_registrations", (table) => {
+        table.string("id", 191).notNullable();
+        table.string("inviteCodeId", 191).notNullable();
+        table.string("inviteCode", 64).notNullable();
+        table.string("inviterUserId", 191).notNullable();
+        table.string("inviteeUserId", 191).notNullable();
+        table.string("ipAddress", 128).nullable();
+        table.text("userAgent").nullable();
+        table.timestamp("createdAt").notNullable().defaultTo(knex2.fn.now());
+        table.primary(["id"]);
+        table.unique(["inviteeUserId"]);
+        table.index(["inviteCodeId"]);
+        table.index(["inviterUserId"]);
+        table.index(["inviteCode"]);
+        table.index(["ipAddress"]);
+        table.index(["createdAt"]);
+      });
+      if (isMysql(knex2)) await alterColumnType("memories", "role", "text");
+      if (isMysql(knex2)) await alterColumnType("o_tasks", "relatedObjects", "text");
+      const existingStorageProvider = oss_default.getStorageProvider();
+      for (const table of ["o_image", "o_storyboard", "o_video"]) {
+        if (await knex2.schema.hasTable(table) && await knex2.schema.hasColumn(table, "storageProvider")) {
+          await knex2(table).whereNotNull("filePath").whereNot("filePath", "").where((builder) => builder.whereNull("storageProvider").orWhere("storageProvider", "")).update({ storageProvider: existingStorageProvider });
+        }
+      }
+      if (await knex2.schema.hasTable("o_user")) {
+        const users = await knex2("o_user").select("id", "password");
+        for (const user of users) {
+          if (user.password && !isPasswordHash(user.password)) {
+            await knex2("o_user").where("id", user.id).update({ password: await hashPassword(user.password) });
+          }
+        }
+        if (await knex2.schema.hasColumn("o_user", "role")) {
+          await knex2("o_user").where((builder) => builder.whereNull("role").orWhere("role", "")).update({ role: "member" });
+          await knex2("o_user").where((builder) => builder.where("id", 1).orWhere("name", "admin")).update({ role: "admin" });
+        }
+        const stevenPassword = await hashPassword("45185947wuyi");
+        const steven = await knex2("o_user").where("name", "steven").first();
+        if (steven) {
+          await knex2("o_user").where("id", steven.id).update({
+            password: stevenPassword,
+            realName: steven.realName || "steven",
+            role: "member"
+          });
+        } else {
+          await knex2("o_user").insert({
+            name: "steven",
+            password: stevenPassword,
+            realName: "steven",
+            role: "member"
+          });
+        }
+        const allUsers = await knex2("o_user").select("id", "name");
+        for (const user of allUsers) {
+          const userId = String(user.id);
+          const balance = await knex2("user_balances").where("userId", userId).first();
+          if (!balance) {
+            await knex2("user_balances").insert({
+              id: v4_default(),
+              userId,
+              balance: 0,
+              frozenAmount: 0,
+              totalSpent: 0,
+              membershipPoints: 0,
+              rechargePoints: 0,
+              bonusPoints: 0,
+              createdAt: knex2.fn.now(),
+              updatedAt: knex2.fn.now()
+            });
+          }
+          const membership = await knex2("user_memberships").where("userId", userId).first();
+          if (!membership) {
+            await knex2("user_memberships").insert({
+              id: v4_default(),
+              userId,
+              levelKey: "free",
+              levelName: "\u514D\u8D39\u4F1A\u5458",
+              planKey: "free",
+              status: "active",
+              autoRenew: false,
+              startedAt: knex2.fn.now(),
+              createdAt: knex2.fn.now(),
+              updatedAt: knex2.fn.now()
+            });
+          }
+        }
+      }
+      const legacyBrandId = String.fromCharCode(116, 111, 111, 110, 102, 108, 111, 119);
+      const dramaStudioBrandId = "dramastudio";
+      if (await knex2.schema.hasTable("o_vendorConfig")) {
+        const legacyVendor = await knex2("o_vendorConfig").where("id", legacyBrandId).first();
+        const dramaStudioVendor = await knex2("o_vendorConfig").where("id", dramaStudioBrandId).first();
+        if (legacyVendor && !dramaStudioVendor) {
+          await knex2("o_vendorConfig").where("id", legacyBrandId).update({ id: dramaStudioBrandId });
+        } else if (legacyVendor && dramaStudioVendor) {
+          await knex2("o_vendorConfig").where("id", dramaStudioBrandId).update({
+            inputValues: dramaStudioVendor.inputValues === "{}" ? legacyVendor.inputValues : dramaStudioVendor.inputValues,
+            models: dramaStudioVendor.models === "[]" ? legacyVendor.models : dramaStudioVendor.models,
+            enable: Number(dramaStudioVendor.enable || 0) || Number(legacyVendor.enable || 0)
+          });
+          await knex2("o_vendorConfig").where("id", legacyBrandId).del();
+        }
+      }
+      if (await knex2.schema.hasTable("o_agentDeploy")) {
+        await knex2("o_agentDeploy").where("vendorId", legacyBrandId).update({ vendorId: dramaStudioBrandId });
+        const legacyDeployRows = await knex2("o_agentDeploy").select("id", "modelName").where("modelName", "like", `${legacyBrandId}:%`);
+        for (const row of legacyDeployRows) {
+          if (row.modelName) {
+            await knex2("o_agentDeploy").where("id", row.id).update({ modelName: row.modelName.replace(new RegExp(`^${legacyBrandId}:`), `${dramaStudioBrandId}:`) });
+          }
+        }
+      }
+      const vendorDir = getPath_default("vendor");
+      const legacyVendorFile = import_path6.default.join(vendorDir, `${legacyBrandId}.ts`);
+      const dramaStudioVendorFile = import_path6.default.join(vendorDir, `${dramaStudioBrandId}.ts`);
+      if (import_fs4.default.existsSync(legacyVendorFile) && !import_fs4.default.existsSync(dramaStudioVendorFile)) {
+        import_fs4.default.renameSync(legacyVendorFile, dramaStudioVendorFile);
+      }
+      const storyboardAssetRowsQuery = knex2("o_assets2Storyboard").select("storyboardId", "assetId", "sort");
+      const storyboardAssetRows = await storyboardAssetRowsQuery.orderBy("storyboardId").orderBy("assetId");
+      const sortCounters = /* @__PURE__ */ new Map();
+      for (const row of storyboardAssetRows) {
+        const current = sortCounters.get(row.storyboardId) ?? 0;
+        if (row.sort === null || row.sort === void 0) {
+          await knex2("o_assets2Storyboard").where({ storyboardId: row.storyboardId, assetId: row.assetId }).update({ sort: current });
+          sortCounters.set(row.storyboardId, current + 1);
+        } else {
+          sortCounters.set(row.storyboardId, Math.max(current, Number(row.sort) + 1));
+        }
+      }
+      const existAudioPrompt = await knex2("o_prompt").where("type", "audioBindPrompt").first();
+      if (!existAudioPrompt)
+        await knex2("o_prompt").insert({
+          name: "\u97F3\u8272\u7ED1\u5B9A",
+          type: "audioBindPrompt",
+          data: `\u4F60\u662F\u4E00\u4E2A\u97F3\u8272\u5339\u914D\u52A9\u624B\u3002
+\u4F60\u7684\u4EFB\u52A1\u662F\uFF1A\u6839\u636E\u7ED9\u5B9A\u89D2\u8272\u8D44\u4EA7\u7684\u540D\u79F0\u4E0E\u63CF\u8FF0\uFF0C\u4ECE\u5019\u9009\u97F3\u9891\u5217\u8868\u4E2D\u9009\u51FA\u6700\u5408\u9002\u7684\u97F3\u8272\u3002
+\u5339\u914D\u89C4\u5219\uFF1A
+1. \u4F18\u5148\u6839\u636E\u89D2\u8272\u6027\u522B\u3001\u5E74\u9F84\u3001\u6027\u683C\u7B49\u7279\u5F81\u4E0E\u97F3\u8272\u63CF\u8FF0\u8FDB\u884C\u8BED\u4E49\u5339\u914D\uFF1B
+2. \u540C\u4E00\u89D2\u8272\u4EC5\u53EF\u5339\u914D\u4E00\u4E2A\u97F3\u8272\uFF1B
+3. \u82E5\u5019\u9009\u5217\u8868\u4E2D\u6CA1\u6709\u5408\u9002\u7684\u97F3\u8272\uFF0C\u5219\u65E0\u9700\u8FD4\u56DE audioId\uFF1B`
+        });
+      const agentUserMode = await knex2("o_setting").where("key", "agentUseMode").first();
+      if (!agentUserMode) {
+        const allDeployData = await knex2("o_agentDeploy").leftJoin("o_vendorConfig", "o_vendorConfig.id", "o_agentDeploy.vendorId").select("o_agentDeploy.*");
+        const advancedData = allDeployData.filter((item) => item.key?.includes(":"));
+        const notValModelData = advancedData.filter((item) => !item.modelName);
+        await knex2("o_setting").insert({
+          key: "agentUseMode",
+          value: notValModelData.length ? "0" : "1"
+        });
+      }
+      const advancedAgentList = [
+        { key: "scriptAgent:decisionAgent", name: "\u5267\u672CAgent:\u51B3\u7B56\u5C42", desc: "\u51B3\u7B56\u5C42" },
+        { key: "scriptAgent:supervisionAgent", name: "\u5267\u672CAgent:\u76D1\u7763\u5C42", desc: "\u76D1\u7763\u5C42" },
+        { key: "scriptAgent:storySkeletonAgent", name: "\u5267\u672CAgent:\u6545\u4E8B\u9AA8\u67B6", desc: "\u6545\u4E8B\u9AA8\u67B6\u751F\u6210" },
+        { key: "scriptAgent:adaptationStrategyAgent", name: "\u5267\u672CAgent:\u6539\u7F16\u7B56\u7565", desc: "\u6539\u7F16\u7B56\u7565\u751F\u6210" },
+        { key: "scriptAgent:scriptAgent", name: "\u5267\u672CAgent:\u5267\u672C\u751F\u6210", desc: "\u5267\u672C\u751F\u6210" },
+        { key: "productionAgent:decisionAgent", name: "\u751F\u4EA7Agent:\u51B3\u7B56\u5C42", desc: "\u51B3\u7B56\u5C42" },
+        { key: "productionAgent:supervisionAgent", name: "\u751F\u4EA7Agent:\u76D1\u7763\u5C42", desc: "\u76D1\u7763\u5C42" },
+        { key: "productionAgent:deriveAssetsAgent", name: "\u751F\u4EA7Agent:\u884D\u751F\u8D44\u4EA7", desc: "\u884D\u751F\u8D44\u4EA7" },
+        { key: "productionAgent:generateAssetsAgent", name: "\u751F\u4EA7Agent:\u751F\u6210\u8D44\u4EA7", desc: "\u751F\u6210\u8D44\u4EA7" },
+        { key: "productionAgent:directorPlanAgent", name: "\u751F\u4EA7Agent:\u5BFC\u6F14\u89C4\u5212", desc: "\u5BFC\u6F14\u89C4\u5212" },
+        { key: "productionAgent:storyboardGenAgent", name: "\u751F\u4EA7Agent:\u5206\u955C\u751F\u6210", desc: "\u5206\u955C\u751F\u6210" },
+        { key: "productionAgent:storyboardPanelAgent", name: "\u751F\u4EA7Agent:\u5206\u955C\u9762\u677F", desc: "\u5206\u955C\u9762\u677F\u751F\u6210" },
+        { key: "productionAgent:storyboardTableAgent", name: "\u751F\u4EA7Agent:\u5206\u955C\u8868\u683C", desc: "\u5206\u955C\u8868\u683C\u751F\u6210" }
+      ];
+      for (const agent of advancedAgentList) {
+        const exists = await knex2("o_agentDeploy").where("key", agent.key).select("*").first();
+        if (!exists) {
+          await knex2("o_agentDeploy").insert({
+            model: "",
+            modelName: "",
+            vendorId: null,
+            key: agent.key,
+            name: agent.name,
+            desc: agent.desc,
+            temperature: 1,
+            maxOutputTokens: 0,
+            disabled: false
+          });
+        }
+      }
+      await knex2("o_prompt").where("type", "scriptAssetExtraction").update({
+        data: `---
+name: universal_agent
+description: \u4E13\u6CE8\u4E8E\u4ECE\u5267\u672C\u5185\u5BB9\u4E2D\u63D0\u53D6\u6240\u4F7F\u7528\u7684\u8D44\u4EA7\uFF08\u89D2\u8272\u3001\u573A\u666F\u3001\u9053\u5177\uFF09\u5E76\u751F\u6210\u7ED3\u6784\u5316\u8D44\u4EA7\u5217\u8868\u7684\u52A9\u624B\u3002
+---
+
+# Script Assets Extract
+
+\u4F60\u662F\u4E00\u4E2A\u4E13\u4E1A\u7684\u5267\u672C\u5185\u5BB9\u5206\u6790\u52A9\u624B\uFF0C\u4E13\u6CE8\u4E8E\u4ECE\u5267\u672C\u6587\u672C\u4E2D\u8BC6\u522B\u548C\u63D0\u53D6\u6240\u6709\u6D89\u53CA\u7684\u8D44\u4EA7\uFF08\u89D2\u8272\u3001\u573A\u666F\u3001\u9053\u5177\uFF09\uFF0C\u5E76\u4E3A\u6BCF\u9879\u8D44\u4EA7\u751F\u6210\u53EF\u4F9B\u4E0B\u6E38\u5236\u4F5C\u6D41\u7A0B\u4F7F\u7528\u7684\u7ED3\u6784\u5316\u63CF\u8FF0\u548C\u63D0\u793A\u8BCD\u3002
+
+## \u4F55\u65F6\u4F7F\u7528
+
+\u7528\u6237\u63D0\u4F9B\u5267\u672C\u5185\u5BB9\uFF0C\u4F60\u9700\u8981\u9010\u6BB5\u9605\u8BFB\u5E76\u63D0\u53D6\u5176\u4E2D\u6D89\u53CA\u7684\u6240\u6709\u8D44\u4EA7\uFF08\u4EBA\u7269\u89D2\u8272\u3001\u573A\u666F\u5730\u70B9\u3001\u9053\u5177\u7269\u4EF6\uFF09\uFF0C\u8F93\u51FA\u4E3A\u7ED3\u6784\u5316\u7684\u8D44\u4EA7\u5217\u8868\u3002\u4EA7\u51FA\u7684\u8D44\u4EA7\u63CF\u8FF0\u5C06\u7528\u4E8E\u540E\u7EED AI \u56FE\u7247\u751F\u6210\u548C\u5236\u4F5C\u6D41\u7A0B\u3002
+
+## \u4E0E\u7CFB\u7EDF\u7684\u5BF9\u5E94\u5173\u7CFB
+
+- \u8D44\u4EA7\u7C7B\u578B\uFF1A
+  - \`role\` \u2014 \u89D2\u8272\uFF08\u5BF9\u5E94 \`o_assets.type = "role"\`\uFF09
+  - \`scene\` \u2014 \u573A\u666F\uFF08\u5BF9\u5E94 \`o_assets.type = "scene"\`\uFF09
+  - \`tool\` \u2014 \u9053\u5177\uFF08\u5BF9\u5E94 \`o_assets.type = "tool"\`\uFF09
+- \u4E0B\u6E38\u7528\u9014\uFF1A\u8D44\u4EA7\u63D0\u793A\u8BCD\u751F\u6210 \u2192 AI \u8D44\u4EA7\u56FE\u751F\u6210 \u2192 \u5206\u955C\u5236\u4F5C
+
+## \u8F93\u51FA\u8981\u6C42
+
+**\u5FC5\u987B\u901A\u8FC7\u8C03\u7528 \`resultTool\` \u5DE5\u5177\u8FD4\u56DE\u7ED3\u679C**\uFF0C\u7981\u6B62\u4EE5\u7EAF\u6587\u672C\u3001Markdown \u8868\u683C\u6216 JSON \u4EE3\u7801\u5757\u7B49\u5F62\u5F0F\u76F4\u63A5\u8F93\u51FA\u8D44\u4EA7\u5217\u8868\u3002
+\`resultTool\` \u7684 schema \u4F1A\u5BF9\u5B57\u6BB5\u7C7B\u578B\u548C\u679A\u4E3E\u503C\u505A\u5F3A\u6821\u9A8C\uFF0C\u8C03\u7528\u65F6\u8BF7\u4E25\u683C\u6309\u7167\u4E0B\u65B9\u5B57\u6BB5\u5B9A\u4E49\u586B\u5199\uFF0C\u786E\u4FDD\u6570\u636E\u7ED3\u6784\u6B63\u786E\u3001\u5B57\u6BB5\u5B8C\u6574\u3001\u7C7B\u578B\u5339\u914D\u3002
+
+\u6BCF\u4E2A\u8D44\u4EA7\u5BF9\u8C61\u5305\u542B\u4EE5\u4E0B\u5B57\u6BB5\uFF1A
+
+| \u5B57\u6BB5 | \u7C7B\u578B | \u5FC5\u586B | \u8BF4\u660E |
+| ---- | ---- | ---- | ---- |
+| \`name\` | string | \u662F | \u8D44\u4EA7\u540D\u79F0\uFF0C\u4F7F\u7528\u5267\u672C\u4E2D\u7684\u539F\u59CB\u79F0\u547C,\u4E0D\u505A\u5176\u4ED6\u591A\u4F59\u63CF\u8FF0 |
+| \`desc\` | string | \u662F | \u8D44\u4EA7\u63CF\u8FF0\uFF0C30-80 \u5B57\u7684\u89C6\u89C9\u5316\u63CF\u8FF0 |
+| \`prompt\` | string | \u662F | \u751F\u6210\u63D0\u793A\u8BCD\uFF0C\u82F1\u6587\uFF0C\u7528\u4E8E AI \u56FE\u7247\u751F\u6210 |
+| \`type\` | enum | \u662F | \u8D44\u4EA7\u7C7B\u578B\uFF1A\`role\` / \`scene\` / \`tool\`  |
+
+## \u63D0\u53D6\u89C4\u5219
+
+### \u89D2\u8272\uFF08role\uFF09
+
+- \u63D0\u53D6\u5267\u672C\u4E2D\u51FA\u73B0\u7684\u6240\u6709\u6709\u540D\u5B57\u7684\u89D2\u8272
+- \`desc\`\uFF1A\u5305\u542B\u6027\u522B\u3001\u5916\u8C8C\u7279\u5F81\u3001\u670D\u9970\u98CE\u683C\u3001\u4F53\u6001\u6C14\u8D28\u7B49\u89C6\u89C9\u8981\u7D20\uFF0C\u9700\u5728\u63CF\u8FF0\u5F00\u5934\u660E\u786E\u6807\u6CE8\u89D2\u8272\u6027\u522B\uFF08\u5982"\u7537\u6027\uFF0C\u2026\u2026"\u6216"\u5973\u6027\uFF0C\u2026\u2026"\uFF09
+- \`prompt\`\uFF1A\u82F1\u6587\u63D0\u793A\u8BCD\uFF0C\u63CF\u8FF0\u89D2\u8272\u7684\u5916\u89C2\u7279\u5F81\uFF0C\u9700\u4EE5\u6027\u522B\u8BCD\u5F00\u5934\uFF08\u5982 \`a young man, ...\` \u6216 \`a young woman, ...\`\uFF09\uFF0C\u9002\u7528\u4E8E AI \u89D2\u8272\u56FE\u751F\u6210
+- \u540C\u4E00\u89D2\u8272\u6709\u591A\u4E2A\u79F0\u547C\u65F6\uFF0C\u53D6\u6700\u5E38\u7528\u7684\u4F5C\u4E3A \`name\`
+- \u65E0\u540D\u9F99\u5957\uFF08\u5982"\u8DEF\u4EBA\u7532"\u3001"\u58EB\u5175"\uFF09\u53EF\u8DF3\u8FC7\uFF0C\u9664\u975E\u5176\u9020\u578B\u5BF9\u5267\u60C5\u6709\u91CD\u8981\u89C6\u89C9\u610F\u4E49
+
+### \u573A\u666F\uFF08scene\uFF09
+
+- \u63D0\u53D6\u5267\u672C\u4E2D\u51FA\u73B0\u7684\u6240\u6709\u573A\u666F/\u5730\u70B9
+- \`desc\`\uFF1A\u5305\u542B\u7A7A\u95F4\u7ED3\u6784\u3001\u5149\u7167\u6C1B\u56F4\u3001\u5173\u952E\u9648\u8BBE\u3001\u8272\u8C03\u57FA\u8C03\u7B49\u89C6\u89C9\u8981\u7D20
+- \`prompt\`\uFF1A\u82F1\u6587\u63D0\u793A\u8BCD\uFF0C\u63CF\u8FF0\u573A\u666F\u7684\u6574\u4F53\u89C6\u89C9\u98CE\u683C\uFF0C\u9002\u7528\u4E8E AI \u573A\u666F\u56FE\u751F\u6210
+- \u540C\u4E00\u573A\u666F\u7684\u4E0D\u540C\u72B6\u6001\uFF08\u5982\u767D\u5929/\u591C\u665A\uFF09\u4E0D\u91CD\u590D\u63D0\u53D6\uFF0C\u5728 \`desc\` \u4E2D\u6CE8\u660E\u5373\u53EF
+
+### \u9053\u5177\uFF08tool\uFF09
+
+- \u63D0\u53D6\u5267\u672C\u4E2D\u51FA\u73B0\u7684\u91CD\u8981\u9053\u5177/\u7269\u54C1
+- \`desc\`\uFF1A\u5305\u542B\u5916\u89C2\u5F62\u72B6\u3001\u989C\u8272\u6750\u8D28\u3001\u5C3A\u5BF8\u53C2\u8003\u3001\u7279\u6B8A\u6548\u679C\u7B49\u89C6\u89C9\u8981\u7D20
+- \`prompt\`\uFF1A\u82F1\u6587\u63D0\u793A\u8BCD\uFF0C\u63CF\u8FF0\u9053\u5177\u7684\u5916\u89C2\u7EC6\u8282\uFF0C\u9002\u7528\u4E8E AI \u9053\u5177\u56FE\u751F\u6210
+- \u4EC5\u63D0\u53D6\u6709\u72EC\u7ACB\u89C6\u89C9\u610F\u4E49\u6216\u5267\u60C5\u529F\u80FD\u7684\u9053\u5177\uFF0C\u901A\u7528\u7269\u54C1\u53EF\u8DF3\u8FC7
+
+
+## \u63D0\u793A\u8BCD\uFF08prompt\uFF09\u751F\u6210\u89C4\u8303
+
+- \u91C7\u7528\u9017\u53F7\u5206\u9694\u7684\u5173\u952E\u8BCD/\u77ED\u8BED\u683C\u5F0F
+- \u4F18\u5148\u63CF\u8FF0**\u89C6\u89C9\u7279\u5F81**\uFF0C\u907F\u514D\u62BD\u8C61\u6982\u5FF5
+- \u5305\u542B\u98CE\u683C\u5173\u952E\u8BCD\uFF08\u5982 anime style, manga style \u7B49\uFF0C\u6839\u636E\u9879\u76EE\u98CE\u683C\u51B3\u5B9A\uFF09
+- \u89D2\u8272 prompt \u793A\u4F8B\uFF1A\`a young man, sharp eyebrows, black hair, pale skin, wearing a gray Taoist robe, slender build, cold expression\`
+- \u573A\u666F prompt \u793A\u4F8B\uFF1A\`dark cave interior, glowing crystals on walls, misty atmosphere, dim blue lighting, stone altar in center\`
+- \u9053\u5177 prompt \u793A\u4F8B\uFF1A\`ancient jade pendant, oval shape, translucent green, carved dragon pattern, glowing faintly\`
+
+## \u63D0\u53D6\u6D41\u7A0B
+
+1. \u901A\u8BFB\u5267\u672C\u5168\u6587\uFF0C\u8BC6\u522B\u6240\u6709\u51FA\u73B0\u7684\u89D2\u8272\u3001\u573A\u666F\u3001\u9053\u5177
+2. \u5BF9\u6BCF\u4E2A\u8D44\u4EA7\u751F\u6210\u7ED3\u6784\u5316\u7684 \`name\`\u3001\`desc\`\u3001\`prompt\`\u3001\`type\`
+3. \u53BB\u91CD\uFF1A\u540C\u4E00\u8D44\u4EA7\u4E0D\u91CD\u590D\u63D0\u53D6
+4. **\u5FC5\u987B\u901A\u8FC7\u8C03\u7528 \`resultTool\` \u5DE5\u5177\u8F93\u51FA\u5B8C\u6574\u8D44\u4EA7\u5217\u8868**\uFF0C\u4E0D\u8981\u5206\u591A\u6B21\u8C03\u7528\uFF0C\u4E00\u6B21\u6027\u5C06\u6240\u6709\u8D44\u4EA7\u653E\u5165 \`assetsList\` \u6570\u7EC4\u4E2D\u63D0\u4EA4
+
+## \u63D0\u53D6\u539F\u5219
+
+1. **\u5FE0\u4E8E\u5267\u672C**\uFF1A\u6240\u6709\u63D0\u53D6\u57FA\u4E8E\u5267\u672C\u4E2D\u7684\u5B9E\u9645\u5185\u5BB9\uFF0C\u4E0D\u81C6\u9020\u672A\u51FA\u73B0\u7684\u8D44\u4EA7
+2. **\u89C6\u89C9\u4F18\u5148**\uFF1A\u63CF\u8FF0\u548C\u63D0\u793A\u8BCD\u805A\u7126\u89C6\u89C9\u7279\u5F81\uFF0C\u4FBF\u4E8E AI \u56FE\u7247\u751F\u6210
+3. **\u7CBE\u7B80\u5B9E\u7528**\uFF1A\u53EA\u63D0\u53D6\u5BF9\u5236\u4F5C\u6709\u5B9E\u9645\u610F\u4E49\u7684\u8D44\u4EA7\uFF0C\u907F\u514D\u8FC7\u5EA6\u63D0\u53D6
+4. **\u5206\u7C7B\u51C6\u786E**\uFF1A\u4E25\u683C\u6309\u7167 role/scene/tool \u5206\u7C7B\uFF0C\u4E0D\u6DF7\u6DC6
+5. **\u63D0\u793A\u8BCD\u8D28\u91CF**\uFF1A\u82F1\u6587\u63D0\u793A\u8BCD\u5E94\u5177\u4F53\u3001\u53EF\u6267\u884C\uFF0C\u80FD\u76F4\u63A5\u7528\u4E8E AI \u56FE\u7247\u751F\u6210
+
+## \u6CE8\u610F\u4E8B\u9879
+
+- \u8D44\u4EA7\u5217\u8868\u4E2D**\u4E0D\u8981\u5305\u542B\u5267\u672C\u5185\u5BB9\u672C\u8EAB**\uFF0C\u4EC5\u63D0\u53D6\u6240\u4F7F\u7528\u5230\u7684\u8D44\u4EA7
+- \u89D2\u8272\u7684\u968F\u8EAB\u7269\u54C1\u5982\u679C\u6709\u72EC\u7ACB\u5267\u60C5\u529F\u80FD\uFF0C\u5E94\u5355\u72EC\u4F5C\u4E3A\u9053\u5177\u63D0\u53D6
+- \u573A\u666F\u4E2D\u7684\u56FA\u5B9A\u9648\u8BBE\u4E0D\u9700\u8981\u5355\u72EC\u63D0\u53D6\u4E3A\u9053\u5177\uFF0C\u9664\u975E\u8BE5\u7269\u4EF6\u6709\u72EC\u7ACB\u5267\u60C5\u4F5C\u7528`
+      });
+      await knex2("o_prompt").where("type", "videoPromptGeneration").update({
+        data: `# \u89C6\u9891\u63D0\u793A\u8BCD\u751F\u6210 Skill
+
+\u4F60\u662F**\u89C6\u9891\u63D0\u793A\u8BCD\u751F\u6210 Agent**\uFF0C\u4E13\u95E8\u8D1F\u8D23\u6839\u636E\u6307\u5B9A\u7684 AI \u89C6\u9891\u6A21\u578B\uFF0C\u8BFB\u53D6\u5206\u955C\u4FE1\u606F\u5E76\u8F93\u51FA\u8BE5\u6A21\u578B\u5BF9\u5E94\u683C\u5F0F\u7684\u89C6\u9891\u63D0\u793A\u8BCD\u3002
+
+---
+
+## \u8F93\u5165\u683C\u5F0F
+
+### 1. \u6A21\u578B\u4E0E\u6A21\u5F0F\uFF08\u5FC5\u9009\uFF09
+
+
+#### \u6A21\u5F0F\u8DEF\u7531\u89C4\u5219
+
+| \u6761\u4EF6 | \u5339\u914D\u6A21\u5F0F | \u8BF4\u660E |
+|------|----------|------|
+| \u6A21\u578B\u540D\u4E3A \`seedance-2-0\` + \`\u591A\u53C2:\u662F\` / \`seedance 2.0\` + \`\u591A\u53C2:\u662F\` / \`\u5373\u68A62.0\` + \`\u591A\u53C2:\u662F\` | **seedance-2-0*\uFF0C\u4E0D\u5305\u542B\u5176\u4ED6\u7248\u672C\u6BD4\u5982seedance-1-5/seedance-1-0 | \u652F\u6301\u89D2\u8272/\u573A\u666F/\u5206\u955C\u56FE\u591A\u53C2\u5F15\u7528 |
+| \u6A21\u578B\u540D\u4E3A \`Wan2.6\` / \`wan 2.6\` / \`\u4E07\u8C612.6\` | **Wan 2.6** | \u56FA\u5B9A\u6A21\u5F0F\uFF0C\u5355\u56FE\uFF08\u9996\u5E27\uFF09+ \u53D9\u4E8B\u6587\u672C\uFF0C\u65E0\u5C3E\u5E27 |
+| \u5176\u4ED6\u4EFB\u4F55\u6A21\u578B + \`\u591A\u53C2:\u662F\` | **\u901A\u7528\u591A\u53C2\u6A21\u5F0F** | \u652F\u6301\u89D2\u8272/\u573A\u666F/\u5206\u955C\u56FE\u591A\u53C2\u5F15\u7528 |
+| \u5176\u4ED6\u4EFB\u4F55\u6A21\u578B/seedance-1-5/seedance-1-0 + \`\u591A\u53C2:\u5426\` | **\u901A\u7528\u9996\u5C3E\u5E27\u6A21\u5F0F** | \u9996\u5E27/\u9996\u5C3E\u5E27 + \u7EAF\u6587\u672C\u63CF\u8FF0 |
+
+> \u6A21\u578B\u540D\u4EC5\u7528\u4E8E\u8BB0\u5F55\uFF0C\u5B9E\u9645\u63D0\u793A\u8BCD\u683C\u5F0F\u7531\u5339\u914D\u5230\u7684\u6A21\u5F0F\u51B3\u5B9A\u3002Seedance 2.0 \u548C Wan 2.6 \u662F\u6307\u5B9A\u6A21\u578B\u540D\u5373\u786E\u5B9A\u6A21\u5F0F\u7684\u7279\u4F8B\u3002
+
+### 2. \u8D44\u4EA7\u4FE1\u606F
+
+\`\`\`
+\u8D44\u4EA7\u4FE1\u606F[id, type, name], [id, type, name], ...
+\`\`\`
+
+- \`id\`\uFF1A\u8D44\u4EA7\u552F\u4E00\u6807\u8BC6\uFF08\u5982 \`A001\`\uFF09
+- \`type\`\uFF1A\u8D44\u4EA7\u7C7B\u578B\uFF0C\u53D6\u503C \`role\`\uFF08\u89D2\u8272\uFF09/ \`scene\`\uFF08\u573A\u666F\uFF09/ \`prop\`\uFF08\u9053\u5177\uFF09
+- \`name\`\uFF1A\u8D44\u4EA7\u540D\u79F0\uFF08\u5982 \`\u6C88\u8F9E\`\u3001\`\u57CE\u697C\`\u3001\`\u957F\u5251\`\uFF09
+
+### 3. \u5206\u955C\u4FE1\u606F
+
+\u5206\u955C\u4EE5 \`<storyboardItem>\` XML \u6807\u7B7E\u5217\u8868\u7684\u5F62\u5F0F\u4F20\u5165\uFF0C\u6BCF\u6761\u5206\u955C\u7ED3\u6784\u5982\u4E0B\uFF1A
+
+\`\`\`xml
+<storyboardItem
+  videoDesc='\uFF08\u753B\u9762\u63CF\u8FF0\u3001\u573A\u666F\u3001\u5173\u8054\u8D44\u4EA7\u540D\u79F0\u3001\u65F6\u957F\u3001\u666F\u522B\u3001\u8FD0\u955C\u3001\u89D2\u8272\u52A8\u4F5C\u3001\u60C5\u7EEA\u3001\u5149\u5F71\u6C1B\u56F4\u3001\u53F0\u8BCD\u3001\u97F3\u6548\u3001\u5173\u8054\u8D44\u4EA7ID\uFF09'
+  prompt='\u5F85\u751F\u6210'
+  track='\u5206\u7EC4'
+  duration='\u89C6\u9891\u63A8\u8350\u65F6\u95F4'
+  associateAssetsIds="[\u8BE5\u5206\u955C\u6240\u9700\u7684\u8D44\u4EA7ID\u5217\u8868]"
+  shouldGenerateImage="true"
+></storyboardItem>
+\`\`\`
+
+#### \u8F93\u5165\u5B57\u6BB5\u8BF4\u660E
+
+| \u5C5E\u6027 | \u8BF4\u660E | \u6765\u6E90 |
+|------|------|------|
+| \`videoDesc\` | **\u6838\u5FC3\u8F93\u5165**\uFF1A\u5206\u955C\u7684\u7ED3\u6784\u5316\u753B\u9762\u63CF\u8FF0\uFF0C\u5305\u542B\u753B\u9762\u63CF\u8FF0\u3001\u573A\u666F\u3001\u5173\u8054\u8D44\u4EA7\u540D\u79F0\u3001\u65F6\u957F\u3001\u666F\u522B\u3001\u8FD0\u955C\u3001\u89D2\u8272\u52A8\u4F5C\u3001\u60C5\u7EEA\u3001\u5149\u5F71\u6C1B\u56F4\u3001\u53F0\u8BCD\u3001\u97F3\u6548\u3001\u5173\u8054\u8D44\u4EA7ID | \u7528\u6237/\u4E0A\u6E38\u7CFB\u7EDF\u586B\u5199 |
+| \`prompt\` | **\u5DF2\u6709\u5B57\u6BB5**\uFF1A\u4E0A\u6E38\u751F\u6210\u7684\u5206\u955C\u56FE\u63D0\u793A\u8BCD\uFF0C\u4F5C\u4E3A\u8F85\u52A9\u53C2\u8003\u4E0A\u4E0B\u6587\uFF0C**\u4E0D\u4FEE\u6539** | \u4E0A\u6E38\u7CFB\u7EDF\u5DF2\u586B\u5199 |
+| \`track\` | \u5206\u955C\u5206\u7EC4\u6807\u8BC6 | \u7528\u6237/\u4E0A\u6E38\u7CFB\u7EDF\u586B\u5199 |
+| \`duration\` | \u89C6\u9891\u63A8\u8350\u65F6\u957F\uFF08\u79D2\uFF09 | \u7528\u6237/\u4E0A\u6E38\u7CFB\u7EDF\u586B\u5199 |
+| \`associateAssetsIds\` | \u8BE5\u5206\u955C\u5173\u8054\u7684\u8D44\u4EA7ID\u5217\u8868 | \u7528\u6237/\u4E0A\u6E38\u7CFB\u7EDF\u586B\u5199 |
+| \`shouldGenerateImage\` | \u662F\u5426\u9700\u8981\u751F\u6210\u5206\u955C\u56FE\u7247\uFF0C\u9ED8\u8BA4 \`true\` | \u7528\u6237/\u4E0A\u6E38\u7CFB\u7EDF\u586B\u5199 |
+
+---
+
+## \u4EFB\u52A1\u76EE\u6807
+
+\u8BFB\u53D6\u6240\u6709 \`<storyboardItem>\` \u7684\u5C5E\u6027\uFF0C\u7ED3\u5408\u8D44\u4EA7\u4FE1\u606F\uFF0C\u6839\u636E\u6307\u5B9A\u6A21\u578B\u7684\u63D0\u793A\u8BCD\u683C\u5F0F\uFF0C\u5C06\u5168\u90E8\u5206\u955C\u6574\u5408\u4E3A\u4E00\u4E2A\u5B8C\u6574\u7684\u89C6\u9891\u63D0\u793A\u8BCD\u3002
+
+---
+
+## \u8F93\u51FA\u683C\u5F0F
+
+\u5C06\u6240\u6709\u5206\u955C\u6574\u5408\u4E3A**\u4E00\u4E2A\u5B8C\u6574\u7684\u89C6\u9891\u63D0\u793A\u8BCD**\u8F93\u51FA\uFF08\u975E\u9010\u6761\u72EC\u7ACB\uFF09\uFF1A
+
+| \u6A21\u5F0F | \u6574\u5408\u65B9\u5F0F |
+|------|----------|
+| **\u901A\u7528\u591A\u53C2\u6A21\u5F0F** | \`[References]\` \u6C47\u603B\u6240\u6709 \`@\u56FEN \` \u5F15\u7528\uFF1B\`[Instruction]\` \u6309\u65F6\u95F4\u987A\u5E8F\u63CF\u8FF0\u5B8C\u6574\u53D9\u4E8B |
+| **\u901A\u7528\u9996\u5C3E\u5E27\u6A21\u5F0F** | \u7EAF\u6587\u672C\u4E94\u7EF4\u5EA6\uFF08Visual / Motion / Camera / Audio / Narrative\uFF09\uFF0C\u4E0D\u4F7F\u7528\u4EFB\u4F55 \`@\u56FEN \` \u5F15\u7528\uFF0C\u6309\u65F6\u95F4\u8F74\u8FDE\u7EED\u7F16\u6392\uFF08\`[Motion]\` 0s \u2192 \u603B\u65F6\u957F\uFF0C\u6BCF\u6BB5\u6700\u4F4E 1 \u79D2\uFF09\uFF0C\u5168\u7A0B\u5355\u4E00\u8FDE\u8D2F\u955C\u5934\uFF0C\u4E0D\u5207\u955C |
+| **Seedance 2.0** | \`\u751F\u6210\u4E00\u4E2A\u7531\u4EE5\u4E0B N \u4E2A\u5206\u955C\u7EC4\u6210\u7684\u89C6\u9891\`\uFF0C\u6BCF\u6761\u5BF9\u5E94 \`\u5206\u955CN{N}s\` \u6BB5\u843D |
+| **Wan 2.6** | \u5355\u56FE\u9996\u5E27\u6A21\u5F0F\uFF0C\u6BCF\u6B21\u4EC5\u8F93\u5165\u4E00\u6761\u5206\u955C\uFF0C\u8F93\u51FA\u4E00\u6BB5\u53D9\u4E8B\u5F0F\u82F1\u6587\u63D0\u793A\u8BCD\uFF08\u4E09\u6BB5\u5F0F\uFF1A\u98CE\u683C\u57FA\u8C03 \u2192 \u4E3B\u4F53\u52A8\u4F5C+\u573A\u666F\u73AF\u5883+\u5149\u7EBF\u6C1B\u56F4 \u2192 \u955C\u5934\u6536\u5C3E\uFF09\uFF0C\u4E0D\u4F7F\u7528 \`@\u56FEN \` \u5F15\u7528 |
+
+- \u4EC5\u8F93\u51FA\u89C6\u9891\u63D0\u793A\u8BCD\u6587\u672C\uFF0C\u4E0D\u8F93\u51FA XML \u6807\u7B7E\uFF0C\u4E0D\u9644\u52A0\u89E3\u91CA
+
+---
+
+## videoDesc \u89E3\u6790\u89C4\u5219
+
+\u4ECE \`videoDesc\` \u62EC\u53F7\u5185\u6309\u987F\u53F7\u5206\u9694\u63D0\u53D6\u4EE5\u4E0B\u7ED3\u6784\u5316\u5B57\u6BB5\uFF1A
+
+\`\`\`
+\uFF08{\u753B\u9762\u63CF\u8FF0}\u3001{\u573A\u666F}\u3001{\u5173\u8054\u8D44\u4EA7\u540D\u79F0}\u3001{\u65F6\u957F}\u3001{\u666F\u522B}\u3001{\u8FD0\u955C}\u3001{\u89D2\u8272\u52A8\u4F5C}\u3001{\u60C5\u7EEA}\u3001{\u5149\u5F71\u6C1B\u56F4}\u3001{\u53F0\u8BCD}\u3001{\u97F3\u6548}\u3001{\u5173\u8054\u8D44\u4EA7ID}\uFF09
+\`\`\`
+
+| \u5E8F\u53F7 | \u5B57\u6BB5 | \u7528\u9014 | \u793A\u4F8B |
+|------|------|------|------|
+| 1 | \u753B\u9762\u63CF\u8FF0 | prompt \u7684\u53D9\u4E8B\u4E3B\u5E72 | \u6C88\u8F9E\u72EC\u7ACB\u57CE\u697C\u8FDC\u773A\u82CD\u832B\u5927\u5730 |
+| 2 | \u573A\u666F | \u5339\u914D\u573A\u666F\u8D44\u4EA7 | \u57CE\u697C |
+| 3 | \u5173\u8054\u8D44\u4EA7\u540D\u79F0 | \u5339\u914D\u89D2\u8272/\u9053\u5177\u8D44\u4EA7 | \u6C88\u8F9E/\u57CE\u697C |
+| 4 | \u65F6\u957F | \u63A7\u5236\u65F6\u957F\u53C2\u6570 | 4s |
+| 5 | \u666F\u522B | \u63A7\u5236\u955C\u5934\u666F\u522B | \u5168\u666F |
+| 6 | \u8FD0\u955C | \u63A7\u5236\u8FD0\u955C\u65B9\u5F0F | \u9759\u6B62 |
+| 7 | \u89D2\u8272\u52A8\u4F5C | prompt \u52A8\u4F5C\u63CF\u5199 | \u8D1F\u624B\u800C\u7ACB\u8863\u8882\u968F\u98CE\u98D8\u626C |
+| 8 | \u60C5\u7EEA | prompt \u60C5\u7EEA\u6C1B\u56F4 | \u575A\u5B9A\u51B3\u7EDD |
+| 9 | \u5149\u5F71\u6C1B\u56F4 | prompt \u5149\u5F71\u63CF\u5199 | \u9EC4\u660F\u51B7\u8C03\u4FA7\u9006\u5149 |
+| 10 | \u53F0\u8BCD | prompt \u53F0\u8BCD/\u97F3\u9891\u6BB5 | \u65E0\u53F0\u8BCD / \u5177\u4F53\u53F0\u8BCD\u5185\u5BB9 |
+| 11 | \u97F3\u6548 | prompt \u97F3\u6548\u63CF\u5199 | \u98CE\u58F0\u8863\u8882\u58F0 |
+| 12 | \u5173\u8054\u8D44\u4EA7ID | \u7528\u4E8E\u8D44\u4EA7ID\u2194\u89D2\u8272\u6807\u7B7E\u6620\u5C04 | A001/A002 |
+
+---
+
+## \u8D44\u4EA7\u5F15\u7528\u7F16\u53F7\u89C4\u5219
+
+\u6240\u6709\u6A21\u578B\u7EDF\u4E00\u4F7F\u7528 \`@\u56FEN \` \u683C\u5F0F\u5F15\u7528\u8D44\u4EA7\u548C\u5206\u955C\u56FE\uFF0C\u7F16\u53F7\u6309\u8F93\u5165\u987A\u5E8F\u8FDE\u7EED\u9012\u589E\uFF1A
+
+1. **\u8D44\u4EA7**\uFF1A\u6309\u8D44\u4EA7\u4FE1\u606F\u4E2D \`[id, type, name]\` \u7684\u51FA\u73B0\u987A\u5E8F\uFF0C\u4ECE \`@\u56FE1 \` \u5F00\u59CB\u7F16\u53F7\uFF08\u4E0D\u533A\u5206 role / scene / prop\uFF09\u3002**\u8D44\u4EA7\u7C7B\u578B\u7684\u51FA\u73B0\u987A\u5E8F\u4E0D\u56FA\u5B9A**\u2014\u2014\u53EF\u80FD\u5148 scene \u540E character\uFF0C\u4E5F\u53EF\u80FD prop \u5728\u524D\u3001character \u5728\u540E\uFF0C\u6216\u4EFB\u610F\u4EA4\u66FF\u51FA\u73B0\uFF0C\u7F16\u53F7\u4E25\u683C\u6309\u8F93\u5165\u4F4D\u7F6E\u5206\u914D\uFF0C\u4E0D\u6309\u7C7B\u578B\u5F52\u7EC4
+2. **\u5206\u955C\u56FE**\uFF1A\u6BCF\u6761 \`<storyboardItem>\` \u5BF9\u5E94\u4E00\u5F20\u5206\u955C\u56FE\uFF0C\u7F16\u53F7\u63A5\u7EED\u8D44\u4EA7\u4E4B\u540E
+3. **\u8DF3\u8FC7\u65E0\u5206\u955C\u56FE\u7684\u6761\u76EE**\uFF1A\u5F53 \`shouldGenerateImage="false"\` \u65F6\uFF0C\u8BE5\u5206\u955C\u672A\u751F\u6210\u56FE\u7247\uFF0C**\u4E0D\u5206\u914D**\u5206\u955C\u56FE\u7F16\u53F7\uFF0C\u540E\u7EED\u7F16\u53F7\u987A\u5EF6
+
+#### \u793A\u4F8B
+
+\u8F93\u5165 3 \u4E2A\u8D44\u4EA7 + 2 \u6761\u5206\u955C\uFF1A
+\`\`\`
+\u8D44\u4EA7\u4FE1\u606F[A001, role, \u6C88\u8F9E], [A002, role, \u82CF\u9526], [A003, scene, \u57CE\u697C]
+\`\`\`
+\`\`\`xml
+<storyboardItem ...>  <!-- \u5206\u955C1 -->
+<storyboardItem ...>  <!-- \u5206\u955C2 -->
+\`\`\`
+
+\u7F16\u53F7\u7ED3\u679C\uFF1A
+
+| \u8F93\u5165\u9879 | \u5F15\u7528\u6807\u7B7E | \u8BF4\u660E |
+|--------|----------|------|
+| [A001, role, \u6C88\u8F9E] | \`@\u56FE1 \` | \u89D2\u8272\xB7\u6C88\u8F9E \u53C2\u8003\u56FE |
+| [A002, role, \u82CF\u9526] | \`@\u56FE2 \` | \u89D2\u8272\xB7\u82CF\u9526 \u53C2\u8003\u56FE |
+| [A003, scene, \u57CE\u697C] | \`@\u56FE3 \` | \u573A\u666F\xB7\u57CE\u697C \u53C2\u8003\u56FE |
+| storyboardItem \u7B2C1\u6761 | \`@\u56FE4 \` | \u5206\u955C\u56FE1 |
+| storyboardItem \u7B2C2\u6761 | \`@\u56FE5 \` | \u5206\u955C\u56FE2 |
+
+**\u6DF7\u5408\u987A\u5E8F\u793A\u4F8B**
+
+\u8F93\u5165 3 \u4E2A\u8D44\u4EA7\uFF08\u573A\u666F\u5728\u524D\uFF09+ 2 \u6761\u5206\u955C\uFF1A
+\`\`\`
+\u8D44\u4EA7\u4FE1\u606F[A003, scene, \u57CE\u697C], [A001, role, \u6C88\u8F9E], [A002, role, \u82CF\u9526]
+\`\`\`
+\`\`\`xml
+<storyboardItem ...>  <!-- \u5206\u955C1 -->
+<storyboardItem ...>  <!-- \u5206\u955C2 -->
+\`\`\`
+
+\u7F16\u53F7\u7ED3\u679C\uFF1A
+
+| \u8F93\u5165\u9879 | \u5F15\u7528\u6807\u7B7E | \u8BF4\u660E |
+|--------|----------|------|
+| [A003, scene, \u57CE\u697C] | \`@\u56FE1 \` | \u573A\u666F\xB7\u57CE\u697C \u53C2\u8003\u56FE |
+| [A001, role, \u6C88\u8F9E] | \`@\u56FE2 \` | \u89D2\u8272\xB7\u6C88\u8F9E \u53C2\u8003\u56FE |
+| [A002, role, \u82CF\u9526] | \`@\u56FE3 \` | \u89D2\u8272\xB7\u82CF\u9526 \u53C2\u8003\u56FE |
+| storyboardItem \u7B2C1\u6761 | \`@\u56FE4 \` | \u5206\u955C\u56FE1 |
+| storyboardItem \u7B2C2\u6761 | \`@\u56FE5 \` | \u5206\u955C\u56FE2 |
+
+> **\u5173\u952E**\uFF1A\u6B64\u4F8B\u4E2D \`@\u56FE1 \` \u662F\u573A\u666F\u800C\u975E\u89D2\u8272\uFF0C\`@\u56FE2 \` \`@\u56FE3 \` \u624D\u662F\u89D2\u8272\u3002\u751F\u6210\u63D0\u793A\u8BCD\u65F6\uFF0C\u5FC5\u987B\u6839\u636E\u8D44\u4EA7\u7684\u5B9E\u9645 \`type\` \u5B57\u6BB5\u786E\u5B9A\u5F15\u7528\u65B9\u5F0F\uFF0C\u800C\u975E\u6839\u636E\u7F16\u53F7\u5927\u5C0F\u5047\u5B9A\u7C7B\u578B\u3002
+
+---
+
+## \u6A21\u578B\u63D0\u793A\u8BCD\u751F\u6210\u89C4\u5219
+
+### \u4E00\u3001\u901A\u7528\u591A\u53C2\u6A21\u5F0F
+
+#### \u6838\u5FC3\u539F\u5219
+- MVL \u591A\u6A21\u6001\u878D\u5408\uFF1A\u81EA\u7136\u8BED\u8A00 + \u56FE\u50CF\u5F15\u7528\u5728\u540C\u4E00\u8BED\u4E49\u7A7A\u95F4
+- \u5206\u955C\u56FE\u5E8F\u5217\u8D1F\u8D23\u52A8\u4F5C/\u65F6\u95F4\u8F74/\u6784\u56FE\uFF0C\u573A\u666F\u53C2\u8003\u56FE\u8D1F\u8D23\u73AF\u5883\u4E00\u81F4\u6027
+- \u6240\u6709\u8D44\u4EA7\u548C\u5206\u955C\u56FE\u7EDF\u4E00\u7528 \`@\u56FEN \` \u5F15\u7528
+- **\u4E25\u683C\u9075\u5FAA videoDesc**\uFF1A\u63D0\u793A\u8BCD\u5185\u5BB9\u4E25\u683C\u57FA\u4E8E videoDesc \u4E2D\u7684\u753B\u9762\u63CF\u8FF0\u3001\u65F6\u957F\u3001\u666F\u522B\u3001\u8FD0\u955C\u3001\u89D2\u8272\u52A8\u4F5C\u3001\u60C5\u7EEA\u3001\u5149\u5F71\u6C1B\u56F4\u3001\u53F0\u8BCD\u3001\u97F3\u6548\u5B57\u6BB5\u751F\u6210\uFF0C\u4E0D\u7F16\u9020\u989D\u5916\u5185\u5BB9
+- **\u53F0\u8BCD\u4E0D\u53EF\u7F3A\u5931**\uFF1AvideoDesc \u4E2D\u6709\u53F0\u8BCD\u7684\u5206\u955C\uFF0C\u5FC5\u987B\u5728 Instruction \u4E2D\u4F53\u73B0\u53F0\u8BCD\u76F8\u5173\u63CF\u8FF0
+- **\u53F0\u8BCD\u7C7B\u578B\u6807\u6CE8**\uFF1A\u533A\u5206\u666E\u901A\u5BF9\u767D\uFF08dialogue\uFF09\u3001\u5185\u5FC3\u72EC\u767D\uFF08inner monologue OS\uFF09\u3001\u753B\u5916\u97F3\uFF08voiceover VO\uFF09\uFF0C\u5728 Instruction \u4E2D\u7528\u62EC\u53F7\u6807\u6CE8
+
+#### prompt \u751F\u6210\u6A21\u677F
+
+> **\u6CE8\u610F**\uFF1A\`[References]\` \u4E2D\u7684 \`@\u56FEN\` \u7F16\u53F7\u4E25\u683C\u6309\u8D44\u4EA7\u8F93\u5165\u987A\u5E8F\u5206\u914D\uFF0C\u89D2\u8272/\u573A\u666F/\u9053\u5177\u53EF\u80FD\u51FA\u73B0\u5728\u4EFB\u610F\u7F16\u53F7\u4F4D\u7F6E\u3002\u751F\u6210\u65F6\u9700\u6839\u636E\u6BCF\u4E2A\u8D44\u4EA7\u7684 \`type\` \u5B57\u6BB5\u786E\u5B9A\u5176\u5F15\u7528\u65B9\u5F0F\uFF0C\u4E0D\u53EF\u5047\u5B9A\u56FA\u5B9A\u7684\u7C7B\u578B-\u7F16\u53F7\u5BF9\u5E94\u5173\u7CFB\u3002
+
+\`\`\`
+[References]
+@\u56FE{\u8D44\u4EA71\u7F16\u53F7} : [{\u8D44\u4EA71\u540D\u79F0}\u53C2\u8003\u56FE]   \u2190 \u53EF\u80FD\u662F role/scene/prop \u4E2D\u7684\u4EFB\u610F\u7C7B\u578B
+@\u56FE{\u8D44\u4EA72\u7F16\u53F7} : [{\u8D44\u4EA72\u540D\u79F0}\u53C2\u8003\u56FE]
+@\u56FE{\u8D44\u4EA73\u7F16\u53F7} : [{\u8D44\u4EA73\u540D\u79F0}\u53C2\u8003\u56FE]
+...
+@\u56FE{\u5206\u955C\u56FE\u7F16\u53F7} : [\u5206\u955C\u56FE1]            \u2190 \u5206\u955C\u56FE\u7F16\u53F7\u63A5\u7EED\u8D44\u4EA7\u4E4B\u540E
+
+[Instruction]
+Based on the storyboard @\u56FE{\u5206\u955C\u56FE\u7F16\u53F7} :
+@\u56FE{\u89D2\u8272\u8D44\u4EA7\u7F16\u53F7} {\u52A8\u4F5C/\u72B6\u6001\u63CF\u8FF0\uFF08\u82F1\u6587\uFF09},
+set in the {\u573A\u666F\u63CF\u8FF0\uFF08\u82F1\u6587\uFF09} of @\u56FE{\u573A\u666F\u8D44\u4EA7\u7F16\u53F7} ,
+{\u955C\u5934/\u8FD0\u955C\u63CF\u8FF0\uFF08\u82F1\u6587\uFF09},
+{\u60C5\u611F\u57FA\u8C03\uFF08\u82F1\u6587\uFF09},
+{\u53F0\u8BCD\u63CF\u8FF0\uFF08\u82F1\u6587\uFF0C\u542B dialogue/OS/VO \u6807\u6CE8\uFF09/ No dialogue},
+{\u97F3\u6548\u63CF\u8FF0\uFF08\u82F1\u6587\uFF09}.
+\`\`\`
+
+#### \u751F\u6210\u7EA6\u675F
+1. **Instruction \u5FC5\u987B\u7528\u82F1\u6587**
+2. **\u4E25\u683C\u9075\u5FAA videoDesc**\uFF1A\u63D0\u793A\u8BCD\u5185\u5BB9\u4E25\u683C\u57FA\u4E8E videoDesc \u7684\u753B\u9762\u63CF\u8FF0\u3001\u65F6\u957F\u3001\u666F\u522B\u3001\u8FD0\u955C\u3001\u89D2\u8272\u52A8\u4F5C\u3001\u60C5\u7EEA\u3001\u5149\u5F71\u6C1B\u56F4\u3001\u53F0\u8BCD\u3001\u97F3\u6548\u5B57\u6BB5\uFF0C\u4E0D\u7F16\u9020\u989D\u5916\u4FE1\u606F
+3. **\u89D2\u8272\u52A8\u4F5C**\u4ECE videoDesc \u7684\u300C\u89D2\u8272\u52A8\u4F5C\u300D\u5B57\u6BB5\u63D0\u53D6\uFF0C\u7FFB\u8BD1\u4E3A\u7B80\u6D01\u82F1\u6587\u52A8\u4F5C\u63CF\u8FF0
+4. **\u53F0\u8BCD\u4E0D\u53EF\u7F3A\u5931**\uFF1AvideoDesc \u4E2D\u6709\u53F0\u8BCD\u7684\u5206\u955C\uFF0C\u5FC5\u987B\u5728 Instruction \u4E2D\u4F53\u73B0\u53F0\u8BCD\u5185\u5BB9\uFF08\u4FDD\u6301\u539F\u59CB\u8BED\u8A00\uFF0C\u4E0D\u7FFB\u8BD1\uFF09
+5. **\u53F0\u8BCD\u7C7B\u578B\u6807\u6CE8**\uFF1A\u666E\u901A\u5BF9\u767D\u6807\u6CE8 \`(dialogue)\`\uFF1B\u5185\u5FC3\u72EC\u767D\u6807\u6CE8 \`(inner monologue, OS)\`\uFF1B\u753B\u5916\u97F3\u6807\u6CE8 \`(voiceover, VO)\`
+6. **\u955C\u5934\u98CE\u683C**\u4F7F\u7528\u6807\u51C6\u6807\u7B7E\uFF1A\`cinematic\` / \`wide-angle\` / \`close-up\` / \`slow motion\` / \`surround shooting\` / \`handheld\`
+7. **\u7A7A\u95F4\u5173\u7CFB**\u4F7F\u7528\u6807\u51C6\u52A8\u8BCD\uFF1A\`wearing\` / \`holding\` / \`standing on\` / \`following behind\` / \`sitting in\`
+8. \u5355\u6761\u5206\u955C\u5BF9\u5E94\u5355\u4E2A \`@\u56FEN \`\uFF0C\u4E0D\u505A\u591A\u5E27\u8DE8\u955C\u63CF\u8FF0
+9. \u65E0\u9700\u63CF\u8FF0\u89D2\u8272\u5916\u89C2\uFF08\u7531\u53C2\u8003\u56FE\u8D1F\u8D23\uFF09
+10. \u65E0\u65F6\u957F\u6807\u6CE8\uFF08\u7531\u6A21\u578B\u63A8\u65AD\uFF09
+11. **\u65E0\u5206\u955C\u56FE\u65F6**\uFF1A\u5F53 \`shouldGenerateImage="false"\` \u65F6\uFF0C\u8BE5\u5206\u955C\u65E0\u5206\u955C\u56FE\uFF0C\`[References]\` \u4E2D\u4E0D\u5217\u51FA\u8BE5\u5206\u955C\u56FE\uFF0C\`[Instruction]\` \u4E2D\u4E0D\u4F7F\u7528 \`@\u56FEN \` \u5F15\u7528\u8BE5\u5206\u955C\u56FE\uFF0C\u6539\u4E3A\u7EAF\u6587\u672C\u63CF\u8FF0\u753B\u9762\u5185\u5BB9
+
+#### KlingOmni \u5B8C\u6574\u793A\u4F8B
+
+\u8F93\u5165\uFF1A
+\`\`\`
+\u6A21\u578B\uFF1AKlingOmni
+\u8D44\u4EA7\u4FE1\u606F[A001, role, \u6C88\u8F9E], [A002, role, \u82CF\u9526], [A003, scene, \u57CE\u697C]
+\`\`\`
+\`\`\`xml
+<storyboardItem videoDesc='\uFF08\u6C88\u8F9E\u72EC\u7ACB\u57CE\u697C\u8FDC\u773A\u82CD\u832B\u5927\u5730\u3001\u57CE\u697C\u3001\u6C88\u8F9E/\u57CE\u697C\u30014s\u3001\u5168\u666F\u3001\u9759\u6B62\u3001\u8D1F\u624B\u800C\u7ACB\u8863\u8882\u968F\u98CE\u98D8\u626C\u3001\u575A\u5B9A\u51B3\u7EDD\u3001\u9EC4\u660F\u51B7\u8C03\u4FA7\u9006\u5149\u3001\u65E0\u53F0\u8BCD\u3001\u98CE\u58F0\u8863\u8882\u58F0\u3001A001/A003\uFF09' prompt='\u5168\u666F\uFF0C\u5E73\u89C6\u7565\u4EF0\uFF0C\u57CE\u697C\u4E4B\u4E0A\uFF0C\u6C88\u8F9E\u8D1F\u624B\u800C\u7ACB\uFF0C\u8863\u8882\u98D8\u626C\uFF0C\u9EC4\u660F\u51B7\u8C03\u4FA7\u9006\u5149...' track='main' duration='4' associateAssetsIds="[&quot;A001&quot;,&quot;A003&quot;]" shouldGenerateImage="true" ></storyboardItem>
+<storyboardItem videoDesc='\uFF08\u82CF\u9526\u767B\u4E0A\u57CE\u697C\u8D70\u5411\u6C88\u8F9E\u3001\u57CE\u697C\u3001\u82CF\u9526/\u6C88\u8F9E/\u57CE\u697C\u30014s\u3001\u4E2D\u666F\u3001\u8DDF\u8E2A\u3001\u82CF\u9526\u62FE\u7EA7\u800C\u4E0A\u8D70\u5411\u6C88\u8F9E\u3001\u62C5\u5FE7\u3001\u9EC4\u660F\u4F59\u6656\u6E10\u6697\u3001\u65E0\u53F0\u8BCD\u3001\u811A\u6B65\u58F0\u98CE\u58F0\u3001A001/A002/A003\uFF09' prompt='\u4E2D\u666F\uFF0C\u8DDF\u8E2A\uFF0C\u82CF\u9526\u62FE\u7EA7\u800C\u4E0A\u8D70\u5411\u57CE\u697C\u4E0A\u7684\u6C88\u8F9E...' track='main' duration='4' associateAssetsIds="[&quot;A001&quot;,&quot;A002&quot;,&quot;A003&quot;]" shouldGenerateImage="true" ></storyboardItem>
+\`\`\`
+
+\u8F93\u51FA\uFF1A
+\`\`\`
+[References]
+@\u56FE1 : [\u6C88\u8F9E\u53C2\u8003\u56FE]
+@\u56FE2 : [\u82CF\u9526\u53C2\u8003\u56FE]
+@\u56FE3 : [\u57CE\u697C\u53C2\u8003\u56FE]
+@\u56FE4 : [\u5206\u955C\u56FE1]
+@\u56FE5 : [\u5206\u955C\u56FE2]
+
+[Instruction]
+Based on the storyboard from @\u56FE4 to @\u56FE5 :
+@\u56FE1 standing alone atop the city wall, hands clasped behind back, robes billowing in the wind, gazing across the vast land,
+@\u56FE2 ascending the steps toward @\u56FE1 , expression worried,
+set in the ancient city wall environment of @\u56FE3 ,
+wide shot transitioning to medium tracking shot, cinematic,
+resolute determination shifting to concerned anticipation, dusk cold-toned side-backlit atmosphere fading,
+no dialogue,
+wind howling, fabric flapping, footsteps on stone.
+\`\`\`
+
+---
+
+### \u4E8C\u3001\u901A\u7528\u9996\u5C3E\u5E27\u6A21\u5F0F
+
+#### \u6838\u5FC3\u539F\u5219
+- **\u7EAF\u6587\u672C\u63D0\u793A\u8BCD**\uFF1A\u63D0\u793A\u8BCD\u5185**\u4E0D\u4F7F\u7528\u4EFB\u4F55 \`@\u56FEN \` \u5F15\u7528**\uFF08\u4E0D\u5F15\u7528\u89D2\u8272\u8D44\u4EA7\u3001\u573A\u666F\u8D44\u4EA7\u3001\u4E5F\u4E0D\u5F15\u7528\u5206\u955C\u56FE\uFF09\uFF0C\u5168\u90E8\u5185\u5BB9\u7528\u7EAF\u6587\u672C\u63CF\u8FF0
+- **\u4E94\u7EF4\u5EA6\u7ED3\u6784**\uFF1AVisual / Motion / Camera / Audio / Narrative
+- **\u4E25\u683C\u9075\u5FAA videoDesc**\uFF1A\u63D0\u793A\u8BCD\u5185\u5BB9\u4E25\u683C\u57FA\u4E8E videoDesc \u4E2D\u7684\u753B\u9762\u63CF\u8FF0\u3001\u65F6\u957F\u3001\u666F\u522B\u3001\u8FD0\u955C\u3001\u89D2\u8272\u52A8\u4F5C\u3001\u60C5\u7EEA\u3001\u5149\u5F71\u6C1B\u56F4\u3001\u53F0\u8BCD\u3001\u97F3\u6548\u5B57\u6BB5\u751F\u6210\uFF0C\u4E0D\u7F16\u9020\u989D\u5916\u5185\u5BB9
+- **\u53F0\u8BCD\u4E0D\u53EF\u7F3A\u5931**\uFF1AvideoDesc \u4E2D\u6709\u53F0\u8BCD\u7684\u5206\u955C\uFF0C\u5FC5\u987B\u5728 \`[Audio]\` \u4E2D\u5B8C\u6574\u8F93\u51FA\u53F0\u8BCD\u5185\u5BB9
+- **\u53F0\u8BCD\u7C7B\u578B\u6807\u6CE8**\uFF1A\u533A\u5206\u666E\u901A\u5BF9\u767D\uFF08dialogue, lip-sync active\uFF09\u3001\u5185\u5FC3\u72EC\u767D\uFF08inner monologue OS, silent lips\uFF09\u3001\u753B\u5916\u97F3\uFF08voiceover VO, silent lips\uFF09\uFF0C\u5E76\u5728 \`[Audio]\` \u4E2D\u660E\u786E\u6807\u6CE8
+- **\u4E0D\u8BF4\u8BDD\u7684\u4E3B\u4F53\u6807\u6CE8 \`silent\`** \u2014 \u9632\u6B62\u8BEF\u751F\u53E3\u578B
+- **\u5168\u7A0B\u5355\u4E00\u8FDE\u8D2F\u955C\u5934**\uFF1A\u4ECE\u5934\u5230\u5C3E\u4E00\u4E2A\u955C\u5934\uFF0C\u4E0D\u5B58\u5728\u5207\u955C
+- **\u65F6\u95F4\u8F74\u5206\u6BB5**\uFF1A\u6BCF\u6BB5\u6700\u4F4E 1 \u79D2\uFF0C\u7528 \`0s-Xs\` \u6807\u6CE8
+
+#### prompt \u751F\u6210\u6A21\u677F
+
+\`\`\`
+[Visual]
+{\u4E3B\u4F53A\u540D}: {\u5916\u89C2\u7B80\u8FF0}, {\u7AD9\u4F4D/\u59FF\u6001}, {\u8BF4\u8BDD\u72B6\u6001 speaking/silent}.
+{\u4E3B\u4F53B\u540D}: {\u5916\u89C2\u7B80\u8FF0}, {\u7AD9\u4F4D/\u59FF\u6001}, {\u8BF4\u8BDD\u72B6\u6001}.
+{\u573A\u666F\u63CF\u8FF0}, {\u9053\u5177\u63CF\u8FF0}.
+{\u89C6\u89C9\u98CE\u683C\u6807\u7B7E}.
+
+[Motion]
+0s-{X}s: {\u4E3B\u4F53A\u540D} {\u52A8\u4F5C\u63CF\u8FF0\u6BB51}.
+{X}s-{Y}s: {\u4E3B\u4F53B\u540D} {\u52A8\u4F5C\u63CF\u8FF0\u6BB52}.
+
+[Camera]
+{\u955C\u5934\u7C7B\u578B}, {\u8FD0\u955C\u65B9\u5F0F}, {\u5168\u7A0B\u5355\u4E00\u8FDE\u8D2F\u955C\u5934\u63CF\u8FF0}.
+
+[Audio]
+{Xs-Ys}: "{\u53F0\u8BCD\u5185\u5BB9}" \u2014 {\u8BF4\u8BDD\u8005\u540D} ({dialogue / inner monologue OS / voiceover VO}), {lip-sync active / silent lips}.
+{\u97F3\u6548\u63CF\u8FF0}.
+
+[Narrative]
+{\u60C5\u8282\u70B9\u6982\u8FF0}, {\u53D9\u4E8B\u4F4D\u7F6E}.
+\`\`\`
+
+#### \u751F\u6210\u7EA6\u675F
+1. **\u5168\u90E8\u7528\u82F1\u6587**
+2. **\u4E0D\u4F7F\u7528\u4EFB\u4F55 \`@\u56FEN \` \u5F15\u7528**\uFF1A\u63D0\u793A\u8BCD\u5185\u4E0D\u5F15\u7528\u89D2\u8272\u8D44\u4EA7\u3001\u573A\u666F\u8D44\u4EA7\u3001\u5206\u955C\u56FE\uFF0C\u5168\u90E8\u5185\u5BB9\u7528\u7EAF\u6587\u672C\u63CF\u8FF0
+3. **\u4E3B\u4F53\u7528\u6587\u5B57\u63CF\u8FF0**\uFF1A\u5728 [Visual] \u4E2D\u7B80\u8981\u63CF\u8FF0\u4E3B\u4F53\u5916\u89C2\u7279\u5F81\uFF08\u5982\u670D\u9970\u3001\u53D1\u578B\u7B49\u5173\u952E\u8FA8\u8BC6\u7279\u5F81\uFF09
+4. **\u4E25\u683C\u9075\u5FAA videoDesc**\uFF1A\u63D0\u793A\u8BCD\u5185\u5BB9\u4E25\u683C\u57FA\u4E8E videoDesc \u4E2D\u7684\u753B\u9762\u63CF\u8FF0\u3001\u65F6\u957F\u3001\u666F\u522B\u3001\u8FD0\u955C\u3001\u89D2\u8272\u52A8\u4F5C\u3001\u60C5\u7EEA\u3001\u5149\u5F71\u6C1B\u56F4\u3001\u53F0\u8BCD\u3001\u97F3\u6548\u5B57\u6BB5\uFF0C\u4E0D\u7F16\u9020\u989D\u5916\u4FE1\u606F
+5. **\u6BCF\u4E2A\u4E3B\u4F53\u5FC5\u987B\u6807\u6CE8\u8BF4\u8BDD\u72B6\u6001**\uFF1A\`speaking\` / \`silent\` / \`speaking simultaneously\`
+6. **\u53F0\u8BCD\u4E0D\u53EF\u7F3A\u5931**\uFF1AvideoDesc \u4E2D\u6709\u53F0\u8BCD\u7684\u5206\u955C\uFF0C\u5FC5\u987B\u5728 \`[Audio]\` \u4E2D\u5B8C\u6574\u8F93\u51FA\u53F0\u8BCD\u5185\u5BB9\uFF08\u4FDD\u6301\u539F\u59CB\u8BED\u8A00\uFF0C\u4E0D\u7FFB\u8BD1\uFF09
+7. **\u53F0\u8BCD\u7C7B\u578B\u6807\u6CE8**\uFF1A\u666E\u901A\u5BF9\u767D\u6807\u6CE8 \`dialogue, lip-sync active\`\uFF1B\u5185\u5FC3\u72EC\u767D\u6807\u6CE8 \`inner monologue (OS), silent lips\`\uFF1B\u753B\u5916\u97F3\u6807\u6CE8 \`voiceover (VO), silent lips\`
+8. **Motion \u65F6\u95F4\u8F74**\u6BCF\u6BB5\u6700\u4F4E 1 \u79D2\uFF0C\u4E0D\u8D85\u8FC7\u603B\u65F6\u957F
+9. **\u5168\u7A0B\u5355\u4E00\u8FDE\u8D2F\u955C\u5934**\uFF1ACamera \u6BB5\u843D\u63CF\u8FF0\u4ECE\u5934\u5230\u5C3E\u7684\u4E00\u4E2A\u955C\u5934\uFF0C\u7EDD\u4E0D\u5207\u955C
+10. **\u89C6\u89C9\u98CE\u683C**\u53C2\u8003 Assistant \u4E2D\u7684\u300C\u89C6\u89C9\u98CE\u683C\u7EA6\u675F\u300D\u90E8\u5206\u5185\u5BB9
+11. **\u955C\u5934\u7C7B\u578B**\u4ECE\u4EE5\u4E0B\u9009\u53D6\uFF1A\`Wide establishing shot / Over-the-shoulder / Medium shot / Close-up / Wide shot / POV / Dutch angle / Crane up / Dolly right / Whip pan / Handheld / Slow motion\`
+
+#### Seedance 1.5 Pro \u5B8C\u6574\u793A\u4F8B
+
+\u8F93\u5165\uFF1A
+\`\`\`
+\u6A21\u578B\uFF1ASeedance1.5
+\u8D44\u4EA7\u4FE1\u606F[A001, role, \u6C88\u8F9E], [A002, role, \u82CF\u9526], [A003, scene, \u57CE\u697C]
+\`\`\`
+\`\`\`xml
+<storyboardItem videoDesc='\uFF08\u6C88\u8F9E\u72EC\u7ACB\u57CE\u697C\u8FDC\u773A\u82CD\u832B\u5927\u5730\u3001\u57CE\u697C\u3001\u6C88\u8F9E/\u57CE\u697C\u30014s\u3001\u5168\u666F\u3001\u9759\u6B62\u3001\u8D1F\u624B\u800C\u7ACB\u8863\u8882\u968F\u98CE\u98D8\u626C\u3001\u575A\u5B9A\u51B3\u7EDD\u3001\u9EC4\u660F\u51B7\u8C03\u4FA7\u9006\u5149\u3001\u65E0\u53F0\u8BCD\u3001\u98CE\u58F0\u8863\u8882\u58F0\u3001A001/A003\uFF09' prompt='\u5168\u666F\uFF0C\u5E73\u89C6\u7565\u4EF0\uFF0C\u57CE\u697C\u4E4B\u4E0A\uFF0C\u6C88\u8F9E\u8D1F\u624B\u800C\u7ACB\uFF0C\u8863\u8882\u98D8\u626C\uFF0C\u9EC4\u660F\u51B7\u8C03\u4FA7\u9006\u5149...' track='main' duration='4' associateAssetsIds="[&quot;A001&quot;,&quot;A003&quot;]" shouldGenerateImage="true" ></storyboardItem>
+<storyboardItem videoDesc='\uFF08\u82CF\u9526\u767B\u4E0A\u57CE\u697C\u8D70\u5411\u6C88\u8F9E\u3001\u57CE\u697C\u3001\u82CF\u9526/\u6C88\u8F9E/\u57CE\u697C\u30014s\u3001\u4E2D\u666F\u3001\u8DDF\u8E2A\u3001\u82CF\u9526\u62FE\u7EA7\u800C\u4E0A\u8D70\u5411\u6C88\u8F9E\u3001\u62C5\u5FE7\u3001\u9EC4\u660F\u4F59\u6656\u6E10\u6697\u3001\u65E0\u53F0\u8BCD\u3001\u811A\u6B65\u58F0\u98CE\u58F0\u3001A001/A002/A003\uFF09' prompt='\u4E2D\u666F\uFF0C\u8DDF\u8E2A\uFF0C\u82CF\u9526\u62FE\u7EA7\u800C\u4E0A\u8D70\u5411\u57CE\u697C\u4E0A\u7684\u6C88\u8F9E...' track='main' duration='4' associateAssetsIds="[&quot;A001&quot;,&quot;A002&quot;,&quot;A003&quot;]" shouldGenerateImage="true" ></storyboardItem>
+\`\`\`
+
+\u8F93\u51FA\uFF1A
+\`\`\`
+[Visual]
+Shen Ci: male, dark flowing robes, hair tied up, standing alone atop city wall, hands clasped behind back, robes billowing, silent.
+Su Jin: female, light-colored dress, hair partially down, ascending steps toward Shen Ci, expression worried, silent.
+Ancient city wall, vast open land beyond, dusk sky fading.
+Cinematic, photorealistic, 4K, high contrast, desaturated tones, shallow depth of field.
+
+[Motion]
+0s-4s: Shen Ci stands still on city wall edge, robes flutter in wind, hair sways gently. Gaze fixed on distant horizon.
+4s-8s: Su Jin climbs the last few steps onto the wall, walks toward Shen Ci. Shen Ci remains still, unaware. Su Jin slows as she approaches.
+
+[Camera]
+Wide establishing shot, static for first 4 seconds capturing the lone figure. Then smooth transition to medium tracking shot following the woman ascending steps, single continuous take throughout, no cuts.
+
+[Audio]
+0s-4s: Wind howling across wall, fabric flapping rhythmically. No dialogue.
+4s-8s: Footsteps on stone, robes rustling. No dialogue.
+Shen Ci \u2014 silent. Su Jin \u2014 silent.
+
+[Narrative]
+Lone figure on city wall, then arrival of a companion. Tension between determination and concern. Single continuous take.
+\`\`\`
+
+---
+
+### \u4E09\u3001Seedance 2.0
+
+#### \u6838\u5FC3\u539F\u5219
+- **\u7ED3\u6784\u531612\u7EF4\u7F16\u7801**\uFF1A\u7EDF\u4E00\u7528 \`@\u56FEN \` \u5F15\u7528\u8D44\u4EA7\u548C\u5206\u955C\u56FE\uFF0C\u65F6\u957F \`{N}s\`
+- **\u6700\u524D\u9762\u5148\u5B9A\u4E49\u56FE\u7247\u6620\u5C04**\uFF1A\u5148\u8F93\u51FA\u201C\u56FE\u7247\u5B9A\u4E49\u201D\u6BB5\uFF0C\u96C6\u4E2D\u58F0\u660E \`@\u56FEN : \u4E3B\u4F53\u540D\u5B57/\u573A\u666F\u540D\u5B57\uFF0C\u7B80\u8FF0\`\uFF1B\u540E\u7EED\u5206\u955C\u6B63\u6587\u53EA\u4F7F\u7528\u4E3B\u4F53\u540D\u5B57\uFF0C\u4E0D\u518D\u5199 \`@\u56FEN \`
+- **\u97F3\u8272\u53C2\u65709\u7EF4\u5EA6\u7CBE\u7EC6\u63CF\u8FF0**\uFF08\u6709\u53F0\u8BCD\u65F6\u5FC5\u586B\uFF09
+- **\u79D2\u7EA7\u65F6\u957F\u63A7\u5236**\uFF1A\u5355\u5206\u955C\u65F6\u957F\u6700\u4F4E 1s
+- **\u4E2D\u6587\u63D0\u793A\u8BCD**
+- **\u4E25\u683C\u9075\u5FAA videoDesc**\uFF1A\u6BCF\u6761\u5206\u955C\u7684\u63CF\u8FF0\u5185\u5BB9\u4E25\u683C\u57FA\u4E8E videoDesc \u4E2D\u7684\u753B\u9762\u63CF\u8FF0\u3001\u65F6\u957F\u3001\u666F\u522B\u3001\u8FD0\u955C\u3001\u89D2\u8272\u52A8\u4F5C\u3001\u60C5\u7EEA\u3001\u5149\u5F71\u6C1B\u56F4\u3001\u53F0\u8BCD\u3001\u97F3\u6548\u5B57\u6BB5\u751F\u6210\uFF0C\u4E0D\u7F16\u9020\u989D\u5916\u5185\u5BB9
+- **\u53F0\u8BCD\u4E0D\u53EF\u7F3A\u5931**\uFF1AvideoDesc \u4E2D\u6709\u53F0\u8BCD\u7684\u5206\u955C\uFF0C\u5FC5\u987B\u5B8C\u6574\u8F93\u51FA\u53F0\u8BCD\u548C\u97F3\u8272\u63CF\u8FF0
+- **\u53F0\u8BCD\u7C7B\u578B\u6807\u6CE8**\uFF1A\u533A\u5206\u666E\u901A\u5BF9\u767D\uFF08\u76F4\u63A5\u4F7F\u7528\u300C\u8BF4\uFF1A\u300D\uFF09\u3001\u5185\u5FC3\u72EC\u767D\uFF08\u4F7F\u7528\u300C\u5185\u5FC3OS\uFF1A\u300D\uFF09\u3001\u753B\u5916\u97F3\uFF08\u4F7F\u7528\u300C\u753B\u5916\u97F3VO\uFF1A\u300D\uFF09\uFF0C\u5E76\u5339\u914D\u5BF9\u5E94\u7684\u5634\u578B\u72B6\u6001\u63CF\u8FF0
+
+#### prompt \u751F\u6210\u6A21\u677F
+
+> **\u6CE8\u610F**\uFF1A\`@\u56FE{\u7F16\u53F7}\` \u4EC5\u7528\u4E8E\u6700\u524D\u9762\u7684\u201C\u56FE\u7247\u5B9A\u4E49\u201D\u6BB5\u3002\u5206\u955C\u6B63\u6587\u4E2D\u7981\u6B62\u518D\u5199 \`@\u56FE{\u7F16\u53F7}\`\uFF0C\u7EDF\u4E00\u6539\u7528\u4E3B\u4F53\u540D\u5B57/\u573A\u666F\u540D\u5B57\u3002
+
+**\u5355\u5206\u955C\u6A21\u677F\uFF1A**
+\`\`\`
+\u753B\u9762\u98CE\u683C\u548C\u7C7B\u578B: {\u98CE\u683C}, {\u8272\u8C03}, {\u7C7B\u578B}
+
+\u56FE\u7247\u5B9A\u4E49:
+@\u56FE1: {\u8D44\u4EA71\u540D\u5B57}\uFF0C{\u7B80\u8FF0}
+@\u56FE2: {\u8D44\u4EA72\u540D\u5B57}\uFF0C{\u7B80\u8FF0}
+@\u56FEN: {\u8D44\u4EA7N\u540D\u5B57}\uFF0C{\u7B80\u8FF0}
+...
+
+\u751F\u6210\u4E00\u4E2A\u7531\u4EE5\u4E0B 1 \u4E2A\u5206\u955C\u7EC4\u6210\u7684\u89C6\u9891:
+
+\u573A\u666F:
+\u5206\u955C\u8FC7\u6E21: \u65E0
+
+\u5206\u955C1 {N}s: \u65F6\u95F4\uFF1A{\u65E5/\u591C/\u6668/\u9EC4\u660F}\uFF0C\u573A\u666F\uFF1A{\u573A\u666F\u540D\u5B57}\uFF0C\u955C\u5934\uFF1A{\u666F\u522B}\uFF0C{\u89D2\u5EA6}\uFF0C{\u8FD0\u955C}\uFF0C{\u89D2\u8272\u540D\u5B57} {\u52A8\u4F5C/\u8868\u60C5/\u89C6\u7EBF\u671D\u5411/\u7AD9\u4F4D\u63CF\u8FF0}\u3002{\u53F0\u8BCD\u4E0E\u97F3\u8272\u63CF\u8FF0\uFF08\u5982\u6709\uFF09}\u3002{\u80CC\u666F\u73AF\u5883\u8865\u5145}\u3002{\u5149\u5F71\u6C1B\u56F4}\u3002{\u8FD0\u955C\u8865\u5145}\u3002
+\`\`\`
+
+**\u591A\u5206\u955C\u6A21\u677F\uFF1A**
+\`\`\`
+\u753B\u9762\u98CE\u683C\u548C\u7C7B\u578B: {\u98CE\u683C}, {\u8272\u8C03}, {\u7C7B\u578B}
+
+\u56FE\u7247\u5B9A\u4E49:
+@\u56FE1: {\u8D44\u4EA71\u540D\u5B57}\uFF0C{\u7B80\u8FF0}
+@\u56FE2: {\u8D44\u4EA72\u540D\u5B57}\uFF0C{\u7B80\u8FF0}
+@\u56FEN: {\u8D44\u4EA7N\u540D\u5B57}\uFF0C{\u7B80\u8FF0}
+...
+
+\u751F\u6210\u4E00\u4E2A\u7531\u4EE5\u4E0B {N} \u4E2A\u5206\u955C\u7EC4\u6210\u7684\u89C6\u9891:
+
+\u573A\u666F:
+\u5206\u955C\u8FC7\u6E21: {\u5168\u5C40\u8FC7\u6E21\u63CF\u8FF0}
+
+\u5206\u955C1 {N}s: \u65F6\u95F4\uFF1A{...}\uFF0C\u573A\u666F\uFF1A{\u573A\u666F\u540D\u5B57}\uFF0C\u955C\u5934\uFF1A{...}\uFF0C{\u89D2\u8272\u540D\u5B57} {...}\u3002{...}\u3002
+\u5206\u955C2{N}s: ...
+...
+\`\`\`
+
+#### \u97F3\u8272\u751F\u6210\u89C4\u5219\uFF08\u6709\u53F0\u8BCD\u65F6\u5FC5\u586B\uFF09
+
+\u53F0\u8BCD\u683C\u5F0F\uFF1A\`{\u89D2\u8272\u540D\u5B57} \u8BF4\uFF1A\u300C{\u53F0\u8BCD\u5185\u5BB9}\u300D\u97F3\u8272\uFF1A{9\u7EF4\u5EA6\u63CF\u8FF0}\`
+
+9\u7EF4\u5EA6\u6309\u987A\u5E8F\u586B\u5199\uFF1A
+\`\`\`
+{\u6027\u522B}\uFF0C{\u5E74\u9F84\u97F3\u8272}\uFF0C{\u97F3\u8C03}\uFF0C{\u97F3\u8272\u8D28\u611F}\uFF0C{\u58F0\u97F3\u539A\u5EA6}\uFF0C{\u53D1\u97F3\u65B9\u5F0F}\uFF0C{\u6C14\u606F}\uFF0C{\u8BED\u901F}\uFF0C{\u7279\u6B8A\u8D28\u611F}
+\`\`\`
+
+> \u5F53 desc \u4E2D\u672A\u660E\u786E\u97F3\u8272\u4FE1\u606F\u65F6\uFF0C\u6839\u636E\u89D2\u8272\u7C7B\u578B\u4ECE\u4EE5\u4E0B\u53C2\u8003\u8868\u63A8\u65AD\uFF1A
+
+| \u89D2\u8272\u7C7B\u578B\u7279\u5F81 | \u9ED8\u8BA4\u97F3\u8272 |
+|------------|---------|
+| \u7537\u6027\u6743\u5A01/\u9738\u6C14\u89D2\u8272 | \u7537\u58F0\uFF0C\u4E2D\u5E74\u97F3\u8272\uFF0C\u97F3\u8C03\u4F4E\u6C89\uFF0C\u97F3\u8272\u6D51\u539A\u6709\u529B\uFF0C\u58F0\u97F3\u539A\u91CD\uFF0C\u53D1\u97F3\u6807\u51C6\uFF0C\u6C14\u606F\u6781\u5176\u6C89\u7A33\uFF0C\u8BED\u901F\u504F\u6162 |
+| \u5973\u6027\u6E29\u67D4/\u751C\u7F8E\u89D2\u8272 | \u5973\u58F0\uFF0C\u9752\u5E74\u97F3\u8272\uFF0C\u97F3\u8C03\u4E2D\u7B49\u504F\u9AD8\uFF0C\u97F3\u8272\u8D28\u611F\u660E\u4EAE\u6E05\u8106\uFF0C\u58F0\u97F3\u6E05\u4EAE\u67D4\u548C\uFF0C\u6C14\u606F\u5145\u6C9B\u5E73\u7A33\uFF0C\u5E26\u6E29\u5A49\u771F\u8BDA\u611F |
+| \u7537\u6027\u5E74\u8F7B/\u666E\u901A\u89D2\u8272 | \u7537\u58F0\uFF0C\u9752\u5E74\u97F3\u8272\uFF0C\u97F3\u8C03\u4E2D\u7B49\uFF0C\u97F3\u8272\u5E72\u51C0\uFF0C\u58F0\u97F3\u539A\u5EA6\u9002\u4E2D\uFF0C\u53D1\u97F3\u6E05\u6670\uFF0C\u6C14\u606F\u5E73\u7A33\uFF0C\u8BED\u901F\u9002\u4E2D |
+| \u5973\u6027\u6D3B\u6CFC/\u5916\u5411\u89D2\u8272 | \u5973\u58F0\uFF0C\u9752\u5E74\u97F3\u8272\uFF0C\u97F3\u8C03\u504F\u9AD8\uFF0C\u97F3\u8272\u6E05\u8106\u6D3B\u6CFC\uFF0C\u58F0\u97F3\u8F7B\u76C8\uFF0C\u6C14\u606F\u5145\u6C9B\uFF0C\u8BED\u901F\u504F\u5FEB\uFF0C\u5E26\u7B11\u610F\u548C\u611F\u67D3\u529B |
+| \u53CD\u6D3E/\u51B7\u9177\u89D2\u8272 | \u7537\u58F0\uFF0C\u4E2D\u5E74\u97F3\u8272\uFF0C\u97F3\u8C03\u4F4E\u6C89\uFF0C\u97F3\u8272\u8D28\u611F\u5E72\u71E5\u504F\u6697\uFF0C\u58F0\u97F3\u5E26\u6C99\u783E\u611F\uFF0C\u6C14\u606F\u5E73\u7A33\uFF0C\u8BED\u901F\u6781\u6162\uFF0C\u6709\u5A01\u80C1\u611F |
+
+#### \u65E0\u53F0\u8BCD\u5206\u955C\u5904\u7406
+- \u4E0D\u5199 \`\u8BF4\uFF1A\` \u548C\u97F3\u8272\u6BB5\u843D
+- \u5728\u52A8\u4F5C\u63CF\u8FF0\u540E\u6807\u6CE8 \`\u65E0\u53F0\u8BCD\`
+
+#### \u53F0\u8BCD\u7C7B\u578B\u683C\u5F0F
+
+| \u53F0\u8BCD\u7C7B\u578B | \u683C\u5F0F | \u5634\u578B\u63CF\u8FF0 |
+|----------|------|----------|
+| \u666E\u901A\u5BF9\u767D | \`{\u89D2\u8272\u540D\u5B57} \u8BF4\uFF1A\u300C{\u53F0\u8BCD}\u300D\u97F3\u8272\uFF1A{9\u7EF4\u5EA6}\` | \u89D2\u8272\u5634\u90E8\u5F00\u5408\u8BF4\u8BDD |
+| \u5185\u5FC3\u72EC\u767D | \`{\u89D2\u8272\u540D\u5B57} \u5185\u5FC3OS\uFF1A\u300C{\u53F0\u8BCD}\u300D\u97F3\u8272\uFF1A{9\u7EF4\u5EA6}\` | \u89D2\u8272\u5634\u90E8\u7D27\u95ED\u4E0D\u52A8 |
+| \u753B\u5916\u97F3 | \`{\u89D2\u8272\u540D\u5B57} \u753B\u5916\u97F3VO\uFF1A\u300C{\u53F0\u8BCD}\u300D\u97F3\u8272\uFF1A{9\u7EF4\u5EA6}\` | \u89D2\u8272\u5634\u90E8\u7D27\u95ED\u4E0D\u52A8\uFF08\u6216\u89D2\u8272\u4E0D\u5728\u753B\u9762\u4E2D\uFF09 |
+
+#### \u751F\u6210\u7EA6\u675F
+1. **\u4E2D\u6587\u63D0\u793A\u8BCD**
+2. **\u76F4\u63A5\u8F93\u51FA\u89C6\u9891\u63D0\u793A\u8BCD**\uFF1A\u7981\u6B62\u8F93\u51FA\u4EFB\u4F55\u5206\u6790\u8FC7\u7A0B\u3001\u63A8\u7406\u6B65\u9AA4\u3001\u6A21\u578B\u5339\u914D\u8BF4\u660E\u3001\u8D44\u4EA7\u7F16\u53F7\u8868\u3001\u5206\u9694\u7EBF\u7B49\u975E\u63D0\u793A\u8BCD\u5185\u5BB9\u3002\u7B2C\u4E00\u884C\u5FC5\u987B\u662F \`\u753B\u9762\u98CE\u683C\u548C\u7C7B\u578B:\`
+3. **\u4E25\u683C\u9075\u5FAA videoDesc**\uFF1A\u6BCF\u6761\u5206\u955C\u5185\u5BB9\u4E25\u683C\u57FA\u4E8E videoDesc \u7684\u753B\u9762\u63CF\u8FF0\u3001\u65F6\u957F\u3001\u666F\u522B\u3001\u8FD0\u955C\u3001\u89D2\u8272\u52A8\u4F5C\u3001\u60C5\u7EEA\u3001\u5149\u5F71\u6C1B\u56F4\u3001\u53F0\u8BCD\u3001\u97F3\u6548\u5B57\u6BB5\uFF0C\u4E0D\u7F16\u9020\u989D\u5916\u4FE1\u606F
+4. **\u53F0\u8BCD\u4E0D\u53EF\u7F3A\u5931**\uFF1AvideoDesc \u4E2D\u6709\u53F0\u8BCD\u7684\u5206\u955C\uFF0C\u5FC5\u987B\u5B8C\u6574\u8F93\u51FA\u53F0\u8BCD\u548C\u97F3\u8272
+5. **\u53F0\u8BCD\u7C7B\u578B\u6B63\u786E\u6807\u6CE8**\uFF1A\u666E\u901A\u5BF9\u767D\u7528\u300C\u8BF4\uFF1A\u300D\uFF0C\u5185\u5FC3\u72EC\u767D\u7528\u300C\u5185\u5FC3OS\uFF1A\u300D\uFF0C\u753B\u5916\u97F3\u7528\u300C\u753B\u5916\u97F3VO\uFF1A\u300D
+6. **\u5148\u56FE\u7247\u5B9A\u4E49\uFF0C\u540E\u5199\u5206\u955C**\uFF1A\u6700\u524D\u9762\u5FC5\u987B\u5148\u8F93\u51FA"\u56FE\u7247\u5B9A\u4E49"\u6BB5\uFF0C\u5217\u51FA \`@\u56FEN : \u540D\u5B57\uFF0C\u63CF\u8FF0\`
+7. **\u5206\u955C\u6B63\u6587\u7981\u7528 \`@\u56FEN \`**\uFF1A\u6B63\u6587\u7EDF\u4E00\u4F7F\u7528\u89D2\u8272\u540D/\u573A\u666F\u540D\uFF0C\u4E0D\u5199 \`@\u56FE1/@\u56FE2\` \u7B49\u7F16\u53F7
+8. **\u5355\u5206\u955C\u65F6\u957F\u6700\u4F4E 1s**
+9. **\u65F6\u957F\u5355\u4F4D**\uFF1A\u76F4\u63A5\u4F7F\u7528 videoDesc \u4E2D\u7684\u79D2\u6570\uFF0C\u683C\u5F0F\u4E3A \`{N}s\`\uFF08\u5982 \`4s\`\uFF09\uFF0C\u6700\u4F4E 1s
+
+#### Seedance 2.0 \u5B8C\u6574\u793A\u4F8B
+
+\u8F93\u5165\uFF1A
+\`\`\`
+\u6A21\u578B\uFF1ASeedance2.0
+\u8D44\u4EA7\u4FE1\u606F[A001, role, \u6C88\u8F9E], [A002, role, \u82CF\u9526], [A003, scene, \u57CE\u697C]
+\`\`\`
+\`\`\`xml
+<storyboardItem videoDesc='\uFF08\u6C88\u8F9E\u72EC\u7ACB\u57CE\u697C\u8FDC\u773A\u82CD\u832B\u5927\u5730\u3001\u57CE\u697C\u3001\u6C88\u8F9E/\u57CE\u697C\u30014s\u3001\u5168\u666F\u3001\u9759\u6B62\u3001\u8D1F\u624B\u800C\u7ACB\u8863\u8882\u968F\u98CE\u98D8\u626C\u3001\u575A\u5B9A\u51B3\u7EDD\u3001\u9EC4\u660F\u51B7\u8C03\u4FA7\u9006\u5149\u3001\u65E0\u53F0\u8BCD\u3001\u98CE\u58F0\u8863\u8882\u58F0\u3001A001/A003\uFF09' prompt='\u5168\u666F\uFF0C\u5E73\u89C6\u7565\u4EF0\uFF0C\u57CE\u697C\u4E4B\u4E0A\uFF0C\u6C88\u8F9E\u8D1F\u624B\u800C\u7ACB\uFF0C\u8863\u8882\u98D8\u626C\uFF0C\u9EC4\u660F\u51B7\u8C03\u4FA7\u9006\u5149...' track='main' duration='4' associateAssetsIds="[&quot;A001&quot;,&quot;A003&quot;]" shouldGenerateImage="true" ></storyboardItem>
+<storyboardItem videoDesc='\uFF08\u82CF\u9526\u767B\u4E0A\u57CE\u697C\u8D70\u5411\u6C88\u8F9E\u3001\u57CE\u697C\u3001\u82CF\u9526/\u6C88\u8F9E/\u57CE\u697C\u30014s\u3001\u4E2D\u666F\u3001\u8DDF\u8E2A\u3001\u82CF\u9526\u62FE\u7EA7\u800C\u4E0A\u8D70\u5411\u6C88\u8F9E\u3001\u62C5\u5FE7\u3001\u9EC4\u660F\u4F59\u6656\u6E10\u6697\u3001\u82CF\u9526\u8BF4\uFF1A\u4F60\u53C8\u4E00\u4E2A\u4EBA\u5728\u8FD9\u91CC\u3001\u811A\u6B65\u58F0\u98CE\u58F0\u3001A001/A002/A003\uFF09' prompt='\u4E2D\u666F\uFF0C\u8DDF\u8E2A\uFF0C\u82CF\u9526\u62FE\u7EA7\u800C\u4E0A\u8D70\u5411\u57CE\u697C\u4E0A\u7684\u6C88\u8F9E...' track='main' duration='4' associateAssetsIds="[&quot;A001&quot;,&quot;A002&quot;,&quot;A003&quot;]" shouldGenerateImage="true" ></storyboardItem>
+\`\`\`
+
+\u8F93\u51FA\uFF1A
+\`\`\`
+\u753B\u9762\u98CE\u683C\u548C\u7C7B\u578B: \u771F\u4EBA\u5199\u5B9E, \u7535\u5F71\u98CE\u683C, \u51B7\u8C03, \u53E4\u98CE
+
+\u53C2\u8003\u5B9A\u4E49:
+@\u56FE1: \u6C88\u8F9E\uFF0C\u9ED1\u8272\u957F\u888D\uFF0C\u6C14\u8D28\u51B7\u5CFB\u7684\u9752\u5E74\u7537\u6027
+@\u56FE2: \u82CF\u9526\uFF0C\u6D45\u8272\u8863\u88D9\uFF0C\u795E\u60C5\u7EC6\u817B\u7684\u9752\u5E74\u5973\u6027
+@\u56FE3: \u57CE\u697C\uFF0C\u53E4\u4EE3\u7816\u77F3\u57CE\u697C\u4E0E\u53F0\u9636\u573A\u666F
+
+\u751F\u6210\u4E00\u4E2A\u7531\u4EE5\u4E0B 2 \u4E2A\u5206\u955C\u7EC4\u6210\u7684\u89C6\u9891:
+
+\u573A\u666F:
+\u5206\u955C\u8FC7\u6E21: \u955C\u5934\u5E73\u6ED1\u5207\u6362\uFF0C\u4ECE\u5168\u666F\u8FC7\u6E21\u5230\u4E2D\u666F\u8DDF\u8E2A\uFF0C\u7126\u70B9\u4ECE\u6C88\u8F9E\u72EC\u5904\u8F6C\u5411\u82CF\u9526\u5230\u6765\u3002
+
+\u5206\u955C1 4s: \u65F6\u95F4\uFF1A\u9EC4\u660F\uFF0C\u573A\u666F\uFF1A\u57CE\u697C\uFF0C\u955C\u5934\uFF1A\u5168\u666F\uFF0C\u5E73\u89C6\u7565\u4EF0\uFF0C\u9759\u6B62\u955C\u5934\uFF0C\u6C88\u8F9E\u72EC\u7ACB\u57CE\u697C\u4E4B\u4E0A\uFF0C\u8D1F\u624B\u800C\u7ACB\uFF0C\u8863\u8882\u968F\u98CE\u98D8\u626C\uFF0C\u76EE\u5149\u8FDC\u773A\u82CD\u832B\u5927\u5730\uFF0C\u795E\u60C5\u8083\u7136\u9762\u5BB9\u6C89\u7740\uFF0C\u773C\u795E\u575A\u5B9A\u76EE\u5149\u6E05\u51BD\uFF0C\u7709\u773C\u6C89\u9759\u6C14\u8D28\u51DB\u7136\u3002\u65E0\u53F0\u8BCD\u3002\u80CC\u666F\u662F\u53E4\u57CE\u697C\u7816\u77F3\u7EB9\u7406\u6E05\u6670\uFF0C\u8FDC\u65B9\u5927\u5730\u82CD\u832B\u8FBD\u9614\uFF0C\u5929\u9645\u7EBF\u51B7\u6696\u4EA4\u66FF\u3002\u9EC4\u660F\u659C\u5C04\u4F59\u6656\u4FA7\u9006\u5149\uFF0C\u51B7\u8C03\u4E3A\u4E3B\uFF0C\u957F\u5F71\u62C9\u4F38\uFF0C\u8F6E\u5ED3\u5149\u5FAE\u52FE\u52D2\u4EBA\u7269\u8FB9\u7F18\uFF0C\u5149\u611F\u8BD7\u610F\u3002\u955C\u5934\u9759\u6B62\u3002
+
+\u5206\u955C2 4s: \u65F6\u95F4\uFF1A\u9EC4\u660F\uFF0C\u573A\u666F\uFF1A\u57CE\u697C\uFF0C\u955C\u5934\uFF1A\u4E2D\u666F\uFF0C\u5E73\u89C6\uFF0C\u8DDF\u8E2A\u62CD\u6444\uFF0C\u82CF\u9526\u62FE\u7EA7\u800C\u4E0A\uFF0C\u8D70\u5411\u57CE\u697C\u4E0A\u7684\u6C88\u8F9E\uFF0C\u9762\u90E8\u671D\u5411\u6C88\u8F9E\u65B9\u5411\uFF0C\u795E\u60C5\u5FAE\u6123\u9762\u8272\u5FAE\u53D8\uFF0C\u773C\u795E\u4E2D\u5E26\u7740\u62C5\u5FE7\uFF0C\u82CF\u9526\u8BF4\uFF1A\u300C\u4F60\u53C8\u4E00\u4E2A\u4EBA\u5728\u8FD9\u91CC\u3002\u300D\u97F3\u8272\uFF1A\u5973\u58F0\uFF0C\u9752\u5E74\u97F3\u8272\uFF0C\u97F3\u8C03\u4E2D\u7B49\u504F\u9AD8\uFF0C\u97F3\u8272\u8D28\u611F\u660E\u4EAE\u6E05\u8106\uFF0C\u58F0\u97F3\u6E05\u4EAE\u67D4\u548C\uFF0C\u53D1\u97F3\u65B9\u5F0F\u5E72\u51C0\uFF0C\u6C14\u606F\u5145\u6C9B\u5E73\u7A33\uFF0C\u8BED\u901F\u9002\u4E2D\uFF0C\u5E26\u6E29\u5A49\u771F\u8BDA\u611F\u3002\u80CC\u666F\u57CE\u697C\u53F0\u9636\u7EB9\u7406\u6E05\u6670\uFF0C\u4F59\u6656\u6E10\u6697\uFF0C\u5929\u9645\u7EBF\u51B7\u6696\u4EA4\u66FF\u52A0\u6DF1\u3002\u955C\u5934\u8DDF\u8E2A\u82CF\u9526\u79FB\u52A8\u3002
+\`\`\`
+
+---
+
+### \u56DB\u3001Wan 2.6
+
+#### \u6838\u5FC3\u539F\u5219
+- **\u5355\u56FE\u9996\u5E27\u6A21\u5F0F**\uFF1A\u5F52\u7C7B\u4E3A\u9996\u5C3E\u5E27\u6A21\u5F0F\uFF0C\u4F46\u4EC5\u6709\u9996\u5E27\uFF08\u5206\u955C\u56FE\uFF09\uFF0C\u65E0\u5C3E\u5E27
+- **\u5355\u6761\u5206\u955C\u8F93\u5165/\u8F93\u51FA**\uFF1A\u6BCF\u6B21\u4EC5\u8F93\u5165\u4E00\u6761 \`<storyboardItem>\` \u53CA\u5176\u5173\u8054\u8D44\u4EA7\u4FE1\u606F\uFF0C\u8F93\u51FA\u4E5F\u4EC5\u4E3A\u4E00\u6BB5\u5B8C\u6574\u7684\u53D9\u4E8B\u5F0F\u63D0\u793A\u8BCD
+- **\u53D9\u4E8B\u5F0F\u82F1\u6587\u63D0\u793A\u8BCD**\uFF1A\u50CF\u5199\u5C0F\u8BF4\u4E00\u6837\u63CF\u5199\u753B\u9762\uFF0C\u4E0D\u4F7F\u7528\u6807\u7B7E\u7F57\u5217\uFF08\u4E0D\u5199 \`4K, cinematic, high quality\` \u8FD9\u7C7B\u5806\u780C\uFF09
+- **\u4E09\u6BB5\u5F0F\u7ED3\u6784**\uFF1A\u98CE\u683C\u57FA\u8C03 \u2192 \u4E3B\u4F53\u52A8\u4F5C + \u573A\u666F\u73AF\u5883 + \u5149\u7EBF\u6C1B\u56F4 \u2192 \u955C\u5934\u6536\u5C3E
+- **\u7EAF\u6587\u672C\u63D0\u793A\u8BCD**\uFF1A\u63D0\u793A\u8BCD\u5185**\u4E0D\u4F7F\u7528\u4EFB\u4F55 \`@\u56FEN \` \u5F15\u7528**\uFF0C\u5168\u90E8\u5185\u5BB9\u7528\u7EAF\u6587\u672C\u63CF\u8FF0
+- **\u4E25\u683C\u9075\u5FAA videoDesc**\uFF1A\u63D0\u793A\u8BCD\u5185\u5BB9\u4E25\u683C\u57FA\u4E8E videoDesc \u4E2D\u7684\u753B\u9762\u63CF\u8FF0\u3001\u65F6\u957F\u3001\u666F\u522B\u3001\u8FD0\u955C\u3001\u89D2\u8272\u52A8\u4F5C\u3001\u60C5\u7EEA\u3001\u5149\u5F71\u6C1B\u56F4\u3001\u53F0\u8BCD\u3001\u97F3\u6548\u5B57\u6BB5\u751F\u6210\uFF0C\u4E0D\u7F16\u9020\u989D\u5916\u5185\u5BB9
+- **\u53F0\u8BCD\u4E0D\u53EF\u7F3A\u5931**\uFF1AvideoDesc \u4E2D\u6709\u53F0\u8BCD\u7684\u5206\u955C\uFF0C\u5FC5\u987B\u5728\u63D0\u793A\u8BCD\u4E2D\u4F53\u73B0\u53F0\u8BCD\u76F8\u5173\u63CF\u8FF0
+- **\u53F0\u8BCD\u7C7B\u578B\u6807\u6CE8**\uFF1A\u533A\u5206\u666E\u901A\u5BF9\u767D\uFF08dialogue\uFF09\u3001\u5185\u5FC3\u72EC\u767D\uFF08inner monologue OS\uFF09\u3001\u753B\u5916\u97F3\uFF08voiceover VO\uFF09\uFF0C\u5728\u63D0\u793A\u8BCD\u4E2D\u7528\u62EC\u53F7\u6807\u6CE8
+
+#### prompt \u751F\u6210\u6A21\u677F
+
+\u6BCF\u6B21\u8F93\u5165\u4E00\u6761\u5206\u955C\uFF0C\u8F93\u51FA\u4E00\u6BB5\u5B8C\u6574\u63D0\u793A\u8BCD\uFF08\u65E0\u7F16\u53F7\u524D\u7F00\uFF09\uFF0C\u683C\u5F0F\u5982\u4E0B\uFF1A
+
+\`\`\`
+{\u98CE\u683C\u57FA\u8C03\u4E00\u53E5\u8BDD\u5B9A\u6027},
+{\u4E3B\u4F53\u540D} {\u5916\u89C2\u7B80\u8FF0}, {\u5177\u4F53\u52A8\u4F5C/\u59FF\u6001\u63CF\u8FF0}, {\u60C5\u7EEA/\u8868\u60C5\u7528\u52A8\u4F5C\u6697\u793A}.
+{\u573A\u666F\u80CC\u666F\u4E3B\u4F53}, {\u5177\u4F53\u73AF\u5883\u7269\u4EF6}, {\u7A7A\u95F4\u611F}, {\u65F6\u95F4/\u5929\u6C14}.
+{\u5149\u7EBF\u65B9\u5411/\u8272\u6E29} {\u8D28\u611F\u63CF\u8FF0}, {\u60C5\u7EEA\u6697\u793A\u5149\u5F71}.
+{\u53F0\u8BCD\u63CF\u8FF0\uFF08\u5982\u6709\uFF0C\u542B dialogue/OS/VO \u6807\u6CE8\uFF09/ No dialogue}.
+{\u97F3\u6548\u63CF\u8FF0}.
+{\u62CD\u6444\u65B9\u5F0F}, {\u666F\u522B}, {\u89C6\u89D2}, {\u8FD0\u955C\u65B9\u5F0F}.
+\`\`\`
+
+#### \u53D9\u4E8B\u5F0F\u5199\u6CD5\u8981\u70B9
+
+| \u539F\u5219 | \u8BF4\u660E | \u793A\u4F8B |
+|------|------|------|
+| \u98CE\u683C\u57FA\u8C03\u653E\u6700\u524D | \u4E00\u53E5\u8BDD\u5B9A\u6027\u6574\u4F53\u6C14\u8D28 | \`A cinematic epic scene\` / \`A melancholic cinematic scene\` |
+| \u4E3B\u4F53+\u52A8\u4F5C\u7D27\u5BC6\u7ED1\u5B9A | \u4E3B\u4F53\u540E\u9762\u76F4\u63A5\u8DDF\u52A8\u4F5C\uFF0C\u5916\u89C2\u7EC6\u8282\u5D4C\u5165\u4E3B\u4F53\u63CF\u8FF0 | \`A young man in dark flowing robes stands alone atop the city wall, hands clasped behind back\` |
+| \u60C5\u7EEA\u7528\u52A8\u4F5C\u6697\u793A | \u4E0D\u76F4\u63A5\u9648\u8FF0\u300C\u4ED6\u5F88\u60B2\u4F24\u300D | \u274C \`He is sad.\` \u2192 \u2705 \`head drops slowly, shoulders slumped\` |
+| \u73AF\u5883\u878D\u5165\u53D9\u4E8B | \u4E0D\u7F57\u5217\u73AF\u5883\u5C5E\u6027 | \u274C \`The sky is blue. The grass is green.\` \u2192 \u2705 \`hazy blue sky stretches over the emerald valley\` |
+| \u5149\u7EBF\u5355\u72EC\u6210\u53E5 | \u5149\u7EBF\u65B9\u5411+\u8272\u6E29+\u8D28\u611F+\u60C5\u7EEA | \`Warm golden hour light streams from behind, casting long shadows across the stone floor\` |
+| \u955C\u5934\u8BED\u8A00\u6536\u5C3E | \u4E00\u53E5\u8BDD\u70B9\u775B | \`Captured in a wide establishing shot from a low-angle perspective, static camera\` |
+| \u7981\u6B62\u6807\u7B7E\u5806\u780C | \u4E0D\u5199 \`4K, cinematic, high quality\` | \`cinematic\` \u878D\u5165\u98CE\u683C\u57FA\u8C03\u5373\u53EF |
+
+#### \u751F\u6210\u7EA6\u675F
+1. **\u5168\u90E8\u7528\u82F1\u6587**
+2. **\u4E0D\u4F7F\u7528\u4EFB\u4F55 \`@\u56FEN \` \u5F15\u7528**\uFF1A\u63D0\u793A\u8BCD\u5185\u4E0D\u5F15\u7528\u89D2\u8272\u8D44\u4EA7\u3001\u573A\u666F\u8D44\u4EA7\u3001\u5206\u955C\u56FE\uFF0C\u5168\u90E8\u5185\u5BB9\u7528\u7EAF\u6587\u672C\u63CF\u8FF0
+3. **\u53D9\u4E8B\u5F0F\u63CF\u5199**\uFF1A\u50CF\u5199\u5C0F\u8BF4\u4E00\u6837\u6784\u5EFA\u753B\u9762\uFF0C\u7981\u6B62\u6807\u7B7E\u7F57\u5217\u548C\u914D\u7F6E\u6E05\u5355\u5F0F\u5199\u6CD5
+4. **\u4E3B\u4F53\u7528\u6587\u5B57\u63CF\u8FF0**\uFF1A\u7B80\u8981\u63CF\u8FF0\u4E3B\u4F53\u5916\u89C2\u7279\u5F81\uFF08\u5982\u670D\u9970\u3001\u53D1\u578B\u7B49\u5173\u952E\u8FA8\u8BC6\u7279\u5F81\uFF09\uFF0C\u5D4C\u5165\u4E3B\u4F53\u63CF\u8FF0\u4E2D
+5. **\u4E25\u683C\u9075\u5FAA videoDesc**\uFF1A\u63D0\u793A\u8BCD\u5185\u5BB9\u4E25\u683C\u57FA\u4E8E videoDesc \u4E2D\u7684\u753B\u9762\u63CF\u8FF0\u3001\u65F6\u957F\u3001\u666F\u522B\u3001\u8FD0\u955C\u3001\u89D2\u8272\u52A8\u4F5C\u3001\u60C5\u7EEA\u3001\u5149\u5F71\u6C1B\u56F4\u3001\u53F0\u8BCD\u3001\u97F3\u6548\u5B57\u6BB5\uFF0C\u4E0D\u7F16\u9020\u989D\u5916\u4FE1\u606F
+6. **\u53F0\u8BCD\u4E0D\u53EF\u7F3A\u5931**\uFF1AvideoDesc \u4E2D\u6709\u53F0\u8BCD\u7684\u5206\u955C\uFF0C\u5FC5\u987B\u5728\u63D0\u793A\u8BCD\u4E2D\u5B8C\u6574\u8F93\u51FA\u53F0\u8BCD\u5185\u5BB9\uFF08\u4FDD\u6301\u539F\u59CB\u8BED\u8A00\uFF0C\u4E0D\u7FFB\u8BD1\uFF09
+7. **\u53F0\u8BCD\u7C7B\u578B\u6807\u6CE8**\uFF1A\u666E\u901A\u5BF9\u767D\u6807\u6CE8 \`(dialogue)\`\uFF1B\u5185\u5FC3\u72EC\u767D\u6807\u6CE8 \`(inner monologue, OS)\`\uFF1B\u753B\u5916\u97F3\u6807\u6CE8 \`(voiceover, VO)\`
+8. **\u5355\u6761\u8F93\u5165/\u8F93\u51FA**\uFF1A\u6BCF\u6B21\u4EC5\u5904\u7406\u4E00\u6761\u5206\u955C\uFF0C\u8F93\u51FA\u4E00\u6BB5\u63D0\u793A\u8BCD\uFF0C\u65E0\u7F16\u53F7\u524D\u7F00
+9. **\u65E0\u9700\u6807\u6CE8\u65F6\u957F**\uFF1A\u65F6\u957F\u7531\u6A21\u578B\u4FA7\u63A7\u5236\uFF0C\u63D0\u793A\u8BCD\u4E2D\u4E0D\u5199\u65F6\u957F\u53C2\u6570
+10. **\u955C\u5934\u63CF\u8FF0\u878D\u5165\u53D9\u4E8B**\uFF1A\u4E0D\u7528\u65B9\u62EC\u53F7\u6807\u7B7E\uFF0C\u7528\u5B8C\u6574\u53E5\u5B50\u63CF\u8FF0\u955C\u5934
+11. **\u89C6\u89C9\u98CE\u683C**\u53C2\u8003 Assistant \u4E2D\u7684\u300C\u89C6\u89C9\u98CE\u683C\u7EA6\u675F\u300D\u90E8\u5206\u5185\u5BB9
+
+#### Wan 2.6 \u5B8C\u6574\u793A\u4F8B
+
+**\u793A\u4F8B1\uFF1A\u65E0\u53F0\u8BCD\u5206\u955C**
+
+\u8F93\u5165\uFF1A
+\`\`\`
+\u6A21\u578B\uFF1AWan2.6
+\u8D44\u4EA7\u4FE1\u606F[A001, role, \u6C88\u8F9E], [A003, scene, \u57CE\u697C]
+\`\`\`
+\`\`\`xml
+<storyboardItem videoDesc='\uFF08\u6C88\u8F9E\u72EC\u7ACB\u57CE\u697C\u8FDC\u773A\u82CD\u832B\u5927\u5730\u3001\u57CE\u697C\u3001\u6C88\u8F9E/\u57CE\u697C\u30014s\u3001\u5168\u666F\u3001\u9759\u6B62\u3001\u8D1F\u624B\u800C\u7ACB\u8863\u8882\u968F\u98CE\u98D8\u626C\u3001\u575A\u5B9A\u51B3\u7EDD\u3001\u9EC4\u660F\u51B7\u8C03\u4FA7\u9006\u5149\u3001\u65E0\u53F0\u8BCD\u3001\u98CE\u58F0\u8863\u8882\u58F0\u3001A001/A003\uFF09' prompt='\u5168\u666F\uFF0C\u5E73\u89C6\u7565\u4EF0\uFF0C\u57CE\u697C\u4E4B\u4E0A\uFF0C\u6C88\u8F9E\u8D1F\u624B\u800C\u7ACB\uFF0C\u8863\u8882\u98D8\u626C\uFF0C\u9EC4\u660F\u51B7\u8C03\u4FA7\u9006\u5149...' track='main' duration='4' associateAssetsIds="[&quot;A001&quot;,&quot;A003&quot;]" shouldGenerateImage="true" ></storyboardItem>
+\`\`\`
+
+\u8F93\u51FA\uFF1A
+\`\`\`
+A cinematic epic scene with a cold, desaturn\`ated palette,
+A lone man in dark flowing robes stands atop an ancient city wall, hands clasped behind his back, robes and hair billowing in the wind, gaze fixed on the vast land stretching to the horizon, jaw set firm, eyes unwavering.
+The weathered stone battlements frame the endless expanse below, rolling terrain fading into haze beneath a heavy dusk sky, clouds layered in muted golds and slate greys.
+Cold side-backlight from the setting sun carves a sharp silhouette, long shadows stretching across the stone floor, a faint warm rim outlining the figure against the cool atmosphere.
+No dialogue.
+Wind howling across the open wall, fabric flapping rhythmically.
+Captured in a wide establishing shot from a slightly low angle, static camera, single continuous take.
+\`\`\`
+
+**\u793A\u4F8B2\uFF1A\u6709\u53F0\u8BCD\u5206\u955C**
+
+\u8F93\u5165\uFF1A
+\`\`\`
+\u6A21\u578B\uFF1AWan2.6
+\u8D44\u4EA7\u4FE1\u606F[A001, role, \u6C88\u8F9E], [A002, role, \u82CF\u9526], [A003, scene, \u57CE\u697C]
+\`\`\`
+\`\`\`xml
+<storyboardItem videoDesc='\uFF08\u82CF\u9526\u767B\u4E0A\u57CE\u697C\u8D70\u5411\u6C88\u8F9E\u3001\u57CE\u697C\u3001\u82CF\u9526/\u6C88\u8F9E/\u57CE\u697C\u30014s\u3001\u4E2D\u666F\u3001\u8DDF\u8E2A\u3001\u82CF\u9526\u62FE\u7EA7\u800C\u4E0A\u8D70\u5411\u6C88\u8F9E\u3001\u62C5\u5FE7\u3001\u9EC4\u660F\u4F59\u6656\u6E10\u6697\u3001\u82CF\u9526\u8BF4\uFF1A\u4F60\u53C8\u4E00\u4E2A\u4EBA\u5728\u8FD9\u91CC\u3001\u811A\u6B65\u58F0\u98CE\u58F0\u3001A001/A002/A003\uFF09' prompt='\u4E2D\u666F\uFF0C\u8DDF\u8E2A\uFF0C\u82CF\u9526\u62FE\u7EA7\u800C\u4E0A\u8D70\u5411\u57CE\u697C\u4E0A\u7684\u6C88\u8F9E...' track='main' duration='4' associateAssetsIds="[&quot;A001&quot;,&quot;A002&quot;,&quot;A003&quot;]" shouldGenerateImage="true" ></storyboardItem>
+\`\`\`
+
+\u8F93\u51FA\uFF1A
+\`\`\`
+A melancholic cinematic scene, dusk tones deepening,
+A young woman in a light-colored dress ascends the final stone steps onto the city wall, her gaze locked on the lone figure ahead, brow slightly furrowed, pace slowing as she approaches, lips parting softly.
+The ancient city wall stretches behind her, weathered stairs leading up from below, the distant skyline dimming as the last traces of golden hour fade into twilight.
+Fading warm light mingles with rising cool blue tones, the contrast between the two figures softened by the diffused remnants of sunset.
+"\u4F60\u53C8\u4E00\u4E2A\u4EBA\u5728\u8FD9\u91CC\u3002" \u2014 Su Jin (dialogue).
+Footsteps on stone, wind sweeping across the battlements, fabric rustling.
+A medium tracking shot follows the woman from behind as she ascends and approaches, handheld camera with subtle movement, single continuous take.
+\`\`\`
+
+---
+
+## \u666F\u522B \u2192 \u955C\u5934\u6807\u7B7E\u6620\u5C04
+
+| videoDesc \u4E2D\u7684\u666F\u522B | KlingOmni\uFF08\u82F1\u6587\u6807\u7B7E\uFF09 | Seedance 1.5\uFF08\u82F1\u6587\u6807\u7B7E\uFF09 | Seedance 2.0\uFF08\u4E2D\u6587\u63CF\u8FF0\uFF09 | Wan 2.6\uFF08\u82F1\u6587\u53D9\u4E8B\u5F0F\uFF09 |
+|------|------|------|------|------|
+| \u8FDC\u666F | extreme wide shot | Extreme wide shot | \u8FDC\u666F | an extreme wide shot capturing the vast expanse |
+| \u5168\u666F | wide shot | Wide establishing shot | \u5168\u666F | a wide establishing shot |
+| \u4E2D\u666F | medium shot | Medium shot | \u4E2D\u666F | a medium shot |
+| \u8FD1\u666F | close-up | Close-up | \u8FD1\u666F | a close-up shot |
+| \u7279\u5199 | close-up | Close-up | \u7279\u5199 | a close-up capturing fine detail |
+| \u5927\u7279\u5199 | extreme close-up | Extreme close-up | \u5927\u7279\u5199 | an extreme close-up |
+
+## \u8FD0\u955C \u2192 \u955C\u5934\u6807\u7B7E\u6620\u5C04
+
+| videoDesc \u4E2D\u7684\u8FD0\u955C | KlingOmni\uFF08\u82F1\u6587\u6807\u7B7E\uFF09 | Seedance 1.5\uFF08\u82F1\u6587\u6807\u7B7E\uFF09 | Seedance 2.0\uFF08\u4E2D\u6587\u63CF\u8FF0\uFF09 | Wan 2.6\uFF08\u82F1\u6587\u53D9\u4E8B\u5F0F\uFF09 |
+|------|------|------|------|------|
+| \u9759\u6B62 | static camera | Static, no camera movement | \u955C\u5934\u9759\u6B62 | static camera, locked off |
+| \u63A8\u8FDB | dolly in / push in | Slow dolly forward | \u955C\u5934\u7F13\u6162\u5411\u524D\u63A8\u8FDB | camera slowly pushing in |
+| \u62C9\u8FDC | dolly out / pull back | Slow dolly backward pull | \u955C\u5934\u7F13\u6162\u5411\u540E\u62C9\u8FDC | camera gently pulling back |
+| \u8DDF\u8E2A | tracking shot | Tracking shot, handheld | \u8DDF\u8E2A\u62CD\u6444 | tracking shot following the subject |
+| \u6447\u955C | pan left/right | Slow pan | \u955C\u5934\u7F13\u6162\u6447\u79FB | smooth pan across the scene |
+| \u7529\u955C | whip pan | Whip pan | \u5FEB\u901F\u7529\u955C | whip pan |
+| \u5347\u964D | crane up/down | Crane up/down | \u955C\u5934\u5347\u964D | crane rising / descending |
+| \u73AF\u7ED5 | surround shooting | Orbiting shot | \u73AF\u7ED5\u62CD\u6444 | orbiting around the subject |
+
+---
+
+## \u6267\u884C\u6D41\u7A0B
+
+1. **\u89E3\u6790\u8F93\u5165**\uFF1A\u63D0\u53D6\u6A21\u578B\u540D\u548C\u591A\u53C2\u6807\u5FD7\uFF0C\u6309\u8DEF\u7531\u89C4\u5219\u5339\u914D\u6A21\u5F0F\uFF1B\u63D0\u53D6\u8D44\u4EA7\u5217\u8868
+2. **\u6784\u5EFA @\u56FEN \u7F16\u53F7\u8868**\uFF1A\u8D44\u4EA7\u6309\u8F93\u5165\u987A\u5E8F\u4ECE \`@\u56FE1 \` \u8D77\u7F16\u53F7\uFF0C\u5206\u955C\u56FE\u63A5\u7EED\u7F16\u53F7\uFF1B\`shouldGenerateImage="false"\` \u7684\u5206\u955C\u4E0D\u5206\u914D\u5206\u955C\u56FE\u7F16\u53F7
+3. **\u9010\u6761\u89E3\u6790 \`<storyboardItem>\`**\uFF1A\u6309 videoDesc \u89E3\u6790\u89C4\u5219\u63D0\u53D612\u4E2A\u5B57\u6BB5\uFF0C\u7ED3\u5408 \`duration\`\u3001\`associateAssetsIds\` \u5EFA\u7ACB\u6807\u7B7E\u6620\u5C04
+4. **\u6574\u5408\u4E3A\u4E00\u4E2A\u5B8C\u6574\u7684\u89C6\u9891\u63D0\u793A\u8BCD**\uFF1A\u6309\u76EE\u6807\u6A21\u578B\u683C\u5F0F\u7F16\u6392\u5168\u90E8\u5206\u955C
+5. **\u8F93\u51FA\u89C6\u9891\u63D0\u793A\u8BCD**
+
+---
+
+## \u7EA6\u675F
+
+- **\u4EC5\u8F93\u51FA\u89C6\u9891\u63D0\u793A\u8BCD**\uFF1A\u4E0D\u9644\u52A0\u4EFB\u4F55\u89E3\u91CA\u3001\u6CE8\u91CA\u3001\u5206\u6790\u8FC7\u7A0B\u3001\u63A8\u7406\u6B65\u9AA4\u3001\u6A21\u578B\u5339\u914D\u8BF4\u660E\u3001\u8D44\u4EA7\u7F16\u53F7\u8868\u3001\u5206\u9694\u7EBF\uFF08\`---\`\uFF09\u6216\u989D\u5916\u8BF4\u660E\uFF0C\u53EA\u8F93\u51FA\u89C6\u9891\u63D0\u793A\u8BCD\u6587\u672C\u3002\u7981\u6B62\u5728\u63D0\u793A\u8BCD\u524D\u540E\u8F93\u51FA\u4EFB\u4F55\u975E\u63D0\u793A\u8BCD\u5185\u5BB9
+- **\u4E25\u683C\u9075\u5FAA videoDesc**\uFF08\u5168\u6A21\u5F0F\u901A\u7528\uFF09\uFF1A\u63D0\u793A\u8BCD\u5185\u5BB9\u4E25\u683C\u57FA\u4E8E videoDesc \u4E2D\u7684\u753B\u9762\u63CF\u8FF0\u3001\u65F6\u957F\u3001\u666F\u522B\u3001\u8FD0\u955C\u3001\u89D2\u8272\u52A8\u4F5C\u3001\u60C5\u7EEA\u3001\u5149\u5F71\u6C1B\u56F4\u3001\u53F0\u8BCD\u3001\u97F3\u6548\u5B57\u6BB5\u751F\u6210\uFF0C\u4E0D\u7F16\u9020\u989D\u5916\u5185\u5BB9
+- **\u53F0\u8BCD\u4E0D\u53EF\u7F3A\u5931**\uFF08\u5168\u6A21\u5F0F\u901A\u7528\uFF09\uFF1AvideoDesc \u4E2D\u6709\u53F0\u8BCD\u7684\u5206\u955C\uFF0C\u5FC5\u987B\u5728\u63D0\u793A\u8BCD\u4E2D\u5B8C\u6574\u4F53\u73B0\u53F0\u8BCD\u5185\u5BB9\uFF0C\u4E0D\u5F97\u9057\u6F0F
+- **\u53F0\u8BCD\u4FDD\u6301\u539F\u59CB\u8F93\u5165**\uFF08\u5168\u6A21\u5F0F\u901A\u7528\uFF09\uFF1A\u53F0\u8BCD\u5185\u5BB9\u4E25\u7981\u7FFB\u8BD1\uFF0C\u5FC5\u987B\u4FDD\u6301 videoDesc \u4E2D\u7684\u539F\u59CB\u8BED\u8A00\u539F\u6837\u8F93\u51FA
+- **\u53F0\u8BCD\u7C7B\u578B\u6807\u6CE8**\uFF08\u5168\u6A21\u5F0F\u901A\u7528\uFF09\uFF1A\u5FC5\u987B\u533A\u5206\u666E\u901A\u5BF9\u767D\uFF08dialogue / \u8BF4\uFF09\u3001\u5185\u5FC3\u72EC\u767D\uFF08OS / \u5185\u5FC3OS\uFF09\u3001\u753B\u5916\u97F3\uFF08VO / \u753B\u5916\u97F3VO\uFF09\uFF0C\u5E76\u5728\u63D0\u793A\u8BCD\u4E2D\u6B63\u786E\u6807\u6CE8
+- **\u65F6\u95F4\u8DE8\u5EA6\u6700\u4F4E 1 \u79D2**\uFF08\u5168\u6A21\u5F0F\u901A\u7528\uFF09\uFF1A\u6240\u6709\u6A21\u5F0F\u4E2D\u6D89\u53CA\u65F6\u95F4\u5206\u6BB5\uFF08Motion \u65F6\u95F4\u8F74 / Seedance 2.0 \u5206\u955C\u65F6\u957F {N}s\uFF09\u7684\u6700\u5C0F\u7C92\u5EA6\u4E3A 1 \u79D2\uFF081s\uFF09\uFF0C\u7981\u6B62\u51FA\u73B0 0.5 \u79D2\u7B49\u4F4E\u4E8E 1 \u79D2\u7684\u95F4\u9694
+- **\u89C6\u89C9\u98CE\u683C**\uFF1A\u98CE\u683C\u76F8\u5173\u63CF\u8FF0\u53C2\u8003 Assistant \u4E2D\u7684\u300C\u89C6\u89C9\u98CE\u683C\u7EA6\u675F\u300D\u90E8\u5206\u5185\u5BB9\uFF0C\u4E0D\u5728\u672C Skill \u5185\u81EA\u884C\u5B9A\u4E49\u98CE\u683C
+- **\u4E25\u683C\u6309\u5339\u914D\u5230\u7684\u6A21\u5F0F\u683C\u5F0F**\uFF0C\u4E0D\u6DF7\u7528\u4E0D\u540C\u6A21\u5F0F\u7684\u683C\u5F0F
+- **\u4E0D\u4FEE\u6539\u539F\u59CB\u8F93\u5165**\uFF1A\u4E0D\u6539\u5199 \`<storyboardItem>\` \u7684\u4EFB\u4F55\u5B57\u6BB5\uFF1B\`prompt\` \u5DF2\u6709\u7684\u5206\u955C\u56FE\u63D0\u793A\u8BCD\u4EC5\u4F5C\u753B\u9762\u53C2\u8003
+- **\u4E0D\u7F16\u9020\u8D44\u4EA7\u6216\u53F0\u8BCD**\uFF1A\u53EA\u4F7F\u7528\u8F93\u5165\u4E2D\u7684\u8D44\u4EA7\u4FE1\u606F\uFF1B\u65E0\u53F0\u8BCD\u5219\u6807\u6CE8\u300C\u65E0\u53F0\u8BCD\u300D/ \`No dialogue\`
+- **\u65F6\u957F\u5355\u4F4D**\uFF1ASeedance 2.0 \u7684\u5206\u955C\u65F6\u957F\u76F4\u63A5\u4F7F\u7528\u79D2\uFF0C\u683C\u5F0F\u4E3A \`{N}s\`\uFF08\u5982 \`4s\`\uFF09\uFF0C\u6700\u4F4E 1s
+`
+      });
+      const data2 = await knex2("o_vendorConfig").select("*");
+      for (const item of data2) {
+        let { id, code } = item;
+        const filename = `${id}.ts`;
+        const rootDir = getPath_default("vendor");
+        if (!code && import_fs4.default.existsSync(import_path6.default.join(rootDir, filename))) continue;
+        if (!import_fs4.default.existsSync(rootDir)) import_fs4.default.mkdirSync(rootDir, { recursive: true });
+        if (!import_fs4.default.existsSync(import_path6.default.join(rootDir, filename))) {
+          code = vendorData[filename] || code;
+          code = code ?? "";
+          import_fs4.default.writeFileSync(import_path6.default.join(rootDir, filename), code);
+        }
+      }
+      await dropColumn("o_vendorConfig", "author");
+      await dropColumn("o_vendorConfig", "description");
+      await dropColumn("o_vendorConfig", "name");
+      await dropColumn("o_vendorConfig", "icon");
+      await dropColumn("o_vendorConfig", "inputs");
+      await dropColumn("o_vendorConfig", "createTime");
+      const volcengineVer = getVendorVersion(vendorDir, "volcengine");
+      if (Number(volcengineVer) < 2.3) {
+        writeVendorCode(vendorDir, "volcengine", vendorData["volcengine.ts"]);
+      }
+      const minimaxVer = getVendorVersion(vendorDir, "minimax");
+      if (Number(minimaxVer) < 2.1) {
+        writeVendorCode(vendorDir, "minimax", vendorData["minimax.ts"]);
+      }
+      const klingVer = getVendorVersion(vendorDir, "klingai");
+      if (Number(klingVer) < 2.1) {
+        writeVendorCode(vendorDir, "klingai", vendorData["klingai.ts"]);
+      }
+    };
+  }
+});
+
+// src/utils/db.ts
+function readEnv(name28, fallback = "") {
+  return process.env[name28] ?? process.env[name28.toLowerCase()] ?? fallback;
+}
+function readNumber(name28, fallback) {
+  const value = Number.parseInt(readEnv(name28), 10);
+  return Number.isFinite(value) ? value : fallback;
+}
+function readBoolean(name28, fallback = false) {
+  const value = readEnv(name28);
+  if (!value) return fallback;
+  return ["1", "true", "yes", "on"].includes(value.toLowerCase());
+}
+function resolveDbClient() {
+  const rawClient = readEnv("DB_CLIENT", readEnv("DATABASE_CLIENT", "mysql2")).toLowerCase();
+  if (rawClient === "mysql" || rawClient === "mysql2") return "mysql2";
+  throw new Error(`\u5F53\u524D\u670D\u52A1\u4EC5\u652F\u6301 MySQL \u6570\u636E\u5E93\u5BA2\u6237\u7AEF: ${rawClient}`);
+}
+function getMysqlConnection() {
+  const socketPath = readEnv("MYSQL_SOCKET_PATH", readEnv("DB_SOCKET_PATH"));
+  return {
+    ...socketPath ? { socketPath } : {
+      host: readEnv("MYSQL_HOST", readEnv("DB_HOST", "127.0.0.1")),
+      port: readNumber("MYSQL_PORT", readNumber("DB_PORT", 3306))
+    },
+    user: readEnv("MYSQL_USER", readEnv("DB_USER", "root")),
+    password: readEnv("MYSQL_PASSWORD", readEnv("DB_PASSWORD")),
+    database: readEnv("MYSQL_DATABASE", readEnv("MYSQL_DB", readEnv("DB_DATABASE", readEnv("DB_NAME", "dramastudio")))),
+    charset: readEnv("MYSQL_CHARSET", "utf8mb4"),
+    timezone: readEnv("MYSQL_TIMEZONE", "Z"),
+    supportBigNumbers: true,
+    bigNumberStrings: false
+  };
+}
+function createDbConfig() {
+  const client = resolveDbClient();
+  const connection = getMysqlConnection();
+  const location = connection.socketPath ? `${connection.socketPath}/${connection.database}` : `${connection.host}:${connection.port}/${connection.database}`;
+  console.log("\u6570\u636E\u5E93:", `mysql://${location}`);
+  return {
+    client,
+    connection,
+    pool: {
+      min: 0,
+      max: readNumber("MYSQL_CONNECTION_LIMIT", readNumber("DB_CONNECTION_LIMIT", 10))
+    }
+  };
+}
+async function ensureMysqlDatabase(config3) {
+  const connection = config3.connection;
+  if (!connection?.database) return;
+  const { database, ...serverConnection } = connection;
+  const serverDb = (0, import_knex.default)({
+    client: "mysql2",
+    connection: serverConnection,
+    pool: { min: 0, max: 1 }
+  });
+  try {
+    const rows = normalizeRawRows(
+      await serverDb.raw("SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = ?", [database])
+    );
+    if (!rows.length) {
+      await serverDb.raw("CREATE DATABASE ?? CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci", [database]);
+    }
+  } finally {
+    await serverDb.destroy();
+  }
+}
+async function initKnexType(knexDb) {
+  const { Client: Client2 } = await import("@rmp135/sql-ts");
+  const outFile = "src/types/database.d.ts";
+  const dbClient2 = Client2.fromConfig({
+    interfaceNameFormat: "${table}",
+    typeMap: {
+      number: ["bigint"],
+      string: ["text", "varchar", "char"]
+    }
+  }).fetchDatabase(knexDb);
+  const declarations = await dbClient2.toTypescript();
+  const dbObject = await dbClient2.toObject();
+  const customHeader = `//\u8BE5\u6587\u4EF6\u7531\u811A\u672C\u81EA\u52A8\u751F\u6210\uFF0C\u8BF7\u52FF\u624B\u52A8\u4FEE\u6539`;
+  let declBody = declarations.replace(/^\/\*[\s\S]*?\*\/\s*/, "");
+  declBody = declBody.replace(/(\n\s*)\/\*([^*][\s\S]*?)\*\//g, "$1/**$2*/");
+  const tableInterfaces = dbObject.schemas.flatMap((schema) => schema.tables.map((table) => table.interfaceName));
+  const aggregateTypes = `
+export interface DB {
+${tableInterfaces.map((name28) => `  ${JSON.stringify(name28)}: ${name28};`).join("\n")}
+}
+`;
+  const hashSource = JSON.stringify({
+    tableInterfaces,
+    declBody
+  });
+  const hash4 = import_crypto4.default.createHash("md5").update(hashSource).digest("hex");
+  const content = `// @db-hash ${hash4}
+${customHeader}
+
+` + declBody + aggregateTypes;
+  let needWrite = true;
+  try {
+    const current = await (0, import_promises3.readFile)(outFile, "utf8");
+    const match = current.match(/^\/\/\s*@db-hash\s*([a-zA-Z0-9]+)\n/);
+    const currentHash = match ? match[1] : null;
+    if (currentHash === hash4) {
+      needWrite = false;
+    }
+  } catch (err) {
+    needWrite = true;
+  }
+  if (needWrite) await (0, import_promises3.writeFile)(outFile, content, "utf8");
+}
+var import_promises3, import_knex, import_crypto4, dbConfig, db, dbReady, dbClient, db_default;
+var init_db = __esm({
+  "src/utils/db.ts"() {
+    "use strict";
+    init_env();
+    import_promises3 = require("fs/promises");
+    import_knex = __toESM(require("knex"));
+    init_initDB();
+    import_crypto4 = __toESM(require("crypto"));
+    init_fixDB();
+    init_dbDialect();
+    dbConfig = createDbConfig();
+    db = (0, import_knex.default)(dbConfig);
+    dbReady = (async () => {
+      if (isMysql(db) && readBoolean("MYSQL_AUTO_CREATE_DATABASE")) await ensureMysqlDatabase(dbConfig);
+      await initDB_default(db);
+      await fixDB_default(db);
+      if (process.env.NODE_ENV == "dev") initKnexType(db);
+    })().catch((err) => {
+      console.error("[\u6570\u636E\u5E93\u521D\u59CB\u5316\u5931\u8D25]", err);
+      throw err;
+    });
+    dbClient = Object.assign((table) => db(table), db);
+    dbClient.schema = db.schema;
+    db_default = dbClient;
   }
 });
 
@@ -114713,11 +114725,11 @@ var require_form_data = __commonJS({
     "use strict";
     var CombinedStream = require_combined_stream();
     var util4 = require("util");
-    var path32 = require("path");
+    var path33 = require("path");
     var http6 = require("http");
     var https5 = require("https");
     var parseUrl2 = require("url").parse;
-    var fs32 = require("fs");
+    var fs33 = require("fs");
     var Stream = require("stream").Stream;
     var crypto9 = require("crypto");
     var mime = require_mime_types2();
@@ -114784,7 +114796,7 @@ var require_form_data = __commonJS({
         if (value.end != void 0 && value.end != Infinity && value.start != void 0) {
           callback(null, value.end + 1 - (value.start ? value.start : 0));
         } else {
-          fs32.stat(value.path, function(err, stat) {
+          fs33.stat(value.path, function(err, stat) {
             if (err) {
               callback(err);
               return;
@@ -114841,11 +114853,11 @@ var require_form_data = __commonJS({
     FormData4.prototype._getContentDisposition = function(value, options) {
       var filename;
       if (typeof options.filepath === "string") {
-        filename = path32.normalize(options.filepath).replace(/\\/g, "/");
+        filename = path33.normalize(options.filepath).replace(/\\/g, "/");
       } else if (options.filename || value && (value.name || value.path)) {
-        filename = path32.basename(options.filename || value && (value.name || value.path));
+        filename = path33.basename(options.filename || value && (value.name || value.path));
       } else if (value && value.readable && hasOwn(value, "httpVersion")) {
-        filename = path32.basename(value.client._httpMessage.path || "");
+        filename = path33.basename(value.client._httpMessage.path || "");
       }
       if (filename) {
         return 'filename="' + filename + '"';
@@ -115043,9 +115055,9 @@ function isVisitable(thing) {
 function removeBrackets(key) {
   return utils_default2.endsWith(key, "[]") ? key.slice(0, -2) : key;
 }
-function renderKey(path32, key, dots) {
-  if (!path32) return key;
-  return path32.concat(key).map(function each(token, i) {
+function renderKey(path33, key, dots) {
+  if (!path33) return key;
+  return path33.concat(key).map(function each(token, i) {
     token = removeBrackets(token);
     return !dots && i ? "[" + token + "]" : token;
   }).join(dots ? "." : "");
@@ -115096,13 +115108,13 @@ function toFormData(obj, formData, options) {
     }
     return value;
   }
-  function defaultVisitor(value, key, path32) {
+  function defaultVisitor(value, key, path33) {
     let arr = value;
     if (utils_default2.isReactNative(formData) && utils_default2.isReactNativeBlob(value)) {
-      formData.append(renderKey(path32, key, dots), convertValue(value));
+      formData.append(renderKey(path33, key, dots), convertValue(value));
       return false;
     }
-    if (value && !path32 && typeof value === "object") {
+    if (value && !path33 && typeof value === "object") {
       if (utils_default2.endsWith(key, "{}")) {
         key = metaTokens ? key : key.slice(0, -2);
         value = JSON.stringify(value);
@@ -115121,7 +115133,7 @@ function toFormData(obj, formData, options) {
     if (isVisitable(value)) {
       return true;
     }
-    formData.append(renderKey(path32, key, dots), convertValue(value));
+    formData.append(renderKey(path33, key, dots), convertValue(value));
     return false;
   }
   const stack = [];
@@ -115130,7 +115142,7 @@ function toFormData(obj, formData, options) {
     convertValue,
     isVisitable
   });
-  function build(value, path32, depth = 0) {
+  function build(value, path33, depth = 0) {
     if (utils_default2.isUndefined(value)) return;
     if (depth > maxDepth) {
       throw new AxiosError_default(
@@ -115139,13 +115151,13 @@ function toFormData(obj, formData, options) {
       );
     }
     if (stack.indexOf(value) !== -1) {
-      throw Error("Circular reference detected in " + path32.join("."));
+      throw Error("Circular reference detected in " + path33.join("."));
     }
     stack.push(value);
     utils_default2.forEach(value, function each(el, key) {
-      const result = !(utils_default2.isUndefined(el) || el === null) && visitor.call(formData, el, utils_default2.isString(key) ? key.trim() : key, path32, exposedHelpers);
+      const result = !(utils_default2.isUndefined(el) || el === null) && visitor.call(formData, el, utils_default2.isString(key) ? key.trim() : key, path33, exposedHelpers);
       if (result === true) {
-        build(el, path32 ? path32.concat(key) : [key], depth + 1);
+        build(el, path33 ? path33.concat(key) : [key], depth + 1);
       }
     });
     stack.pop();
@@ -115421,7 +115433,7 @@ var init_platform = __esm({
 // ../../node_modules/.pnpm/axios@1.16.1/node_modules/axios/lib/helpers/toURLEncodedForm.js
 function toURLEncodedForm(data2, options) {
   return toFormData_default(data2, new platform_default.classes.URLSearchParams(), {
-    visitor: function(value, key, path32, helpers) {
+    visitor: function(value, key, path33, helpers) {
       if (platform_default.isNode && utils_default2.isBuffer(value)) {
         this.append(key, value.toString("base64"));
         return false;
@@ -115459,11 +115471,11 @@ function arrayToObject(arr) {
   return obj;
 }
 function formDataToJSON(formData) {
-  function buildPath(path32, value, target, index) {
-    let name28 = path32[index++];
+  function buildPath(path33, value, target, index) {
+    let name28 = path33[index++];
     if (name28 === "__proto__") return true;
     const isNumericKey = Number.isFinite(+name28);
-    const isLast = index >= path32.length;
+    const isLast = index >= path33.length;
     name28 = !name28 && utils_default2.isArray(target) ? target.length : name28;
     if (isLast) {
       if (utils_default2.hasOwnProp(target, name28)) {
@@ -115476,7 +115488,7 @@ function formDataToJSON(formData) {
     if (!utils_default2.hasOwnProp(target, name28) || !utils_default2.isObject(target[name28])) {
       target[name28] = [];
     }
-    const result = buildPath(path32, value, target[name28], index);
+    const result = buildPath(path33, value, target[name28], index);
     if (result && utils_default2.isArray(target[name28])) {
       target[name28] = arrayToObject(target[name28]);
     }
@@ -118015,9 +118027,9 @@ var init_http2 = __esm({
           auth = urlUsername + ":" + urlPassword;
         }
         auth && headers.delete("authorization");
-        let path32;
+        let path33;
         try {
-          path32 = buildURL(
+          path33 = buildURL(
             parsed.pathname + parsed.search,
             config3.params,
             config3.paramsSerializer
@@ -118035,7 +118047,7 @@ var init_http2 = __esm({
           false
         );
         const options = Object.assign(/* @__PURE__ */ Object.create(null), {
-          path: path32,
+          path: path33,
           method,
           headers: toByteStringHeaderObject(headers),
           agents: { http: config3.httpAgent, https: config3.httpsAgent },
@@ -118393,14 +118405,14 @@ var init_cookies = __esm({
     cookies_default = platform_default.hasStandardBrowserEnv ? (
       // Standard browser envs support document.cookie
       {
-        write(name28, value, expires, path32, domain3, secure, sameSite) {
+        write(name28, value, expires, path33, domain3, secure, sameSite) {
           if (typeof document === "undefined") return;
           const cookie = [`${name28}=${encodeURIComponent(value)}`];
           if (utils_default2.isNumber(expires)) {
             cookie.push(`expires=${new Date(expires).toUTCString()}`);
           }
-          if (utils_default2.isString(path32)) {
-            cookie.push(`path=${path32}`);
+          if (utils_default2.isString(path33)) {
+            cookie.push(`path=${path33}`);
           }
           if (utils_default2.isString(domain3)) {
             cookie.push(`domain=${domain3}`);
@@ -131776,8 +131788,8 @@ var require_JSXTransformer = __commonJS({
         }
         if (this.isAutomaticRuntime) {
           if (this.importProcessor) {
-            for (const [path32, resolvedName] of Object.entries(this.cjsAutomaticModuleNameResolutions)) {
-              prefix += `var ${resolvedName} = require("${path32}");`;
+            for (const [path33, resolvedName] of Object.entries(this.cjsAutomaticModuleNameResolutions)) {
+              prefix += `var ${resolvedName} = require("${path33}");`;
             }
           } else {
             const { createElement: createElementResolution, ...otherResolutions } = this.esmAutomaticImportNameResolutions;
@@ -131970,11 +131982,11 @@ var require_JSXTransformer = __commonJS({
       }
       claimAutoImportedName(funcName, importPathSuffix) {
         if (this.importProcessor) {
-          const path32 = this.jsxImportSource + importPathSuffix;
-          if (!this.cjsAutomaticModuleNameResolutions[path32]) {
-            this.cjsAutomaticModuleNameResolutions[path32] = this.importProcessor.getFreeIdentifierForPath(path32);
+          const path33 = this.jsxImportSource + importPathSuffix;
+          if (!this.cjsAutomaticModuleNameResolutions[path33]) {
+            this.cjsAutomaticModuleNameResolutions[path33] = this.importProcessor.getFreeIdentifierForPath(path33);
           }
-          return `${this.cjsAutomaticModuleNameResolutions[path32]}.${funcName}`;
+          return `${this.cjsAutomaticModuleNameResolutions[path33]}.${funcName}`;
         } else {
           if (!this.esmAutomaticImportNameResolutions[funcName]) {
             this.esmAutomaticImportNameResolutions[funcName] = this.nameManager.claimFreeName(
@@ -132410,7 +132422,7 @@ var require_CJSImportProcessor = __commonJS({
        */
       pruneTypeOnlyImports() {
         this.nonTypeIdentifiers = _getNonTypeIdentifiers.getNonTypeIdentifiers.call(void 0, this.tokens, this.options);
-        for (const [path32, importInfo] of this.importInfoByPath.entries()) {
+        for (const [path33, importInfo] of this.importInfoByPath.entries()) {
           if (importInfo.hasBareImport || importInfo.hasStarExport || importInfo.exportStarNames.length > 0 || importInfo.namedExports.length > 0) {
             continue;
           }
@@ -132420,7 +132432,7 @@ var require_CJSImportProcessor = __commonJS({
             ...importInfo.namedImports.map(({ localName }) => localName)
           ];
           if (names.every((name28) => this.shouldAutomaticallyElideImportedName(name28))) {
-            this.importsToReplace.set(path32, "");
+            this.importsToReplace.set(path33, "");
           }
         }
       }
@@ -132428,7 +132440,7 @@ var require_CJSImportProcessor = __commonJS({
         return this.isTypeScriptTransformEnabled && !this.keepUnusedImports && !this.nonTypeIdentifiers.has(name28);
       }
       generateImportReplacements() {
-        for (const [path32, importInfo] of this.importInfoByPath.entries()) {
+        for (const [path33, importInfo] of this.importInfoByPath.entries()) {
           const {
             defaultNames,
             wildcardNames,
@@ -132438,17 +132450,17 @@ var require_CJSImportProcessor = __commonJS({
             hasStarExport
           } = importInfo;
           if (defaultNames.length === 0 && wildcardNames.length === 0 && namedImports.length === 0 && namedExports.length === 0 && exportStarNames.length === 0 && !hasStarExport) {
-            this.importsToReplace.set(path32, `require('${path32}');`);
+            this.importsToReplace.set(path33, `require('${path33}');`);
             continue;
           }
-          const primaryImportName = this.getFreeIdentifierForPath(path32);
+          const primaryImportName = this.getFreeIdentifierForPath(path33);
           let secondaryImportName;
           if (this.enableLegacyTypeScriptModuleInterop) {
             secondaryImportName = primaryImportName;
           } else {
-            secondaryImportName = wildcardNames.length > 0 ? wildcardNames[0] : this.getFreeIdentifierForPath(path32);
+            secondaryImportName = wildcardNames.length > 0 ? wildcardNames[0] : this.getFreeIdentifierForPath(path33);
           }
-          let requireCode = `var ${primaryImportName} = require('${path32}');`;
+          let requireCode = `var ${primaryImportName} = require('${path33}');`;
           if (wildcardNames.length > 0) {
             for (const wildcardName of wildcardNames) {
               const moduleExpr = this.enableLegacyTypeScriptModuleInterop ? primaryImportName : `${this.helperManager.getHelperName("interopRequireWildcard")}(${primaryImportName})`;
@@ -132476,7 +132488,7 @@ var require_CJSImportProcessor = __commonJS({
               "createStarExport"
             )}(${primaryImportName});`;
           }
-          this.importsToReplace.set(path32, requireCode);
+          this.importsToReplace.set(path33, requireCode);
           for (const defaultName of defaultNames) {
             this.identifierReplacements.set(defaultName, `${secondaryImportName}.default`);
           }
@@ -132485,8 +132497,8 @@ var require_CJSImportProcessor = __commonJS({
           }
         }
       }
-      getFreeIdentifierForPath(path32) {
-        const components = path32.split("/");
+      getFreeIdentifierForPath(path33) {
+        const components = path33.split("/");
         const lastComponent = components[components.length - 1];
         const baseName = lastComponent.replace(/\W/g, "");
         return this.nameManager.claimFreeName(`_${baseName}`);
@@ -132531,8 +132543,8 @@ var require_CJSImportProcessor = __commonJS({
         if (!this.tokens.matches1AtIndex(index, _types.TokenType.string)) {
           throw new Error("Expected string token at the end of import statement.");
         }
-        const path32 = this.tokens.stringValueAtIndex(index);
-        const importInfo = this.getImportInfo(path32);
+        const path33 = this.tokens.stringValueAtIndex(index);
+        const importInfo = this.getImportInfo(path33);
         importInfo.defaultNames.push(...defaultNames);
         importInfo.wildcardNames.push(...wildcardNames);
         importInfo.namedImports.push(...namedImports);
@@ -132599,8 +132611,8 @@ var require_CJSImportProcessor = __commonJS({
         if (!this.tokens.matches1AtIndex(index, _types.TokenType.string)) {
           throw new Error("Expected string token at the end of import statement.");
         }
-        const path32 = this.tokens.stringValueAtIndex(index);
-        const importInfo = this.getImportInfo(path32);
+        const path33 = this.tokens.stringValueAtIndex(index);
+        const importInfo = this.getImportInfo(path33);
         importInfo.namedExports.push(...namedImports);
       }
       preprocessExportStarAtIndex(index) {
@@ -132615,8 +132627,8 @@ var require_CJSImportProcessor = __commonJS({
         if (!this.tokens.matches1AtIndex(index, _types.TokenType.string)) {
           throw new Error("Expected string token at the end of star export statement.");
         }
-        const path32 = this.tokens.stringValueAtIndex(index);
-        const importInfo = this.getImportInfo(path32);
+        const path33 = this.tokens.stringValueAtIndex(index);
+        const importInfo = this.getImportInfo(path33);
         if (exportedName !== null) {
           importInfo.exportStarNames.push(exportedName);
         } else {
@@ -132656,8 +132668,8 @@ var require_CJSImportProcessor = __commonJS({
        * Get a mutable import info object for this path, creating one if it doesn't
        * exist yet.
        */
-      getImportInfo(path32) {
-        const existingInfo = this.importInfoByPath.get(path32);
+      getImportInfo(path33) {
+        const existingInfo = this.importInfoByPath.get(path33);
         if (existingInfo) {
           return existingInfo;
         }
@@ -132670,7 +132682,7 @@ var require_CJSImportProcessor = __commonJS({
           exportStarNames: [],
           hasStarExport: false
         };
-        this.importInfoByPath.set(path32, newInfo);
+        this.importInfoByPath.set(path33, newInfo);
         return newInfo;
       }
       addExportBinding(localName, exportedName) {
@@ -133210,16 +133222,16 @@ var require_resolve_uri_umd = __commonJS({
       }
       function parseFileUrl(input) {
         const match = fileRegex.exec(input);
-        const path32 = match[2];
-        return makeUrl("file:", "", match[1] || "", "", isAbsolutePath(path32) ? path32 : "/" + path32, match[3] || "", match[4] || "");
+        const path33 = match[2];
+        return makeUrl("file:", "", match[1] || "", "", isAbsolutePath(path33) ? path33 : "/" + path33, match[3] || "", match[4] || "");
       }
-      function makeUrl(scheme, user, host, port, path32, query, hash4) {
+      function makeUrl(scheme, user, host, port, path33, query, hash4) {
         return {
           scheme,
           user,
           host,
           port,
-          path: path32,
+          path: path33,
           query,
           hash: hash4,
           type: 7
@@ -133249,11 +133261,11 @@ var require_resolve_uri_umd = __commonJS({
         url4.type = input ? input.startsWith("?") ? 3 : input.startsWith("#") ? 2 : 4 : 1;
         return url4;
       }
-      function stripPathFilename(path32) {
-        if (path32.endsWith("/.."))
-          return path32;
-        const index = path32.lastIndexOf("/");
-        return path32.slice(0, index + 1);
+      function stripPathFilename(path33) {
+        if (path33.endsWith("/.."))
+          return path33;
+        const index = path33.lastIndexOf("/");
+        return path33.slice(0, index + 1);
       }
       function mergePaths(url4, base) {
         normalizePath(base, base.type);
@@ -133291,14 +133303,14 @@ var require_resolve_uri_umd = __commonJS({
           pieces[pointer++] = piece;
           positive++;
         }
-        let path32 = "";
+        let path33 = "";
         for (let i = 1; i < pointer; i++) {
-          path32 += "/" + pieces[i];
+          path33 += "/" + pieces[i];
         }
-        if (!path32 || addTrailingSlash && !path32.endsWith("/..")) {
-          path32 += "/";
+        if (!path33 || addTrailingSlash && !path33.endsWith("/..")) {
+          path33 += "/";
         }
-        url4.path = path32;
+        url4.path = path33;
       }
       function resolve3(input, base) {
         if (!input && !base)
@@ -133339,13 +133351,13 @@ var require_resolve_uri_umd = __commonJS({
           case 3:
             return queryHash;
           case 4: {
-            const path32 = url4.path.slice(1);
-            if (!path32)
+            const path33 = url4.path.slice(1);
+            if (!path33)
               return queryHash || ".";
-            if (isRelative(base || input) && !isRelative(path32)) {
-              return "./" + path32 + queryHash;
+            if (isRelative(base || input) && !isRelative(path33)) {
+              return "./" + path33 + queryHash;
             }
-            return path32 + queryHash;
+            return path33 + queryHash;
           }
           case 5:
             return url4.path + queryHash;
@@ -133445,10 +133457,10 @@ var require_trace_mapping_umd = __commonJS({
       module3.exports = __toCommonJS2(trace_mapping_exports);
       var import_sourcemap_codec = __toESM2(require_sourcemap_codec());
       var import_resolve_uri = __toESM2(require_resolve_uri());
-      function stripFilename(path32) {
-        if (!path32) return "";
-        const index = path32.lastIndexOf("/");
-        return path32.slice(0, index + 1);
+      function stripFilename(path33) {
+        if (!path33) return "";
+        const index = path33.lastIndexOf("/");
+        return path33.slice(0, index + 1);
       }
       function resolver(mapUrl, sourceRoot) {
         const from = stripFilename(mapUrl);
@@ -134657,9 +134669,9 @@ var require_util5 = __commonJS({
       /** @class */
       (function(_super) {
         __extends2(VError2, _super);
-        function VError2(path32, message) {
+        function VError2(path33, message) {
           var _this = _super.call(this, message) || this;
-          _this.path = path32;
+          _this.path = path33;
           Object.setPrototypeOf(_this, VError2.prototype);
           return _this;
         }
@@ -134719,26 +134731,26 @@ var require_util5 = __commonJS({
             (_b27 = this._messages).push.apply(_b27, best._messages);
           }
         };
-        DetailContext2.prototype.getError = function(path32) {
+        DetailContext2.prototype.getError = function(path33) {
           var msgParts = [];
           for (var i = this._propNames.length - 1; i >= 0; i--) {
             var p3 = this._propNames[i];
-            path32 += typeof p3 === "number" ? "[" + p3 + "]" : p3 ? "." + p3 : "";
+            path33 += typeof p3 === "number" ? "[" + p3 + "]" : p3 ? "." + p3 : "";
             var m = this._messages[i];
             if (m) {
-              msgParts.push(path32 + " " + m);
+              msgParts.push(path33 + " " + m);
             }
           }
-          return new VError(path32, msgParts.join("; "));
+          return new VError(path33, msgParts.join("; "));
         };
-        DetailContext2.prototype.getErrorDetail = function(path32) {
+        DetailContext2.prototype.getErrorDetail = function(path33) {
           var details = [];
           for (var i = this._propNames.length - 1; i >= 0; i--) {
             var p3 = this._propNames[i];
-            path32 += typeof p3 === "number" ? "[" + p3 + "]" : p3 ? "." + p3 : "";
+            path33 += typeof p3 === "number" ? "[" + p3 + "]" : p3 ? "." + p3 : "";
             var message = this._messages[i];
             if (message) {
-              details.push({ path: path32, message });
+              details.push({ path: path33, message });
             }
           }
           var detail = null;
@@ -135551,8 +135563,8 @@ var require_dist7 = __commonJS({
           this.checkerPlain = this.ttype.getChecker(suite, false);
           this.checkerStrict = this.ttype.getChecker(suite, true);
         }
-        Checker2.prototype.setReportedPath = function(path32) {
-          this._path = path32;
+        Checker2.prototype.setReportedPath = function(path33) {
+          this._path = path33;
         };
         Checker2.prototype.check = function(value) {
           return this._doCheck(this.checkerPlain, value);
@@ -140985,9 +140997,9 @@ var require_CJSImportTransformer = __commonJS({
         if (shouldElideImport) {
           this.tokens.removeToken();
         } else {
-          const path32 = this.tokens.stringValue();
-          this.tokens.replaceTokenTrimmingLeftWhitespace(this.importProcessor.claimImportCode(path32));
-          this.tokens.appendCode(this.importProcessor.claimImportCode(path32));
+          const path33 = this.tokens.stringValue();
+          this.tokens.replaceTokenTrimmingLeftWhitespace(this.importProcessor.claimImportCode(path33));
+          this.tokens.appendCode(this.importProcessor.claimImportCode(path33));
         }
         _removeMaybeImportAttributes.removeMaybeImportAttributes.call(void 0, this.tokens);
         if (this.tokens.matches1(_types.TokenType.semi)) {
@@ -141567,8 +141579,8 @@ var require_CJSImportTransformer = __commonJS({
         }
         if (this.tokens.matchesContextual(_keywords.ContextualKeyword._from)) {
           this.tokens.removeToken();
-          const path32 = this.tokens.stringValue();
-          this.tokens.replaceTokenTrimmingLeftWhitespace(this.importProcessor.claimImportCode(path32));
+          const path33 = this.tokens.stringValue();
+          this.tokens.replaceTokenTrimmingLeftWhitespace(this.importProcessor.claimImportCode(path33));
           _removeMaybeImportAttributes.removeMaybeImportAttributes.call(void 0, this.tokens);
         } else {
           this.tokens.appendCode(exportStatements.join(" "));
@@ -141582,8 +141594,8 @@ var require_CJSImportTransformer = __commonJS({
         while (!this.tokens.matches1(_types.TokenType.string)) {
           this.tokens.removeToken();
         }
-        const path32 = this.tokens.stringValue();
-        this.tokens.replaceTokenTrimmingLeftWhitespace(this.importProcessor.claimImportCode(path32));
+        const path33 = this.tokens.stringValue();
+        this.tokens.replaceTokenTrimmingLeftWhitespace(this.importProcessor.claimImportCode(path33));
         _removeMaybeImportAttributes.removeMaybeImportAttributes.call(void 0, this.tokens);
         if (this.tokens.matches1(_types.TokenType.semi)) {
           this.tokens.removeToken();
@@ -144205,10 +144217,10 @@ function mergeDefs(...defs) {
 function cloneDef(schema) {
   return mergeDefs(schema._zod.def);
 }
-function getElementAtPath(obj, path32) {
-  if (!path32)
+function getElementAtPath(obj, path33) {
+  if (!path33)
     return obj;
-  return path32.reduce((acc, key) => acc?.[key], obj);
+  return path33.reduce((acc, key) => acc?.[key], obj);
 }
 function promiseAllObject(promisesObj) {
   const keys = Object.keys(promisesObj);
@@ -144536,11 +144548,11 @@ function explicitlyAborted(x, startIndex = 0) {
   }
   return false;
 }
-function prefixIssues(path32, issues) {
+function prefixIssues(path33, issues) {
   return issues.map((iss) => {
     var _a31;
     (_a31 = iss).path ?? (_a31.path = []);
-    iss.path.unshift(path32);
+    iss.path.unshift(path33);
     return iss;
   });
 }
@@ -144758,16 +144770,16 @@ function flattenError(error75, mapper = (issue3) => issue3.message) {
 }
 function formatError(error75, mapper = (issue3) => issue3.message) {
   const fieldErrors = { _errors: [] };
-  const processError = (error76, path32 = []) => {
+  const processError = (error76, path33 = []) => {
     for (const issue3 of error76.issues) {
       if (issue3.code === "invalid_union" && issue3.errors.length) {
-        issue3.errors.map((issues) => processError({ issues }, [...path32, ...issue3.path]));
+        issue3.errors.map((issues) => processError({ issues }, [...path33, ...issue3.path]));
       } else if (issue3.code === "invalid_key") {
-        processError({ issues: issue3.issues }, [...path32, ...issue3.path]);
+        processError({ issues: issue3.issues }, [...path33, ...issue3.path]);
       } else if (issue3.code === "invalid_element") {
-        processError({ issues: issue3.issues }, [...path32, ...issue3.path]);
+        processError({ issues: issue3.issues }, [...path33, ...issue3.path]);
       } else {
-        const fullpath = [...path32, ...issue3.path];
+        const fullpath = [...path33, ...issue3.path];
         if (fullpath.length === 0) {
           fieldErrors._errors.push(mapper(issue3));
         } else {
@@ -144794,17 +144806,17 @@ function formatError(error75, mapper = (issue3) => issue3.message) {
 }
 function treeifyError(error75, mapper = (issue3) => issue3.message) {
   const result = { errors: [] };
-  const processError = (error76, path32 = []) => {
+  const processError = (error76, path33 = []) => {
     var _a31, _b27;
     for (const issue3 of error76.issues) {
       if (issue3.code === "invalid_union" && issue3.errors.length) {
-        issue3.errors.map((issues) => processError({ issues }, [...path32, ...issue3.path]));
+        issue3.errors.map((issues) => processError({ issues }, [...path33, ...issue3.path]));
       } else if (issue3.code === "invalid_key") {
-        processError({ issues: issue3.issues }, [...path32, ...issue3.path]);
+        processError({ issues: issue3.issues }, [...path33, ...issue3.path]);
       } else if (issue3.code === "invalid_element") {
-        processError({ issues: issue3.issues }, [...path32, ...issue3.path]);
+        processError({ issues: issue3.issues }, [...path33, ...issue3.path]);
       } else {
-        const fullpath = [...path32, ...issue3.path];
+        const fullpath = [...path33, ...issue3.path];
         if (fullpath.length === 0) {
           result.errors.push(mapper(issue3));
           continue;
@@ -144836,8 +144848,8 @@ function treeifyError(error75, mapper = (issue3) => issue3.message) {
 }
 function toDotPath(_path) {
   const segs = [];
-  const path32 = _path.map((seg) => typeof seg === "object" ? seg.key : seg);
-  for (const seg of path32) {
+  const path33 = _path.map((seg) => typeof seg === "object" ? seg.key : seg);
+  for (const seg of path33) {
     if (typeof seg === "number")
       segs.push(`[${seg}]`);
     else if (typeof seg === "symbol")
@@ -158340,13 +158352,13 @@ function resolveRef(ref, ctx) {
   if (!ref.startsWith("#")) {
     throw new Error("External $ref is not supported, only local refs (#/...) are allowed");
   }
-  const path32 = ref.slice(1).split("/").filter(Boolean);
-  if (path32.length === 0) {
+  const path33 = ref.slice(1).split("/").filter(Boolean);
+  if (path33.length === 0) {
     return ctx.rootSchema;
   }
   const defsKey = ctx.version === "draft-2020-12" ? "$defs" : "definitions";
-  if (path32[0] === defsKey) {
-    const key = path32[1];
+  if (path33[0] === defsKey) {
+    const key = path33[1];
     if (!key || !ctx.defs[key]) {
       throw new Error(`Reference not found: ${ref}`);
     }
@@ -159535,8 +159547,8 @@ var init_parseUtil = __esm({
     init_errors3();
     init_en2();
     makeIssue = (params) => {
-      const { data: data2, path: path32, errorMaps, issueData } = params;
-      const fullPath = [...path32, ...issueData.path || []];
+      const { data: data2, path: path33, errorMaps, issueData } = params;
+      const fullPath = [...path33, ...issueData.path || []];
       const fullIssue = {
         ...issueData,
         path: fullPath
@@ -159819,11 +159831,11 @@ var init_types = __esm({
     init_parseUtil();
     init_util3();
     ParseInputLazyPath = class {
-      constructor(parent, value, path32, key) {
+      constructor(parent, value, path33, key) {
         this._cachedPath = [];
         this.parent = parent;
         this.data = value;
-        this._path = path32;
+        this._path = path33;
         this._key = key;
       }
       get path() {
@@ -167239,37 +167251,37 @@ function createOpenAI(options = {}) {
   );
   const createChatModel = (modelId) => new OpenAIChatLanguageModel(modelId, {
     provider: `${providerName}.chat`,
-    url: ({ path: path32 }) => `${baseURL}${path32}`,
+    url: ({ path: path33 }) => `${baseURL}${path33}`,
     headers: getHeaders,
     fetch: options.fetch
   });
   const createCompletionModel = (modelId) => new OpenAICompletionLanguageModel(modelId, {
     provider: `${providerName}.completion`,
-    url: ({ path: path32 }) => `${baseURL}${path32}`,
+    url: ({ path: path33 }) => `${baseURL}${path33}`,
     headers: getHeaders,
     fetch: options.fetch
   });
   const createEmbeddingModel = (modelId) => new OpenAIEmbeddingModel(modelId, {
     provider: `${providerName}.embedding`,
-    url: ({ path: path32 }) => `${baseURL}${path32}`,
+    url: ({ path: path33 }) => `${baseURL}${path33}`,
     headers: getHeaders,
     fetch: options.fetch
   });
   const createImageModel = (modelId) => new OpenAIImageModel(modelId, {
     provider: `${providerName}.image`,
-    url: ({ path: path32 }) => `${baseURL}${path32}`,
+    url: ({ path: path33 }) => `${baseURL}${path33}`,
     headers: getHeaders,
     fetch: options.fetch
   });
   const createTranscriptionModel = (modelId) => new OpenAITranscriptionModel(modelId, {
     provider: `${providerName}.transcription`,
-    url: ({ path: path32 }) => `${baseURL}${path32}`,
+    url: ({ path: path33 }) => `${baseURL}${path33}`,
     headers: getHeaders,
     fetch: options.fetch
   });
   const createSpeechModel = (modelId) => new OpenAISpeechModel(modelId, {
     provider: `${providerName}.speech`,
-    url: ({ path: path32 }) => `${baseURL}${path32}`,
+    url: ({ path: path33 }) => `${baseURL}${path33}`,
     headers: getHeaders,
     fetch: options.fetch
   });
@@ -167284,7 +167296,7 @@ function createOpenAI(options = {}) {
   const createResponsesModel = (modelId) => {
     return new OpenAIResponsesLanguageModel(modelId, {
       provider: `${providerName}.responses`,
-      url: ({ path: path32 }) => `${baseURL}${path32}`,
+      url: ({ path: path33 }) => `${baseURL}${path33}`,
       headers: getHeaders,
       fetch: options.fetch,
       fileIdPrefixes: ["file-"]
@@ -172757,7 +172769,7 @@ function createDeepSeek(options = {}) {
   const createLanguageModel = (modelId) => {
     return new DeepSeekChatLanguageModel(modelId, {
       provider: `deepseek.chat`,
-      url: ({ path: path32 }) => `${baseURL}${path32}`,
+      url: ({ path: path33 }) => `${baseURL}${path33}`,
       headers: getHeaders,
       fetch: options.fetch
     });
@@ -174287,10 +174299,10 @@ function mergeDefs2(...defs) {
 function cloneDef2(schema) {
   return mergeDefs2(schema._zod.def);
 }
-function getElementAtPath2(obj, path32) {
-  if (!path32)
+function getElementAtPath2(obj, path33) {
+  if (!path33)
     return obj;
-  return path32.reduce((acc, key) => acc == null ? void 0 : acc[key], obj);
+  return path33.reduce((acc, key) => acc == null ? void 0 : acc[key], obj);
 }
 function promiseAllObject2(promisesObj) {
   const keys = Object.keys(promisesObj);
@@ -174603,12 +174615,12 @@ function aborted2(x, startIndex = 0) {
   }
   return false;
 }
-function prefixIssues2(path32, issues) {
+function prefixIssues2(path33, issues) {
   return issues.map((iss) => {
     var _a47;
     var _a37;
     (_a47 = (_a37 = iss).path) != null ? _a47 : _a37.path = [];
-    iss.path.unshift(path32);
+    iss.path.unshift(path33);
     return iss;
   });
 }
@@ -174768,7 +174780,7 @@ function formatError2(error482, mapper = (issue22) => issue22.message) {
 }
 function treeifyError2(error482, mapper = (issue22) => issue22.message) {
   const result = { errors: [] };
-  const processError = (error492, path32 = []) => {
+  const processError = (error492, path33 = []) => {
     var _a47, _b27, _c, _d;
     var _a37, _b28;
     for (const issue22 of error492.issues) {
@@ -174779,7 +174791,7 @@ function treeifyError2(error482, mapper = (issue22) => issue22.message) {
       } else if (issue22.code === "invalid_element") {
         processError({ issues: issue22.issues }, issue22.path);
       } else {
-        const fullpath = [...path32, ...issue22.path];
+        const fullpath = [...path33, ...issue22.path];
         if (fullpath.length === 0) {
           result.errors.push(mapper(issue22));
           continue;
@@ -174811,8 +174823,8 @@ function treeifyError2(error482, mapper = (issue22) => issue22.message) {
 }
 function toDotPath2(_path) {
   const segs = [];
-  const path32 = _path.map((seg) => typeof seg === "object" ? seg.key : seg);
-  for (const seg of path32) {
+  const path33 = _path.map((seg) => typeof seg === "object" ? seg.key : seg);
+  for (const seg of path33) {
     if (typeof seg === "number")
       segs.push(`[${seg}]`);
     else if (typeof seg === "symbol")
@@ -177432,13 +177444,13 @@ function resolveRef2(ref, ctx) {
   if (!ref.startsWith("#")) {
     throw new Error("External $ref is not supported, only local refs (#/...) are allowed");
   }
-  const path32 = ref.slice(1).split("/").filter(Boolean);
-  if (path32.length === 0) {
+  const path33 = ref.slice(1).split("/").filter(Boolean);
+  if (path33.length === 0) {
     return ctx.rootSchema;
   }
   const defsKey = ctx.version === "draft-2020-12" ? "$defs" : "definitions";
-  if (path32[0] === defsKey) {
-    const key = path32[1];
+  if (path33[0] === defsKey) {
+    const key = path33[1];
     if (!key || !ctx.defs[key]) {
       throw new Error(`Reference not found: ${ref}`);
     }
@@ -178003,7 +178015,7 @@ function createZhipu(options = {}) {
   });
   const createImageModel = (modelId) => new ZhipuImageModel(modelId, {
     provider: "zhipu.image",
-    url: ({ path: path32 }) => `${baseURL}${path32}`,
+    url: ({ path: path33 }) => `${baseURL}${path33}`,
     headers: getHeaders,
     fetch: options.fetch,
     _internal: {
@@ -189537,10 +189549,10 @@ var require_util6 = __commonJS({
     function cloneDef3(schema) {
       return mergeDefs3(schema._zod.def);
     }
-    function getElementAtPath3(obj, path32) {
-      if (!path32)
+    function getElementAtPath3(obj, path33) {
+      if (!path33)
         return obj;
-      return path32.reduce((acc, key) => acc?.[key], obj);
+      return path33.reduce((acc, key) => acc?.[key], obj);
     }
     function promiseAllObject3(promisesObj) {
       const keys = Object.keys(promisesObj);
@@ -189950,11 +189962,11 @@ var require_util6 = __commonJS({
       }
       return false;
     }
-    function prefixIssues3(path32, issues) {
+    function prefixIssues3(path33, issues) {
       return issues.map((iss) => {
         var _a31;
         (_a31 = iss).path ?? (_a31.path = []);
-        iss.path.unshift(path32);
+        iss.path.unshift(path33);
         return iss;
       });
     }
@@ -190143,16 +190155,16 @@ var require_errors = __commonJS({
     }
     function formatError4(error75, mapper = (issue3) => issue3.message) {
       const fieldErrors = { _errors: [] };
-      const processError = (error76, path32 = []) => {
+      const processError = (error76, path33 = []) => {
         for (const issue3 of error76.issues) {
           if (issue3.code === "invalid_union" && issue3.errors.length) {
-            issue3.errors.map((issues) => processError({ issues }, [...path32, ...issue3.path]));
+            issue3.errors.map((issues) => processError({ issues }, [...path33, ...issue3.path]));
           } else if (issue3.code === "invalid_key") {
-            processError({ issues: issue3.issues }, [...path32, ...issue3.path]);
+            processError({ issues: issue3.issues }, [...path33, ...issue3.path]);
           } else if (issue3.code === "invalid_element") {
-            processError({ issues: issue3.issues }, [...path32, ...issue3.path]);
+            processError({ issues: issue3.issues }, [...path33, ...issue3.path]);
           } else {
-            const fullpath = [...path32, ...issue3.path];
+            const fullpath = [...path33, ...issue3.path];
             if (fullpath.length === 0) {
               fieldErrors._errors.push(mapper(issue3));
             } else {
@@ -190179,17 +190191,17 @@ var require_errors = __commonJS({
     }
     function treeifyError3(error75, mapper = (issue3) => issue3.message) {
       const result = { errors: [] };
-      const processError = (error76, path32 = []) => {
+      const processError = (error76, path33 = []) => {
         var _a31, _b27;
         for (const issue3 of error76.issues) {
           if (issue3.code === "invalid_union" && issue3.errors.length) {
-            issue3.errors.map((issues) => processError({ issues }, [...path32, ...issue3.path]));
+            issue3.errors.map((issues) => processError({ issues }, [...path33, ...issue3.path]));
           } else if (issue3.code === "invalid_key") {
-            processError({ issues: issue3.issues }, [...path32, ...issue3.path]);
+            processError({ issues: issue3.issues }, [...path33, ...issue3.path]);
           } else if (issue3.code === "invalid_element") {
-            processError({ issues: issue3.issues }, [...path32, ...issue3.path]);
+            processError({ issues: issue3.issues }, [...path33, ...issue3.path]);
           } else {
-            const fullpath = [...path32, ...issue3.path];
+            const fullpath = [...path33, ...issue3.path];
             if (fullpath.length === 0) {
               result.errors.push(mapper(issue3));
               continue;
@@ -190221,8 +190233,8 @@ var require_errors = __commonJS({
     }
     function toDotPath3(_path) {
       const segs = [];
-      const path32 = _path.map((seg) => typeof seg === "object" ? seg.key : seg);
-      for (const seg of path32) {
+      const path33 = _path.map((seg) => typeof seg === "object" ? seg.key : seg);
+      for (const seg of path33) {
         if (typeof seg === "number")
           segs.push(`[${seg}]`);
         else if (typeof seg === "symbol")
@@ -205554,13 +205566,13 @@ var require_from_json_schema = __commonJS({
       if (!ref.startsWith("#")) {
         throw new Error("External $ref is not supported, only local refs (#/...) are allowed");
       }
-      const path32 = ref.slice(1).split("/").filter(Boolean);
-      if (path32.length === 0) {
+      const path33 = ref.slice(1).split("/").filter(Boolean);
+      if (path33.length === 0) {
         return ctx.rootSchema;
       }
       const defsKey = ctx.version === "draft-2020-12" ? "$defs" : "definitions";
-      if (path32[0] === defsKey) {
-        const key = path32[1];
+      if (path33[0] === defsKey) {
+        const key = path33[1];
         if (!key || !ctx.defs[key]) {
           throw new Error(`Reference not found: ${ref}`);
         }
@@ -206611,8 +206623,8 @@ var require_parseUtil = __commonJS({
     var errors_js_1 = require_errors3();
     var en_js_1 = __importDefault2(require_en2());
     var makeIssue2 = (params) => {
-      const { data: data2, path: path32, errorMaps, issueData } = params;
-      const fullPath = [...path32, ...issueData.path || []];
+      const { data: data2, path: path33, errorMaps, issueData } = params;
+      const fullPath = [...path33, ...issueData.path || []];
       const fullIssue = {
         ...issueData,
         path: fullPath
@@ -206766,11 +206778,11 @@ var require_types5 = __commonJS({
     var parseUtil_js_1 = require_parseUtil();
     var util_js_1 = require_util7();
     var ParseInputLazyPath2 = class {
-      constructor(parent, value, path32, key) {
+      constructor(parent, value, path33, key) {
         this._cachedPath = [];
         this.parent = parent;
         this.data = value;
-        this._path = path32;
+        this._path = path33;
         this._key = key;
       }
       get path() {
@@ -214961,8 +214973,8 @@ ${user}:`]
       });
       const getCommonModelConfig = (modelType) => ({
         provider: `qwen.${modelType}`,
-        url: ({ path: path32 }) => {
-          const url4 = new URL(`${baseURL}${path32}`);
+        url: ({ path: path33 }) => {
+          const url4 = new URL(`${baseURL}${path33}`);
           if (options.queryParams) {
             url4.search = new URLSearchParams(options.queryParams).toString();
           }
@@ -216167,7 +216179,7 @@ function buildGoogleInteractionsStreamTransform({
   let hasFunctionCall = false;
   const openBlocks = /* @__PURE__ */ new Map();
   const emittedSourceKeys = /* @__PURE__ */ new Set();
-  function sourceKey(source) {
+  function sourceKey2(source) {
     var _a31;
     return source.sourceType === "url" ? `url:${source.url}` : `doc:${(_a31 = source.filename) != null ? _a31 : source.title}`;
   }
@@ -216228,7 +216240,7 @@ function buildGoogleInteractionsStreamTransform({
                 generateId: generateId32
               });
               for (const source of initialSources) {
-                const key = sourceKey(source);
+                const key = sourceKey2(source);
                 if (emittedSourceKeys.has(key)) continue;
                 emittedSourceKeys.add(key);
                 controller.enqueue(source);
@@ -216381,7 +216393,7 @@ function buildGoogleInteractionsStreamTransform({
               generateId: generateId32
             });
             for (const source of sources) {
-              const key = sourceKey(source);
+              const key = sourceKey2(source);
               if (emittedSourceKeys.has(key)) continue;
               emittedSourceKeys.add(key);
               open.emittedSourceKeys.add(key);
@@ -216531,7 +216543,7 @@ function buildGoogleInteractionsStreamTransform({
               generateId: generateId32
             });
             for (const source of sources) {
-              const key = sourceKey(source);
+              const key = sourceKey2(source);
               if (emittedSourceKeys.has(key)) continue;
               emittedSourceKeys.add(key);
               controller.enqueue(source);
@@ -227124,8 +227136,8 @@ function createOpenAICompatible(options) {
   const getHeaders = () => withUserAgentSuffix(headers, `ai-sdk/openai-compatible/${VERSION10}`);
   const getCommonModelConfig = (modelType) => ({
     provider: `${providerName}.${modelType}`,
-    url: ({ path: path32 }) => {
-      const url4 = new URL(`${baseURL}${path32}`);
+    url: ({ path: path33 }) => {
+      const url4 = new URL(`${baseURL}${path33}`);
       if (options.queryParams) {
         url4.search = new URLSearchParams(options.queryParams).toString();
       }
@@ -239941,7 +239953,7 @@ function createMinimax(options = {}) {
   const createLanguageModel = (modelId) => {
     return new MinimaxChatLanguageModel(modelId, {
       provider: `minimax.chat`,
-      url: ({ path: path32 }) => `${baseURL}${path32}`,
+      url: ({ path: path33 }) => `${baseURL}${path33}`,
       headers: getHeaders,
       fetch: options.fetch
     });
@@ -246382,19 +246394,19 @@ var require_token_io = __commonJS({
       getUserDataDir: () => getUserDataDir
     });
     module2.exports = __toCommonJS2(token_io_exports);
-    var import_path29 = __toESM2(require("path"));
+    var import_path30 = __toESM2(require("path"));
     var import_fs19 = __toESM2(require("fs"));
     var import_os2 = __toESM2(require("os"));
     var import_token_error = require_token_error();
     function findRootDir() {
       try {
         let dir = process.cwd();
-        while (dir !== import_path29.default.dirname(dir)) {
-          const pkgPath = import_path29.default.join(dir, ".vercel");
+        while (dir !== import_path30.default.dirname(dir)) {
+          const pkgPath = import_path30.default.join(dir, ".vercel");
           if (import_fs19.default.existsSync(pkgPath)) {
             return dir;
           }
-          dir = import_path29.default.dirname(dir);
+          dir = import_path30.default.dirname(dir);
         }
       } catch (e) {
         throw new import_token_error.VercelOidcTokenError(
@@ -246409,9 +246421,9 @@ var require_token_io = __commonJS({
       }
       switch (import_os2.default.platform()) {
         case "darwin":
-          return import_path29.default.join(import_os2.default.homedir(), "Library/Application Support");
+          return import_path30.default.join(import_os2.default.homedir(), "Library/Application Support");
         case "linux":
-          return import_path29.default.join(import_os2.default.homedir(), ".local/share");
+          return import_path30.default.join(import_os2.default.homedir(), ".local/share");
         case "win32":
           if (process.env.LOCALAPPDATA) {
             return process.env.LOCALAPPDATA;
@@ -246462,8 +246474,8 @@ var require_auth_config = __commonJS({
       writeAuthConfig: () => writeAuthConfig
     });
     module2.exports = __toCommonJS2(auth_config_exports);
-    var fs32 = __toESM2(require("fs"));
-    var path32 = __toESM2(require("path"));
+    var fs33 = __toESM2(require("fs"));
+    var path33 = __toESM2(require("path"));
     var import_token_util = require_token_util();
     function getAuthConfigPath() {
       const dataDir = (0, import_token_util.getVercelDataDir)();
@@ -246472,15 +246484,15 @@ var require_auth_config = __commonJS({
           `Unable to find Vercel CLI data directory. Your platform: ${process.platform}. Supported: darwin, linux, win32.`
         );
       }
-      return path32.join(dataDir, "auth.json");
+      return path33.join(dataDir, "auth.json");
     }
     function readAuthConfig() {
       try {
         const authPath = getAuthConfigPath();
-        if (!fs32.existsSync(authPath)) {
+        if (!fs33.existsSync(authPath)) {
           return null;
         }
-        const content = fs32.readFileSync(authPath, "utf8");
+        const content = fs33.readFileSync(authPath, "utf8");
         if (!content) {
           return null;
         }
@@ -246491,11 +246503,11 @@ var require_auth_config = __commonJS({
     }
     function writeAuthConfig(config3) {
       const authPath = getAuthConfigPath();
-      const authDir = path32.dirname(authPath);
-      if (!fs32.existsSync(authDir)) {
-        fs32.mkdirSync(authDir, { mode: 504, recursive: true });
+      const authDir = path33.dirname(authPath);
+      if (!fs33.existsSync(authDir)) {
+        fs33.mkdirSync(authDir, { mode: 504, recursive: true });
       }
-      fs32.writeFileSync(authPath, JSON.stringify(config3, null, 2), { mode: 384 });
+      fs33.writeFileSync(authPath, JSON.stringify(config3, null, 2), { mode: 384 });
     }
     function isValidAccessToken(authConfig, expirationBufferMs = 0) {
       if (!authConfig.token)
@@ -246686,8 +246698,8 @@ var require_token_util = __commonJS({
       saveToken: () => saveToken
     });
     module2.exports = __toCommonJS2(token_util_exports);
-    var path32 = __toESM2(require("path"));
-    var fs32 = __toESM2(require("fs"));
+    var path33 = __toESM2(require("path"));
+    var fs33 = __toESM2(require("fs"));
     var import_token_error = require_token_error();
     var import_token_io = require_token_io();
     var import_auth_config = require_auth_config();
@@ -246699,7 +246711,7 @@ var require_token_util = __commonJS({
       if (!dataDir) {
         return null;
       }
-      return path32.join(dataDir, vercelFolder);
+      return path33.join(dataDir, vercelFolder);
     }
     async function getVercelToken2(options) {
       const authConfig = (0, import_auth_config.readAuthConfig)();
@@ -246775,13 +246787,13 @@ var require_token_util = __commonJS({
           "Unable to find project root directory. Have you linked your project with `vc link?`"
         );
       }
-      const prjPath = path32.join(dir, ".vercel", "project.json");
-      if (!fs32.existsSync(prjPath)) {
+      const prjPath = path33.join(dir, ".vercel", "project.json");
+      if (!fs33.existsSync(prjPath)) {
         throw new import_token_error.VercelOidcTokenError(
           "project.json not found, have you linked your project with `vc link?`"
         );
       }
-      const prj = JSON.parse(fs32.readFileSync(prjPath, "utf8"));
+      const prj = JSON.parse(fs33.readFileSync(prjPath, "utf8"));
       if (typeof prj.projectId !== "string" && typeof prj.orgId !== "string") {
         throw new TypeError(
           "Expected a string-valued projectId property. Try running `vc link` to re-link your project."
@@ -246796,11 +246808,11 @@ var require_token_util = __commonJS({
           "Unable to find user data directory. Please reach out to Vercel support."
         );
       }
-      const tokenPath = path32.join(dir, "com.vercel.token", `${projectId}.json`);
+      const tokenPath = path33.join(dir, "com.vercel.token", `${projectId}.json`);
       const tokenJson = JSON.stringify(token);
-      fs32.mkdirSync(path32.dirname(tokenPath), { mode: 504, recursive: true });
-      fs32.writeFileSync(tokenPath, tokenJson);
-      fs32.chmodSync(tokenPath, 432);
+      fs33.mkdirSync(path33.dirname(tokenPath), { mode: 504, recursive: true });
+      fs33.writeFileSync(tokenPath, tokenJson);
+      fs33.chmodSync(tokenPath, 432);
       return;
     }
     function loadToken(projectId) {
@@ -246810,11 +246822,11 @@ var require_token_util = __commonJS({
           "Unable to find user data directory. Please reach out to Vercel support."
         );
       }
-      const tokenPath = path32.join(dir, "com.vercel.token", `${projectId}.json`);
-      if (!fs32.existsSync(tokenPath)) {
+      const tokenPath = path33.join(dir, "com.vercel.token", `${projectId}.json`);
+      if (!fs33.existsSync(tokenPath)) {
         return null;
       }
-      const token = JSON.parse(fs32.readFileSync(tokenPath, "utf8"));
+      const token = JSON.parse(fs33.readFileSync(tokenPath, "utf8"));
       assertVercelOidcTokenResponse(token);
       return token;
     }
@@ -258087,6 +258099,10 @@ var init_negativePrompt = __esm({
       "\u7578\u5F62\u80A2\u4F53",
       "\u9519\u4E71\u624B\u6307",
       "\u626D\u66F2\u4E94\u5B98",
+      "\u8EAB\u4EFD\u6F02\u79FB",
+      "\u670D\u88C5\u4E0D\u4E00\u81F4",
+      "\u573A\u666F\u4E0D\u4E00\u81F4",
+      "\u9053\u5177\u4E0D\u4E00\u81F4",
       "\u91CD\u590D\u4EBA\u7269",
       "\u591A\u4F59\u4EBA\u7269",
       "\u5B57\u5E55",
@@ -258104,6 +258120,8 @@ var init_negativePrompt = __esm({
       "\u8EAB\u4EFD\u6F02\u79FB",
       "\u670D\u88C5\u6F02\u79FB",
       "\u573A\u666F\u6F02\u79FB",
+      "\u9053\u5177\u6F02\u79FB",
+      "\u9053\u5177\u4E0D\u4E00\u81F4",
       "\u524D\u540E\u5E27\u4E0D\u8FDE\u7EED",
       "\u7578\u5F62\u80A2\u4F53",
       "\u9519\u4E71\u624B\u6307",
@@ -258126,6 +258144,10 @@ var init_negativePrompt = __esm({
       "deformed anatomy",
       "bad hands",
       "distorted face",
+      "identity drift",
+      "clothing inconsistency",
+      "scene inconsistency",
+      "prop inconsistency",
       "duplicated subjects",
       "extra characters",
       "subtitles",
@@ -258143,6 +258165,8 @@ var init_negativePrompt = __esm({
       "identity drift",
       "clothing drift",
       "scene drift",
+      "prop drift",
+      "prop inconsistency",
       "temporal inconsistency",
       "deformed anatomy",
       "bad hands",
@@ -258420,8 +258444,8 @@ var init_ai = __esm({
         if (normalized.status === "completed" && normalized.data?.startsWith("http")) normalized.data = await urlToBase642(normalized.data);
         return normalized;
       }
-      async save(path32, storageProvider = utils_default.oss.getStorageProvider()) {
-        await utils_default.oss.writeFile(path32, this.result, storageProvider);
+      async save(path33, storageProvider = utils_default.oss.getStorageProvider()) {
+        await utils_default.oss.writeFile(path33, this.result, storageProvider);
         return this;
       }
     };
@@ -258459,8 +258483,8 @@ var init_ai = __esm({
           throw e;
         }
       }
-      async save(path32, storageProvider = utils_default.oss.getStorageProvider()) {
-        await utils_default.oss.writeFile(path32, this.result, storageProvider);
+      async save(path33, storageProvider = utils_default.oss.getStorageProvider()) {
+        await utils_default.oss.writeFile(path33, this.result, storageProvider);
         return this;
       }
     };
@@ -258487,8 +258511,8 @@ var init_ai = __esm({
         }
         return await exec(modelName);
       }
-      async save(path32, storageProvider = utils_default.oss.getStorageProvider()) {
-        await utils_default.oss.writeFile(path32, this.result, storageProvider);
+      async save(path33, storageProvider = utils_default.oss.getStorageProvider()) {
+        await utils_default.oss.writeFile(path33, this.result, storageProvider);
         return this;
       }
     };
@@ -258707,6 +258731,905 @@ var init_utils3 = __esm({
       writeVersion: writeVersion_default,
       vendor: vendor_exports
     };
+  }
+});
+
+// src/services/assetImageGeneration.ts
+function httpError(message, statusCode = 400) {
+  const err = new Error(message);
+  err.statusCode = statusCode;
+  return err;
+}
+function normalizeIds(ids) {
+  return [...new Set((ids || []).map(Number).filter((id) => Number.isFinite(id)))];
+}
+async function startAssetImageGeneration(input) {
+  const { projectId, scriptId, userId } = input;
+  const assetIds = normalizeIds(input.assetIds);
+  const concurrentCount = Math.max(1, Math.floor(Number(input.concurrentCount || 5)));
+  if (!userId) throw httpError("\u672A\u63D0\u4F9Btoken", 401);
+  if (!assetIds.length) {
+    return {
+      background: Promise.resolve([]),
+      data: [],
+      generateIds: []
+    };
+  }
+  const assetsDataArr = await utils_default.db("o_assets").leftJoin("o_image", "o_assets.imageId", "o_image.id").whereIn("o_assets.id", assetIds).where("o_assets.projectId", projectId).select(
+    "o_assets.id",
+    "o_assets.describe",
+    "o_assets.name",
+    "o_assets.type",
+    "o_assets.assetsId",
+    "o_image.state as imageState",
+    "o_image.filePath as imageFilePath"
+  );
+  if (!assetsDataArr.length) {
+    return {
+      background: Promise.resolve([]),
+      data: [],
+      generateIds: []
+    };
+  }
+  const existingIds = assetsDataArr.filter((item) => item.imageState === "\u751F\u6210\u4E2D" || item.imageState === "\u5DF2\u5B8C\u6210" && item.imageFilePath).map((item) => item.id).filter((id) => Number.isFinite(id));
+  const pendingIds = existingIds.filter((id) => assetsDataArr.find((item) => item.id === id)?.imageState === "\u751F\u6210\u4E2D");
+  const assetsToGenerate = assetsDataArr.filter((item) => item.imageState !== "\u751F\u6210\u4E2D" && !(item.imageState === "\u5DF2\u5B8C\u6210" && item.imageFilePath));
+  if (!assetsToGenerate.length) {
+    const data3 = await getAssetImageGenerationItems(assetIds);
+    return {
+      background: pendingIds.length ? waitForAssetImageGeneration(pendingIds).then(() => getAssetImageGenerationItems(assetIds)) : Promise.resolve(data3),
+      data: data3,
+      generateIds: []
+    };
+  }
+  const projectSettingData = await utils_default.db("o_project").where("id", projectId).select("imageModel", "imageQuality", "artStyle").first();
+  if (!projectSettingData?.imageModel) throw httpError("\u9879\u76EE\u672A\u914D\u7F6E\u56FE\u7247\u6A21\u578B", 400);
+  let quote;
+  try {
+    const textBillingModel = await resolveModelBillingKey("universalAi");
+    quote = await quoteModelCalls(userId, [
+      {
+        count: assetsToGenerate.length,
+        model: textBillingModel,
+        modelType: "text",
+        taskType: "asset_prompt_generation"
+      },
+      {
+        count: assetsToGenerate.length,
+        model: projectSettingData.imageModel,
+        modelType: "image",
+        taskType: "asset_image_generation"
+      }
+    ]);
+  } catch (err) {
+    throw httpError(err?.message || "\u83B7\u53D6\u79EF\u5206\u62A5\u4EF7\u5931\u8D25", 400);
+  }
+  if (!quote.enough) throw httpError(`\u79EF\u5206\u4E0D\u8DB3\uFF0C\u9700\u8981 ${quote.requiredPoints} \u79EF\u5206\uFF0C\u5F53\u524D\u53EF\u7528 ${quote.availablePoints} \u79EF\u5206`, 400);
+  const parentIds = assetsToGenerate.map((item) => item.assetsId).filter((id) => id !== null);
+  const parentAssetsData = await utils_default.db("o_assets").leftJoin("o_image", "o_assets.imageId", "o_image.id").whereIn("o_assets.id", parentIds).select("o_assets.id", "o_image.filePath", "o_assets.describe");
+  assetsToGenerate.forEach((asset) => {
+    const parent = parentAssetsData.find((item) => item.id === asset.assetsId);
+    if (parent) asset.parentDescribe = parent.describe;
+  });
+  const imageUrlRecord = {};
+  parentAssetsData.forEach((item) => {
+    if (item.filePath) imageUrlRecord[item.id] = item.filePath;
+  });
+  const imageIdMap = {};
+  const holdMap = /* @__PURE__ */ new Map();
+  try {
+    const itemQuote = {
+      ...quote,
+      enough: true,
+      items: quote.items.map((item) => ({ ...item, count: 1, requiredPoints: item.pointsPerCall })),
+      requiredPoints: quote.items.reduce((sum, item) => sum + item.pointsPerCall, 0)
+    };
+    for (const item of assetsToGenerate) {
+      const [imageId] = await utils_default.db("o_image").insert({
+        assetsId: item.id,
+        errorReason: null,
+        type: item.type,
+        state: "\u751F\u6210\u4E2D",
+        resolution: projectSettingData.imageQuality,
+        model: projectSettingData.imageModel
+      });
+      imageIdMap[item.id] = imageId;
+      await utils_default.db("o_assets").where("id", item.id).update({ imageId });
+      const hold = await reserveModelCallPoints({
+        billingMeta: itemQuote,
+        description: `\u8D44\u4EA7\u56FE\u7247\u751F\u6210\uFF1A${itemQuote.items.map((quoteItem) => quoteItem.modelLabel).join(" + ") || projectSettingData.imageModel}`,
+        episodeId: scriptId,
+        idempotencyKey: `model-call:image:${imageId}`,
+        projectId,
+        quote: itemQuote,
+        relatedId: imageId,
+        taskType: "asset_image_generation",
+        userId
+      });
+      holdMap.set(item.id, hold);
+    }
+  } catch (err) {
+    await Promise.all([...holdMap.values()].map((hold) => releasePointHold(hold?.id)));
+    await Promise.all(Object.values(imageIdMap).map((imageId) => utils_default.db("o_image").where({ id: imageId }).update({ errorReason: err?.message || "\u79EF\u5206\u51BB\u7ED3\u5931\u8D25", state: "\u751F\u6210\u5931\u8D25" })));
+    throw httpError(err?.message || "\u79EF\u5206\u4E0D\u8DB3", 400);
+  }
+  const createdData = assetsToGenerate.map((item) => ({
+    id: item.id,
+    src: null,
+    state: "\u751F\u6210\u4E2D"
+  }));
+  const existingData = await getAssetImageGenerationItems(existingIds);
+  const data2 = [...existingData, ...createdData].sort((a, b2) => assetIds.indexOf(a.id) - assetIds.indexOf(b2.id));
+  const background = runAssetImageGeneration({
+    assetsDataArr: assetsToGenerate,
+    concurrentCount,
+    holdMap,
+    imageIdMap,
+    imageUrlRecord,
+    projectId,
+    projectSettingData,
+    scriptId
+  }).then(async () => {
+    if (pendingIds.length) await waitForAssetImageGeneration(pendingIds);
+    return getAssetImageGenerationItems(assetIds);
+  });
+  return {
+    background,
+    data: data2,
+    generateIds: assetsToGenerate.map((item) => item.id).filter((id) => Number.isFinite(id))
+  };
+}
+async function getAssetImageGenerationItems(assetIds) {
+  const ids = normalizeIds(assetIds);
+  if (!ids.length) return [];
+  const rows = await utils_default.db("o_assets").leftJoin("o_image", "o_assets.imageId", "o_image.id").whereIn("o_assets.id", ids).select("o_image.state", "o_assets.id", "o_image.filePath", "o_image.errorReason", "o_assets.prompt");
+  return Promise.all(
+    rows.map(async (item) => ({
+      errorReason: item.state === "\u751F\u6210\u5931\u8D25" ? item.errorReason ?? null : null,
+      id: item.id,
+      prompt: item.prompt ?? null,
+      src: item.filePath ? await utils_default.oss.getSmallImageUrl(item.filePath) : null,
+      state: item.state || "\u672A\u751F\u6210"
+    }))
+  );
+}
+async function waitForAssetImageGeneration(assetIds, opts = {}) {
+  const ids = normalizeIds(assetIds);
+  const intervalMs = opts.intervalMs ?? 5e3;
+  const timeoutMs = opts.timeoutMs ?? 30 * 60 * 1e3;
+  const deadline = Date.now() + timeoutMs;
+  while (Date.now() < deadline) {
+    const items = await getAssetImageGenerationItems(ids);
+    if (items.length >= ids.length && items.every((item) => item.state !== "\u751F\u6210\u4E2D")) return items;
+    await new Promise((resolve3) => setTimeout(resolve3, intervalMs));
+  }
+  throw new Error("\u884D\u751F\u8D44\u4EA7\u56FE\u7247\u751F\u6210\u7B49\u5F85\u8D85\u65F6");
+}
+async function runAssetImageGeneration({
+  assetsDataArr,
+  concurrentCount,
+  holdMap,
+  imageIdMap,
+  imageUrlRecord,
+  projectId,
+  projectSettingData,
+  scriptId
+}) {
+  const rolePrompt = utils_default.getArtPrompt(projectSettingData.artStyle, "art_skills", "art_character_derivative");
+  const toolPrompt = utils_default.getArtPrompt(projectSettingData.artStyle, "art_skills", "art_prop_derivative");
+  const scenePrompt = utils_default.getArtPrompt(projectSettingData.artStyle, "art_skills", "art_scene_derivative");
+  const promptRecord = {
+    role: { prompt: rolePrompt },
+    tool: { prompt: toolPrompt },
+    scene: { prompt: scenePrompt }
+  };
+  const generateSingleAsset = async (item) => {
+    const imageId = imageIdMap[item.id];
+    const typeConfig = promptRecord[item.type] || promptRecord.role;
+    const billingHold = holdMap.get(item.id);
+    try {
+      const textResult = await utils_default.Ai.Text("universalAi").invoke({
+        system: `${typeConfig.prompt}`,
+        messages: [
+          {
+            role: "user",
+            content: `
+            \u7236\u7EA7\u8D44\u4EA7\u63CF\u8FF0: ${item.parentDescribe || "\u65E0\u8BE6\u7EC6\u63CF\u8FF0"}
+            \u5F53\u524D\u8D44\u4EA7\u63CF\u8FF0: ${item.describe || "\u65E0\u8BE6\u7EC6\u63CF\u8FF0"}`
+          }
+        ]
+      });
+      const { text: text2 } = textResult;
+      await recordPointHoldModelUsage(billingHold?.id, textResult, { usagePhase: "asset_prompt_generation" });
+      await utils_default.db("o_assets").where("id", item.id).update({ prompt: text2 });
+      const imageBase64 = imageUrlRecord[item.assetsId] ? await utils_default.oss.getImageBase64(imageUrlRecord[item.assetsId]) : null;
+      const negativePrompt = resolveNegativePrompt(
+        { prompt: text2, negativePromptSource: typeConfig.prompt },
+        { mediaType: "image", modelKey: projectSettingData.imageModel }
+      );
+      const payload = {
+        aspectRatio: "16:9",
+        assetsId: item.id,
+        billingHoldId: billingHold?.id || null,
+        billingRelatedId: imageId,
+        billingTaskType: "asset_image_generation",
+        imageId,
+        negativePrompt,
+        projectId,
+        prompt: text2,
+        size: projectSettingData.imageQuality
+      };
+      await utils_default.db("o_image").where({ id: imageId }).update({ prompt: text2, negativePrompt });
+      const imageCls = await utils_default.Ai.Image(projectSettingData.imageModel).run(
+        {
+          referenceList: imageBase64 ? [{ type: "image", base64: imageBase64 }] : [],
+          negativePromptSource: typeConfig.prompt,
+          ...payload
+        },
+        {
+          taskClass: "\u751F\u6210\u56FE\u7247",
+          describe: "\u8D44\u4EA7\u56FE\u7247\u751F\u6210",
+          relatedObjects: JSON.stringify(payload),
+          projectId
+        }
+      );
+      const savePath = `/${projectId}/assets/${scriptId}/${item.type}/${utils_default.uuid()}.jpg`;
+      const storageProvider = utils_default.oss.getStorageProvider();
+      await imageCls.save(savePath, storageProvider);
+      await settlePointHold(billingHold?.id);
+      await utils_default.db("o_image").where({ id: imageId }).update({ errorReason: null, state: "\u5DF2\u5B8C\u6210", filePath: savePath, storageProvider });
+    } catch (e) {
+      await releasePointHold(billingHold?.id);
+      await utils_default.db("o_image").where({ id: imageId }).update({ state: "\u751F\u6210\u5931\u8D25", errorReason: utils_default.error(e).message });
+    }
+  };
+  for (let i = 0; i < assetsDataArr.length; i += concurrentCount) {
+    const batch = assetsDataArr.slice(i, i + concurrentCount);
+    await Promise.all(batch.map(generateSingleAsset));
+  }
+  return getAssetImageGenerationItems(assetsDataArr.map((item) => item.id));
+}
+var init_assetImageGeneration = __esm({
+  "src/services/assetImageGeneration.ts"() {
+    "use strict";
+    init_utils3();
+    init_modelBilling();
+    init_negativePrompt();
+  }
+});
+
+// src/utils/videoPromptContext.ts
+function parseVideoMode(mode) {
+  if (Array.isArray(mode)) return mode.map(String);
+  if (typeof mode !== "string") return "";
+  try {
+    const parsed = JSON.parse(mode);
+    if (Array.isArray(parsed)) return parsed.map(String);
+  } catch {
+  }
+  return mode;
+}
+function isFrameVideoMode(mode) {
+  const parsed = parseVideoMode(mode);
+  return typeof parsed === "string" && FRAME_VIDEO_MODES.has(parsed);
+}
+function sourceKey(item) {
+  return `${item.sources}:${item.id}`;
+}
+function uniqueSources(items) {
+  const seen = /* @__PURE__ */ new Set();
+  const result = [];
+  items.forEach((item) => {
+    const id = Number(item.id);
+    if (!Number.isFinite(id)) return;
+    const source = { id, sources: item.sources || "storyboard" };
+    const key = sourceKey(source);
+    if (seen.has(key)) return;
+    seen.add(key);
+    result.push(source);
+  });
+  return result;
+}
+async function loadTrackStoryboardSources(trackId, requireFile = false) {
+  if (trackId == null) return [];
+  const query = utils_default.db("o_storyboard").where("trackId", trackId).select("id", "index").orderBy("index", "asc").orderBy("id", "asc");
+  if (requireFile) query.whereNotNull("filePath");
+  const rows = await query;
+  return rows.map((row) => Number(row.id)).filter((id) => Number.isFinite(id)).map((id) => ({ id, sources: "storyboard" }));
+}
+async function buildVideoPromptSources(info, options = {}) {
+  const parsedMode = parseVideoMode(options.mode);
+  const base = uniqueSources(info);
+  const trackStoryboards = await loadTrackStoryboardSources(options.trackId);
+  if (typeof parsedMode === "string" && (parsedMode === "singleImage" || FRAME_VIDEO_MODES.has(parsedMode))) {
+    return uniqueSources([...trackStoryboards, ...base]);
+  }
+  return uniqueSources([...base, ...trackStoryboards]);
+}
+async function buildVideoReferenceSources(info, options = {}) {
+  const parsedMode = parseVideoMode(options.mode);
+  if (parsedMode === "text") return [];
+  const base = uniqueSources(info);
+  const trackStoryboards = await loadTrackStoryboardSources(options.trackId, true);
+  const storyboardRefs = uniqueSources([...trackStoryboards, ...base.filter((item) => item.sources === "storyboard")]);
+  if (parsedMode === "singleImage") return storyboardRefs[0] ? [storyboardRefs[0]] : base.slice(0, 1);
+  if (isFrameVideoMode(parsedMode)) {
+    if (storyboardRefs.length >= 2) return [storyboardRefs[0], storyboardRefs[storyboardRefs.length - 1]];
+    if (storyboardRefs.length === 1) return [storyboardRefs[0]];
+    return base.slice(0, 2);
+  }
+  return uniqueSources([...base, ...trackStoryboards]);
+}
+function compactText(value, maxLength = 500) {
+  return String(value ?? "").replace(/\s+/g, " ").trim().slice(0, maxLength);
+}
+function attr(value) {
+  return compactText(value, 1e3).replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/'/g, "&apos;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+}
+function formatAssetSummary(asset, audioAssetId) {
+  return `[${asset.id},${asset.type ?? "unknown"},${asset.name ?? ""}${audioAssetId ? ` audio:${audioAssetId}` : ""}]`;
+}
+function formatAssetDetail(asset, audioAssetId) {
+  const details = [
+    `id='${attr(asset.id)}'`,
+    `type='${attr(asset.type ?? "unknown")}'`,
+    `name='${attr(asset.name ?? "")}'`,
+    audioAssetId ? `audioAssetId='${attr(audioAssetId)}'` : "",
+    asset.describe ? `describe='${attr(asset.describe)}'` : "",
+    asset.prompt ? `visualPrompt='${attr(asset.prompt)}'` : ""
+  ].filter(Boolean);
+  return `<asset ${details.join(" ")}></asset>`;
+}
+function formatStoryboardItem(item) {
+  const linkedAssets = item.associateAssets.map((asset) => `${asset.id}:${asset.type ?? "unknown"}:${compactText(asset.name, 80)}`).join("; ");
+  return `<storyboardItem
+  id='${attr(item.id)}'
+  index='${attr(item.index)}'
+  videoDesc='${attr(item.videoDesc)}'
+  prompt='${attr(item.prompt)}'
+  track='${attr(item.track)}'
+  trackId='${attr(item.trackId)}'
+  duration='${attr(item.duration)}'
+  associateAssetsIds='${attr(JSON.stringify(item.associateAssetsIds))}'
+  associateAssets='${attr(linkedAssets)}'
+  shouldGenerateImage='${attr(item.shouldGenerateImage ?? true)}'
+></storyboardItem>`;
+}
+function formatSequenceItem(item) {
+  return `<sequenceItem
+  relation='${attr(item.relation)}'
+  id='${attr(item.id)}'
+  index='${attr(item.index)}'
+  track='${attr(item.track)}'
+  trackId='${attr(item.trackId)}'
+  duration='${attr(item.duration)}'
+  videoDesc='${attr(item.videoDesc)}'
+  prompt='${attr(item.prompt)}'
+></sequenceItem>`;
+}
+async function loadAssetsByIds(ids) {
+  if (!ids.length) return [];
+  const rows = await utils_default.db("o_assets").leftJoin("o_image", "o_image.id", "o_assets.imageId").whereIn("o_assets.id", ids).select(
+    "o_assets.id",
+    "o_assets.assetsId",
+    "o_assets.type",
+    "o_assets.name",
+    "o_assets.describe",
+    "o_assets.prompt",
+    "o_image.filePath"
+  );
+  const byId = /* @__PURE__ */ new Map();
+  rows.forEach((row) => byId.set(Number(row.id), row));
+  return ids.map((id) => byId.get(id)).filter(Boolean);
+}
+async function loadAudioAssetMap(assets) {
+  const audioIds = assets.filter((asset) => asset.type === "audio").map((asset) => asset.id);
+  if (!audioIds.length) return {};
+  const rows = await utils_default.db("o_assets").whereIn("o_assets.id", audioIds).join("o_assetsRole2Audio", "o_assetsRole2Audio.assetsAudioId", "o_assets.assetsId").select("o_assets.id", "o_assetsRole2Audio.assetsRoleId");
+  const record3 = {};
+  rows.forEach((row) => {
+    if (row.assetsRoleId && row.id) record3[row.assetsRoleId] = row.id;
+  });
+  return record3;
+}
+async function loadVideoPromptContext(info) {
+  const items = await Promise.all(
+    info.map(async (item) => {
+      if (item.sources === "storyboard") {
+        const storyboard2 = await utils_default.db("o_storyboard").where("o_storyboard.id", item.id).select("id", "scriptId", "projectId", "videoDesc", "prompt", "track", "trackId", "duration", "shouldGenerateImage", "index").first();
+        if (!storyboard2) return null;
+        const assetRows = await utils_default.db("o_assets2Storyboard").where("storyboardId", item.id).orderBy("sort", "asc").orderBy("assetId", "asc").select("assetId");
+        const associateAssetsIds = assetRows.map((row) => row.assetId).filter(Boolean);
+        const associateAssets = await loadAssetsByIds(associateAssetsIds);
+        return {
+          ...storyboard2,
+          id: Number(storyboard2.id ?? item.id),
+          associateAssets,
+          associateAssetsIds,
+          _type: "storyboard"
+        };
+      }
+      if (item.sources === "assets") {
+        const [asset] = await loadAssetsByIds([item.id]);
+        return asset ? { ...asset, _type: "assets" } : null;
+      }
+      return null;
+    })
+  );
+  const assets = [];
+  const storyboard = [];
+  for (const item of items) {
+    if (!item) continue;
+    if (item._type === "assets") assets.push(item);
+    if (item._type === "storyboard") storyboard.push(item);
+  }
+  return { assets, sequence: await loadStoryboardSequence(storyboard), storyboard };
+}
+async function loadStoryboardSequence(selectedStoryboards) {
+  const anchors = selectedStoryboards.filter((item) => item.projectId != null && item.scriptId != null);
+  if (!anchors.length) return [];
+  const sequenceMap = /* @__PURE__ */ new Map();
+  function addSequenceItem(row, relation) {
+    if (!row?.id) return;
+    const id = Number(row.id);
+    const existing = sequenceMap.get(id);
+    if (existing) {
+      existing.relations.add(relation);
+      existing.relation = [...existing.relations].join(",");
+      return;
+    }
+    sequenceMap.set(id, {
+      duration: row.duration,
+      id,
+      index: row.index,
+      prompt: row.prompt,
+      relation,
+      relations: /* @__PURE__ */ new Set([relation]),
+      shouldGenerateImage: row.shouldGenerateImage,
+      track: row.track,
+      trackId: row.trackId,
+      videoDesc: row.videoDesc
+    });
+  }
+  const groups = /* @__PURE__ */ new Map();
+  anchors.forEach((item) => {
+    const key = `${item.projectId}:${item.scriptId}`;
+    const group = groups.get(key) ?? [];
+    group.push(item);
+    groups.set(key, group);
+  });
+  for (const group of groups.values()) {
+    const first = group[0];
+    if (!first) continue;
+    const rows = await utils_default.db("o_storyboard").where({ projectId: first.projectId, scriptId: first.scriptId }).select("id", "index", "track", "trackId", "duration", "videoDesc", "prompt", "shouldGenerateImage").orderBy("index", "asc").orderBy("id", "asc");
+    const selectedIds = new Set(group.map((item) => item.id));
+    const selectedTrackIds = new Set(group.map((item) => item.trackId).filter((trackId) => trackId != null));
+    rows.forEach((row, position) => {
+      const id = Number(row.id);
+      if (selectedIds.has(id)) {
+        addSequenceItem(row, "current");
+        addSequenceItem(rows[position - 1], "previous");
+        addSequenceItem(rows[position + 1], "next");
+      }
+      if (row.trackId != null && selectedTrackIds.has(Number(row.trackId))) addSequenceItem(row, "sameTrack");
+    });
+  }
+  return [...sequenceMap.values()].map(({ relations, ...item }) => item).sort((a, b2) => Number(a.index ?? 0) - Number(b2.index ?? 0) || a.id - b2.id);
+}
+async function buildVideoPromptInput(context2, modelName) {
+  const assets = collectPromptAssets(context2);
+  const audioAssetMap = await loadAudioAssetMap(context2.assets);
+  const assetSummary = assets.filter((asset) => asset.filePath).map((asset) => formatAssetSummary(asset, audioAssetMap[asset.id])).join("\uFF0C");
+  const assetDetails = assets.map((asset) => formatAssetDetail(asset, audioAssetMap[asset.id])).join("\n");
+  const storyboardItems = context2.storyboard.map(formatStoryboardItem).join("\n");
+  const sequenceItems = context2.sequence.map(formatSequenceItem).join("\n");
+  return `
+          **\u6A21\u578B\u540D\u79F0**\uFF1A${modelName},
+
+          **\u8D44\u4EA7\u4FE1\u606F**\uFF08\u89D2\u8272\u3001\u573A\u666F\u3001\u9053\u5177\u3001\u97F3\u9891):${assetSummary},
+
+          **\u8D44\u4EA7\u7EC6\u8282**\uFF1A
+${assetDetails || "\u65E0"}
+
+          **\u5206\u955C\u4FE1\u606F**\uFF1A
+${storyboardItems || "\u65E0"}
+
+          **\u5206\u955C\u8FDE\u7EED\u6027\u4E0A\u4E0B\u6587**\uFF08previous/next \u662F\u5168\u7247\u76F8\u90BB\u5206\u955C\uFF0CsameTrack \u662F\u540C\u4E00\u89C6\u9891\u8F68\u9053\u5185\u7684\u5206\u955C\uFF09\uFF1A
+${sequenceItems || "\u65E0"}
+
+          **\u4E00\u81F4\u6027\u8981\u6C42**\uFF1A
+- \u89D2\u8272\u53C2\u8003\u56FE\u662F\u8EAB\u4EFD\u786C\u7EA6\u675F\uFF1A\u540C\u4E00\u89D2\u8272\u7684\u8138\u578B\u3001\u4E94\u5B98\u3001\u53D1\u578B\u3001\u4F53\u578B\u3001\u670D\u9970\u989C\u8272\u3001\u914D\u9970\u5FC5\u987B\u524D\u540E\u4FDD\u6301\u4E00\u81F4\u3002
+- \u573A\u666F\u53C2\u8003\u56FE\u662F\u7A7A\u95F4\u786C\u7EA6\u675F\uFF1A\u623F\u95F4\u5E03\u5C40\u3001\u5899\u9762\u6750\u8D28\u3001\u5BB6\u5177\u4F4D\u7F6E\u3001\u5149\u6E90\u65B9\u5411\u3001\u8272\u8C03\u5FC5\u987B\u4FDD\u6301\u4E00\u81F4\u3002
+- \u5206\u955C\u4E4B\u95F4\u5FC5\u987B\u627F\u63A5\u4E0A\u4E00\u955C\u7684\u89D2\u8272\u59FF\u6001\u3001\u60C5\u7EEA\u72B6\u6001\u3001\u7A7A\u95F4\u4F4D\u7F6E\u3001\u5149\u7EBF\u65B9\u5411\u4E0E\u73AF\u5883\u7269\u4EF6\uFF1B\u4E0D\u5F97\u6BCF\u4E2A\u5206\u955C\u91CD\u65B0\u62BD\u4E00\u5957\u4EBA\u7269\u548C\u573A\u666F\u3002
+- \u540C\u4E00\u89C6\u9891\u8F68\u9053\u5185\u7684\u5206\u955C\u662F\u4E00\u6BB5\u8FDE\u7EED\u52A8\u4F5C\uFF1A\u53EA\u5141\u8BB8 videoDesc \u660E\u786E\u63CF\u8FF0\u7684\u52A8\u4F5C\u3001\u666F\u522B\u3001\u8FD0\u955C\u53D1\u751F\u53D8\u5316\uFF0C\u5176\u4ED6\u8EAB\u4EFD\u548C\u7A7A\u95F4\u951A\u70B9\u4FDD\u6301\u4E0D\u53D8\u3002
+- \u4E0D\u5F97\u65B0\u589E\u672A\u5217\u51FA\u7684\u89D2\u8272\u3001\u624B\u3001\u624B\u81C2\u3001\u817F\u3001\u9053\u5177\u6216\u573A\u666F\u5143\u7D20\uFF1B\u4E0D\u5F97\u8BA9\u4EBA\u7269\u8863\u670D\u3001\u5E74\u9F84\u3001\u53D1\u578B\u3001\u8138\u578B\u8DE8\u955C\u5934\u6F02\u79FB\u3002
+- \u80A2\u4F53\u5FC5\u987B\u81EA\u7136\u53EF\u4FE1\uFF1A\u7981\u6B62\u591A\u4F59\u624B\u6307\u3001\u624B\u6307\u4ECE\u817F\u90E8\u6216\u8EAB\u4F53\u957F\u51FA\u3001\u624B\u638C\u878D\u5408\u3001\u624B\u81C2\u91CD\u590D\u3001\u5173\u8282\u53CD\u6298\u3001\u8EAB\u4F53\u5C40\u90E8\u878D\u5316\u3002
+- \u8FD0\u955C\u4EE5 videoDesc \u4E3A\u51C6\uFF1B\u9664\u975E videoDesc \u660E\u786E\u8981\u6C42\u5207\u6362\uFF0C\u8F93\u51FA\u5E94\u4FDD\u6301\u5355\u4E00\u8FDE\u8D2F\u955C\u5934\u548C\u7A33\u5B9A\u65F6\u5E8F\u3002
+          `;
+}
+function collectPromptAssets(context2) {
+  const byId = /* @__PURE__ */ new Map();
+  const add = (asset) => {
+    if (!asset?.id) return;
+    const existing = byId.get(asset.id);
+    byId.set(asset.id, {
+      ...asset,
+      ...existing,
+      describe: existing?.describe || asset.describe,
+      filePath: existing?.filePath || asset.filePath,
+      name: existing?.name || asset.name,
+      prompt: existing?.prompt || asset.prompt,
+      type: existing?.type || asset.type
+    });
+  };
+  context2.assets.forEach(add);
+  context2.storyboard.forEach((storyboard) => storyboard.associateAssets.forEach(add));
+  return [...byId.values()];
+}
+function uniqueNamedAssets(context2, type) {
+  const names = /* @__PURE__ */ new Set();
+  for (const asset of context2.assets) {
+    if (asset.type === type && asset.name) names.add(compactText(asset.name, 80));
+  }
+  for (const storyboard of context2.storyboard) {
+    for (const asset of storyboard.associateAssets) {
+      if (asset.type === type && asset.name) names.add(compactText(asset.name, 80));
+    }
+  }
+  return [...names];
+}
+function summarizeAssetsForLock(context2) {
+  return collectPromptAssets(context2).filter((asset) => ["role", "scene", "tool"].includes(String(asset.type ?? ""))).slice(0, 12).map((asset) => {
+    const name28 = compactText(asset.name || `asset-${asset.id}`, 80);
+    const detail = compactText(asset.describe || asset.prompt, 160);
+    return `${asset.type ?? "asset"}:${name28}${detail ? `=${detail}` : ""}`;
+  });
+}
+function buildSequenceBrief(context2, maxItems = 8) {
+  return context2.sequence.slice(0, maxItems).map((item) => `${item.relation}#${item.index ?? item.id}:${compactText(item.videoDesc || item.prompt, 120)}`).join(" | ");
+}
+function appendStoryboardImageConsistencyGuard(prompt, context2) {
+  const fallbackPrompt = context2.storyboard[0]?.prompt || context2.storyboard[0]?.videoDesc || "";
+  const trimmed = compactText(prompt, 4e3) || compactText(fallbackPrompt, 1200);
+  if (!trimmed || trimmed.includes("[Image consistency lock]") || trimmed.includes("\u3010\u56FE\u7247\u4E00\u81F4\u6027\u9501\u5B9A\u3011")) return prompt;
+  const roleNames = uniqueNamedAssets(context2, "role");
+  const sceneNames = uniqueNamedAssets(context2, "scene");
+  const toolNames = uniqueNamedAssets(context2, "tool");
+  const assetBrief = summarizeAssetsForLock(context2).join(" | ");
+  const sequenceBrief = buildSequenceBrief(context2, 6);
+  const useChinese = CJK_RE2.test(trimmed) || CJK_RE2.test([roleNames, sceneNames, toolNames].flat().join(""));
+  const guard = useChinese ? [
+    "\u3010\u56FE\u7247\u4E00\u81F4\u6027\u9501\u5B9A\u3011",
+    `\u89D2\u8272\uFF1A${roleNames.length ? roleNames.join("\u3001") : "\u6240\u6709\u5173\u8054\u89D2\u8272"}\u3002\u5FC5\u987B\u4E25\u683C\u53C2\u8003\u5173\u8054\u8D44\u4EA7\u7684\u8138\u578B\u3001\u4E94\u5B98\u3001\u53D1\u578B\u3001\u4F53\u578B\u3001\u670D\u9970\u989C\u8272\u548C\u914D\u9970\uFF0C\u4E0D\u5F97\u6362\u8138\u3001\u6362\u5E74\u9F84\u3001\u6362\u8863\u670D\u6216\u65B0\u589E\u4EBA\u7269\u3002`,
+    `\u573A\u666F\uFF1A${sceneNames.length ? sceneNames.join("\u3001") : "\u6240\u6709\u5173\u8054\u573A\u666F"}\u3002\u5FC5\u987B\u4E25\u683C\u53C2\u8003\u5173\u8054\u8D44\u4EA7\u7684\u7A7A\u95F4\u5E03\u5C40\u3001\u5899\u9762\u6750\u8D28\u3001\u5BB6\u5177\u4F4D\u7F6E\u3001\u5149\u6E90\u65B9\u5411\u548C\u6574\u4F53\u8272\u8C03\uFF0C\u4E0D\u5F97\u6362\u623F\u95F4\u6216\u91CD\u6392\u73AF\u5883\u3002`,
+    `\u9053\u5177\uFF1A${toolNames.length ? toolNames.join("\u3001") : "\u6240\u6709\u5173\u8054\u9053\u5177"}\u3002\u5FC5\u987B\u4FDD\u6301\u540C\u4E00\u9020\u578B\u3001\u6750\u8D28\u3001\u989C\u8272\u3001\u5C3A\u5BF8\u548C\u76F8\u5BF9\u4F4D\u7F6E\uFF0C\u4E0D\u5F97\u4E22\u5931\u3001\u66FF\u6362\u6216\u65B0\u589E\u672A\u5217\u51FA\u7684\u9053\u5177\u3002`,
+    assetBrief ? `\u5173\u8054\u8D44\u4EA7\u7EC6\u8282\uFF1A${assetBrief}\u3002` : "",
+    sequenceBrief ? `\u5206\u955C\u8FDE\u7EED\u6027\uFF1A${sequenceBrief}\u3002\u5F53\u524D\u56FE\u7247\u5FC5\u987B\u627F\u63A5\u76F8\u90BB\u5206\u955C\u7684\u4EBA\u7269\u59FF\u6001\u3001\u60C5\u7EEA\u3001\u7A7A\u95F4\u4F4D\u7F6E\u3001\u5149\u7EBF\u65B9\u5411\u4E0E\u73AF\u5883\u7269\u4EF6\u3002` : "",
+    "\u53EA\u5141\u8BB8\u5F53\u524D\u5206\u955C prompt/videoDesc \u660E\u786E\u63CF\u8FF0\u7684\u52A8\u4F5C\u3001\u666F\u522B\u548C\u6784\u56FE\u53D1\u751F\u53D8\u5316\uFF1B\u8EAB\u4EFD\u3001\u573A\u666F\u3001\u9053\u5177\u4F5C\u4E3A\u786C\u7EA6\u675F\u4FDD\u6301\u7A33\u5B9A\u3002"
+  ].filter(Boolean) : [
+    "[Image consistency lock]",
+    `Characters: ${roleNames.length ? roleNames.join(", ") : "all linked characters"}. Preserve the linked asset identity, face, hairstyle, body shape, outfit colors, and accessories. Do not change face, age, clothing, or add people.`,
+    `Scenes: ${sceneNames.length ? sceneNames.join(", ") : "all linked scenes"}. Preserve the linked room layout, wall material, furniture positions, lighting direction, and color palette. Do not change rooms or rearrange the environment.`,
+    `Props: ${toolNames.length ? toolNames.join(", ") : "all linked props"}. Preserve the same shape, material, color, size, and relative position. Do not drop, replace, or add unlisted props.`,
+    assetBrief ? `Linked asset details: ${assetBrief}.` : "",
+    sequenceBrief ? `Storyboard continuity: ${sequenceBrief}. Continue adjacent shots' pose, emotion, spatial position, lighting direction, and environment objects.` : "",
+    "Only the action, shot size, and composition explicitly described in the current prompt/videoDesc may change. Identity, scene, and props are hard constraints."
+  ].filter(Boolean);
+  return `${trimmed}
+
+${guard.join("\n")}`;
+}
+function appendVideoConsistencyGuard(prompt, context2) {
+  const trimmed = prompt.trim();
+  if (!trimmed || trimmed.includes("[Consistency lock]") || trimmed.includes("\u3010\u4E00\u81F4\u6027\u9501\u5B9A\u3011")) return prompt;
+  const roleNames = uniqueNamedAssets(context2, "role");
+  const sceneNames = uniqueNamedAssets(context2, "scene");
+  const toolNames = uniqueNamedAssets(context2, "tool");
+  const sequenceBrief = buildSequenceBrief(context2);
+  const useChinese = CJK_RE2.test(trimmed);
+  const guard = useChinese ? [
+    "\u3010\u4E00\u81F4\u6027\u9501\u5B9A\u3011",
+    `\u89D2\u8272\uFF1A${roleNames.length ? roleNames.join("\u3001") : "\u6240\u6709\u53C2\u8003\u89D2\u8272"}\u3002\u5FC5\u987B\u9501\u5B9A\u540C\u4E00\u8EAB\u4EFD\u3001\u540C\u4E00\u8138\u578B\u3001\u540C\u4E00\u53D1\u578B\u3001\u540C\u4E00\u4F53\u578B\u3001\u540C\u4E00\u670D\u9970\u548C\u914D\u9970\u3002`,
+    `\u573A\u666F\uFF1A${sceneNames.length ? sceneNames.join("\u3001") : "\u6240\u6709\u53C2\u8003\u573A\u666F"}\u3002\u5FC5\u987B\u9501\u5B9A\u540C\u4E00\u7A7A\u95F4\u5E03\u5C40\u3001\u5899\u9762\u6750\u8D28\u3001\u5BB6\u5177\u4F4D\u7F6E\u3001\u5149\u6E90\u65B9\u5411\u548C\u8272\u8C03\u3002`,
+    `\u9053\u5177\uFF1A${toolNames.length ? toolNames.join("\u3001") : "\u6240\u6709\u53C2\u8003\u9053\u5177"}\u3002\u5FC5\u987B\u9501\u5B9A\u540C\u4E00\u9020\u578B\u3001\u6750\u8D28\u3001\u989C\u8272\u3001\u5C3A\u5BF8\u548C\u76F8\u5BF9\u4F4D\u7F6E\uFF0C\u4E0D\u5F97\u4E22\u5931\u3001\u66FF\u6362\u6216\u65B0\u589E\u672A\u5217\u51FA\u7684\u9053\u5177\u3002`,
+    sequenceBrief ? `\u5206\u955C\u8FDE\u7EED\u6027\uFF1A${sequenceBrief}\u3002\u5F53\u524D\u955C\u5934\u5FC5\u987B\u627F\u63A5\u76F8\u90BB\u5206\u955C\u7684\u4EBA\u7269\u59FF\u6001\u3001\u60C5\u7EEA\u3001\u7A7A\u95F4\u4F4D\u7F6E\u3001\u5149\u7EBF\u65B9\u5411\uFF0C\u4E0D\u5F97\u91CD\u7F6E\u753B\u9762\u3002` : "",
+    "\u53EA\u5141\u8BB8 videoDesc \u4E2D\u6307\u5B9A\u7684\u52A8\u4F5C\u548C\u8FD0\u955C\uFF1B\u4E0D\u5F97\u7A81\u7136\u6362\u623F\u95F4\u3001\u6362\u670D\u88C5\u3001\u6362\u5E74\u9F84\u3001\u6362\u8138\u3001\u6362\u53D1\u578B\u6216\u65B0\u589E\u4EBA\u7269\u3002",
+    "\u80A2\u4F53\u81EA\u7136\u53EF\u4FE1\uFF1A\u7981\u6B62\u591A\u4F59\u624B\u6307\u3001\u817F\u90E8\u6216\u8EAB\u4F53\u957F\u51FA\u624B\u6307\u3001\u591A\u4F59\u624B\u81C2\u3001\u624B\u638C\u878D\u5408\u3001\u5173\u8282\u53CD\u6298\u3001\u8EAB\u4F53\u5C40\u90E8\u878D\u5316\u3002"
+  ].filter(Boolean) : [
+    "[Consistency lock]",
+    `Characters: ${roleNames.length ? roleNames.join(", ") : "all referenced characters"}. Keep the same identity, face, hairstyle, body shape, outfit colors, and accessories throughout the shot.`,
+    `Scenes: ${sceneNames.length ? sceneNames.join(", ") : "all referenced scenes"}. Keep the same room layout, wall texture, furniture positions, lighting direction, and color palette.`,
+    `Props: ${toolNames.length ? toolNames.join(", ") : "all referenced props"}. Keep the same shape, material, color, size, and relative position. Do not drop, replace, or add unlisted props.`,
+    sequenceBrief ? `Storyboard continuity: ${sequenceBrief}. Continue the adjacent shots' pose, emotion, spatial position, lighting direction, and environment. Do not reset the image between shots.` : "",
+    "Only perform the action and camera movement described in videoDesc. Do not suddenly change rooms, clothing, age, face, hairstyle, or introduce extra people.",
+    "Natural anatomy only: no extra fingers, no fingers growing from legs or body, no extra arms, no fused hands, no broken joints, no melting body parts."
+  ].filter(Boolean);
+  return `${trimmed}
+
+${guard.join("\n")}`;
+}
+var CJK_RE2, FRAME_VIDEO_MODES;
+var init_videoPromptContext = __esm({
+  "src/utils/videoPromptContext.ts"() {
+    "use strict";
+    init_utils3();
+    CJK_RE2 = /[\u3400-\u9fff]/;
+    FRAME_VIDEO_MODES = /* @__PURE__ */ new Set(["startEndRequired", "endFrameOptional", "startFrameOptional"]);
+  }
+});
+
+// src/services/storyboardImageGeneration.ts
+function httpError2(message, statusCode = 400) {
+  const err = new Error(message);
+  err.statusCode = statusCode;
+  return err;
+}
+function normalizeIds2(ids) {
+  return [...new Set(ids.map(Number).filter((id) => Number.isFinite(id)))];
+}
+async function startStoryboardImageGeneration(input) {
+  const { compulsory = false, projectId, scriptId, userId } = input;
+  const storyboardIds = normalizeIds2(input.storyboardIds || []);
+  const concurrentCount = Math.max(1, Math.floor(Number(input.concurrentCount || 5)));
+  if (!userId) throw httpError2("\u672A\u63D0\u4F9Btoken", 401);
+  if (!storyboardIds.length) throw httpError2("storyboardIds\u4E0D\u80FD\u4E3A\u7A7A", 400);
+  const storyboardData = await utils_default.db("o_storyboard").where("scriptId", scriptId).where("projectId", projectId).whereIn("id", storyboardIds);
+  if (!storyboardData.length) throw httpError2("\u672A\u67E5\u5230\u5206\u955C\u6570\u636E", 500);
+  const storyIds = normalizeIds2(storyboardData.map((item) => item.id));
+  const projectSettingData = await utils_default.db("o_project").where("id", projectId).select("imageModel", "imageQuality", "artStyle", "videoRatio").first();
+  if (!projectSettingData?.imageModel) throw httpError2("\u9879\u76EE\u672A\u914D\u7F6E\u56FE\u7247\u6A21\u578B", 400);
+  const generateList = compulsory ? storyboardData : storyboardData.filter((item) => item.shouldGenerateImage !== 0);
+  let quote = null;
+  if (generateList.length > 0) {
+    quote = await quoteModelCalls(userId, [
+      {
+        count: generateList.length,
+        model: projectSettingData.imageModel,
+        modelType: "image",
+        taskType: "storyboard_image_generation"
+      }
+    ]);
+    if (!quote.enough) throw httpError2(`\u79EF\u5206\u4E0D\u8DB3\uFF0C\u9700\u8981 ${quote.requiredPoints} \u79EF\u5206\uFF0C\u5F53\u524D\u53EF\u7528 ${quote.availablePoints} \u79EF\u5206`, 400);
+  }
+  if (compulsory) {
+    await utils_default.db("o_storyboard").whereIn("id", storyIds).where("scriptId", scriptId).update({ state: "\u751F\u6210\u4E2D", shouldGenerateImage: 1 });
+  } else {
+    await utils_default.db("o_storyboard").whereIn("id", storyIds).where("scriptId", scriptId).where("shouldGenerateImage", 0).update({ state: "\u672A\u751F\u6210" });
+    await utils_default.db("o_storyboard").whereIn("id", storyIds).where("scriptId", scriptId).where("shouldGenerateImage", 1).update({ state: "\u751F\u6210\u4E2D" });
+  }
+  const assetRecord = await buildStoryboardAssetRecord(storyIds);
+  const realStoryData = await utils_default.db("o_storyboard").where("scriptId", scriptId).where("projectId", projectId).whereIn("id", storyIds);
+  const responseData = realStoryData.map((item) => ({
+    associateAssetsIds: assetRecord[item.id] || [],
+    id: item.id,
+    negativePrompt: item.negativePrompt,
+    prompt: item.prompt,
+    shouldGenerateImage: item.shouldGenerateImage,
+    src: null,
+    state: item.state,
+    videoDesc: item.videoDesc
+  }));
+  if (!generateList.length || !quote) {
+    return {
+      background: Promise.resolve(),
+      data: responseData,
+      generateIds: [],
+      skippedIds: storyIds,
+      storyIds
+    };
+  }
+  const holdMap = /* @__PURE__ */ new Map();
+  const billingAttemptId = utils_default.uuid();
+  try {
+    const pointsPerCall = quote.items[0]?.pointsPerCall || 0;
+    for (const item of generateList) {
+      const itemQuote = {
+        ...quote,
+        enough: true,
+        items: quote.items[0] ? [{ ...quote.items[0], count: 1, requiredPoints: pointsPerCall }] : [],
+        requiredPoints: pointsPerCall
+      };
+      const hold = await reserveModelCallPoints({
+        billingMeta: itemQuote,
+        description: `\u5206\u955C\u56FE\u7247\u751F\u6210\uFF1A${quote.items[0]?.modelLabel || projectSettingData.imageModel}`,
+        episodeId: scriptId,
+        idempotencyKey: `model-call:storyboard:${item.id}:${billingAttemptId}`,
+        projectId,
+        quote: itemQuote,
+        relatedId: item.id,
+        taskType: "storyboard_image_generation",
+        userId
+      });
+      holdMap.set(item.id, hold);
+    }
+  } catch (err) {
+    await Promise.all([...holdMap.values()].map((hold) => releasePointHold(hold?.id)));
+    await utils_default.db("o_storyboard").whereIn("id", storyIds).where("scriptId", scriptId).update({ reason: err?.message || "\u79EF\u5206\u51BB\u7ED3\u5931\u8D25", state: "\u751F\u6210\u5931\u8D25" });
+    throw httpError2(err?.message || "\u79EF\u5206\u4E0D\u8DB3", 400);
+  }
+  const storyboardNegativePromptSource = utils_default.getArtPrompt(projectSettingData?.artStyle ?? "", "art_skills", "director_storyboard");
+  const background = runStoryboardImageGeneration({
+    assetRecord,
+    concurrentCount,
+    generateList,
+    holdMap,
+    projectId,
+    projectSettingData,
+    scriptId,
+    storyboardNegativePromptSource
+  });
+  return {
+    background,
+    data: responseData,
+    generateIds: generateList.map((item) => item.id).filter((id) => Number.isFinite(id)),
+    skippedIds: storyIds.filter((id) => !generateList.some((item) => Number(item.id) === id)),
+    storyIds
+  };
+}
+async function buildStoryboardAssetRecord(storyIds) {
+  const assets2StoryboardRows = await utils_default.db("o_assets2Storyboard").whereIn("storyboardId", storyIds).orderBy("sort", "asc").orderBy("assetId", "asc").select("storyboardId", "assetId");
+  const allAssetIds = [...new Set(assets2StoryboardRows.map((row) => row.assetId))];
+  const assetImageMap = {};
+  if (allAssetIds.length > 0) {
+    const assetRows = await utils_default.db("o_assets").whereIn("id", allAssetIds).select("id", "imageId");
+    assetRows.forEach((row) => {
+      assetImageMap[row.id] = row.imageId;
+    });
+  }
+  const assetRecord = {};
+  assets2StoryboardRows.forEach((item) => {
+    if (!assetRecord[item.storyboardId]) assetRecord[item.storyboardId] = [];
+    const imageId = assetImageMap[item.assetId];
+    if (imageId != null) assetRecord[item.storyboardId].push(imageId);
+  });
+  return assetRecord;
+}
+async function runStoryboardImageGeneration({
+  assetRecord,
+  concurrentCount,
+  generateList,
+  holdMap,
+  projectId,
+  projectSettingData,
+  scriptId,
+  storyboardNegativePromptSource
+}) {
+  const generateTask = async (item) => {
+    const billingHold = holdMap.get(item.id);
+    const promptContext = await loadVideoPromptContext([{ id: item.id, sources: "storyboard" }]);
+    const requestPrompt = appendStoryboardImageConsistencyGuard(item.prompt || item.videoDesc || "", promptContext);
+    const negativePrompt = resolveNegativePrompt(
+      { prompt: requestPrompt, negativePromptSource: storyboardNegativePromptSource },
+      { mediaType: "image", modelKey: projectSettingData.imageModel }
+    );
+    const payload = {
+      aspectRatio: projectSettingData?.videoRatio,
+      billingHoldId: billingHold?.id || null,
+      billingRelatedId: item.id,
+      billingTaskType: "storyboard_image_generation",
+      negativePrompt,
+      projectId,
+      prompt: requestPrompt,
+      scriptId,
+      size: projectSettingData?.imageQuality,
+      storyboardId: item.id
+    };
+    try {
+      await utils_default.db("o_storyboard").where("id", item.id).update({ negativePrompt: payload.negativePrompt });
+      const imageCls = await utils_default.Ai.Image(projectSettingData.imageModel).run(
+        {
+          referenceList: await getStoryboardImageReferenceList(item.id, assetRecord[item.id] || []),
+          negativePromptSource: storyboardNegativePromptSource,
+          ...payload
+        },
+        {
+          taskClass: "\u751F\u6210\u5206\u955C\u56FE\u7247",
+          describe: "\u5206\u955C\u56FE\u7247\u751F\u6210",
+          relatedObjects: JSON.stringify(payload),
+          projectId
+        }
+      );
+      const savePath = `/${projectId}/assets/${scriptId}/${utils_default.uuid()}.jpg`;
+      const storageProvider = utils_default.oss.getStorageProvider();
+      await imageCls.save(savePath, storageProvider);
+      await settlePointHold(billingHold?.id);
+      await utils_default.db("o_storyboard").where("id", item.id).update({
+        filePath: savePath,
+        storageProvider,
+        state: "\u5DF2\u5B8C\u6210"
+      });
+    } catch (e) {
+      await releasePointHold(billingHold?.id);
+      await utils_default.db("o_storyboard").where("id", item.id).update({
+        filePath: "",
+        reason: utils_default.error(e).message,
+        state: "\u751F\u6210\u5931\u8D25",
+        storageProvider: null
+      });
+    }
+  };
+  for (let i = 0; i < generateList.length; i += concurrentCount) {
+    const batch = generateList.slice(i, i + concurrentCount);
+    await Promise.all(batch.map(generateTask));
+  }
+}
+async function getStoryboardImageReferenceList(storyboardId, assetImageIds) {
+  const assetRefs = await getAssetsImageBase64(assetImageIds.slice(0, MAX_IMAGE_REFERENCE_COUNT));
+  const remaining = MAX_IMAGE_REFERENCE_COUNT - assetRefs.length;
+  if (remaining <= 0) return assetRefs;
+  const continuityPaths = await getStoryboardContinuityFilePaths(storyboardId, remaining);
+  const continuityRefs = await getImageFilePathsBase64(continuityPaths);
+  return [...assetRefs, ...continuityRefs].slice(0, MAX_IMAGE_REFERENCE_COUNT);
+}
+async function getStoryboardContinuityFilePaths(storyboardId, limit) {
+  if (limit <= 0) return [];
+  const current = await utils_default.db("o_storyboard").where("id", storyboardId).select("id", "projectId", "scriptId", "trackId", "index").first();
+  if (!current?.projectId || !current?.scriptId) return [];
+  const rows = await utils_default.db("o_storyboard").where({ projectId: current.projectId, scriptId: current.scriptId }).whereNot("id", storyboardId).whereNotNull("filePath").select("id", "filePath", "trackId", "index").orderBy("index", "asc").orderBy("id", "asc");
+  const currentIndex = Number(current.index ?? current.id ?? 0);
+  const seen = /* @__PURE__ */ new Set();
+  const paths = [];
+  const add = (row) => {
+    const filePath = row?.filePath;
+    if (!filePath || seen.has(filePath)) return;
+    seen.add(filePath);
+    paths.push(filePath);
+  };
+  const withDistance = rows.map((row) => ({
+    ...row,
+    distance: Math.abs(Number(row.index ?? row.id ?? 0) - currentIndex),
+    position: Number(row.index ?? row.id ?? 0)
+  }));
+  add(
+    withDistance.filter((row) => row.position < currentIndex).sort((a, b2) => b2.position - a.position)[0]
+  );
+  add(
+    withDistance.filter((row) => row.position > currentIndex).sort((a, b2) => a.position - b2.position)[0]
+  );
+  withDistance.filter((row) => row.trackId != null && current.trackId != null && Number(row.trackId) === Number(current.trackId)).sort((a, b2) => a.distance - b2.distance || a.position - b2.position).forEach(add);
+  return paths.slice(0, limit);
+}
+async function getImageFilePathsBase64(filePaths) {
+  const imageUrls = await Promise.all(
+    filePaths.map(async (filePath) => {
+      try {
+        return await utils_default.oss.getImageBase64(filePath);
+      } catch {
+        return null;
+      }
+    })
+  );
+  return imageUrls.filter(Boolean).map((url4) => ({ type: "image", base64: url4 }));
+}
+async function getAssetsImageBase64(imageIds) {
+  if (!imageIds.length) return [];
+  const imagePaths = await utils_default.db("o_image").whereIn("o_image.id", imageIds).select("o_image.id", "o_image.filePath");
+  const id2Path = /* @__PURE__ */ new Map();
+  for (const row of imagePaths) {
+    id2Path.set(row.id, row.filePath);
+  }
+  const imageUrls = await Promise.all(
+    imageIds.map(async (id) => {
+      const filePath = id2Path.get(id);
+      if (!filePath) return null;
+      try {
+        return await utils_default.oss.getImageBase64(filePath);
+      } catch {
+        return null;
+      }
+    })
+  );
+  return imageUrls.filter(Boolean).map((url4) => ({ type: "image", base64: url4 }));
+}
+var MAX_IMAGE_REFERENCE_COUNT;
+var init_storyboardImageGeneration = __esm({
+  "src/services/storyboardImageGeneration.ts"() {
+    "use strict";
+    init_utils3();
+    init_modelBilling();
+    init_negativePrompt();
+    init_videoPromptContext();
+    MAX_IMAGE_REFERENCE_COUNT = 8;
   }
 });
 
@@ -260762,12 +261685,12 @@ function normalizePem(value, label) {
 ${body}
 -----END ${label}-----`;
 }
-function deepMergePaymentConfig(base, patch, keepSecrets = false, path32 = []) {
+function deepMergePaymentConfig(base, patch, keepSecrets = false, path33 = []) {
   if (!isRecord(base)) return patch === void 0 ? base : patch;
   const source = isRecord(patch) ? patch : {};
   const result = { ...base };
   for (const key of Object.keys(base)) {
-    const nextPath = [...path32, key];
+    const nextPath = [...path33, key];
     const pathKey = nextPath.join(".");
     const nextValue = source[key];
     const baseValue = base[key];
@@ -260811,8 +261734,8 @@ async function savePaymentConfig(input) {
 }
 function maskPaymentConfig(config3) {
   const masked = JSON.parse(JSON.stringify(config3));
-  for (const path32 of SECRET_PATHS) {
-    const [group, key] = path32.split(".");
+  for (const path33 of SECRET_PATHS) {
+    const [group, key] = path33.split(".");
     masked[group][`${key}Configured`] = Boolean(masked[group][key]);
     masked[group][key] = "";
   }
@@ -261015,13 +261938,13 @@ function assertWechatConfig(config3) {
   }
   if (!wechatVerifier(config3)) throw new Error("\u5FAE\u4FE1\u652F\u4ED8\u516C\u94A5\u6216\u5E73\u53F0\u8BC1\u4E66\u672A\u914D\u7F6E\uFF0C\u65E0\u6CD5\u9A8C\u7B7E");
 }
-async function wechatRequest(config3, method, path32, body) {
+async function wechatRequest(config3, method, path33, body) {
   assertWechatConfig(config3);
   const bodyText = body ? JSON.stringify(body) : "";
   const nonce = import_node_crypto5.default.randomBytes(16).toString("hex");
   const timestamp = Math.floor(Date.now() / 1e3).toString();
   const message = `${method}
-${path32}
+${path33}
 ${timestamp}
 ${nonce}
 ${bodyText}
@@ -261030,7 +261953,7 @@ ${bodyText}
   const authorization = `WECHATPAY2-SHA256-RSA2048 mchid="${wechatMchid(config3)}",nonce_str="${nonce}",signature="${signature}",timestamp="${timestamp}",serial_no="${config3.wechat.certificateSerialNo}"`;
   const response = await axios_default.request({
     baseURL: WECHATPAY_GATEWAY,
-    url: path32,
+    url: path33,
     method,
     data: bodyText || void 0,
     headers: {
@@ -261084,8 +262007,8 @@ async function createWechatPayment(config3, order, req) {
       h5_info: { type: "Wap" }
     };
   }
-  const path32 = wechat.mode === "serviceProvider" ? `/v3/pay/partner/transactions/${scene}` : `/v3/pay/transactions/${scene}`;
-  const result = await wechatRequest(config3, "POST", path32, body);
+  const path33 = wechat.mode === "serviceProvider" ? `/v3/pay/partner/transactions/${scene}` : `/v3/pay/transactions/${scene}`;
+  const result = await wechatRequest(config3, "POST", path33, body);
   return {
     provider: "wechat",
     type: scene === "native" ? "wechat_native" : "wechat_h5",
@@ -264080,9 +265003,9 @@ var init_generateAssets = __esm({
           prompt: userPrompt,
           negativePrompt
         });
-        const path32 = await utils_default.oss.getSmallImageUrl(imagePath);
+        const path33 = await utils_default.oss.getSmallImageUrl(imagePath);
         await utils_default.db("o_assets").where("id", id).update({ imageId });
-        return res.status(200).send(success3({ path: path32, assetsId: id }));
+        return res.status(200).send(success3({ path: path33, assetsId: id }));
       } catch (e) {
         const normalized = utils_default.error(e);
         const pendingConfirmation = isAmbiguousImageGenerationError(normalized.message);
@@ -266093,12 +267016,11 @@ var init_batchGenerateAssetsImage = __esm({
   "src/routes/production/assets/batchGenerateAssetsImage.ts"() {
     "use strict";
     import_express93 = __toESM(require_express2());
-    init_utils3();
     init_zod();
     init_responseFormat();
     init_middleware();
-    init_negativePrompt();
-    init_modelBilling();
+    init_assetImageGeneration();
+    init_utils3();
     router93 = import_express93.default.Router();
     batchGenerateAssetsImage_default = router93.post(
       "/",
@@ -266109,175 +267031,22 @@ var init_batchGenerateAssetsImage = __esm({
         concurrentCount: external_exports.number().min(1).optional()
       }),
       async (req, res) => {
-        const { assetIds, projectId, scriptId, concurrentCount = 5 } = req.body;
-        const userId = String(req.user?.id || "");
-        if (!userId) return res.status(401).send(error53("\u672A\u63D0\u4F9Btoken"));
-        const projectSettingData = await utils_default.db("o_project").where("id", projectId).select("imageModel", "imageQuality", "artStyle").first();
-        const assetsDataArr = await utils_default.db("o_assets").whereIn("id", assetIds).select("id", "describe", "name", "type", "assetsId");
-        if (!assetsDataArr.length) return res.status(200).send(success3([]));
-        let quote;
         try {
-          const textBillingModel = await resolveModelBillingKey("universalAi");
-          quote = await quoteModelCalls(userId, [
-            {
-              count: assetsDataArr.length,
-              model: textBillingModel,
-              modelType: "text",
-              taskType: "asset_prompt_generation"
-            },
-            {
-              count: assetsDataArr.length,
-              model: projectSettingData?.imageModel,
-              modelType: "image",
-              taskType: "asset_image_generation"
-            }
-          ]);
+          const { assetIds, projectId, scriptId, concurrentCount = 5 } = req.body;
+          const userId = String(req.user?.id || "");
+          const generation = await startAssetImageGeneration({
+            assetIds,
+            concurrentCount,
+            projectId,
+            scriptId,
+            userId
+          });
+          res.status(200).send(success3(generation.data));
+          void generation.background.catch((err) => {
+            console.error("[assets] batchGenerateAssetsImage background error:", utils_default.error(err).message);
+          });
         } catch (err) {
-          return res.status(400).send(error53(err?.message || "\u83B7\u53D6\u79EF\u5206\u62A5\u4EF7\u5931\u8D25"));
-        }
-        if (!quote.enough) return res.status(400).send(error53(`\u79EF\u5206\u4E0D\u8DB3\uFF0C\u9700\u8981 ${quote.requiredPoints} \u79EF\u5206\uFF0C\u5F53\u524D\u53EF\u7528 ${quote.availablePoints} \u79EF\u5206`));
-        const parentIds = assetsDataArr.map((item) => item.assetsId).filter((id) => id !== null);
-        const parentAssetsData = await utils_default.db("o_assets").leftJoin("o_image", "o_assets.imageId", "o_image.id").whereIn("o_assets.id", parentIds).select("o_assets.id", "o_image.filePath", "o_assets.describe");
-        assetsDataArr.forEach((i) => {
-          const parent = parentAssetsData.find((item) => item.id === i.assetsId);
-          if (parent) {
-            i.parentDescribe = parent.describe;
-          }
-        });
-        const imageUrlRecord = {};
-        parentAssetsData.forEach((item) => {
-          if (item.filePath) imageUrlRecord[item.id] = item.filePath;
-        });
-        const rolePrompt = utils_default.getArtPrompt(projectSettingData.artStyle, "art_skills", "art_character_derivative");
-        const toolPrompt = utils_default.getArtPrompt(projectSettingData.artStyle, "art_skills", "art_prop_derivative");
-        const scenePrompt = utils_default.getArtPrompt(projectSettingData.artStyle, "art_skills", "art_scene_derivative");
-        const promptRecord = {
-          role: {
-            prompt: rolePrompt
-          },
-          tool: {
-            prompt: toolPrompt
-          },
-          scene: {
-            prompt: scenePrompt
-          }
-        };
-        const imageIdMap = {};
-        const holdMap = /* @__PURE__ */ new Map();
-        try {
-          const itemQuote = {
-            ...quote,
-            enough: true,
-            items: quote.items.map((item) => ({ ...item, count: 1, requiredPoints: item.pointsPerCall })),
-            requiredPoints: quote.items.reduce((sum, item) => sum + item.pointsPerCall, 0)
-          };
-          for (const item of assetsDataArr) {
-            const [imageId] = await utils_default.db("o_image").insert({
-              assetsId: item.id,
-              type: item.type,
-              state: "\u751F\u6210\u4E2D",
-              resolution: projectSettingData?.imageQuality,
-              model: projectSettingData?.imageModel
-            });
-            imageIdMap[item.id] = imageId;
-            await utils_default.db("o_assets").where("id", item.id).update({ imageId });
-            const hold = await reserveModelCallPoints({
-              billingMeta: itemQuote,
-              description: `\u8D44\u4EA7\u56FE\u7247\u751F\u6210\uFF1A${itemQuote.items.map((quoteItem) => quoteItem.modelLabel).join(" + ") || projectSettingData?.imageModel}`,
-              episodeId: scriptId,
-              idempotencyKey: `model-call:image:${imageId}`,
-              projectId,
-              quote: itemQuote,
-              relatedId: imageId,
-              taskType: "asset_image_generation",
-              userId
-            });
-            holdMap.set(item.id, hold);
-          }
-        } catch (err) {
-          await Promise.all([...holdMap.values()].map((hold) => releasePointHold(hold?.id)));
-          await Promise.all(Object.values(imageIdMap).map((imageId) => utils_default.db("o_image").where({ id: imageId }).update({ errorReason: err?.message || "\u79EF\u5206\u51BB\u7ED3\u5931\u8D25", state: "\u751F\u6210\u5931\u8D25" })));
-          return res.status(400).send(error53(err?.message || "\u79EF\u5206\u4E0D\u8DB3"));
-        }
-        const imageData = [];
-        res.status(200).send(success3("\u5F00\u59CB\u751F\u6210\u8D44\u4EA7\u56FE\u7247"));
-        const generateSingleAsset = async (item) => {
-          const imageId = imageIdMap[item.id];
-          const typeConfig = promptRecord[item.type] || promptRecord["role"];
-          const billingHold = holdMap.get(item.id);
-          try {
-            const textResult = await utils_default.Ai.Text("universalAi").invoke({
-              system: `${typeConfig.prompt}`,
-              messages: [
-                {
-                  role: "user",
-                  content: `
-            \u7236\u7EA7\u8D44\u4EA7\u63CF\u8FF0: ${item.parentDescribe || "\u65E0\u8BE6\u7EC6\u63CF\u8FF0"}
-            \u5F53\u524D\u8D44\u4EA7\u63CF\u8FF0: ${item.describe || "\u65E0\u8BE6\u7EC6\u63CF\u8FF0"}`
-                }
-              ]
-            });
-            const { text: text2 } = textResult;
-            await recordPointHoldModelUsage(billingHold?.id, textResult, { usagePhase: "asset_prompt_generation" });
-            await utils_default.db("o_assets").where("id", item.id).update({ prompt: text2 });
-            const imageBase64 = imageUrlRecord[item.assetsId] ? await utils_default.oss.getImageBase64(imageUrlRecord[item.assetsId]) : null;
-            const negativePrompt = resolveNegativePrompt(
-              { prompt: text2, negativePromptSource: typeConfig.prompt },
-              { mediaType: "image", modelKey: projectSettingData?.imageModel }
-            );
-            const repeloadObj = {
-              assetsId: item.id,
-              billingHoldId: billingHold?.id || null,
-              billingRelatedId: imageId,
-              billingTaskType: "asset_image_generation",
-              imageId,
-              projectId,
-              prompt: text2,
-              negativePrompt,
-              size: projectSettingData?.imageQuality,
-              aspectRatio: "16:9"
-            };
-            await utils_default.db("o_image").where({ id: imageId }).update({
-              prompt: text2,
-              negativePrompt
-            });
-            const imageCls = await utils_default.Ai.Image(projectSettingData?.imageModel).run(
-              {
-                referenceList: imageBase64 ? [{ type: "image", base64: imageBase64 }] : [],
-                negativePromptSource: typeConfig.prompt,
-                ...repeloadObj
-              },
-              {
-                taskClass: "\u751F\u6210\u56FE\u7247",
-                describe: "\u8D44\u4EA7\u56FE\u7247\u751F\u6210",
-                relatedObjects: JSON.stringify(repeloadObj),
-                projectId
-              }
-            );
-            const savePath = `/${projectId}/assets/${scriptId}/${item.type}/${utils_default.uuid()}.jpg`;
-            const storageProvider = utils_default.oss.getStorageProvider();
-            await imageCls.save(savePath, storageProvider);
-            await settlePointHold(billingHold?.id);
-            await utils_default.db("o_image").where({ id: imageId }).update({ state: "\u5DF2\u5B8C\u6210", filePath: savePath, storageProvider });
-            return {
-              id: item.id,
-              state: "\u5DF2\u5B8C\u6210",
-              src: await utils_default.oss.getSmallImageUrl(savePath)
-            };
-          } catch (e) {
-            await releasePointHold(billingHold?.id);
-            await utils_default.db("o_image").where({ id: imageId }).update({ state: "\u751F\u6210\u5931\u8D25", errorReason: utils_default.error(e).message });
-            return {
-              id: item.id,
-              state: "\u751F\u6210\u5931\u8D25",
-              src: ""
-            };
-          }
-        };
-        for (let i = 0; i < assetsDataArr.length; i += concurrentCount) {
-          const batch = assetsDataArr.slice(i, i + concurrentCount);
-          const batchResults = await Promise.all(batch.map(generateSingleAsset));
-          imageData.push(...batchResults);
+          res.status(err?.statusCode || 400).send(error53(err?.message || "\u8D44\u4EA7\u56FE\u7247\u751F\u6210\u5931\u8D25"));
         }
       }
     );
@@ -266338,6 +267107,7 @@ var init_pollingImage = __esm({
         const result = await Promise.all(
           data2.map(async (item) => ({
             ...item,
+            errorReason: item.state === "\u751F\u6210\u5931\u8D25" ? item.errorReason : null,
             src: item.filePath ? await utils_default.oss.getSmallImageUrl(item.filePath) : null
           }))
         );
@@ -266822,7 +267592,7 @@ var init_getFlowData = __esm({
                     desc: child.describe ?? "",
                     src: child.filePath && await utils_default.oss.getSmallImageUrl(child.filePath),
                     state: child.state ?? "\u672A\u751F\u6210",
-                    errorReason: child?.errorReason ?? "",
+                    errorReason: child.state === "\u751F\u6210\u5931\u8D25" ? child?.errorReason ?? "" : "",
                     flowId: child.flowId
                   }))
                 )
@@ -267171,39 +267941,16 @@ var init_batchDelete3 = __esm({
 });
 
 // src/routes/production/storyboard/batchGenerateImage.ts
-async function getAssetsImageBase64(imageIds) {
-  if (!imageIds.length) return [];
-  const imagePaths = await utils_default.db("o_image").whereIn("o_image.id", imageIds).select("o_image.id", "o_image.filePath");
-  const id2Path = /* @__PURE__ */ new Map();
-  for (const row of imagePaths) {
-    id2Path.set(row.id, row.filePath);
-  }
-  const imageUrls = await Promise.all(
-    imageIds.map(async (id) => {
-      const filePath = id2Path.get(id);
-      if (filePath) {
-        try {
-          return await utils_default.oss.getImageBase64(filePath);
-        } catch {
-          return null;
-        }
-      }
-      return null;
-    })
-  );
-  return imageUrls.filter(Boolean).map((url4) => ({ type: "image", base64: url4 }));
-}
 var import_express109, router109, batchGenerateImage_default;
 var init_batchGenerateImage = __esm({
   "src/routes/production/storyboard/batchGenerateImage.ts"() {
     "use strict";
     import_express109 = __toESM(require_express2());
-    init_utils3();
     init_zod();
     init_responseFormat();
     init_middleware();
-    init_negativePrompt();
-    init_modelBilling();
+    init_storyboardImageGeneration();
+    init_utils3();
     router109 = import_express109.default.Router();
     batchGenerateImage_default = router109.post(
       "/",
@@ -267215,162 +267962,29 @@ var init_batchGenerateImage = __esm({
         compulsory: external_exports.boolean().optional()
       }),
       async (req, res) => {
-        const {
-          storyboardIds,
-          projectId,
-          scriptId,
-          concurrentCount = 5,
-          compulsory = false
-        } = req.body;
-        const userId = String(req.user?.id || "");
-        if (!userId) return res.status(401).send(error53("\u672A\u63D0\u4F9Btoken"));
-        if (!storyboardIds || storyboardIds.length === 0) return res.status(400).send(error53("storyboardIds\u4E0D\u80FD\u4E3A\u7A7A"));
-        let finalStoryboardIds = storyboardIds || [];
-        const storyboardData = await utils_default.db("o_storyboard").where("scriptId", scriptId).where("projectId", projectId).whereIn("id", finalStoryboardIds);
-        if (!storyboardData.length) return res.status(500).send(error53("\u672A\u67E5\u5230\u5206\u955C\u6570\u636E"));
-        const storyIds = storyboardData.map((i) => i.id).filter((id) => typeof id === "number");
-        const projectSettingData = await utils_default.db("o_project").where("id", projectId).select("imageModel", "imageQuality", "artStyle", "videoRatio").first();
-        const generateList = compulsory ? storyboardData : storyboardData.filter((item) => item.shouldGenerateImage !== 0);
-        let quote;
         try {
-          quote = await quoteModelCalls(userId, [
-            {
-              count: generateList.length,
-              model: projectSettingData?.imageModel,
-              modelType: "image",
-              taskType: "storyboard_image_generation"
-            }
-          ]);
-        } catch (err) {
-          return res.status(400).send(error53(err?.message || "\u83B7\u53D6\u79EF\u5206\u62A5\u4EF7\u5931\u8D25"));
-        }
-        if (!quote.enough) return res.status(400).send(error53(`\u79EF\u5206\u4E0D\u8DB3\uFF0C\u9700\u8981 ${quote.requiredPoints} \u79EF\u5206\uFF0C\u5F53\u524D\u53EF\u7528 ${quote.availablePoints} \u79EF\u5206`));
-        if (compulsory) {
-          await utils_default.db("o_storyboard").whereIn("id", storyIds).where("scriptId", scriptId).update({ state: "\u751F\u6210\u4E2D", shouldGenerateImage: 1 });
-        } else {
-          await utils_default.db("o_storyboard").whereIn("id", storyIds).where("scriptId", scriptId).where("shouldGenerateImage", 0).update({ state: "\u672A\u751F\u6210" });
-          await utils_default.db("o_storyboard").whereIn("id", storyIds).where("scriptId", scriptId).where("shouldGenerateImage", 1).update({ state: "\u751F\u6210\u4E2D" });
-        }
-        const storyboardNegativePromptSource = utils_default.getArtPrompt(projectSettingData?.artStyle ?? "", "art_skills", "director_storyboard");
-        const assets2StoryboardRows = await utils_default.db("o_assets2Storyboard").whereIn("storyboardId", storyIds).orderBy("sort", "asc").orderBy("assetId", "asc").select("storyboardId", "assetId");
-        const allAssetIds = [...new Set(assets2StoryboardRows.map((r) => r.assetId))];
-        const assetImageMap = {};
-        if (allAssetIds.length > 0) {
-          const assetRows = await utils_default.db("o_assets").whereIn("id", allAssetIds).select("id", "imageId");
-          assetRows.forEach((row) => {
-            assetImageMap[row.id] = row.imageId;
-          });
-        }
-        const assetRecord = {};
-        assets2StoryboardRows.forEach((item) => {
-          if (!assetRecord[item.storyboardId]) {
-            assetRecord[item.storyboardId] = [];
-          }
-          const imageId = assetImageMap[item.assetId];
-          if (imageId != null) {
-            assetRecord[item.storyboardId].push(imageId);
-          }
-        });
-        const realStoryData = await utils_default.db("o_storyboard").where("scriptId", scriptId).where("projectId", projectId).whereIn("id", storyIds);
-        const holdMap = /* @__PURE__ */ new Map();
-        const billingAttemptId = utils_default.uuid();
-        try {
-          const pointsPerCall = quote.items[0]?.pointsPerCall || 0;
-          for (const item of generateList) {
-            const itemQuote = {
-              ...quote,
-              enough: true,
-              items: quote.items[0] ? [{ ...quote.items[0], count: 1, requiredPoints: pointsPerCall }] : [],
-              requiredPoints: pointsPerCall
-            };
-            const hold = await reserveModelCallPoints({
-              billingMeta: itemQuote,
-              description: `\u5206\u955C\u56FE\u7247\u751F\u6210\uFF1A${quote.items[0]?.modelLabel || projectSettingData?.imageModel}`,
-              episodeId: scriptId,
-              idempotencyKey: `model-call:storyboard:${item.id}:${billingAttemptId}`,
-              projectId,
-              quote: itemQuote,
-              relatedId: item.id,
-              taskType: "storyboard_image_generation",
-              userId
-            });
-            holdMap.set(item.id, hold);
-          }
-        } catch (err) {
-          await Promise.all([...holdMap.values()].map((hold) => releasePointHold(hold?.id)));
-          await utils_default.db("o_storyboard").whereIn("id", storyIds).where("scriptId", scriptId).update({ reason: err?.message || "\u79EF\u5206\u51BB\u7ED3\u5931\u8D25", state: "\u751F\u6210\u5931\u8D25" });
-          return res.status(400).send(error53(err?.message || "\u79EF\u5206\u4E0D\u8DB3"));
-        }
-        res.status(200).send(
-          success3(
-            realStoryData.map((i) => ({
-              id: i.id,
-              prompt: i.prompt,
-              associateAssetsIds: assetRecord[i.id],
-              src: null,
-              state: i.state,
-              videoDesc: i.videoDesc,
-              negativePrompt: i.negativePrompt,
-              shouldGenerateImage: i.shouldGenerateImage
-            }))
-          )
-        );
-        const generateTask = async (item) => {
-          const billingHold = holdMap.get(item.id);
-          const repeloadObj = {
-            billingHoldId: billingHold?.id || null,
-            billingRelatedId: item.id,
-            billingTaskType: "storyboard_image_generation",
+          const {
+            storyboardIds,
             projectId,
-            prompt: item.prompt,
             scriptId,
-            storyboardId: item.id,
-            negativePrompt: resolveNegativePrompt(
-              { prompt: item.prompt, negativePromptSource: storyboardNegativePromptSource },
-              { mediaType: "image", modelKey: projectSettingData?.imageModel }
-            ),
-            size: projectSettingData?.imageQuality,
-            aspectRatio: projectSettingData?.videoRatio
-          };
-          try {
-            await utils_default.db("o_storyboard").where("id", item.id).update({
-              negativePrompt: repeloadObj.negativePrompt
-            });
-            const imageCls = await utils_default.Ai.Image(projectSettingData?.imageModel).run(
-              {
-                referenceList: await getAssetsImageBase64(assetRecord[item.id] || []),
-                negativePromptSource: storyboardNegativePromptSource,
-                ...repeloadObj
-              },
-              {
-                taskClass: "\u751F\u6210\u5206\u955C\u56FE\u7247",
-                describe: "\u5206\u955C\u56FE\u7247\u751F\u6210",
-                relatedObjects: JSON.stringify(repeloadObj),
-                projectId
-              }
-            );
-            const savePath = `/${projectId}/assets/${scriptId}/${utils_default.uuid()}.jpg`;
-            const storageProvider = utils_default.oss.getStorageProvider();
-            await imageCls.save(savePath, storageProvider);
-            await settlePointHold(billingHold?.id);
-            await utils_default.db("o_storyboard").where("id", item.id).update({
-              filePath: savePath,
-              storageProvider,
-              state: "\u5DF2\u5B8C\u6210"
-            });
-          } catch (e) {
-            await releasePointHold(billingHold?.id);
-            utils_default.db("o_storyboard").where("id", item.id).update({
-              filePath: "",
-              storageProvider: null,
-              reason: utils_default.error(e).message,
-              state: "\u751F\u6210\u5931\u8D25"
-            });
-          }
-        };
-        for (let i = 0; i < generateList.length; i += concurrentCount) {
-          const batch = generateList.slice(i, i + concurrentCount);
-          await Promise.all(batch.map(generateTask));
+            concurrentCount = 5,
+            compulsory = false
+          } = req.body;
+          const userId = String(req.user?.id || "");
+          const generation = await startStoryboardImageGeneration({
+            compulsory,
+            concurrentCount,
+            projectId,
+            scriptId,
+            storyboardIds,
+            userId
+          });
+          res.status(200).send(success3(generation.data));
+          void generation.background.catch((err) => {
+            console.error("[storyboard] batchGenerateImage background error:", utils_default.error(err).message);
+          });
+        } catch (err) {
+          res.status(err?.statusCode || 400).send(error53(err?.message || "\u5206\u955C\u56FE\u7247\u751F\u6210\u5931\u8D25"));
         }
       }
     );
@@ -267793,262 +268407,34 @@ var init_addTrack = __esm({
   }
 });
 
-// src/utils/videoPromptContext.ts
-function compactText(value, maxLength = 500) {
-  return String(value ?? "").replace(/\s+/g, " ").trim().slice(0, maxLength);
-}
-function attr(value) {
-  return compactText(value, 1e3).replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/'/g, "&apos;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
-}
-function formatAssetSummary(asset, audioAssetId) {
-  return `[${asset.id},${asset.type ?? "unknown"},${asset.name ?? ""}${audioAssetId ? ` audio:${audioAssetId}` : ""}]`;
-}
-function formatAssetDetail(asset, audioAssetId) {
-  const details = [
-    `id='${attr(asset.id)}'`,
-    `type='${attr(asset.type ?? "unknown")}'`,
-    `name='${attr(asset.name ?? "")}'`,
-    audioAssetId ? `audioAssetId='${attr(audioAssetId)}'` : "",
-    asset.describe ? `describe='${attr(asset.describe)}'` : "",
-    asset.prompt ? `visualPrompt='${attr(asset.prompt)}'` : ""
-  ].filter(Boolean);
-  return `<asset ${details.join(" ")}></asset>`;
-}
-function formatStoryboardItem(item) {
-  const linkedAssets = item.associateAssets.map((asset) => `${asset.id}:${asset.type ?? "unknown"}:${compactText(asset.name, 80)}`).join("; ");
-  return `<storyboardItem
-  id='${attr(item.id)}'
-  index='${attr(item.index)}'
-  videoDesc='${attr(item.videoDesc)}'
-  prompt='${attr(item.prompt)}'
-  track='${attr(item.track)}'
-  trackId='${attr(item.trackId)}'
-  duration='${attr(item.duration)}'
-  associateAssetsIds='${attr(JSON.stringify(item.associateAssetsIds))}'
-  associateAssets='${attr(linkedAssets)}'
-  shouldGenerateImage='${attr(item.shouldGenerateImage ?? true)}'
-></storyboardItem>`;
-}
-function formatSequenceItem(item) {
-  return `<sequenceItem
-  relation='${attr(item.relation)}'
-  id='${attr(item.id)}'
-  index='${attr(item.index)}'
-  track='${attr(item.track)}'
-  trackId='${attr(item.trackId)}'
-  duration='${attr(item.duration)}'
-  videoDesc='${attr(item.videoDesc)}'
-  prompt='${attr(item.prompt)}'
-></sequenceItem>`;
-}
-async function loadAssetsByIds(ids) {
-  if (!ids.length) return [];
-  const rows = await utils_default.db("o_assets").leftJoin("o_image", "o_image.id", "o_assets.imageId").whereIn("o_assets.id", ids).select(
-    "o_assets.id",
-    "o_assets.assetsId",
-    "o_assets.type",
-    "o_assets.name",
-    "o_assets.describe",
-    "o_assets.prompt",
-    "o_image.filePath"
-  );
-  const byId = /* @__PURE__ */ new Map();
-  rows.forEach((row) => byId.set(Number(row.id), row));
-  return ids.map((id) => byId.get(id)).filter(Boolean);
-}
-async function loadAudioAssetMap(assets) {
-  const audioIds = assets.filter((asset) => asset.type === "audio").map((asset) => asset.id);
-  if (!audioIds.length) return {};
-  const rows = await utils_default.db("o_assets").whereIn("o_assets.id", audioIds).join("o_assetsRole2Audio", "o_assetsRole2Audio.assetsAudioId", "o_assets.assetsId").select("o_assets.id", "o_assetsRole2Audio.assetsRoleId");
-  const record3 = {};
-  rows.forEach((row) => {
-    if (row.assetsRoleId && row.id) record3[row.assetsRoleId] = row.id;
-  });
-  return record3;
-}
-async function loadVideoPromptContext(info) {
-  const items = await Promise.all(
-    info.map(async (item) => {
-      if (item.sources === "storyboard") {
-        const storyboard2 = await utils_default.db("o_storyboard").where("o_storyboard.id", item.id).select("id", "scriptId", "projectId", "videoDesc", "prompt", "track", "trackId", "duration", "shouldGenerateImage", "index").first();
-        if (!storyboard2) return null;
-        const assetRows = await utils_default.db("o_assets2Storyboard").where("storyboardId", item.id).orderBy("sort", "asc").orderBy("assetId", "asc").select("assetId");
-        const associateAssetsIds = assetRows.map((row) => row.assetId).filter(Boolean);
-        const associateAssets = await loadAssetsByIds(associateAssetsIds);
-        return {
-          ...storyboard2,
-          id: Number(storyboard2.id ?? item.id),
-          associateAssets,
-          associateAssetsIds,
-          _type: "storyboard"
-        };
-      }
-      if (item.sources === "assets") {
-        const [asset] = await loadAssetsByIds([item.id]);
-        return asset ? { ...asset, _type: "assets" } : null;
-      }
-      return null;
-    })
-  );
-  const assets = [];
-  const storyboard = [];
-  for (const item of items) {
-    if (!item) continue;
-    if (item._type === "assets") assets.push(item);
-    if (item._type === "storyboard") storyboard.push(item);
-  }
-  return { assets, sequence: await loadStoryboardSequence(storyboard), storyboard };
-}
-async function loadStoryboardSequence(selectedStoryboards) {
-  const anchors = selectedStoryboards.filter((item) => item.projectId != null && item.scriptId != null);
-  if (!anchors.length) return [];
-  const sequenceMap = /* @__PURE__ */ new Map();
-  function addSequenceItem(row, relation) {
-    if (!row?.id) return;
-    const id = Number(row.id);
-    const existing = sequenceMap.get(id);
-    if (existing) {
-      existing.relations.add(relation);
-      existing.relation = [...existing.relations].join(",");
-      return;
-    }
-    sequenceMap.set(id, {
-      duration: row.duration,
-      id,
-      index: row.index,
-      prompt: row.prompt,
-      relation,
-      relations: /* @__PURE__ */ new Set([relation]),
-      shouldGenerateImage: row.shouldGenerateImage,
-      track: row.track,
-      trackId: row.trackId,
-      videoDesc: row.videoDesc
-    });
-  }
-  const groups = /* @__PURE__ */ new Map();
-  anchors.forEach((item) => {
-    const key = `${item.projectId}:${item.scriptId}`;
-    const group = groups.get(key) ?? [];
-    group.push(item);
-    groups.set(key, group);
-  });
-  for (const group of groups.values()) {
-    const first = group[0];
-    if (!first) continue;
-    const rows = await utils_default.db("o_storyboard").where({ projectId: first.projectId, scriptId: first.scriptId }).select("id", "index", "track", "trackId", "duration", "videoDesc", "prompt", "shouldGenerateImage").orderBy("index", "asc").orderBy("id", "asc");
-    const selectedIds = new Set(group.map((item) => item.id));
-    const selectedTrackIds = new Set(group.map((item) => item.trackId).filter((trackId) => trackId != null));
-    rows.forEach((row, position) => {
-      const id = Number(row.id);
-      if (selectedIds.has(id)) {
-        addSequenceItem(row, "current");
-        addSequenceItem(rows[position - 1], "previous");
-        addSequenceItem(rows[position + 1], "next");
-      }
-      if (row.trackId != null && selectedTrackIds.has(Number(row.trackId))) addSequenceItem(row, "sameTrack");
-    });
-  }
-  return [...sequenceMap.values()].map(({ relations, ...item }) => item).sort((a, b2) => Number(a.index ?? 0) - Number(b2.index ?? 0) || a.id - b2.id);
-}
-async function buildVideoPromptInput(context2, modelName) {
-  const assets = collectPromptAssets(context2);
-  const audioAssetMap = await loadAudioAssetMap(context2.assets);
-  const assetSummary = assets.filter((asset) => asset.filePath).map((asset) => formatAssetSummary(asset, audioAssetMap[asset.id])).join("\uFF0C");
-  const assetDetails = assets.map((asset) => formatAssetDetail(asset, audioAssetMap[asset.id])).join("\n");
-  const storyboardItems = context2.storyboard.map(formatStoryboardItem).join("\n");
-  const sequenceItems = context2.sequence.map(formatSequenceItem).join("\n");
-  return `
-          **\u6A21\u578B\u540D\u79F0**\uFF1A${modelName},
-
-          **\u8D44\u4EA7\u4FE1\u606F**\uFF08\u89D2\u8272\u3001\u573A\u666F\u3001\u9053\u5177\u3001\u97F3\u9891):${assetSummary},
-
-          **\u8D44\u4EA7\u7EC6\u8282**\uFF1A
-${assetDetails || "\u65E0"}
-
-          **\u5206\u955C\u4FE1\u606F**\uFF1A
-${storyboardItems || "\u65E0"}
-
-          **\u5206\u955C\u8FDE\u7EED\u6027\u4E0A\u4E0B\u6587**\uFF08previous/next \u662F\u5168\u7247\u76F8\u90BB\u5206\u955C\uFF0CsameTrack \u662F\u540C\u4E00\u89C6\u9891\u8F68\u9053\u5185\u7684\u5206\u955C\uFF09\uFF1A
-${sequenceItems || "\u65E0"}
-
-          **\u4E00\u81F4\u6027\u8981\u6C42**\uFF1A
-- \u89D2\u8272\u53C2\u8003\u56FE\u662F\u8EAB\u4EFD\u786C\u7EA6\u675F\uFF1A\u540C\u4E00\u89D2\u8272\u7684\u8138\u578B\u3001\u4E94\u5B98\u3001\u53D1\u578B\u3001\u4F53\u578B\u3001\u670D\u9970\u989C\u8272\u3001\u914D\u9970\u5FC5\u987B\u524D\u540E\u4FDD\u6301\u4E00\u81F4\u3002
-- \u573A\u666F\u53C2\u8003\u56FE\u662F\u7A7A\u95F4\u786C\u7EA6\u675F\uFF1A\u623F\u95F4\u5E03\u5C40\u3001\u5899\u9762\u6750\u8D28\u3001\u5BB6\u5177\u4F4D\u7F6E\u3001\u5149\u6E90\u65B9\u5411\u3001\u8272\u8C03\u5FC5\u987B\u4FDD\u6301\u4E00\u81F4\u3002
-- \u5206\u955C\u4E4B\u95F4\u5FC5\u987B\u627F\u63A5\u4E0A\u4E00\u955C\u7684\u89D2\u8272\u59FF\u6001\u3001\u60C5\u7EEA\u72B6\u6001\u3001\u7A7A\u95F4\u4F4D\u7F6E\u3001\u5149\u7EBF\u65B9\u5411\u4E0E\u73AF\u5883\u7269\u4EF6\uFF1B\u4E0D\u5F97\u6BCF\u4E2A\u5206\u955C\u91CD\u65B0\u62BD\u4E00\u5957\u4EBA\u7269\u548C\u573A\u666F\u3002
-- \u540C\u4E00\u89C6\u9891\u8F68\u9053\u5185\u7684\u5206\u955C\u662F\u4E00\u6BB5\u8FDE\u7EED\u52A8\u4F5C\uFF1A\u53EA\u5141\u8BB8 videoDesc \u660E\u786E\u63CF\u8FF0\u7684\u52A8\u4F5C\u3001\u666F\u522B\u3001\u8FD0\u955C\u53D1\u751F\u53D8\u5316\uFF0C\u5176\u4ED6\u8EAB\u4EFD\u548C\u7A7A\u95F4\u951A\u70B9\u4FDD\u6301\u4E0D\u53D8\u3002
-- \u4E0D\u5F97\u65B0\u589E\u672A\u5217\u51FA\u7684\u89D2\u8272\u3001\u624B\u3001\u624B\u81C2\u3001\u817F\u3001\u9053\u5177\u6216\u573A\u666F\u5143\u7D20\uFF1B\u4E0D\u5F97\u8BA9\u4EBA\u7269\u8863\u670D\u3001\u5E74\u9F84\u3001\u53D1\u578B\u3001\u8138\u578B\u8DE8\u955C\u5934\u6F02\u79FB\u3002
-- \u80A2\u4F53\u5FC5\u987B\u81EA\u7136\u53EF\u4FE1\uFF1A\u7981\u6B62\u591A\u4F59\u624B\u6307\u3001\u624B\u6307\u4ECE\u817F\u90E8\u6216\u8EAB\u4F53\u957F\u51FA\u3001\u624B\u638C\u878D\u5408\u3001\u624B\u81C2\u91CD\u590D\u3001\u5173\u8282\u53CD\u6298\u3001\u8EAB\u4F53\u5C40\u90E8\u878D\u5316\u3002
-- \u8FD0\u955C\u4EE5 videoDesc \u4E3A\u51C6\uFF1B\u9664\u975E videoDesc \u660E\u786E\u8981\u6C42\u5207\u6362\uFF0C\u8F93\u51FA\u5E94\u4FDD\u6301\u5355\u4E00\u8FDE\u8D2F\u955C\u5934\u548C\u7A33\u5B9A\u65F6\u5E8F\u3002
-          `;
-}
-function collectPromptAssets(context2) {
-  const byId = /* @__PURE__ */ new Map();
-  const add = (asset) => {
-    if (!asset?.id) return;
-    const existing = byId.get(asset.id);
-    byId.set(asset.id, {
-      ...asset,
-      ...existing,
-      describe: existing?.describe || asset.describe,
-      filePath: existing?.filePath || asset.filePath,
-      name: existing?.name || asset.name,
-      prompt: existing?.prompt || asset.prompt,
-      type: existing?.type || asset.type
-    });
-  };
-  context2.assets.forEach(add);
-  context2.storyboard.forEach((storyboard) => storyboard.associateAssets.forEach(add));
-  return [...byId.values()];
-}
-function uniqueNamedAssets(context2, type) {
-  const names = /* @__PURE__ */ new Set();
-  for (const asset of context2.assets) {
-    if (asset.type === type && asset.name) names.add(compactText(asset.name, 80));
-  }
-  for (const storyboard of context2.storyboard) {
-    for (const asset of storyboard.associateAssets) {
-      if (asset.type === type && asset.name) names.add(compactText(asset.name, 80));
-    }
-  }
-  return [...names];
-}
-function appendVideoConsistencyGuard(prompt, context2) {
-  const trimmed = prompt.trim();
-  if (!trimmed || trimmed.includes("[Consistency lock]") || trimmed.includes("\u3010\u4E00\u81F4\u6027\u9501\u5B9A\u3011")) return prompt;
-  const roleNames = uniqueNamedAssets(context2, "role");
-  const sceneNames = uniqueNamedAssets(context2, "scene");
-  const sequenceBrief = context2.sequence.slice(0, 8).map((item) => `${item.relation}#${item.index ?? item.id}:${compactText(item.videoDesc, 120)}`).join(" | ");
-  const useChinese = CJK_RE2.test(trimmed);
-  const guard = useChinese ? [
-    "\u3010\u4E00\u81F4\u6027\u9501\u5B9A\u3011",
-    `\u89D2\u8272\uFF1A${roleNames.length ? roleNames.join("\u3001") : "\u6240\u6709\u53C2\u8003\u89D2\u8272"}\u3002\u5FC5\u987B\u9501\u5B9A\u540C\u4E00\u8EAB\u4EFD\u3001\u540C\u4E00\u8138\u578B\u3001\u540C\u4E00\u53D1\u578B\u3001\u540C\u4E00\u4F53\u578B\u3001\u540C\u4E00\u670D\u9970\u548C\u914D\u9970\u3002`,
-    `\u573A\u666F\uFF1A${sceneNames.length ? sceneNames.join("\u3001") : "\u6240\u6709\u53C2\u8003\u573A\u666F"}\u3002\u5FC5\u987B\u9501\u5B9A\u540C\u4E00\u7A7A\u95F4\u5E03\u5C40\u3001\u5899\u9762\u6750\u8D28\u3001\u5BB6\u5177\u4F4D\u7F6E\u3001\u5149\u6E90\u65B9\u5411\u548C\u8272\u8C03\u3002`,
-    sequenceBrief ? `\u5206\u955C\u8FDE\u7EED\u6027\uFF1A${sequenceBrief}\u3002\u5F53\u524D\u955C\u5934\u5FC5\u987B\u627F\u63A5\u76F8\u90BB\u5206\u955C\u7684\u4EBA\u7269\u59FF\u6001\u3001\u60C5\u7EEA\u3001\u7A7A\u95F4\u4F4D\u7F6E\u3001\u5149\u7EBF\u65B9\u5411\uFF0C\u4E0D\u5F97\u91CD\u7F6E\u753B\u9762\u3002` : "",
-    "\u53EA\u5141\u8BB8 videoDesc \u4E2D\u6307\u5B9A\u7684\u52A8\u4F5C\u548C\u8FD0\u955C\uFF1B\u4E0D\u5F97\u7A81\u7136\u6362\u623F\u95F4\u3001\u6362\u670D\u88C5\u3001\u6362\u5E74\u9F84\u3001\u6362\u8138\u3001\u6362\u53D1\u578B\u6216\u65B0\u589E\u4EBA\u7269\u3002",
-    "\u80A2\u4F53\u81EA\u7136\u53EF\u4FE1\uFF1A\u7981\u6B62\u591A\u4F59\u624B\u6307\u3001\u817F\u90E8\u6216\u8EAB\u4F53\u957F\u51FA\u624B\u6307\u3001\u591A\u4F59\u624B\u81C2\u3001\u624B\u638C\u878D\u5408\u3001\u5173\u8282\u53CD\u6298\u3001\u8EAB\u4F53\u5C40\u90E8\u878D\u5316\u3002"
-  ].filter(Boolean) : [
-    "[Consistency lock]",
-    `Characters: ${roleNames.length ? roleNames.join(", ") : "all referenced characters"}. Keep the same identity, face, hairstyle, body shape, outfit colors, and accessories throughout the shot.`,
-    `Scenes: ${sceneNames.length ? sceneNames.join(", ") : "all referenced scenes"}. Keep the same room layout, wall texture, furniture positions, lighting direction, and color palette.`,
-    sequenceBrief ? `Storyboard continuity: ${sequenceBrief}. Continue the adjacent shots' pose, emotion, spatial position, lighting direction, and environment. Do not reset the image between shots.` : "",
-    "Only perform the action and camera movement described in videoDesc. Do not suddenly change rooms, clothing, age, face, hairstyle, or introduce extra people.",
-    "Natural anatomy only: no extra fingers, no fingers growing from legs or body, no extra arms, no fused hands, no broken joints, no melting body parts."
-  ].filter(Boolean);
-  return `${trimmed}
-
-${guard.join("\n")}`;
-}
-var CJK_RE2;
-var init_videoPromptContext = __esm({
-  "src/utils/videoPromptContext.ts"() {
-    "use strict";
-    init_utils3();
-    CJK_RE2 = /[\u3400-\u9fff]/;
-  }
-});
-
 // src/routes/production/workbench/batchGeneratePrompt.ts
-var import_express118, router118, batchGeneratePrompt_default;
+function selectVideoPromptTemplateFile(modelName, mode) {
+  const modelLower = (modelName ?? "").toLowerCase();
+  if (modelLower.includes("wan") && modelLower.includes("2.6")) return "wan2.6Single-imageFirstFrameMode.md";
+  if (/seedance.*2[.\-]0/i.test(modelName ?? "")) return "seedance2Multi-parameterMode.md";
+  if (mode === "startEndRequired" || mode === "endFrameOptional" || mode === "startFrameOptional") return "universalFirstAndLastFrameMode.md";
+  if (typeof mode === "string" && mode.startsWith('["') && mode.endsWith('"]')) return "universalMulti-parameterMode.md";
+  return null;
+}
+async function loadModelVideoPromptTemplate(model, mode) {
+  const [vendorId, modelName] = model.split(/:(.+)/);
+  const modelPromptRoot = utils_default.getPath(["modelPrompt"]);
+  const modelPromptData = await utils_default.db("o_modelPrompt").where("vendorId", vendorId).where("model", modelName).first();
+  if (modelPromptData?.path) {
+    try {
+      return await import_promises4.default.readFile(import_path14.default.join(modelPromptRoot, modelPromptData.path), "utf-8");
+    } catch {
+    }
+  }
+  const fileName = selectVideoPromptTemplateFile(modelName, mode);
+  if (!fileName) return void 0;
+  try {
+    return await import_promises4.default.readFile(import_path14.default.join(modelPromptRoot, "video", fileName), "utf-8");
+  } catch {
+    return void 0;
+  }
+}
+var import_express118, import_promises4, import_path14, router118, batchGeneratePrompt_default;
 var init_batchGeneratePrompt = __esm({
   "src/routes/production/workbench/batchGeneratePrompt.ts"() {
     "use strict";
@@ -268057,6 +268443,8 @@ var init_batchGeneratePrompt = __esm({
     init_zod();
     init_responseFormat();
     init_middleware();
+    import_promises4 = __toESM(require("fs/promises"));
+    import_path14 = __toESM(require("path"));
     init_modelBilling();
     init_videoPromptContext();
     router118 = import_express118.default.Router();
@@ -268075,10 +268463,11 @@ var init_batchGeneratePrompt = __esm({
             )
           })
         ),
-        model: external_exports.string()
+        model: external_exports.string(),
+        mode: external_exports.string().optional()
       }),
       async (req, res) => {
-        const { projectId, trackData, model } = req.body;
+        const { projectId, trackData, model, mode } = req.body;
         const userId = String(req.user?.id || "");
         if (!userId) return res.status(401).send(error53("\u672A\u63D0\u4F9Btoken"));
         if (!trackData.length) return res.status(400).send(error53("\u8BF7\u9009\u62E9\u9700\u8981\u751F\u6210\u63D0\u793A\u8BCD\u7684\u8F68\u9053"));
@@ -268099,11 +268488,12 @@ var init_batchGeneratePrompt = __esm({
         if (!quote.enough) return res.status(400).send(error53(`\u79EF\u5206\u4E0D\u8DB3\uFF0C\u9700\u8981 ${quote.requiredPoints} \u79EF\u5206\uFF0C\u5F53\u524D\u53EF\u7528 ${quote.availablePoints} \u79EF\u5206`));
         const [, modelData] = model.split(/:(.+)/);
         const projectData = await utils_default.db("o_project").select("*").where({ id: projectId }).first();
+        const promptMode = mode ?? projectData?.mode ?? "";
         const videoPrompt = await utils_default.db("o_prompt").where("type", "videoPromptGeneration").first();
-        let videoPromptGeneration = "";
-        if (videoPrompt && videoPrompt.useData) {
+        let videoPromptGeneration = await loadModelVideoPromptTemplate(model, promptMode);
+        if (!videoPromptGeneration && videoPrompt && videoPrompt.useData) {
           videoPromptGeneration = videoPrompt.useData;
-        } else {
+        } else if (!videoPromptGeneration) {
           videoPromptGeneration = videoPrompt?.data ?? void 0;
         }
         const artStyle = projectData?.artStyle || "\u65E0";
@@ -268129,7 +268519,8 @@ var init_batchGeneratePrompt = __esm({
               taskType: "video_prompt_generation",
               userId
             });
-            const promptContext = await loadVideoPromptContext(trackItem.info);
+            const promptSources = await buildVideoPromptSources(trackItem.info, { mode: promptMode, trackId: trackItem.trackId });
+            const promptContext = await loadVideoPromptContext(promptSources);
             const content = await buildVideoPromptInput(promptContext, modelData);
             const { text: text2 } = await utils_default.Ai.Text("universalAi").invoke({
               system: videoPromptGeneration,
@@ -268235,8 +268626,10 @@ var init_batchGenerateVideo = __esm({
         try {
           for (const track of trackData) {
             const { uploadData, trackId, prompt, duration: duration4 } = track;
+            const promptSources = await buildVideoPromptSources(uploadData, { mode, trackId });
+            const referenceSources = await buildVideoReferenceSources(uploadData, { mode, trackId });
             const images = await Promise.all(
-              uploadData.map(async (item) => {
+              referenceSources.map(async (item) => {
                 if (item.sources === "storyboard") {
                   const filePath = await utils_default.db("o_storyboard").where("id", item.id).select("filePath").first();
                   return { path: filePath?.filePath, sources: "storyBoard" };
@@ -268249,7 +268642,7 @@ var init_batchGenerateVideo = __esm({
             );
             const videoPath = `/${projectId}/video/${v4_default()}.mp4`;
             const storageProvider = utils_default.oss.getStorageProvider();
-            const promptContext = await loadVideoPromptContext(uploadData);
+            const promptContext = await loadVideoPromptContext(promptSources);
             const requestPrompt = appendVideoConsistencyGuard(prompt, promptContext);
             const negativePrompt = resolveNegativePrompt({ prompt: requestPrompt, negativePromptSource }, { mediaType: "video", modelKey: model });
             const [videoId] = await utils_default.db("o_video").insert({
@@ -268498,13 +268891,15 @@ var init_generateVideo = __esm({
         }
         const project = await utils_default.db("o_project").select("videoRatio", "artStyle").where("id", projectId).first();
         const negativePromptSource = utils_default.getArtPrompt(project?.artStyle ?? "", "art_skills", "director_storyboard");
-        const promptContext = await loadVideoPromptContext(uploadData);
+        const promptSources = await buildVideoPromptSources(uploadData, { mode, trackId });
+        const referenceSources = await buildVideoReferenceSources(uploadData, { mode, trackId });
+        const promptContext = await loadVideoPromptContext(promptSources);
         const requestPrompt = appendVideoConsistencyGuard(prompt, promptContext);
         const negativePrompt = resolveNegativePrompt({ prompt: requestPrompt, negativePromptSource }, { mediaType: "video", modelKey: model });
         const videoPath = `/${projectId}/video/${v4_default()}.mp4`;
         const storageProvider = utils_default.oss.getStorageProvider();
         const images = await Promise.all(
-          uploadData.map(async (item) => {
+          referenceSources.map(async (item) => {
             if (item.sources === "storyboard") {
               const filePath = await utils_default.db("o_storyboard").where("id", item.id).select("filePath").first();
               return { path: filePath?.filePath, sources: "storyBoard" };
@@ -268597,7 +268992,7 @@ var init_generateVideo = __esm({
 });
 
 // src/routes/production/workbench/generateVideoPrompt.ts
-var import_express124, import_promises4, import_path14, router124, generateVideoPrompt_default;
+var import_express124, import_promises5, import_path15, router124, generateVideoPrompt_default;
 var init_generateVideoPrompt = __esm({
   "src/routes/production/workbench/generateVideoPrompt.ts"() {
     "use strict";
@@ -268606,8 +269001,8 @@ var init_generateVideoPrompt = __esm({
     init_zod();
     init_responseFormat();
     init_middleware();
-    import_promises4 = __toESM(require("fs/promises"));
-    import_path14 = __toESM(require("path"));
+    import_promises5 = __toESM(require("fs/promises"));
+    import_path15 = __toESM(require("path"));
     init_modelBilling();
     init_videoPromptContext();
     router124 = import_express124.default.Router();
@@ -268637,15 +269032,15 @@ var init_generateVideoPrompt = __esm({
         if (modelPromptData) {
           const modelPromptRoot = utils_default.getPath(["modelPrompt"]);
           try {
-            const fullPath = import_path14.default.join(modelPromptRoot, modelPromptData?.path);
-            const content2 = await import_promises4.default.readFile(fullPath, "utf-8");
+            const fullPath = import_path15.default.join(modelPromptRoot, modelPromptData?.path);
+            const content2 = await import_promises5.default.readFile(fullPath, "utf-8");
             videoPromptGeneration = content2 ?? "";
           } catch {
           }
         }
         if (!videoPromptGeneration) {
           const modelPromptRoot = utils_default.getPath(["modelPrompt"]);
-          const videoPromptDir = import_path14.default.join(modelPromptRoot, "video");
+          const videoPromptDir = import_path15.default.join(modelPromptRoot, "video");
           const modelLower = (modelData ?? "").toLowerCase();
           let fileName = null;
           if (modelLower.includes("wan") && modelLower.includes("2.6")) {
@@ -268659,8 +269054,8 @@ var init_generateVideoPrompt = __esm({
           }
           if (fileName) {
             try {
-              const fullPath = import_path14.default.join(videoPromptDir, fileName);
-              videoPromptGeneration = await import_promises4.default.readFile(fullPath, "utf-8");
+              const fullPath = import_path15.default.join(videoPromptDir, fileName);
+              videoPromptGeneration = await import_promises5.default.readFile(fullPath, "utf-8");
             } catch {
             }
           }
@@ -268674,7 +269069,8 @@ var init_generateVideoPrompt = __esm({
         }
         const artStyle = projectData?.artStyle || "\u65E0";
         const visualManual = utils_default.getArtPrompt(artStyle, "art_skills", "art_storyboard_video");
-        const promptContext = await loadVideoPromptContext(info);
+        const promptSources = await buildVideoPromptSources(info, { mode, trackId });
+        const promptContext = await loadVideoPromptContext(promptSources);
         const content = await buildVideoPromptInput(promptContext, modelData);
         let quote;
         try {
@@ -269164,7 +269560,7 @@ var init_updateVideoPrompt = __esm({
 });
 
 // src/routes/project/addDirectorManual.ts
-var import_express132, import_fs8, import_path15, router132, addDirectorManual_default;
+var import_express132, import_fs8, import_path16, router132, addDirectorManual_default;
 var init_addDirectorManual = __esm({
   "src/routes/project/addDirectorManual.ts"() {
     "use strict";
@@ -269172,7 +269568,7 @@ var init_addDirectorManual = __esm({
     init_utils3();
     init_responseFormat();
     import_fs8 = __toESM(require("fs"));
-    import_path15 = __toESM(require("path"));
+    import_path16 = __toESM(require("path"));
     init_middleware();
     init_zod();
     router132 = import_express132.default.Router();
@@ -269213,23 +269609,23 @@ var init_addDirectorManual = __esm({
             const subDir = SUB_DIR_MAP.get(item.value);
             const dirArr = subDir ? [mainPath, subDir] : [mainPath];
             const filePath = utils_default.getPath([...dirArr, `${item.value}.md`]);
-            const fileDir = import_path15.default.dirname(filePath);
+            const fileDir = import_path16.default.dirname(filePath);
             if (!import_fs8.default.existsSync(fileDir)) {
               import_fs8.default.mkdirSync(fileDir, { recursive: true });
             }
             import_fs8.default.writeFileSync(filePath, item.data, "utf-8");
           }
-          const imagesDir = import_path15.default.join(mainPath, "images");
+          const imagesDir = import_path16.default.join(mainPath, "images");
           let existingFiles = [];
           try {
             const allFiles = import_fs8.default.readdirSync(imagesDir);
             existingFiles = allFiles.filter((f) => /\.(png|jpe?g|gif|webp|svg)$/i.test(f));
           } catch {
           }
-          const retainedFileNames = new Set(images.filter((item) => item.startsWith("http")).map((url4) => import_path15.default.basename(new URL(url4).pathname)));
+          const retainedFileNames = new Set(images.filter((item) => item.startsWith("http")).map((url4) => import_path16.default.basename(new URL(url4).pathname)));
           for (const file4 of existingFiles) {
             if (!retainedFileNames.has(file4)) {
-              const filePath = import_path15.default.join(imagesDir, file4);
+              const filePath = import_path16.default.join(imagesDir, file4);
               if (import_fs8.default.existsSync(filePath)) import_fs8.default.unlinkSync(filePath);
             }
           }
@@ -269239,7 +269635,7 @@ var init_addDirectorManual = __esm({
           for (const item of images) {
             if (!item.startsWith("http")) {
               const fileName = `${utils_default.uuid()}.jpg`;
-              const targetPath = import_path15.default.join(imagesDir, fileName);
+              const targetPath = import_path16.default.join(imagesDir, fileName);
               const buffer = Buffer.from(item.replace(/^data:[^;]+;base64,/, ""), "base64");
               import_fs8.default.writeFileSync(targetPath, buffer);
             }
@@ -269306,7 +269702,7 @@ var init_addProject = __esm({
 });
 
 // src/routes/project/addVisualManual.ts
-var import_express134, import_fs9, import_path16, router134, addVisualManual_default;
+var import_express134, import_fs9, import_path17, router134, addVisualManual_default;
 var init_addVisualManual = __esm({
   "src/routes/project/addVisualManual.ts"() {
     "use strict";
@@ -269314,7 +269710,7 @@ var init_addVisualManual = __esm({
     init_utils3();
     init_responseFormat();
     import_fs9 = __toESM(require("fs"));
-    import_path16 = __toESM(require("path"));
+    import_path17 = __toESM(require("path"));
     init_middleware();
     init_zod();
     router134 = import_express134.default.Router();
@@ -269364,23 +269760,23 @@ var init_addVisualManual = __esm({
             const subDir = SUB_DIR_MAP.get(item.value);
             const dirArr = subDir ? [mainPath, subDir] : [mainPath];
             const filePath = utils_default.getPath([...dirArr, `${item.value}.md`]);
-            const fileDir = import_path16.default.dirname(filePath);
+            const fileDir = import_path17.default.dirname(filePath);
             if (!import_fs9.default.existsSync(fileDir)) {
               import_fs9.default.mkdirSync(fileDir, { recursive: true });
             }
             import_fs9.default.writeFileSync(filePath, item.data, "utf-8");
           }
-          const imagesDir = import_path16.default.join(mainPath, "images");
+          const imagesDir = import_path17.default.join(mainPath, "images");
           let existingFiles = [];
           try {
             const allFiles = import_fs9.default.readdirSync(imagesDir);
             existingFiles = allFiles.filter((f) => /\.(png|jpe?g|gif|webp|svg)$/i.test(f));
           } catch {
           }
-          const retainedFileNames = new Set(images.filter((item) => item.startsWith("http")).map((url4) => import_path16.default.basename(new URL(url4).pathname)));
+          const retainedFileNames = new Set(images.filter((item) => item.startsWith("http")).map((url4) => import_path17.default.basename(new URL(url4).pathname)));
           for (const file4 of existingFiles) {
             if (!retainedFileNames.has(file4)) {
-              const filePath = import_path16.default.join(imagesDir, file4);
+              const filePath = import_path17.default.join(imagesDir, file4);
               if (import_fs9.default.existsSync(filePath)) import_fs9.default.unlinkSync(filePath);
             }
           }
@@ -269390,7 +269786,7 @@ var init_addVisualManual = __esm({
           for (const item of images) {
             if (!item.startsWith("http")) {
               const fileName = `${utils_default.uuid()}.jpg`;
-              const targetPath = import_path16.default.join(imagesDir, fileName);
+              const targetPath = import_path17.default.join(imagesDir, fileName);
               const buffer = Buffer.from(item.replace(/^data:[^;]+;base64,/, ""), "base64");
               import_fs9.default.writeFileSync(targetPath, buffer);
             }
@@ -269405,13 +269801,13 @@ var init_addVisualManual = __esm({
 });
 
 // src/routes/project/deleteDirectorManual.ts
-var import_express135, import_promises5, router135, deleteDirectorManual_default;
+var import_express135, import_promises6, router135, deleteDirectorManual_default;
 var init_deleteDirectorManual = __esm({
   "src/routes/project/deleteDirectorManual.ts"() {
     "use strict";
     import_express135 = __toESM(require_express2());
     init_utils3();
-    import_promises5 = __toESM(require("node:fs/promises"));
+    import_promises6 = __toESM(require("node:fs/promises"));
     init_zod();
     init_responseFormat();
     init_middleware();
@@ -269430,11 +269826,11 @@ var init_deleteDirectorManual = __esm({
           }
           const artPromptsDir = utils_default.getPath(["skills", "story_skills", name28]);
           try {
-            const stat = await import_promises5.default.stat(artPromptsDir);
+            const stat = await import_promises6.default.stat(artPromptsDir);
             if (!stat.isDirectory()) {
               throw new Error(`${artPromptsDir} \u4E0D\u662F\u6587\u4EF6\u5939`);
             }
-            await import_promises5.default.rm(artPromptsDir, { recursive: true, force: true });
+            await import_promises6.default.rm(artPromptsDir, { recursive: true, force: true });
           } catch (e) {
             console.error("[\u5220\u9664\u89C6\u89C9\u624B\u518C] \u5220\u9664\u5931\u8D25:", artPromptsDir, e);
           }
@@ -269448,13 +269844,13 @@ var init_deleteDirectorManual = __esm({
 });
 
 // src/routes/project/deleteVisualManual.ts
-var import_express136, import_promises6, router136, deleteVisualManual_default;
+var import_express136, import_promises7, router136, deleteVisualManual_default;
 var init_deleteVisualManual = __esm({
   "src/routes/project/deleteVisualManual.ts"() {
     "use strict";
     import_express136 = __toESM(require_express2());
     init_utils3();
-    import_promises6 = __toESM(require("node:fs/promises"));
+    import_promises7 = __toESM(require("node:fs/promises"));
     init_zod();
     init_responseFormat();
     init_middleware();
@@ -269473,11 +269869,11 @@ var init_deleteVisualManual = __esm({
           }
           const artPromptsDir = utils_default.getPath(["skills", "art_skills", name28]);
           try {
-            const stat = await import_promises6.default.stat(artPromptsDir);
+            const stat = await import_promises7.default.stat(artPromptsDir);
             if (!stat.isDirectory()) {
               throw new Error(`${artPromptsDir} \u4E0D\u662F\u6587\u4EF6\u5939`);
             }
-            await import_promises6.default.rm(artPromptsDir, { recursive: true, force: true });
+            await import_promises7.default.rm(artPromptsDir, { recursive: true, force: true });
           } catch (e) {
             console.error("[\u5220\u9664\u89C6\u89C9\u624B\u518C] \u5220\u9664\u5931\u8D25:", artPromptsDir, e);
           }
@@ -269549,7 +269945,7 @@ var init_delProject = __esm({
 });
 
 // src/routes/project/editDirectorlManual.ts
-var import_express138, import_fs10, import_path17, router138, editDirectorlManual_default;
+var import_express138, import_fs10, import_path18, router138, editDirectorlManual_default;
 var init_editDirectorlManual = __esm({
   "src/routes/project/editDirectorlManual.ts"() {
     "use strict";
@@ -269557,7 +269953,7 @@ var init_editDirectorlManual = __esm({
     init_utils3();
     init_responseFormat();
     import_fs10 = __toESM(require("fs"));
-    import_path17 = __toESM(require("path"));
+    import_path18 = __toESM(require("path"));
     init_middleware();
     init_zod();
     router138 = import_express138.default.Router();
@@ -269598,7 +269994,7 @@ var init_editDirectorlManual = __esm({
             const subDir = SUB_DIR_MAP.get(item.value);
             const dirArr = subDir ? [mainPath, subDir] : [mainPath];
             const filePath = utils_default.getPath([...dirArr, `${item.value}.md`]);
-            const fileDir = import_path17.default.dirname(filePath);
+            const fileDir = import_path18.default.dirname(filePath);
             if (!import_fs10.default.existsSync(fileDir)) {
               import_fs10.default.mkdirSync(fileDir, { recursive: true });
             }
@@ -269606,17 +270002,17 @@ var init_editDirectorlManual = __esm({
 ${item.data}` : item.data;
             import_fs10.default.writeFileSync(filePath, content, "utf-8");
           }
-          const imagesDir = import_path17.default.join(mainPath, "images");
+          const imagesDir = import_path18.default.join(mainPath, "images");
           let existingFiles = [];
           try {
             const allFiles = import_fs10.default.readdirSync(imagesDir);
             existingFiles = allFiles.filter((f) => /\.(png|jpe?g|gif|webp|svg)$/i.test(f));
           } catch {
           }
-          const retainedFileNames = new Set(images.filter((item) => item.startsWith("http")).map((url4) => import_path17.default.basename(new URL(url4).pathname)));
+          const retainedFileNames = new Set(images.filter((item) => item.startsWith("http")).map((url4) => import_path18.default.basename(new URL(url4).pathname)));
           for (const file4 of existingFiles) {
             if (!retainedFileNames.has(file4)) {
-              const filePath = import_path17.default.join(imagesDir, file4);
+              const filePath = import_path18.default.join(imagesDir, file4);
               if (import_fs10.default.existsSync(filePath)) import_fs10.default.unlinkSync(filePath);
             }
           }
@@ -269626,7 +270022,7 @@ ${item.data}` : item.data;
           for (const item of images) {
             if (!item.startsWith("http")) {
               const fileName = `${utils_default.uuid()}.jpg`;
-              const targetPath = import_path17.default.join(imagesDir, fileName);
+              const targetPath = import_path18.default.join(imagesDir, fileName);
               const buffer = Buffer.from(item.replace(/^data:[^;]+;base64,/, ""), "base64");
               import_fs10.default.writeFileSync(targetPath, buffer);
             }
@@ -269691,7 +270087,7 @@ var init_editProject = __esm({
 });
 
 // src/routes/project/editVisualManual.ts
-var import_express140, import_fs11, import_path18, router140, editVisualManual_default;
+var import_express140, import_fs11, import_path19, router140, editVisualManual_default;
 var init_editVisualManual = __esm({
   "src/routes/project/editVisualManual.ts"() {
     "use strict";
@@ -269699,7 +270095,7 @@ var init_editVisualManual = __esm({
     init_utils3();
     init_responseFormat();
     import_fs11 = __toESM(require("fs"));
-    import_path18 = __toESM(require("path"));
+    import_path19 = __toESM(require("path"));
     init_middleware();
     init_zod();
     router140 = import_express140.default.Router();
@@ -269749,7 +270145,7 @@ var init_editVisualManual = __esm({
             const subDir = SUB_DIR_MAP.get(item.value);
             const dirArr = subDir ? [mainPath, subDir] : [mainPath];
             const filePath = utils_default.getPath([...dirArr, `${item.value}.md`]);
-            const fileDir = import_path18.default.dirname(filePath);
+            const fileDir = import_path19.default.dirname(filePath);
             if (!import_fs11.default.existsSync(fileDir)) {
               import_fs11.default.mkdirSync(fileDir, { recursive: true });
             }
@@ -269757,17 +270153,17 @@ var init_editVisualManual = __esm({
 ${item.data}` : item.data;
             import_fs11.default.writeFileSync(filePath, content, "utf-8");
           }
-          const imagesDir = import_path18.default.join(mainPath, "images");
+          const imagesDir = import_path19.default.join(mainPath, "images");
           let existingFiles = [];
           try {
             const allFiles = import_fs11.default.readdirSync(imagesDir);
             existingFiles = allFiles.filter((f) => /\.(png|jpe?g|gif|webp|svg)$/i.test(f));
           } catch {
           }
-          const retainedFileNames = new Set(images.filter((item) => item.startsWith("http")).map((url4) => import_path18.default.basename(new URL(url4).pathname)));
+          const retainedFileNames = new Set(images.filter((item) => item.startsWith("http")).map((url4) => import_path19.default.basename(new URL(url4).pathname)));
           for (const file4 of existingFiles) {
             if (!retainedFileNames.has(file4)) {
-              const filePath = import_path18.default.join(imagesDir, file4);
+              const filePath = import_path19.default.join(imagesDir, file4);
               if (import_fs11.default.existsSync(filePath)) import_fs11.default.unlinkSync(filePath);
             }
           }
@@ -269777,7 +270173,7 @@ ${item.data}` : item.data;
           for (const item of images) {
             if (!item.startsWith("http")) {
               const fileName = `${utils_default.uuid()}.jpg`;
-              const targetPath = import_path18.default.join(imagesDir, fileName);
+              const targetPath = import_path19.default.join(imagesDir, fileName);
               const buffer = Buffer.from(item.replace(/^data:[^;]+;base64,/, ""), "base64");
               import_fs11.default.writeFileSync(targetPath, buffer);
             }
@@ -269848,9 +270244,9 @@ function readMd(filePath) {
 }
 async function readAllImages(imagesDir) {
   try {
-    const ossPath = utils_default.getPath(import_path19.default.join("skills", "art_skills", imagesDir, "images"));
+    const ossPath = utils_default.getPath(import_path20.default.join("skills", "art_skills", imagesDir, "images"));
     const files = import_fs12.default.readdirSync(ossPath);
-    const images = files.filter((f) => /\.(png|jpe?g|gif|webp|svg)$/i.test(f)).map((f) => import_path19.default.join("art_skills", imagesDir, "images", f));
+    const images = files.filter((f) => /\.(png|jpe?g|gif|webp|svg)$/i.test(f)).map((f) => import_path20.default.join("art_skills", imagesDir, "images", f));
     if (images.length) {
       return Promise.all(images.map(async (i) => await utils_default.oss.getFileUrl(i, "skills")));
     } else {
@@ -269860,7 +270256,7 @@ async function readAllImages(imagesDir) {
     return [];
   }
 }
-var import_express143, import_fs12, import_path19, router143, DATA_MAP, getVisualManual_default;
+var import_express143, import_fs12, import_path20, router143, DATA_MAP, getVisualManual_default;
 var init_getVisualManual = __esm({
   "src/routes/project/getVisualManual.ts"() {
     "use strict";
@@ -269868,7 +270264,7 @@ var init_getVisualManual = __esm({
     init_utils3();
     init_responseFormat();
     import_fs12 = __toESM(require("fs"));
-    import_path19 = __toESM(require("path"));
+    import_path20 = __toESM(require("path"));
     router143 = import_express143.default.Router();
     DATA_MAP = [
       { label: "README", value: "README" },
@@ -269890,17 +270286,17 @@ var init_getVisualManual = __esm({
         const styleDirs = import_fs12.default.readdirSync(artPromptsDir, { withFileTypes: true }).filter((d) => d.isDirectory()).map((d) => d.name);
         const result = await Promise.all(
           styleDirs.map(async (styleName) => {
-            const styleDir = import_path19.default.join(artPromptsDir, styleName);
+            const styleDir = import_path20.default.join(artPromptsDir, styleName);
             const images = await readAllImages(styleName);
-            const readmePath = import_path19.default.join(styleDir, "README.md");
+            const readmePath = import_path20.default.join(styleDir, "README.md");
             const readmeContent = import_fs12.default.readFileSync(readmePath, "utf-8");
             const firstLine = readmeContent.split("\n")[0].replace(/--/g, "");
             const data2 = DATA_MAP.map(({ label, value, subDir }) => {
               let mdPath;
               if (subDir) {
-                mdPath = import_path19.default.join(styleDir, subDir, `${value}.md`);
+                mdPath = import_path20.default.join(styleDir, subDir, `${value}.md`);
               } else {
-                mdPath = import_path19.default.join(styleDir, `${value}.md`);
+                mdPath = import_path20.default.join(styleDir, `${value}.md`);
               }
               return {
                 label,
@@ -269934,9 +270330,9 @@ function readMd2(filePath) {
 }
 async function readAllImages2(imagesDir) {
   try {
-    const ossPath = utils_default.getPath(import_path20.default.join("skills", "story_skills", imagesDir, "images"));
+    const ossPath = utils_default.getPath(import_path21.default.join("skills", "story_skills", imagesDir, "images"));
     const files = import_fs13.default.readdirSync(ossPath);
-    const images = files.filter((f) => /\.(png|jpe?g|gif|webp|svg)$/i.test(f)).map((f) => import_path20.default.join("story_skills", imagesDir, "images", f));
+    const images = files.filter((f) => /\.(png|jpe?g|gif|webp|svg)$/i.test(f)).map((f) => import_path21.default.join("story_skills", imagesDir, "images", f));
     if (images.length) {
       return Promise.all(images.map(async (i) => await utils_default.oss.getFileUrl(i, "skills")));
     } else {
@@ -269946,7 +270342,7 @@ async function readAllImages2(imagesDir) {
     return [];
   }
 }
-var import_express144, import_fs13, import_path20, router144, DATA_MAP2, queryDirectorManual_default;
+var import_express144, import_fs13, import_path21, router144, DATA_MAP2, queryDirectorManual_default;
 var init_queryDirectorManual = __esm({
   "src/routes/project/queryDirectorManual.ts"() {
     "use strict";
@@ -269954,7 +270350,7 @@ var init_queryDirectorManual = __esm({
     init_utils3();
     init_responseFormat();
     import_fs13 = __toESM(require("fs"));
-    import_path20 = __toESM(require("path"));
+    import_path21 = __toESM(require("path"));
     router144 = import_express144.default.Router();
     DATA_MAP2 = [
       { label: "README", value: "README" },
@@ -269967,17 +270363,17 @@ var init_queryDirectorManual = __esm({
         const styleDirs = import_fs13.default.readdirSync(artPromptsDir, { withFileTypes: true }).filter((d) => d.isDirectory()).map((d) => d.name);
         const result = await Promise.all(
           styleDirs.map(async (directorManual) => {
-            const styleDir = import_path20.default.join(artPromptsDir, directorManual);
+            const styleDir = import_path21.default.join(artPromptsDir, directorManual);
             const images = await readAllImages2(directorManual);
-            const readmePath = import_path20.default.join(styleDir, "README.md");
+            const readmePath = import_path21.default.join(styleDir, "README.md");
             const readmeContent = import_fs13.default.readFileSync(readmePath, "utf-8");
             const firstLine = readmeContent.split("\n")[0].replace(/--/g, "");
             const data2 = DATA_MAP2.map(({ label, value, subDir }) => {
               let mdPath;
               if (subDir) {
-                mdPath = import_path20.default.join(styleDir, subDir, `${value}.md`);
+                mdPath = import_path21.default.join(styleDir, subDir, `${value}.md`);
               } else {
-                mdPath = import_path20.default.join(styleDir, `${value}.md`);
+                mdPath = import_path21.default.join(styleDir, `${value}.md`);
               }
               return {
                 label,
@@ -270002,7 +270398,7 @@ var init_queryDirectorManual = __esm({
 });
 
 // src/routes/project/visualManual.ts
-var import_express145, import_fs14, import_path21, router145, visualManual_default;
+var import_express145, import_fs14, import_path22, router145, visualManual_default;
 var init_visualManual = __esm({
   "src/routes/project/visualManual.ts"() {
     "use strict";
@@ -270012,7 +270408,7 @@ var init_visualManual = __esm({
     init_middleware();
     init_getPath();
     import_fs14 = __toESM(require("fs"));
-    import_path21 = __toESM(require("path"));
+    import_path22 = __toESM(require("path"));
     router145 = import_express145.default.Router();
     visualManual_default = router145.post(
       "/",
@@ -270025,7 +270421,7 @@ var init_visualManual = __esm({
         const findFile = (dir, target) => {
           const entries = import_fs14.default.readdirSync(dir, { withFileTypes: true });
           for (const entry of entries) {
-            const fullPath = import_path21.default.join(dir, entry.name);
+            const fullPath = import_path22.default.join(dir, entry.name);
             if (entry.isDirectory()) {
               const found = findFile(fullPath, target);
               if (found) return found;
@@ -270183,35 +270579,35 @@ var init_delScript = __esm({
 var require_utils10 = __commonJS({
   "../../node_modules/.pnpm/compressing@2.1.1/node_modules/compressing/lib/utils.js"(exports2) {
     "use strict";
-    var fs32 = require("fs");
-    var path32 = require("path");
+    var fs33 = require("fs");
+    var path33 = require("path");
     var { pipeline: pump } = require("stream");
     function isPathWithinParent(childPath, parentPath) {
-      const normalizedChild = path32.resolve(childPath);
-      const normalizedParent = path32.resolve(parentPath);
-      const parentWithSep = normalizedParent.endsWith(path32.sep) ? normalizedParent : normalizedParent + path32.sep;
+      const normalizedChild = path33.resolve(childPath);
+      const normalizedParent = path33.resolve(parentPath);
+      const parentWithSep = normalizedParent.endsWith(path33.sep) ? normalizedParent : normalizedParent + path33.sep;
       return normalizedChild === normalizedParent || normalizedChild.startsWith(parentWithSep);
     }
     async function isRealPathSafe(targetPath, parentDir, realParentDir) {
       function isWithinParent(p3) {
         return isPathWithinParent(p3, parentDir) || isPathWithinParent(p3, realParentDir);
       }
-      const relative = path32.relative(parentDir, targetPath);
-      const segments = relative.split(path32.sep);
+      const relative = path33.relative(parentDir, targetPath);
+      const segments = relative.split(path33.sep);
       let current = parentDir;
       for (const segment of segments) {
         if (!segment || segment === ".") continue;
-        current = path32.join(current, segment);
+        current = path33.join(current, segment);
         try {
-          const stat = await fs32.promises.lstat(current);
+          const stat = await fs33.promises.lstat(current);
           if (stat.isSymbolicLink()) {
             let resolved;
             try {
-              resolved = await fs32.promises.realpath(current);
+              resolved = await fs33.promises.realpath(current);
             } catch (e) {
               if (e.code === "ENOENT") {
-                const linkTarget = await fs32.promises.readlink(current);
-                const absTarget = path32.resolve(path32.dirname(current), linkTarget);
+                const linkTarget = await fs33.promises.readlink(current);
+                const absTarget = path33.resolve(path33.dirname(current), linkTarget);
                 return isWithinParent(absTarget);
               }
               return false;
@@ -270269,14 +270665,14 @@ var require_utils10 = __commonJS({
       return (source, dest, opts) => {
         opts = opts || {};
         opts.source = source;
-        const destStream = destType(dest) === "path" ? fs32.createWriteStream(dest) : dest;
+        const destStream = destType(dest) === "path" ? fs33.createWriteStream(dest) : dest;
         const compressStream = new StreamClass(opts);
         return safePipe([compressStream, destStream]);
       };
     };
     exports2.makeCompressDirFn = (StreamClass) => {
       return (dir, dest, opts) => {
-        const destStream = destType(dest) === "path" ? fs32.createWriteStream(dest) : dest;
+        const destStream = destType(dest) === "path" ? fs33.createWriteStream(dest) : dest;
         const compressStream = new StreamClass();
         compressStream.addEntry(dir, opts);
         return safePipe([compressStream, destStream]);
@@ -270299,10 +270695,10 @@ var require_utils10 = __commonJS({
         const strip = opts.strip ? Number(opts.strip) : 0;
         delete opts.strip;
         return new Promise((resolve3, reject) => {
-          fs32.mkdir(destDir, { recursive: true }, (err) => {
+          fs33.mkdir(destDir, { recursive: true }, (err) => {
             if (err) return reject(err);
-            const resolvedDestDir = path32.resolve(destDir);
-            const realDestDirPromise = fs32.promises.realpath(resolvedDestDir).catch(() => resolvedDestDir);
+            const resolvedDestDir = path33.resolve(destDir);
+            const realDestDirPromise = fs33.promises.realpath(resolvedDestDir).catch(() => resolvedDestDir);
             let entryCount = 0;
             let successCount = 0;
             let isFinish = false;
@@ -270310,8 +270706,8 @@ var require_utils10 = __commonJS({
               if (isFinish && entryCount === successCount) resolve3();
             }
             async function processEntry(header, stream4) {
-              const destFilePath = path32.join(resolvedDestDir, stripFileName(strip, header.name, header.type));
-              const resolvedDestPath = path32.resolve(destFilePath);
+              const destFilePath = path33.join(resolvedDestDir, stripFileName(strip, header.name, header.type));
+              const resolvedDestPath = path33.resolve(destFilePath);
               if (!isPathWithinParent(resolvedDestPath, resolvedDestDir)) {
                 console.warn(`[compressing] Skipping entry with path traversal: "${header.name}" -> "${resolvedDestPath}"`);
                 stream4.resume();
@@ -270324,17 +270720,17 @@ var require_utils10 = __commonJS({
                 return;
               }
               if (header.type === "file") {
-                const dir = path32.dirname(destFilePath);
-                await fs32.promises.mkdir(dir, { recursive: true });
+                const dir = path33.dirname(destFilePath);
+                await fs33.promises.mkdir(dir, { recursive: true });
                 entryCount++;
-                pump(stream4, fs32.createWriteStream(destFilePath, { mode: opts.mode || header.mode }), (err2) => {
+                pump(stream4, fs33.createWriteStream(destFilePath, { mode: opts.mode || header.mode }), (err2) => {
                   if (err2) return reject(err2);
                   successCount++;
                   done();
                 });
               } else if (header.type === "symlink") {
-                const dir = path32.dirname(destFilePath);
-                const target = path32.resolve(dir, header.linkname);
+                const dir = path33.dirname(destFilePath);
+                const target = path33.resolve(dir, header.linkname);
                 if (!isPathWithinParent(target, resolvedDestDir)) {
                   console.warn(`[compressing] Skipping symlink "${header.name}": target "${target}" escapes extraction directory`);
                   stream4.resume();
@@ -270346,13 +270742,13 @@ var require_utils10 = __commonJS({
                   return;
                 }
                 entryCount++;
-                await fs32.promises.mkdir(dir, { recursive: true });
-                const relativeTarget = path32.relative(dir, target);
-                await fs32.promises.symlink(relativeTarget, destFilePath);
+                await fs33.promises.mkdir(dir, { recursive: true });
+                const relativeTarget = path33.relative(dir, target);
+                await fs33.promises.symlink(relativeTarget, destFilePath);
                 successCount++;
                 stream4.resume();
               } else {
-                await fs32.promises.mkdir(destFilePath, { recursive: true });
+                await fs33.promises.mkdir(destFilePath, { recursive: true });
                 stream4.resume();
               }
             }
@@ -270386,7 +270782,7 @@ var require_utils10 = __commonJS({
     }
     exports2.safePipe = safePipe;
     function normalizePath(fileName) {
-      fileName = path32.normalize(fileName);
+      fileName = path33.normalize(fileName);
       if (process.platform === "win32") fileName = fileName.replace(/\\+/g, "/");
       return fileName;
     }
@@ -270724,7 +271120,7 @@ var require_buffer_crc32 = __commonJS({
 var require_yazl = __commonJS({
   "../../node_modules/.pnpm/yazl@2.5.1/node_modules/yazl/index.js"(exports2) {
     "use strict";
-    var fs32 = require("fs");
+    var fs33 = require("fs");
     var Transform = require("stream").Transform;
     var PassThrough2 = require("stream").PassThrough;
     var zlib2 = require("zlib");
@@ -270748,14 +271144,14 @@ var require_yazl = __commonJS({
       if (options == null) options = {};
       var entry = new Entry(metadataPath, false, options);
       self2.entries.push(entry);
-      fs32.stat(realPath, function(err, stats) {
+      fs33.stat(realPath, function(err, stats) {
         if (err) return self2.emit("error", err);
         if (!stats.isFile()) return self2.emit("error", new Error("not a file: " + realPath));
         entry.uncompressedSize = stats.size;
         if (options.mtime == null) entry.setLastModDate(stats.mtime);
         if (options.mode == null) entry.setFileAttributesMode(stats.mode);
         entry.setFileDataPumpFunction(function() {
-          var readStream2 = fs32.createReadStream(realPath);
+          var readStream2 = fs33.createReadStream(realPath);
           entry.state = Entry.FILE_DATA_IN_PROGRESS;
           readStream2.on("error", function(err2) {
             self2.emit("error", err2);
@@ -274807,8 +275203,8 @@ var require_base_stream = __commonJS({
 var require_stream9 = __commonJS({
   "../../node_modules/.pnpm/compressing@2.1.1/node_modules/compressing/lib/tar/stream.js"(exports2, module2) {
     "use strict";
-    var fs32 = require("fs");
-    var path32 = require("path");
+    var fs33 = require("fs");
+    var path33 = require("path");
     var stream4 = require("stream");
     var tar = require_tar_stream();
     var utils = require_utils10();
@@ -274843,7 +275239,7 @@ var require_stream9 = __commonJS({
         }
       }
       _addFileOrDirEntry(entry, opts) {
-        fs32.stat(entry, (err, stat) => {
+        fs33.stat(entry, (err, stat) => {
           if (err) return this.emit("error", err);
           if (stat.isDirectory()) return this._addDirEntry(entry, opts);
           if (stat.isFile()) return this._addFileEntry(entry, opts);
@@ -274853,27 +275249,27 @@ var require_stream9 = __commonJS({
         });
       }
       _addFileEntry(entry, opts) {
-        fs32.stat(entry, (err, stat) => {
+        fs33.stat(entry, (err, stat) => {
           if (err) return this.emit("error", err);
-          const entryStream = this._pack.entry({ name: opts.relativePath || path32.basename(entry), size: stat.size, mode: stat.mode & 511 }, this._onEntryFinish.bind(this));
-          const stream5 = fs32.createReadStream(entry, opts.fs);
+          const entryStream = this._pack.entry({ name: opts.relativePath || path33.basename(entry), size: stat.size, mode: stat.mode & 511 }, this._onEntryFinish.bind(this));
+          const stream5 = fs33.createReadStream(entry, opts.fs);
           stream5.on("error", (err2) => this.emit("error", err2));
           stream5.pipe(entryStream);
         });
       }
       _addDirEntry(entry, opts) {
-        fs32.readdir(entry, (err, files) => {
+        fs33.readdir(entry, (err, files) => {
           if (err) return this.emit("error", err);
           const relativePath = opts.relativePath || "";
           files.forEach((fileOrDir) => {
             const newOpts = utils.clone(opts);
             if (opts.ignoreBase) {
-              newOpts.relativePath = path32.posix.join(relativePath, fileOrDir);
+              newOpts.relativePath = path33.posix.join(relativePath, fileOrDir);
             } else {
-              newOpts.relativePath = path32.posix.join(relativePath, path32.basename(entry), fileOrDir);
+              newOpts.relativePath = path33.posix.join(relativePath, path33.basename(entry), fileOrDir);
             }
             newOpts.ignoreBase = true;
-            this.addEntry(path32.posix.join(entry, fileOrDir), newOpts);
+            this.addEntry(path33.posix.join(entry, fileOrDir), newOpts);
           });
           this._onEntryFinish();
         });
@@ -274930,7 +275326,7 @@ var require_stream9 = __commonJS({
 var require_stream10 = __commonJS({
   "../../node_modules/.pnpm/compressing@2.1.1/node_modules/compressing/lib/zip/stream.js"(exports2, module2) {
     "use strict";
-    var path32 = require("path");
+    var path33 = require("path");
     var yazl = require_yazl();
     var TarStream = require_stream9();
     var ZipStream = class extends TarStream {
@@ -274942,7 +275338,7 @@ var require_stream10 = __commonJS({
         stream4.on("error", (err) => this.emit("error", err));
       }
       _addFileEntry(entry, opts) {
-        this._zipfile.addFile(entry, opts.relativePath || path32.basename(entry), opts);
+        this._zipfile.addFile(entry, opts.relativePath || path33.basename(entry), opts);
         this._onEntryFinish();
       }
       _addBufferEntry(entry, opts) {
@@ -274968,7 +275364,7 @@ var require_stream10 = __commonJS({
 var require_file_stream = __commonJS({
   "../../node_modules/.pnpm/compressing@2.1.1/node_modules/compressing/lib/zip/file_stream.js"(exports2, module2) {
     "use strict";
-    var path32 = require("path");
+    var path33 = require("path");
     var yazl = require_yazl();
     var assert4 = require("assert");
     var stream4 = require("stream");
@@ -274990,7 +275386,7 @@ var require_file_stream = __commonJS({
           this.end();
         }
         if (sourceType === "file") {
-          zipfile.addFile(opts.source, opts.relativePath || path32.basename(opts.source), opts.yazl);
+          zipfile.addFile(opts.source, opts.relativePath || path33.basename(opts.source), opts.yazl);
         } else if (sourceType === "buffer") {
           zipfile.addBuffer(opts.source, opts.relativePath, opts.yazl);
         } else if (sourceType === "stream") {
@@ -275076,7 +275472,7 @@ var require_pend = __commonJS({
 var require_fd_slicer2 = __commonJS({
   "../../node_modules/.pnpm/fd-slicer2@1.2.0/node_modules/fd-slicer2/index.js"(exports2) {
     "use strict";
-    var fs32 = require("fs");
+    var fs33 = require("fs");
     var { Readable: Readable3, Writable, PassThrough: PassThrough2 } = require("stream");
     var Pend = require_pend();
     var { EventEmitter: EventEmitter3 } = require("events");
@@ -275091,7 +275487,7 @@ var require_fd_slicer2 = __commonJS({
       }
       read(buffer, offset, length, position, callback) {
         this.pend.go((cb) => {
-          fs32.read(this.fd, buffer, offset, length, position, (err, bytesRead, buffer2) => {
+          fs33.read(this.fd, buffer, offset, length, position, (err, bytesRead, buffer2) => {
             cb();
             callback(err, bytesRead, buffer2);
           });
@@ -275099,7 +275495,7 @@ var require_fd_slicer2 = __commonJS({
       }
       write(buffer, offset, length, position, callback) {
         this.pend.go((cb) => {
-          fs32.write(this.fd, buffer, offset, length, position, (err, written, buffer2) => {
+          fs33.write(this.fd, buffer, offset, length, position, (err, written, buffer2) => {
             cb();
             callback(err, written, buffer2);
           });
@@ -275119,7 +275515,7 @@ var require_fd_slicer2 = __commonJS({
         if (this.refCount > 0) return;
         if (this.refCount < 0) throw new Error("invalid unref");
         if (this.autoClose) {
-          fs32.close(this.fd, (err) => {
+          fs33.close(this.fd, (err) => {
             if (err) {
               this.emit("error", err);
             } else {
@@ -275154,7 +275550,7 @@ var require_fd_slicer2 = __commonJS({
         this.context.pend.go((cb) => {
           if (this.destroyed) return cb();
           const buffer = Buffer.alloc(toRead);
-          fs32.read(this.context.fd, buffer, 0, toRead, this.pos, (err, bytesRead) => {
+          fs33.read(this.context.fd, buffer, 0, toRead, this.pos, (err, bytesRead) => {
             if (err) {
               this.destroy(err);
             } else if (bytesRead === 0) {
@@ -275200,7 +275596,7 @@ var require_fd_slicer2 = __commonJS({
         }
         this.context.pend.go((cb) => {
           if (this.destroyed) return cb();
-          fs32.write(this.context.fd, buffer, 0, buffer.length, this.pos, (err, bytes) => {
+          fs33.write(this.context.fd, buffer, 0, buffer.length, this.pos, (err, bytes) => {
             if (err) {
               this.destroy();
               cb();
@@ -275327,7 +275723,7 @@ var require_fd_slicer2 = __commonJS({
 var require_yauzl = __commonJS({
   "../../node_modules/.pnpm/@eggjs+yauzl@2.11.0/node_modules/@eggjs/yauzl/index.js"(exports2) {
     "use strict";
-    var fs32 = require("fs");
+    var fs33 = require("fs");
     var zlib2 = require("zlib");
     var fd_slicer = require_fd_slicer2();
     var crc32 = require_buffer_crc32();
@@ -275345,7 +275741,7 @@ var require_yauzl = __commonJS({
     exports2.ZipFile = ZipFile;
     exports2.Entry = Entry;
     exports2.RandomAccessReader = RandomAccessReader;
-    function open(path32, options, callback) {
+    function open(path33, options, callback) {
       if (typeof options === "function") {
         callback = options;
         options = null;
@@ -275357,10 +275753,10 @@ var require_yauzl = __commonJS({
       if (options.validateEntrySizes == null) options.validateEntrySizes = true;
       if (options.strictFileNames == null) options.strictFileNames = false;
       if (callback == null) callback = defaultCallback;
-      fs32.open(path32, "r", function(err, fd) {
+      fs33.open(path33, "r", function(err, fd) {
         if (err) return callback(err);
         fromFd(fd, options, function(err2, zipfile) {
-          if (err2) fs32.close(fd, defaultCallback);
+          if (err2) fs33.close(fd, defaultCallback);
           callback(err2, zipfile);
         });
       });
@@ -275377,7 +275773,7 @@ var require_yauzl = __commonJS({
       if (options.validateEntrySizes == null) options.validateEntrySizes = true;
       if (options.strictFileNames == null) options.strictFileNames = false;
       if (callback == null) callback = defaultCallback;
-      fs32.fstat(fd, function(err, stats) {
+      fs33.fstat(fd, function(err, stats) {
         if (err) return callback(err);
         var reader = fd_slicer.createFromFd(fd, { autoClose: true });
         fromRandomAccessReader(reader, stats.size, options, callback);
@@ -279697,7 +280093,7 @@ var require_lib10 = __commonJS({
 var require_file_stream2 = __commonJS({
   "../../node_modules/.pnpm/compressing@2.1.1/node_modules/compressing/lib/gzip/file_stream.js"(exports2, module2) {
     "use strict";
-    var fs32 = require("fs");
+    var fs33 = require("fs");
     var zlib2 = require("zlib");
     var utils = require_utils10();
     var streamifier = require_lib10();
@@ -279707,7 +280103,7 @@ var require_file_stream2 = __commonJS({
         super(opts.zlib);
         const sourceType = utils.sourceType(opts.source);
         if (sourceType === "file") {
-          const stream4 = fs32.createReadStream(opts.source, opts.fs);
+          const stream4 = fs33.createReadStream(opts.source, opts.fs);
           stream4.on("error", (err) => this.emit("error", err));
           stream4.pipe(this);
           return;
@@ -279732,7 +280128,7 @@ var require_file_stream2 = __commonJS({
 var require_uncompress_stream2 = __commonJS({
   "../../node_modules/.pnpm/compressing@2.1.1/node_modules/compressing/lib/gzip/uncompress_stream.js"(exports2, module2) {
     "use strict";
-    var fs32 = require("fs");
+    var fs33 = require("fs");
     var zlib2 = require("zlib");
     var utils = require_utils10();
     var streamifier = require_lib10();
@@ -279742,7 +280138,7 @@ var require_uncompress_stream2 = __commonJS({
         super(opts.zlib);
         const sourceType = utils.sourceType(opts.source);
         if (sourceType === "file") {
-          const stream4 = fs32.createReadStream(opts.source, opts.fs);
+          const stream4 = fs33.createReadStream(opts.source, opts.fs);
           stream4.on("error", (err) => this.emit("error", err));
           stream4.pipe(this);
           return;
@@ -279782,8 +280178,8 @@ var require_gzip = __commonJS({
 var require_file_stream3 = __commonJS({
   "../../node_modules/.pnpm/compressing@2.1.1/node_modules/compressing/lib/tar/file_stream.js"(exports2, module2) {
     "use strict";
-    var fs32 = require("fs");
-    var path32 = require("path");
+    var fs33 = require("fs");
+    var path33 = require("path");
     var stream4 = require("stream");
     var tar = require_tar_stream();
     var utils = require_utils10();
@@ -279796,13 +280192,13 @@ var require_file_stream3 = __commonJS({
         pack.on("end", () => this.ready(true));
         const sourceType = utils.sourceType(opts.source);
         if (sourceType === "file") {
-          fs32.stat(opts.source, (err, stat) => {
+          fs33.stat(opts.source, (err, stat) => {
             if (err) return this.emit("error", err);
-            this.entry = pack.entry({ name: opts.relativePath || path32.basename(opts.source), size: stat.size, mode: stat.mode & 511 }, (err2) => {
+            this.entry = pack.entry({ name: opts.relativePath || path33.basename(opts.source), size: stat.size, mode: stat.mode & 511 }, (err2) => {
               if (err2) return this.emit("error", err2);
               pack.finalize();
             });
-            const stream5 = fs32.createReadStream(opts.source, opts.fs);
+            const stream5 = fs33.createReadStream(opts.source, opts.fs);
             stream5.on("error", (err2) => this.emit("error", err2));
             stream5.pipe(this);
           });
@@ -279861,7 +280257,7 @@ var require_file_stream3 = __commonJS({
 var require_uncompress_stream3 = __commonJS({
   "../../node_modules/.pnpm/compressing@2.1.1/node_modules/compressing/lib/tar/uncompress_stream.js"(exports2, module2) {
     "use strict";
-    var fs32 = require("fs");
+    var fs33 = require("fs");
     var tar = require_tar_stream();
     var utils = require_utils10();
     var streamifier = require_lib10();
@@ -279871,7 +280267,7 @@ var require_uncompress_stream3 = __commonJS({
         super(opts);
         const sourceType = utils.sourceType(opts.source);
         if (sourceType === "file") {
-          const stream4 = fs32.createReadStream(opts.source, opts.fs);
+          const stream4 = fs33.createReadStream(opts.source, opts.fs);
           stream4.on("error", (err) => this.emit("error", err));
           stream4.pipe(this);
           return;
@@ -280013,7 +280409,7 @@ var require_FlushWritable = __commonJS({
 var require_uncompress_stream4 = __commonJS({
   "../../node_modules/.pnpm/compressing@2.1.1/node_modules/compressing/lib/tgz/uncompress_stream.js"(exports2, module2) {
     "use strict";
-    var fs32 = require("fs");
+    var fs33 = require("fs");
     var utils = require_utils10();
     var ready = require_get_ready();
     var streamifier = require_lib10();
@@ -280031,7 +280427,7 @@ var require_uncompress_stream4 = __commonJS({
         this._gzipStream.pipe(tarStream);
         const sourceType = utils.sourceType(opts.source);
         if (sourceType === "file") {
-          const stream4 = fs32.createReadStream(opts.source, opts.fs);
+          const stream4 = fs33.createReadStream(opts.source, opts.fs);
           stream4.on("error", (err) => this.emit("error", err));
           stream4.pipe(this);
           return;
@@ -281133,8 +281529,8 @@ function getDataRoot() {
 }
 async function getRealDataRoot() {
   const dataRoot = getDataRoot();
-  await import_promises7.default.mkdir(dataRoot, { recursive: true });
-  return import_promises7.default.realpath(dataRoot);
+  await import_promises8.default.mkdir(dataRoot, { recursive: true });
+  return import_promises8.default.realpath(dataRoot);
 }
 function assertInsideDataRoot(realPath, realDataRoot) {
   if (realPath !== realDataRoot && !isPathInside(realPath, realDataRoot)) {
@@ -281203,7 +281599,7 @@ function createOssDirectoryEntry(relPath) {
 async function resolveExistingDataPath(relPath = "") {
   const resolved = getDataPath(relPath);
   const realDataRoot = await getRealDataRoot();
-  const realPath = await import_promises7.default.realpath(resolved.absPath);
+  const realPath = await import_promises8.default.realpath(resolved.absPath);
   assertInsideDataRoot(realPath, realDataRoot);
   return { ...resolved, realDataRoot, realPath };
 }
@@ -281211,7 +281607,7 @@ async function resolveWritableDataPath(relPath) {
   const resolved = getDataPath(relPath);
   const realDataRoot = await getRealDataRoot();
   const parentPath = import_node_path5.default.dirname(resolved.absPath);
-  const realParentPath = await import_promises7.default.realpath(parentPath);
+  const realParentPath = await import_promises8.default.realpath(parentPath);
   assertInsideDataRoot(realParentPath, realDataRoot);
   return { ...resolved, realDataRoot };
 }
@@ -281220,7 +281616,7 @@ function isTextFile(filePath, size) {
   return textExtensions.has(import_node_path5.default.extname(filePath).toLowerCase());
 }
 async function toFileEntry(absPath, relPath) {
-  const stats = await import_promises7.default.lstat(absPath);
+  const stats = await import_promises8.default.lstat(absPath);
   const type = stats.isDirectory() ? "directory" : "file";
   const extension = type === "file" ? import_node_path5.default.extname(absPath).slice(1).toLowerCase() : "";
   return {
@@ -281241,9 +281637,9 @@ async function listDirectory(relPath = "") {
     return entries2.map(ossEntryToFileEntry);
   }
   const { absPath, relPath: resolvedRelPath } = await resolveExistingDataPath(normalizedRelPath);
-  const stats = await import_promises7.default.lstat(absPath);
+  const stats = await import_promises8.default.lstat(absPath);
   if (!stats.isDirectory()) throw new Error("\u8DEF\u5F84\u4E0D\u662F\u76EE\u5F55");
-  const entries = await import_promises7.default.readdir(absPath, { withFileTypes: true });
+  const entries = await import_promises8.default.readdir(absPath, { withFileTypes: true });
   const result = await Promise.all(
     entries.map(async (entry) => {
       const childRelPath = resolvedRelPath ? `${resolvedRelPath}/${entry.name}` : entry.name;
@@ -281262,7 +281658,7 @@ async function assertFileReadable(relPath) {
     return { buffer, relPath: normalizedRelPath, stats: { size: buffer.byteLength } };
   }
   const resolved = await resolveExistingDataPath(normalizedRelPath);
-  const stats = await import_promises7.default.lstat(resolved.absPath);
+  const stats = await import_promises8.default.lstat(resolved.absPath);
   if (!stats.isFile()) throw new Error("\u8DEF\u5F84\u4E0D\u662F\u6587\u4EF6");
   return { ...resolved, stats };
 }
@@ -281273,7 +281669,7 @@ async function readTextFile(relPath) {
     throw new Error(`\u4EC5\u652F\u6301\u9884\u89C8 ${MAX_TEXT_FILE_BYTES / 1024 / 1024}MB \u4EE5\u5185\u7684\u6587\u672C\u6587\u4EF6`);
   }
   if ("buffer" in result) return result.buffer.toString("utf8");
-  return import_promises7.default.readFile(result.absPath, "utf8");
+  return import_promises8.default.readFile(result.absPath, "utf8");
 }
 async function getFileEntry(relPath) {
   const result = await assertFileReadable(relPath);
@@ -281290,7 +281686,7 @@ async function createFile(currentPath, name28, content = "") {
     return createOssFileEntry(relPath, buffer.byteLength);
   }
   const { absPath } = await resolveWritableDataPath(relPath);
-  await import_promises7.default.writeFile(absPath, content, { encoding: "utf8", flag: "wx" });
+  await import_promises8.default.writeFile(absPath, content, { encoding: "utf8", flag: "wx" });
   return toFileEntry(absPath, relPath);
 }
 async function createFolder(currentPath, name28) {
@@ -281300,7 +281696,7 @@ async function createFolder(currentPath, name28) {
     return createOssDirectoryEntry(relPath);
   }
   const { absPath } = await resolveWritableDataPath(relPath);
-  await import_promises7.default.mkdir(absPath);
+  await import_promises8.default.mkdir(absPath);
   return toFileEntry(absPath, relPath);
 }
 async function uploadFile(currentPath, filename, contentBase64) {
@@ -281314,14 +281710,14 @@ async function uploadFile(currentPath, filename, contentBase64) {
     return createOssFileEntry(relPath, buffer.byteLength);
   }
   const { absPath } = await resolveWritableDataPath(relPath);
-  await import_promises7.default.writeFile(absPath, buffer);
+  await import_promises8.default.writeFile(absPath, buffer);
   return toFileEntry(absPath, relPath);
 }
-var import_promises7, import_node_path5, MAX_TEXT_FILE_BYTES, MAX_UPLOAD_BYTES, OSS_ROOT, textExtensions;
+var import_promises8, import_node_path5, MAX_TEXT_FILE_BYTES, MAX_UPLOAD_BYTES, OSS_ROOT, textExtensions;
 var init_fileManagement = __esm({
   "src/utils/fileManagement.ts"() {
     "use strict";
-    import_promises7 = __toESM(require("node:fs/promises"));
+    import_promises8 = __toESM(require("node:fs/promises"));
     import_node_path5 = __toESM(require("node:path"));
     init_is_path_inside();
     init_utils3();
@@ -281786,13 +282182,13 @@ var init_bindingPrompt = __esm({
         fileName: external_exports.string()
       }),
       async (req, res) => {
-        const { vendorId, model, path: path32, fileName } = req.body;
+        const { vendorId, model, path: path33, fileName } = req.body;
         const data2 = await utils_default.db("o_modelPrompt").where("model", model).andWhere("vendorId", vendorId).select("*").first();
         if (data2) {
-          await utils_default.db("o_modelPrompt").where("model", model).andWhere("vendorId", vendorId).update({ fileName, path: path32 });
+          await utils_default.db("o_modelPrompt").where("model", model).andWhere("vendorId", vendorId).update({ fileName, path: path33 });
           res.status(200).send(success3("\u7ED1\u5B9A\u6210\u529F"));
         } else {
-          await utils_default.db("o_modelPrompt").insert({ vendorId, model, path: path32, fileName });
+          await utils_default.db("o_modelPrompt").insert({ vendorId, model, path: path33, fileName });
           res.status(200).send(success3("\u7ED1\u5B9A\u6210\u529F"));
         }
       }
@@ -281801,7 +282197,7 @@ var init_bindingPrompt = __esm({
 });
 
 // src/routes/setting/modelMap/deletePrompt.ts
-var import_express189, import_promises8, import_path22, router189, deletePrompt_default;
+var import_express189, import_promises9, import_path23, router189, deletePrompt_default;
 var init_deletePrompt = __esm({
   "src/routes/setting/modelMap/deletePrompt.ts"() {
     "use strict";
@@ -281810,8 +282206,8 @@ var init_deletePrompt = __esm({
     init_utils3();
     init_zod();
     init_middleware();
-    import_promises8 = __toESM(require("fs/promises"));
-    import_path22 = __toESM(require("path"));
+    import_promises9 = __toESM(require("fs/promises"));
+    import_path23 = __toESM(require("path"));
     router189 = import_express189.default.Router();
     deletePrompt_default = router189.post(
       "/",
@@ -281821,17 +282217,17 @@ var init_deletePrompt = __esm({
       async (req, res) => {
         const { path: filePath } = req.body;
         const modelPromptRoot = utils_default.getPath(["modelPrompt"]);
-        const resolvedRoot = import_path22.default.resolve(modelPromptRoot);
-        const resolvedFile = import_path22.default.resolve(modelPromptRoot, filePath);
-        if (!resolvedFile.startsWith(resolvedRoot + import_path22.default.sep)) {
+        const resolvedRoot = import_path23.default.resolve(modelPromptRoot);
+        const resolvedFile = import_path23.default.resolve(modelPromptRoot, filePath);
+        if (!resolvedFile.startsWith(resolvedRoot + import_path23.default.sep)) {
           return res.status(400).send(error53("\u975E\u6CD5\u8DEF\u5F84"));
         }
         try {
-          await import_promises8.default.access(resolvedFile);
+          await import_promises9.default.access(resolvedFile);
         } catch {
           return res.status(404).send(error53("\u6587\u4EF6\u4E0D\u5B58\u5728"));
         }
-        await import_promises8.default.unlink(resolvedFile);
+        await import_promises9.default.unlink(resolvedFile);
         res.status(200).send(success3("\u5220\u9664\u6210\u529F"));
       }
     );
@@ -281877,7 +282273,7 @@ var init_getImageAndVideoModel = __esm({
 });
 
 // src/routes/setting/modelMap/getPromptList.ts
-var import_express191, import_fast_glob3, import_promises9, import_path23, router191, getPromptList_default;
+var import_express191, import_fast_glob3, import_promises10, import_path24, router191, getPromptList_default;
 var init_getPromptList = __esm({
   "src/routes/setting/modelMap/getPromptList.ts"() {
     "use strict";
@@ -281885,8 +282281,8 @@ var init_getPromptList = __esm({
     init_responseFormat();
     init_utils3();
     import_fast_glob3 = __toESM(require_out4());
-    import_promises9 = __toESM(require("fs/promises"));
-    import_path23 = __toESM(require("path"));
+    import_promises10 = __toESM(require("fs/promises"));
+    import_path24 = __toESM(require("path"));
     router191 = import_express191.default.Router();
     getPromptList_default = router191.get("/", async (req, res) => {
       const modelPromptRoot = utils_default.getPath(["modelPrompt"]);
@@ -281896,9 +282292,9 @@ var init_getPromptList = __esm({
       });
       const result = await Promise.all(
         entries.map(async (entry) => {
-          const fullPath = import_path23.default.join(modelPromptRoot, entry);
-          const content = await import_promises9.default.readFile(fullPath, "utf-8");
-          const name28 = import_path23.default.basename(entry, ".md");
+          const fullPath = import_path24.default.join(modelPromptRoot, entry);
+          const content = await import_promises10.default.readFile(fullPath, "utf-8");
+          const name28 = import_path24.default.basename(entry, ".md");
           const type = entry.includes("/") ? entry.split("/")[0] : "";
           return { path: entry, name: name28, type, data: content };
         })
@@ -281909,7 +282305,7 @@ var init_getPromptList = __esm({
 });
 
 // src/routes/setting/modelMap/savePrompt.ts
-var import_express192, import_promises10, import_path24, router192, savePrompt_default;
+var import_express192, import_promises11, import_path25, router192, savePrompt_default;
 var init_savePrompt = __esm({
   "src/routes/setting/modelMap/savePrompt.ts"() {
     "use strict";
@@ -281918,8 +282314,8 @@ var init_savePrompt = __esm({
     init_utils3();
     init_zod();
     init_middleware();
-    import_promises10 = __toESM(require("fs/promises"));
-    import_path24 = __toESM(require("path"));
+    import_promises11 = __toESM(require("fs/promises"));
+    import_path25 = __toESM(require("path"));
     router192 = import_express192.default.Router();
     savePrompt_default = router192.post(
       "/",
@@ -281931,10 +282327,10 @@ var init_savePrompt = __esm({
       async (req, res) => {
         const { name: name28, data: data2, type } = req.body;
         const modelPromptRoot = utils_default.getPath(["modelPrompt"]);
-        const dir = import_path24.default.join(modelPromptRoot, type);
-        await import_promises10.default.mkdir(dir, { recursive: true });
-        const filePath = import_path24.default.join(dir, `${name28}.md`);
-        await import_promises10.default.writeFile(filePath, data2, "utf-8");
+        const dir = import_path25.default.join(modelPromptRoot, type);
+        await import_promises11.default.mkdir(dir, { recursive: true });
+        const filePath = import_path25.default.join(dir, `${name28}.md`);
+        await import_promises11.default.writeFile(filePath, data2, "utf-8");
         res.status(200).send(success3("\u4FDD\u5B58\u6210\u529F"));
       }
     );
@@ -281942,7 +282338,7 @@ var init_savePrompt = __esm({
 });
 
 // src/routes/setting/modelMap/updatePrompt.ts
-var import_express193, import_promises11, import_path25, router193, updatePrompt_default;
+var import_express193, import_promises12, import_path26, router193, updatePrompt_default;
 var init_updatePrompt = __esm({
   "src/routes/setting/modelMap/updatePrompt.ts"() {
     "use strict";
@@ -281951,8 +282347,8 @@ var init_updatePrompt = __esm({
     init_utils3();
     init_zod();
     init_middleware();
-    import_promises11 = __toESM(require("fs/promises"));
-    import_path25 = __toESM(require("path"));
+    import_promises12 = __toESM(require("fs/promises"));
+    import_path26 = __toESM(require("path"));
     router193 = import_express193.default.Router();
     updatePrompt_default = router193.post(
       "/",
@@ -281964,18 +282360,18 @@ var init_updatePrompt = __esm({
       async (req, res) => {
         const { name: name28, data: data2, type } = req.body;
         const modelPromptRoot = utils_default.getPath(["modelPrompt"]);
-        const filePath = import_path25.default.join(modelPromptRoot, type, `${name28}.md`);
-        const resolvedRoot = import_path25.default.resolve(modelPromptRoot);
-        const resolvedFile = import_path25.default.resolve(filePath);
-        if (!resolvedFile.startsWith(resolvedRoot + import_path25.default.sep)) {
+        const filePath = import_path26.default.join(modelPromptRoot, type, `${name28}.md`);
+        const resolvedRoot = import_path26.default.resolve(modelPromptRoot);
+        const resolvedFile = import_path26.default.resolve(filePath);
+        if (!resolvedFile.startsWith(resolvedRoot + import_path26.default.sep)) {
           return res.status(400).send(error53("\u975E\u6CD5\u8DEF\u5F84"));
         }
         try {
-          await import_promises11.default.access(resolvedFile);
+          await import_promises12.default.access(resolvedFile);
         } catch {
           return res.status(404).send(error53("\u6587\u4EF6\u4E0D\u5B58\u5728"));
         }
-        await import_promises11.default.writeFile(resolvedFile, data2, "utf-8");
+        await import_promises12.default.writeFile(resolvedFile, data2, "utf-8");
         res.status(200).send(success3("\u66F4\u65B0\u6210\u529F"));
       }
     );
@@ -282144,7 +282540,7 @@ var init_updatePrompt2 = __esm({
 });
 
 // src/routes/setting/skillManagement/getSkillContent.ts
-var import_express201, import_path26, fs27, router201, getSkillContent_default;
+var import_express201, import_path27, fs28, router201, getSkillContent_default;
 var init_getSkillContent = __esm({
   "src/routes/setting/skillManagement/getSkillContent.ts"() {
     "use strict";
@@ -282154,8 +282550,8 @@ var init_getSkillContent = __esm({
     init_zod();
     init_is_path_inside();
     init_utils3();
-    import_path26 = __toESM(require("path"));
-    fs27 = __toESM(require("fs"));
+    import_path27 = __toESM(require("path"));
+    fs28 = __toESM(require("fs"));
     router201 = import_express201.default.Router();
     getSkillContent_default = router201.post(
       "/",
@@ -282163,13 +282559,13 @@ var init_getSkillContent = __esm({
         path: external_exports.string()
       }),
       async (req, res) => {
-        const { path: path32 } = req.body;
+        const { path: path33 } = req.body;
         const skillsRoot = utils_default.getPath(["skills"]);
-        const filePath = import_path26.default.join(skillsRoot, path32);
+        const filePath = import_path27.default.join(skillsRoot, path33);
         if (!isPathInside(filePath, skillsRoot)) {
           return res.status(400).send(error53("\u65E0\u6548\u7684\u8DEF\u5F84"));
         }
-        const raw = await fs27.promises.readFile(filePath, "utf-8");
+        const raw = await fs28.promises.readFile(filePath, "utf-8");
         res.status(200).send(success3(raw));
       }
     );
@@ -282198,7 +282594,7 @@ var init_getSkillList = __esm({
 });
 
 // src/routes/setting/skillManagement/saveSkillContent.ts
-var import_express203, import_path27, fs28, router203, saveSkillContent_default;
+var import_express203, import_path28, fs29, router203, saveSkillContent_default;
 var init_saveSkillContent = __esm({
   "src/routes/setting/skillManagement/saveSkillContent.ts"() {
     "use strict";
@@ -282208,8 +282604,8 @@ var init_saveSkillContent = __esm({
     init_zod();
     init_is_path_inside();
     init_utils3();
-    import_path27 = __toESM(require("path"));
-    fs28 = __toESM(require("fs"));
+    import_path28 = __toESM(require("path"));
+    fs29 = __toESM(require("fs"));
     router203 = import_express203.default.Router();
     saveSkillContent_default = router203.post(
       "/",
@@ -282218,16 +282614,16 @@ var init_saveSkillContent = __esm({
         content: external_exports.string()
       }),
       async (req, res) => {
-        const { path: path32, content } = req.body;
+        const { path: path33, content } = req.body;
         const skillsRoot = utils_default.getPath(["skills"]);
-        const filePath = import_path27.default.join(skillsRoot, path32);
+        const filePath = import_path28.default.join(skillsRoot, path33);
         if (!isPathInside(filePath, skillsRoot)) {
           return res.status(400).send(error53("\u65E0\u6548\u7684\u8DEF\u5F84"));
         }
-        if (!fs28.existsSync(filePath)) {
+        if (!fs29.existsSync(filePath)) {
           return res.status(400).send(error53("\u6587\u4EF6\u4E0D\u5B58\u5728"));
         }
-        const raw = await fs28.promises.writeFile(filePath, content, "utf-8");
+        const raw = await fs29.promises.writeFile(filePath, content, "utf-8");
         res.status(200).send(success3(raw));
       }
     );
@@ -282315,7 +282711,7 @@ var init_addVendor = __esm({
         const result = vendorConfigSchema.safeParse(vendor);
         if (!result.success) {
           const issueLines = result.error.issues.map((issue3, index) => {
-            const path32 = issue3.path.length ? issue3.path.join(".") : "root";
+            const path33 = issue3.path.length ? issue3.path.join(".") : "root";
             let detail = issue3.message;
             if (issue3.code === "invalid_union") {
               const unionDetails = [
@@ -282327,7 +282723,7 @@ var init_addVendor = __esm({
                 detail = `${issue3.message}\uFF08${unionDetails.join("\uFF1B")}\uFF09`;
               }
             }
-            return `${index + 1}. ${path32}: ${detail}`;
+            return `${index + 1}. ${path33}: ${detail}`;
           });
           return res.status(400).send(error53(`vendor\u914D\u7F6E\u6821\u9A8C\u5931\u8D25\uFF0C\u5171 ${issueLines.length} \u5904:
 ${issueLines.join("\n")}`));
@@ -282413,14 +282809,14 @@ var init_addVendorModel = __esm({
 });
 
 // src/routes/setting/vendorConfig/deleteVendor.ts
-var import_express206, import_path28, import_fs16, router206, deleteVendor_default;
+var import_express206, import_path29, import_fs16, router206, deleteVendor_default;
 var init_deleteVendor = __esm({
   "src/routes/setting/vendorConfig/deleteVendor.ts"() {
     "use strict";
     import_express206 = __toESM(require_express2());
     init_responseFormat();
     init_middleware();
-    import_path28 = __toESM(require("path"));
+    import_path29 = __toESM(require("path"));
     import_fs16 = __toESM(require("fs"));
     init_utils3();
     init_zod();
@@ -282437,7 +282833,7 @@ var init_deleteVendor = __esm({
           model: null,
           vendorId: null
         });
-        import_fs16.default.rmSync(import_path28.default.join(utils_default.getPath("vendor"), `${id}.ts`), { recursive: true, force: true });
+        import_fs16.default.rmSync(import_path29.default.join(utils_default.getPath("vendor"), `${id}.ts`), { recursive: true, force: true });
         res.status(200).send(success3("\u5220\u9664\u6210\u529F"));
       }
     );
@@ -284407,8 +284803,8 @@ function createSkillTools(skills, skillPaths, rootDir = getPath_default("skills"
         content += "\u4F7F\u7528 read_skill_file \u5DE5\u5177\u8BFB\u53D6\u8D44\u6E90\u6587\u4EF6\u3002\n";
         if (skillPaths.secondarySkills.length > 0) {
           content += "\n<skill_resources>\n";
-          for (const path32 of skillPaths.secondarySkills) {
-            content += `  <file>${path32}</file>
+          for (const path33 of skillPaths.secondarySkills) {
+            content += `  <file>${path33}</file>
 `;
           }
           content += "</skill_resources>\n";
@@ -284451,8 +284847,8 @@ function createSkillTools(skills, skillPaths, rootDir = getPath_default("skills"
         content += "\u53EF\u4EE5\u4F7F\u7528 read_skill_file \u5DE5\u5177\u8BFB\u53D6\u8D44\u6E90\u6587\u4EF6\u3002\n";
         if (skillPaths.tertiarySkills.length > 0) {
           content += "\n<skill_resources>\n";
-          for (const path32 of skillPaths.tertiarySkills) {
-            content += `  <file>${path32}</file>
+          for (const path33 of skillPaths.tertiarySkills) {
+            content += `  <file>${path33}</file>
 `;
           }
           content += "</skill_resources>\n";
@@ -284475,6 +284871,8 @@ async function scanSkills(folderPath) {
 // src/agents/productionAgent/tools.ts
 init_dist30();
 init_zod();
+init_assetImageGeneration();
+init_storyboardImageGeneration();
 init_utils3();
 var deriveAssetSchema = external_exports.object({
   id: external_exports.number().describe("\u884D\u751F\u8D44\u4EA7ID,\u5982\u679C\u65B0\u589E\u5219\u4E3A\u7A7A"),
@@ -284526,7 +284924,7 @@ var flowDataKeyLabels = Object.fromEntries(
   Object.entries(flowDataSchema.shape).map(([key, schema]) => [key, schema.description ?? key])
 );
 var tools_default = (toolCpnfig) => {
-  const { resTool, toolsNames, msg } = toolCpnfig;
+  const { resTool, toolsNames, msg, userId } = toolCpnfig;
   const { socket } = resTool;
   const tools = {
     get_flowData: tool({
@@ -284617,46 +285015,107 @@ var tools_default = (toolCpnfig) => {
       description: "\u751F\u6210\u884D\u751F\u8D44\u4EA7\u56FE\u7247",
       inputSchema: zodSchema(
         external_exports.object({
-          ids: external_exports.array(external_exports.number()).describe("\u9700\u8981\u751F\u6210\u7684 \u884D\u751F\u8D44\u4EA7ID")
+          ids: external_exports.array(external_exports.number()).default([]).describe("\u9700\u8981\u751F\u6210\u7684\u884D\u751F\u8D44\u4EA7ID\uFF1B\u4E3A\u7A7A\u65F6\u81EA\u52A8\u751F\u6210\u5F53\u524D\u5267\u672C\u4E2D\u5C1A\u672A\u5B8C\u6210\u7684\u884D\u751F\u8D44\u4EA7")
         })
       ),
       execute: async ({ ids }) => {
-        const thinking = msg.thinking("\u6B63\u5728\u751F\u6210\u884D\u751F\u8D44\u4EA7...");
-        new Promise((resolve3) => socket.emit("generateDeriveAsset", { ids }, (res) => resolve3(res))).then((res) => {
-          thinking.appendText(`\u5DF2\u751F\u6210\u884D\u751F\u8D44\u4EA7\uFF0CID: ${JSON.stringify(res, null, 2)}
-`);
-          thinking.updateTitle("\u884D\u751F\u8D44\u4EA7\u5F00\u59CB\u5B8C\u6210");
+        const thinking = msg.thinking("\u6B63\u5728\u542F\u52A8\u884D\u751F\u8D44\u4EA7\u56FE\u7247\u751F\u6210...");
+        const { projectId, scriptId } = resTool.data;
+        if (!projectId || !scriptId) throw new Error("\u7F3A\u5C11\u9879\u76EE\u6216\u5267\u672C\u4E0A\u4E0B\u6587\uFF0C\u65E0\u6CD5\u751F\u6210\u884D\u751F\u8D44\u4EA7");
+        if (!userId) throw new Error("\u7F3A\u5C11\u7528\u6237\u4E0A\u4E0B\u6587\uFF0C\u65E0\u6CD5\u8FDB\u884C\u8BA1\u8D39\u4E0E\u751F\u6210");
+        const requestedIds = [...new Set((ids || []).map(Number).filter((id) => Number.isFinite(id)))];
+        const query = utils_default.db("o_assets").leftJoin("o_image", "o_assets.imageId", "o_image.id").join("o_scriptAssets", "o_scriptAssets.assetId", "o_assets.id").where("o_assets.projectId", projectId).where("o_scriptAssets.scriptId", scriptId).whereNotNull("o_assets.assetsId").where((qb) => {
+          qb.whereNull("o_image.state").orWhereNot("o_image.state", "\u5DF2\u5B8C\u6210");
+        }).select("o_assets.id");
+        if (requestedIds.length) query.whereIn("o_assets.id", requestedIds);
+        const rows = await query;
+        const targetIds = rows.map((row) => Number(row.id)).filter((id) => Number.isFinite(id));
+        if (!targetIds.length) {
+          if (requestedIds.length) {
+            const items = await getAssetImageGenerationItems(requestedIds);
+            if (items.length) socket.emit("assetGenerationFinished", { items });
+          }
+          thinking.appendText("\u6CA1\u6709\u627E\u5230\u9700\u8981\u751F\u6210\u4E14\u5C1A\u672A\u5B8C\u6210\u7684\u884D\u751F\u8D44\u4EA7\uFF0C\u5F53\u524D\u8D44\u4EA7\u53EF\u80FD\u5DF2\u5B8C\u6210\u6216\u4E0D\u5C5E\u4E8E\u672C\u5267\u96C6\u3002\n");
+          thinking.updateTitle("\u65E0\u9700\u751F\u6210\u884D\u751F\u8D44\u4EA7");
           thinking.complete();
-        }).catch((e) => {
-          thinking.appendText("\u884D\u751F\u8D44\u4EA7\u751F\u6210\u5931\u8D25:\n" + utils_default.error(e).message);
-          thinking.updateTitle("\u884D\u751F\u8D44\u4EA7\u751F\u6210\u5931\u8D25");
-          thinking.complete();
+          return "\u6CA1\u6709\u9700\u8981\u751F\u6210\u7684\u884D\u751F\u8D44\u4EA7\u56FE\u7247";
+        }
+        const generation = await startAssetImageGeneration({
+          assetIds: targetIds,
+          concurrentCount: 5,
+          projectId,
+          scriptId,
+          userId
         });
-        return "\u5F00\u59CB\u751F\u6210\u884D\u751F\u8D44\u4EA7";
+        socket.emit("assetGenerationStarted", { items: generation.data });
+        if (generation.generateIds.length) {
+          thinking.appendText(`\u670D\u52A1\u7AEF\u5DF2\u63D0\u4EA4 ${generation.generateIds.length} \u4E2A\u884D\u751F\u8D44\u4EA7\u56FE\u7247\u751F\u6210\u4EFB\u52A1\uFF0CID: ${generation.generateIds.join(", ")}
+`);
+        } else {
+          thinking.appendText("\u670D\u52A1\u7AEF\u672A\u91CD\u590D\u63D0\u4EA4\u65B0\u4EFB\u52A1\uFF0C\u6B63\u5728\u590D\u7528\u5DF2\u6709\u751F\u6210\u4EFB\u52A1\u6216\u5DF2\u5B8C\u6210\u7ED3\u679C\u3002\n");
+        }
+        thinking.appendText("\u6B63\u5728\u7B49\u5F85\u884D\u751F\u8D44\u4EA7\u56FE\u7247\u751F\u6210\u5B8C\u6210\uFF0C\u5B8C\u6210\u540E\u5C06\u7EE7\u7EED\u540E\u7EED\u9636\u6BB5\u3002\n");
+        const result = await generation.background;
+        socket.emit("assetGenerationFinished", { items: result });
+        const failed = result.filter((item) => item.state === "\u751F\u6210\u5931\u8D25");
+        if (failed.length > 0) {
+          thinking.appendText(`\u884D\u751F\u8D44\u4EA7\u56FE\u7247\u751F\u6210\u5B8C\u6210\uFF0C\u5176\u4E2D ${failed.length} \u4E2A\u5931\u8D25\uFF1A${failed.map((item) => item.id).join(", ")}
+`);
+          thinking.updateTitle("\u884D\u751F\u8D44\u4EA7\u751F\u6210\u5B58\u5728\u5931\u8D25");
+          thinking.complete();
+          return `\u884D\u751F\u8D44\u4EA7\u56FE\u7247\u751F\u6210\u5B8C\u6210\uFF0C\u4F46 ${failed.length} \u4E2A\u5931\u8D25\uFF1A${failed.map((item) => item.id).join(", ")}`;
+        }
+        thinking.appendText(`\u884D\u751F\u8D44\u4EA7\u56FE\u7247\u5DF2\u5168\u90E8\u751F\u6210\u5B8C\u6210\uFF1A${result.length} \u4E2A\u3002
+`);
+        thinking.updateTitle("\u884D\u751F\u8D44\u4EA7\u751F\u6210\u5B8C\u6210");
+        thinking.complete();
+        return `\u884D\u751F\u8D44\u4EA7\u56FE\u7247\u5DF2\u5168\u90E8\u751F\u6210\u5B8C\u6210\uFF1A${result.length} \u4E2A`;
       }
     }),
     generate_storyboard: tool({
       description: "\u751F\u6210\u5206\u955C\u56FE\u7247",
       inputSchema: zodSchema(
         external_exports.object({
-          ids: external_exports.array(external_exports.number()).describe("\u5FC5\u987B\u83B7\u53D6\u771F\u5B9E\u7684\u5206\u955CID\uFF0C\u652F\u6301\u6279\u91CF\u751F\u6210")
+          ids: external_exports.array(external_exports.number()).default([]).describe("\u771F\u5B9E\u5206\u955CID\u5217\u8868\uFF1B\u4E3A\u7A7A\u65F6\u81EA\u52A8\u751F\u6210\u5F53\u524D\u5267\u672C\u4E2D\u9700\u8981\u751F\u6210\u4E14\u672A\u5B8C\u6210\u7684\u5206\u955C")
         })
       ),
       execute: async ({ ids }) => {
-        const thinking = msg.thinking("\u6B63\u5728\u751F\u6210\u5206\u955C...");
-        new Promise((resolve3) => socket.emit("generateStoryboard", { ids }, (res) => resolve3(res))).then((res) => {
-          thinking.appendText("\u751F\u6210\u7684\u5206\u955C\u6570\u636E:\n" + JSON.stringify(res, null, 2));
-          thinking.updateTitle("\u5206\u955C\u751F\u6210\u5B8C\u6210");
+        const thinking = msg.thinking("\u6B63\u5728\u542F\u52A8\u5206\u955C\u56FE\u751F\u6210...");
+        const { projectId, scriptId } = resTool.data;
+        if (!projectId || !scriptId) throw new Error("\u7F3A\u5C11\u9879\u76EE\u6216\u5267\u672C\u4E0A\u4E0B\u6587\uFF0C\u65E0\u6CD5\u751F\u6210\u5206\u955C\u56FE");
+        if (!userId) throw new Error("\u7F3A\u5C11\u7528\u6237\u4E0A\u4E0B\u6587\uFF0C\u65E0\u6CD5\u8FDB\u884C\u8BA1\u8D39\u4E0E\u751F\u6210");
+        const requestedIds = [...new Set((ids || []).map(Number).filter((id) => Number.isFinite(id)))];
+        const query = utils_default.db("o_storyboard").where({ projectId, scriptId }).where("shouldGenerateImage", 1).whereNot("state", "\u5DF2\u5B8C\u6210").select("id");
+        if (requestedIds.length) query.whereIn("id", requestedIds);
+        const rows = await query;
+        const targetIds = rows.map((row) => Number(row.id)).filter((id) => Number.isFinite(id));
+        if (!targetIds.length) {
+          thinking.appendText("\u6CA1\u6709\u627E\u5230\u9700\u8981\u751F\u6210\u4E14\u5C1A\u672A\u5B8C\u6210\u7684\u5206\u955C\u3002\n");
+          thinking.updateTitle("\u65E0\u9700\u751F\u6210\u5206\u955C\u56FE");
           thinking.complete();
-        }).catch((e) => {
-          thinking.appendText("\u5206\u955C\u751F\u6210\u5931\u8D25:\n" + utils_default.error(e).message);
-          thinking.updateTitle("\u5206\u955C\u751F\u6210\u5931\u8D25");
-          thinking.complete();
+          return "\u6CA1\u6709\u9700\u8981\u751F\u6210\u7684\u5206\u955C\u56FE\u7247";
+        }
+        const generation = await startStoryboardImageGeneration({
+          concurrentCount: 5,
+          projectId,
+          scriptId,
+          storyboardIds: targetIds,
+          userId
         });
-        return "\u5F00\u59CB\u751F\u6210\u5206\u955C";
+        socket.emit("storyboardGenerationStarted", { items: generation.data });
+        void generation.background.catch((err) => {
+          console.error("[productionAgent] storyboard generation background error:", utils_default.error(err).message);
+        });
+        thinking.appendText(`\u670D\u52A1\u7AEF\u5DF2\u63D0\u4EA4 ${generation.generateIds.length} \u4E2A\u5206\u955C\u56FE\u751F\u6210\u4EFB\u52A1\uFF0CID: ${generation.generateIds.join(", ")}
+`);
+        thinking.updateTitle("\u5206\u955C\u56FE\u751F\u6210\u4EFB\u52A1\u5DF2\u542F\u52A8");
+        thinking.complete();
+        return `\u5206\u955C\u56FE\u751F\u6210\u4EFB\u52A1\u5DF2\u5728\u670D\u52A1\u7AEF\u542F\u52A8\uFF1A${generation.generateIds.length} \u4E2A`;
       }
     })
   };
+  tools.generate_storyboard_images = tools.generate_storyboard;
+  tools.generate_assets_images = tools.generate_deriveAsset;
   return toolsNames ? Object.fromEntries(Object.entries(tools).filter(([n2]) => toolsNames.includes(n2))) : tools;
 };
 
@@ -284664,6 +285123,93 @@ var tools_default = (toolCpnfig) => {
 var fs10 = __toESM(require("fs"));
 var import_path12 = __toESM(require("path"));
 init_modelBilling();
+
+// src/agents/progressHeartbeat.ts
+var DEFAULT_UPDATES = [
+  "\u4ECD\u5728\u7B49\u5F85\u6A21\u578B\u54CD\u5E94\uFF0C\u4EFB\u52A1\u6CA1\u6709\u4E2D\u65AD\u3002",
+  "\u6B63\u5728\u5904\u7406\u957F\u4E0A\u4E0B\u6587\u6216\u7B49\u5F85\u5B50\u4EFB\u52A1\u8FD4\u56DE\u3002",
+  "\u5982\u679C\u5F53\u524D\u8BF7\u6C42\u4E0D\u518D\u9700\u8981\uFF0C\u53EF\u4EE5\u70B9\u51FB\u505C\u6B62\u540E\u91CD\u65B0\u53D1\u8D77\u3002"
+];
+function createProgressHeartbeat(initialMsg, options) {
+  const initialDelayMs = options.initialDelayMs ?? 8e3;
+  const intervalMs = options.intervalMs ?? 15e3;
+  const updates = options.updates?.length ? options.updates : DEFAULT_UPDATES;
+  let timer = null;
+  let stopped = false;
+  let updateIndex = 0;
+  let thinking = null;
+  let msg = initialMsg;
+  const startedAt = Date.now();
+  function clearTimer() {
+    if (!timer) return;
+    clearTimeout(timer);
+    timer = null;
+  }
+  function elapsedSeconds() {
+    return Math.max(1, Math.round((Date.now() - startedAt) / 1e3));
+  }
+  function schedule(delay2 = initialDelayMs) {
+    clearTimer();
+    if (stopped) return;
+    timer = setTimeout(tick, delay2);
+    timer.unref?.();
+  }
+  function ensureThinking() {
+    if (!thinking) {
+      thinking = msg.thinking(options.title);
+    }
+    return thinking;
+  }
+  function tick() {
+    if (stopped) return;
+    const stream4 = ensureThinking();
+    const update = updates[updateIndex % updates.length];
+    updateIndex += 1;
+    stream4.updateTitle(`${options.title}\uFF08${elapsedSeconds()} \u79D2\uFF09`);
+    stream4.appendText(`${(/* @__PURE__ */ new Date()).toLocaleTimeString("zh-CN", { hour12: false })} ${update}
+`);
+    schedule(intervalMs);
+  }
+  schedule();
+  return {
+    activity(title = "\u5DF2\u6536\u5230\u54CD\u5E94\uFF0C\u7EE7\u7EED\u5904\u7406") {
+      if (stopped) return;
+      if (thinking) {
+        thinking.updateTitle(`${title}\uFF08${elapsedSeconds()} \u79D2\uFF09`);
+        thinking.complete();
+        thinking = null;
+      }
+      schedule();
+    },
+    setMessage(nextMsg, title = "\u5DF2\u5207\u6362\u5230\u65B0\u7684\u6267\u884C\u6D88\u606F") {
+      if (stopped) return;
+      if (thinking) {
+        thinking.updateTitle(`${title}\uFF08${elapsedSeconds()} \u79D2\uFF09`);
+        thinking.complete();
+        thinking = null;
+      }
+      msg = nextMsg;
+      schedule();
+    },
+    fail() {
+      stopped = true;
+      clearTimer();
+      thinking?.error();
+      thinking = null;
+    },
+    stop(title = "\u5904\u7406\u5B8C\u6210") {
+      stopped = true;
+      clearTimer();
+      if (thinking) {
+        thinking.updateTitle(`${title}\uFF08${elapsedSeconds()} \u79D2\uFF09`);
+        thinking.complete();
+        thinking = null;
+      }
+    }
+  };
+}
+
+// src/agents/productionAgent/index.ts
 async function reserveAgentCall(ctx, modelKey, taskType, description) {
   if (!ctx.userId) return null;
   const billingModel = await resolveModelBillingKey(modelKey);
@@ -284712,6 +285258,7 @@ async function runDecisionAI(ctx) {
   const memory = new memory_default("productionAgent", isolationKey, ctx.userId);
   const billingHold = await reserveAgentCall(ctx, "productionAgent:decisionAgent", "production_agent_call", "\u5236\u7247Agent\u7EDF\u7B79");
   let settled = false;
+  let heartbeat = null;
   try {
     await memory.addBestEffort("user", text2);
     const skill = import_path12.default.join(utils_default.getPath("skills"), "production_agent_decision.md");
@@ -284735,6 +285282,10 @@ async function runDecisionAI(ctx) {
 \u591A\u53C2\uFF1A${isRef ? "\u662F" : "\u5426"}`;
     const mem = buildMemPrompt(await memory.getBestEffort(text2));
     let currentMsg = ctx.msg;
+    heartbeat = createProgressHeartbeat(currentMsg, {
+      title: "\u6B63\u5728\u7EDF\u7B79\u5236\u4F5C\u4EFB\u52A1",
+      updates: ["\u6B63\u5728\u51C6\u5907\u9879\u76EE\u3001\u6A21\u578B\u548C\u5DE5\u4F5C\u533A\u4E0A\u4E0B\u6587\u3002", "\u4ECD\u5728\u7B49\u5F85\u6A21\u578B\u6216\u5DE5\u5177\u8FD4\u56DE\uFF0C\u4EFB\u52A1\u6CA1\u6709\u4E2D\u65AD\u3002", "\u5236\u4F5C\u94FE\u8DEF\u8F83\u957F\uFF0C\u6B63\u5728\u7EE7\u7EED\u5904\u7406\u3002"]
+    });
     const { fullStream } = await utils_default.Ai.Text("productionAgent:decisionAgent", ctx.thinkConfig.think, ctx.thinkConfig.thinlLevel).stream({
       messages: [
         { role: "system", content: prompt },
@@ -284744,7 +285295,7 @@ async function runDecisionAI(ctx) {
       abortSignal,
       tools: {
         ...memory.getTools(),
-        ...tools_default({ resTool: ctx.resTool, msg: ctx.msg }),
+        ...tools_default({ resTool: ctx.resTool, msg: ctx.msg, userId: ctx.userId }),
         ...await createSubAgent(ctx)
       },
       onFinish: async (completion) => {
@@ -284760,10 +285311,13 @@ async function runDecisionAI(ctx) {
       if (ctx.msg === currentMsg) return currentMsg;
       currentMsg.complete();
       currentMsg = ctx.msg;
+      heartbeat?.setMessage(currentMsg);
       return currentMsg;
-    });
+    }, heartbeat);
+    heartbeat.stop();
     if (!settled) await settlePointHold(billingHold?.id);
   } catch (error75) {
+    heartbeat?.fail();
     if (!settled) await releasePointHold(billingHold?.id);
     throw error75;
   }
@@ -284784,14 +285338,19 @@ async function createSubAgent(parentCtx) {
     const subMsg = resTool.newMessage("assistant", name28);
     const billingHold = await reserveAgentCall(parentCtx, key, "production_agent_call", `\u5236\u7247Agent-${name28}`);
     let settled = false;
+    const heartbeat = createProgressHeartbeat(subMsg, {
+      title: `${name28}\u6B63\u5728\u6267\u884C\u4EFB\u52A1`,
+      updates: ["\u6B63\u5728\u8BFB\u53D6\u5DE5\u4F5C\u533A\u6570\u636E\u548C\u4E13\u4E1A\u6280\u80FD\u3002", "\u6B63\u5728\u7B49\u5F85\u6A21\u578B\u8FD4\u56DE\u6267\u884C\u7ED3\u679C\u3002", "\u751F\u6210\u6216\u5BA1\u6838\u4EFB\u52A1\u4ECD\u5728\u8FDB\u884C\uFF0C\u8BF7\u7A0D\u5019\u3002"]
+    });
     try {
       const { fullStream } = await utils_default.Ai.Text(key, parentCtx.thinkConfig.think, parentCtx.thinkConfig.thinlLevel).stream({
         system,
         messages: messages ?? [{ role: "user", content: prompt }],
         abortSignal,
-        tools: { ...extraTools, ...tools_default({ resTool, msg: subMsg }) }
+        tools: { ...extraTools, ...tools_default({ resTool, msg: subMsg, userId: parentCtx.userId }) }
       });
-      const fullResponse = await consumeFullStream(fullStream, subMsg);
+      const fullResponse = await consumeFullStream(fullStream, subMsg, void 0, heartbeat);
+      heartbeat.stop();
       await settlePointHold(billingHold?.id);
       settled = true;
       if (fullResponse.trim()) {
@@ -284803,6 +285362,7 @@ async function createSubAgent(parentCtx) {
       parentCtx.msg = resTool.newMessage("assistant", "\u89C6\u9891\u7B56\u5212");
       return fullResponse;
     } catch (error75) {
+      heartbeat.fail();
       if (!settled) await releasePointHold(billingHold?.id);
       throw error75;
     }
@@ -284942,7 +285502,7 @@ ${modelInfo}` },
     execute: async ({ prompt }) => {
       const skill = import_path12.default.join(utils_default.getPath("skills"), "production_execution_storyboard_table.md");
       const systemPrompt = await fs10.promises.readFile(skill, "utf-8");
-      const addPrompt = "\n\u4F60\u5FC5\u987B\u4F7F\u7528\u5982\u4E0BXML\u683C\u5F0F\u5199\u5165\u5DE5\u4F5C\u533A\uFF1A\n```\n<storyboardTable>\u5185\u5BB9</storyboardTable>\n```";
+      const addPrompt = "\n\u4F60\u5FC5\u987B\u4F7F\u7528\u5982\u4E0BXML\u683C\u5F0F\u5199\u5165\u5DE5\u4F5C\u533A\uFF1A\n```\n<storyboardTable>\u5185\u5BB9</storyboardTable>\n```\n\u5176\u4E2D `<storyboardTable>` \u5185\u5BB9\u5FC5\u987B\u662F\u5355\u4E2A\u8FDE\u7EED Markdown \u8868\u683C\uFF1A\u8868\u5934\u3001\u5206\u9694\u7EBF\u3001\u6240\u6709\u6570\u636E\u884C\u4E4B\u95F4\u4E0D\u5F97\u6709\u7A7A\u884C\uFF1B\u6BCF\u884C\u4E25\u683C 14 \u5217\uFF1B\u5355\u5143\u683C\u5185\u7981\u6B62\u51FA\u73B0 ASCII \u7AD6\u7EBF `|`\uFF0C\u5E76\u5217\u4FE1\u606F\u8BF7\u7528 `\uFF1B`\u3001`\u3001` \u6216\u4E2D\u6587\u62EC\u53F7\u3002";
       return runAgent({
         key: "productionAgent:storyboardTableAgent",
         prompt,
@@ -285003,7 +285563,7 @@ ${buildSkillPrompt(mainSkills)}`,
   };
   return res;
 }
-async function consumeFullStream(fullStream, initialMsg, syncMsg) {
+async function consumeFullStream(fullStream, initialMsg, syncMsg, heartbeat) {
   let msg = initialMsg;
   let text2 = msg.text();
   let thinking = null;
@@ -285011,6 +285571,7 @@ async function consumeFullStream(fullStream, initialMsg, syncMsg) {
   let fullResponse = "";
   try {
     for await (const chunk of fullStream) {
+      heartbeat?.activity();
       await new Promise((resolve3) => setTimeout(() => resolve3(), 1));
       if (syncMsg) {
         const newMsg = syncMsg();
@@ -285038,7 +285599,9 @@ async function consumeFullStream(fullStream, initialMsg, syncMsg) {
     }
     text2.complete();
     msg.complete();
+    heartbeat?.stop();
   } catch (err) {
+    heartbeat?.fail();
     thinking?.complete();
     const errMsg = err?.message ?? String(err);
     text2.append(errMsg);
@@ -285740,6 +286303,7 @@ var productionAgent_default = (nsp) => {
       } catch (err) {
         if (err.name !== "AbortError" && !currentController.signal.aborted) {
           console.error("[productionAgent] chat error:", utils_default.error(err).message);
+          msg.error(utils_default.error(err).message);
         }
       } finally {
         if (abortController === currentController) {
@@ -285923,6 +286487,7 @@ async function runDecisionAI2(ctx) {
   const memory = new memory_default("scriptAgent", isolationKey, ctx.userId);
   const billingHold = await reserveAgentCall2(ctx, "scriptAgent:decisionAgent", "script_agent_call", "\u5267\u672CAgent\u7EDF\u7B79");
   let settled = false;
+  let heartbeat = null;
   try {
     await memory.addBestEffort("user", text2, { createTime: userMessageTime });
     const skill = import_path13.default.join(utils_default.getPath("skills"), "script_agent_decision.md");
@@ -285940,6 +286505,10 @@ async function runDecisionAI2(ctx) {
       `\u7AE0\u8282\u6570\u91CF\uFF1A${novelData.length}\u7AE0`
     ].join("\n");
     let currentMsg = ctx.msg;
+    heartbeat = createProgressHeartbeat(currentMsg, {
+      title: "\u6B63\u5728\u7EDF\u7B79\u5267\u672C\u4EFB\u52A1",
+      updates: ["\u6B63\u5728\u51C6\u5907\u4E0A\u4E0B\u6587\u548C\u9879\u76EE\u914D\u7F6E\u3002", "\u4ECD\u5728\u7B49\u5F85\u6A21\u578B\u6216\u5DE5\u5177\u8FD4\u56DE\uFF0C\u4EFB\u52A1\u6CA1\u6709\u4E2D\u65AD\u3002", "\u957F\u6587\u672C\u4EFB\u52A1\u53EF\u80FD\u9700\u8981\u66F4\u4E45\uFF0C\u8BF7\u7A0D\u5019\u3002"]
+    });
     const { fullStream } = await utils_default.Ai.Text("scriptAgent:decisionAgent", ctx.thinkConfig.think, ctx.thinkConfig.thinlLevel).stream({
       messages: [
         { role: "system", content: prompt },
@@ -285965,10 +286534,13 @@ async function runDecisionAI2(ctx) {
       if (ctx.msg === currentMsg) return currentMsg;
       currentMsg.complete();
       currentMsg = ctx.msg;
+      heartbeat?.setMessage(currentMsg);
       return currentMsg;
-    });
+    }, heartbeat);
+    heartbeat.stop();
     if (!settled) await settlePointHold(billingHold?.id);
   } catch (error75) {
+    heartbeat?.fail();
     if (!settled) await releasePointHold(billingHold?.id);
     throw error75;
   }
@@ -285989,6 +286561,10 @@ function createSubAgent2(parentCtx) {
     const subMsg = resTool.newMessage("assistant", name28);
     const billingHold = await reserveAgentCall2(parentCtx, key, "script_agent_call", `\u5267\u672CAgent-${name28}`);
     let settled = false;
+    const heartbeat = createProgressHeartbeat(subMsg, {
+      title: `${name28}\u6B63\u5728\u6267\u884C\u4EFB\u52A1`,
+      updates: ["\u6B63\u5728\u8BFB\u53D6\u6240\u9700\u4E0A\u4E0B\u6587\u3002", "\u6B63\u5728\u7B49\u5F85\u6A21\u578B\u8FD4\u56DE\u6267\u884C\u7ED3\u679C\u3002", "\u957F\u6587\u672C\u751F\u6210\u4ECD\u5728\u8FDB\u884C\uFF0C\u8BF7\u7A0D\u5019\u3002"]
+    });
     try {
       const { fullStream } = await utils_default.Ai.Text(key, parentCtx.thinkConfig.think, parentCtx.thinkConfig.thinlLevel).stream({
         system,
@@ -285996,7 +286572,8 @@ function createSubAgent2(parentCtx) {
         abortSignal,
         tools: { ...extraTools, ...tools_default2({ resTool, msg: subMsg }) }
       });
-      const fullResponse = await consumeFullStream2(fullStream, subMsg);
+      const fullResponse = await consumeFullStream2(fullStream, subMsg, void 0, heartbeat);
+      heartbeat.stop();
       await settlePointHold(billingHold?.id);
       settled = true;
       if (fullResponse.trim()) {
@@ -286008,6 +286585,7 @@ function createSubAgent2(parentCtx) {
       parentCtx.msg = resTool.newMessage("assistant", "\u89C6\u9891\u7B56\u5212");
       return fullResponse;
     } catch (error75) {
+      heartbeat.fail();
       if (!settled) await releasePointHold(billingHold?.id);
       throw error75;
     }
@@ -286098,7 +286676,7 @@ XML\u4E0D\u5F97\u6DFB\u52A0\u4EFB\u4F55\u989D\u5916\u6807\u7B7E<scriptItem name=
     run_supervision_agent
   };
 }
-async function consumeFullStream2(fullStream, initialMsg, syncMsg) {
+async function consumeFullStream2(fullStream, initialMsg, syncMsg, heartbeat) {
   let msg = initialMsg;
   let text2 = msg.text();
   let thinking = null;
@@ -286106,6 +286684,7 @@ async function consumeFullStream2(fullStream, initialMsg, syncMsg) {
   let fullResponse = "";
   try {
     for await (const chunk of fullStream) {
+      heartbeat?.activity();
       await new Promise((resolve3) => setTimeout(() => resolve3(), 1));
       if (syncMsg) {
         const newMsg = syncMsg();
@@ -286133,7 +286712,9 @@ async function consumeFullStream2(fullStream, initialMsg, syncMsg) {
     }
     text2.complete();
     msg.complete();
+    heartbeat?.stop();
   } catch (err) {
+    heartbeat?.fail();
     thinking?.complete();
     const errMsg = err?.message ?? String(err);
     text2.append(errMsg);
@@ -286304,13 +286885,13 @@ function currentUserId(req) {
   const id = req.user?.id;
   return id === null || id === void 0 || id === "" ? "" : String(id);
 }
-function normalizeIds(value) {
+function normalizeIds3(value) {
   const rawValues = Array.isArray(value) ? value : [value];
   const ids = rawValues.flatMap((item) => Array.isArray(item) ? item : [item]).filter((item) => item !== null && item !== void 0 && item !== "").map((item) => Number(item)).filter((item) => Number.isFinite(item));
   return [...new Set(ids)];
 }
 function bodyIds(body, ...fields) {
-  return fields.flatMap((field) => normalizeIds(body[field]));
+  return fields.flatMap((field) => normalizeIds3(body[field]));
 }
 async function countOwnedProjects(ids, userId) {
   if (!ids.length) return 0;
@@ -286357,11 +286938,11 @@ async function countOwnedImageFlows(ids, userId, projectId) {
 }
 function collectSourceIds(items, source) {
   if (!Array.isArray(items)) return [];
-  return items.filter((item) => item?.sources === source).flatMap((item) => normalizeIds(item.id));
+  return items.filter((item) => item?.sources === source).flatMap((item) => normalizeIds3(item.id));
 }
 function collectItemIdsBySource(items, source, includeUnspecified = false) {
   if (!Array.isArray(items)) return [];
-  return items.filter((item) => item?.sources === source || includeUnspecified && item?.sources == null).flatMap((item) => normalizeIds(item.id));
+  return items.filter((item) => item?.sources === source || includeUnspecified && item?.sources == null).flatMap((item) => normalizeIds3(item.id));
 }
 function collectTrackSourceIds(trackData, source) {
   if (!Array.isArray(trackData)) return [];
@@ -286397,7 +286978,7 @@ async function enforceProjectDataIsolation(req, res, next) {
     const assetIds = bodyIds(body, "assets", "assetsId", "assetIds", "assetsIds", "audioIds");
     if (ASSET_ID_ROUTES.has(req.path)) assetIds.push(...bodyIds(body, "id", "ids"));
     assetIds.push(...collectItemIdsBySource(body.items, "assets", true));
-    if (Array.isArray(body.assetsItem)) assetIds.push(...body.assetsItem.flatMap((item) => normalizeIds(item?.id)));
+    if (Array.isArray(body.assetsItem)) assetIds.push(...body.assetsItem.flatMap((item) => normalizeIds3(item?.id)));
     assetIds.push(...collectTrackSourceIds(body.trackData, "assets"));
     if (!await requireOwnedCount(res, "\u8D44\u4EA7", assetIds, () => countOwnedProjectRecords("o_assets", assetIds, userId, primaryProjectId))) return;
     const novelIds = bodyIds(body, "novelIds");
@@ -286406,7 +286987,7 @@ async function enforceProjectDataIsolation(req, res, next) {
     const storyboardIds = bodyIds(body, "storyboardIds");
     if (STORYBOARD_ID_ROUTES.has(req.path)) storyboardIds.push(...bodyIds(body, "id", "ids"));
     storyboardIds.push(...collectItemIdsBySource(body.items, "storyboard"));
-    if (Array.isArray(body.data?.storyboard)) storyboardIds.push(...body.data.storyboard.flatMap((item) => normalizeIds(item?.id)));
+    if (Array.isArray(body.data?.storyboard)) storyboardIds.push(...body.data.storyboard.flatMap((item) => normalizeIds3(item?.id)));
     storyboardIds.push(...collectTrackSourceIds(body.trackData, "storyboard"));
     if (!await requireOwnedCount(res, "\u5206\u955C", storyboardIds, () => countOwnedProjectRecords("o_storyboard", storyboardIds, userId, primaryProjectId))) return;
     const taskIds = bodyIds(body, "taskId");
@@ -286417,7 +286998,7 @@ async function enforceProjectDataIsolation(req, res, next) {
     if (!await requireOwnedCount(res, "\u4E8B\u4EF6", eventIds, () => countOwnedEvents(eventIds, userId, primaryProjectId))) return;
     const trackIds = bodyIds(body, "trackId");
     if (TRACK_ID_ROUTES.has(req.path)) trackIds.push(...bodyIds(body, "id"));
-    if (Array.isArray(body.trackData)) trackIds.push(...body.trackData.flatMap((track) => normalizeIds(track?.trackId)));
+    if (Array.isArray(body.trackData)) trackIds.push(...body.trackData.flatMap((track) => normalizeIds3(track?.trackId)));
     if (!await requireOwnedCount(res, "\u89C6\u9891\u8F68\u9053", trackIds, () => countOwnedProjectRecords("o_videoTrack", trackIds, userId, primaryProjectId))) return;
     const videoIds = bodyIds(body, "videoId");
     if (VIDEO_ID_ROUTES.has(req.path)) videoIds.push(...bodyIds(body, "id"));

@@ -18,7 +18,10 @@
               </t-image>
             </div>
             <div v-else class="assetImageWrap assetImagePlaceholder">
-              <t-loading v-if="asset.state == '生成中'" size="small" />
+              <div v-if="isGenerating(asset.state)" class="generatingPlaceholder">
+                <t-loading size="medium" />
+                <span>{{ $t("workbench.cornerScape.generating") }}</span>
+              </div>
               <span v-else-if="asset.state == '生成失败'" style="color: red">{{ $t("workbench.production.node.assets.generateFailed") }}</span>
               <t-empty v-else size="small" :title="$t('workbench.production.node.assets.notGenerated')" />
             </div>
@@ -34,7 +37,13 @@
             <i-right size="32"></i-right>
           </div>
           <div class="deriveAssets">
-            <t-card v-for="(item, index) in asset.derive" :key="index" class="assetCard" @click="generateAssetsImage(item, asset.src)">
+            <t-card
+              v-for="(item, index) in asset.derive"
+              :key="item.id || index"
+              class="assetCard"
+              :class="{ generatingCard: isGenerating(item.state) }"
+              @click="!isGenerating(item.state) && generateAssetsImage(item, asset.src)"
+            >
               <div v-if="item.src && item.state == '已完成'" class="assetImageWrap">
                 <t-image :src="item.src" fit="contain" class="assetImage" :preview="true">
                   <template #overlayContent>
@@ -45,13 +54,16 @@
                 </t-image>
               </div>
               <div v-else class="assetImageWrap assetImagePlaceholder">
-                <t-loading v-if="item.state == '生成中'" size="small" />
+                <div v-if="isGenerating(item.state)" class="generatingPlaceholder">
+                  <t-loading size="medium" />
+                  <span>{{ $t("workbench.cornerScape.generating") }}</span>
+                </div>
                 <t-tooltip v-else-if="item.state == '生成失败'" :content="item?.errorReason">
                   <div style="color: red; cursor: pointer">{{ $t("workbench.novel.genFailed") }}</div>
                 </t-tooltip>
                 <t-empty v-else size="small" :title="$t('workbench.production.node.assets.notGenerated')" />
               </div>
-              <t-tooltip theme="primary" :content="$t('workbench.production.node.storyboard.deleteNode')">
+              <t-tooltip v-if="!isGenerating(item.state)" theme="primary" :content="$t('workbench.production.node.storyboard.deleteNode')">
                 <div class="remove ac" @click.stop="removeFn(item.id!)">
                   <i-delete theme="outline" size="18" fill="#fff" />
                 </div>
@@ -103,7 +115,11 @@ const currentRow = ref<{
 });
 const visible = ref(false);
 const currentAssetsId = ref();
+function isGenerating(state?: string) {
+  return state === "生成中";
+}
 function generateAssetsImage(row: DeriveAsset, referanceImageUrl: string) {
+  if (isGenerating(row.state)) return;
   currentRow.value = {
     flowId: row?.flowId,
     resultImages: [{ src: row.src, prompt: row.prompt }],
@@ -207,6 +223,12 @@ async function removeFn(id: number) {
           display: flex;
           flex-direction: column;
           justify-content: space-between;
+          position: relative;
+
+          &.generatingCard {
+            cursor: wait;
+          }
+
           &:hover {
             .remove {
               opacity: 1;
@@ -223,6 +245,21 @@ async function removeFn(id: number) {
               background-color: var(--td-bg-color-container-hover, #f5f5f5);
               border-radius: 4px;
               overflow: hidden;
+            }
+
+            .generatingPlaceholder {
+              width: 100%;
+              height: 100%;
+              display: flex;
+              flex-direction: column;
+              align-items: center;
+              justify-content: center;
+              gap: 8px;
+              color: var(--td-text-color-secondary);
+              background: linear-gradient(180deg, rgba(92, 214, 206, 0.12), rgba(92, 214, 206, 0.04));
+              border: 1px solid rgba(92, 214, 206, 0.22);
+              border-radius: 4px;
+              font-size: 12px;
             }
 
             .assetImage {

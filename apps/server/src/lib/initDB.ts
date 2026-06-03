@@ -651,7 +651,7 @@ export default async (knex: Knex, forceInit: boolean = false): Promise<void> => 
         const list = [
           {
             id: "4fb36012e56e395b425569987f5dab0e",
-            md5: "39ecc6fb4f1508a300c8a9371cc962c2",
+            md5: "866672fc69b1bd9ce44625afc729726b",
             path: "production_agent_decision.md",
             name: "production_agent_decision",
             description: "",

@@ -21,6 +21,7 @@ export default router.post(
     const result = await Promise.all(
       data.map(async (item: any) => ({
         ...item,
+        errorReason: item.state === "生成失败" ? item.errorReason : null,
         src: item.filePath ? await u.oss.getSmallImageUrl(item.filePath) : null,
       })),
     );

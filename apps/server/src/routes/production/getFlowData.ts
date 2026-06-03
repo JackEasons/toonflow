@@ -132,7 +132,7 @@ export default router.post(
                   desc: child.describe ?? "",
                   src: child.filePath && (await u.oss.getSmallImageUrl(child.filePath!)),
                   state: child.state ?? "未生成",
-                  errorReason: child?.errorReason ?? "",
+                  errorReason: child.state === "生成失败" ? (child?.errorReason ?? "") : "",
                   flowId: child.flowId,
                 })),
             ),

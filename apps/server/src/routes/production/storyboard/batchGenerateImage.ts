@@ -1,17 +1,12 @@
 import express from "express";
-import u from "@/utils";
 import { z } from "zod";
-import sharp from "sharp";
+
 import { error, success } from "@/lib/responseFormat";
 import { validateFields } from "@/middleware/middleware";
-import { Output, tool } from "ai";
-import { assetItemSchema } from "@/agents/productionAgent/tools";
-import { resolveNegativePrompt } from "@/utils/negativePrompt";
-import { quoteModelCalls, releasePointHold, reserveModelCallPoints, settlePointHold } from "@/utils/modelBilling";
-import { appendStoryboardImageConsistencyGuard, loadVideoPromptContext } from "@/utils/videoPromptContext";
+import { startStoryboardImageGeneration } from "@/services/storyboardImageGeneration";
+import u from "@/utils";
+
 const router = express.Router();
-export type AssetData = z.infer<typeof assetItemSchema>;
-const MAX_IMAGE_REFERENCE_COUNT = 8;
 
 export default router.post(
   "/",
@@ -23,289 +18,36 @@ export default router.post(
     compulsory: z.boolean().optional(),
   }),
   async (req, res) => {
-    const {
-      storyboardIds,
-      projectId,
-      scriptId,
-      concurrentCount = 5,
-      compulsory = false,
-    }: {
-      storyboardIds: number[];
-      projectId: number;
-      scriptId: number;
-      concurrentCount: number;
-      compulsory: boolean;
-    } = req.body;
-    const userId = String((req as any).user?.id || "");
-    if (!userId) return res.status(401).send(error("未提供token"));
-    if (!storyboardIds || storyboardIds.length === 0) return res.status(400).send(error("storyboardIds不能为空"));
-    // 当没有 storyboardIds 时，通过 AI 生成新的分镜面板数据
-    let finalStoryboardIds: number[] = storyboardIds || [];
-    // shouldGenerateImage === 0 的分镜标记为「未生成」，其余标记为「生成中」
-    const storyboardData = await u.db("o_storyboard").where("scriptId", scriptId).where("projectId", projectId).whereIn("id", finalStoryboardIds);
-    if (!storyboardData.length) return res.status(500).send(error("未查到分镜数据"));
-    const storyIds = storyboardData.map((i) => i.id).filter((id): id is number => typeof id === "number");
-    const projectSettingData = await u.db("o_project").where("id", projectId).select("imageModel", "imageQuality", "artStyle", "videoRatio").first();
-    const generateList = compulsory ? storyboardData : storyboardData.filter((item) => item.shouldGenerateImage !== 0);
-    let quote;
     try {
-      quote = await quoteModelCalls(userId, [
-        {
-          count: generateList.length,
-          model: projectSettingData?.imageModel as string,
-          modelType: "image",
-          taskType: "storyboard_image_generation",
-        },
-      ]);
-    } catch (err: any) {
-      return res.status(400).send(error(err?.message || "获取积分报价失败"));
-    }
-    if (!quote.enough) return res.status(400).send(error(`积分不足，需要 ${quote.requiredPoints} 积分，当前可用 ${quote.availablePoints} 积分`));
-
-    if (compulsory) {
-      await u.db("o_storyboard").whereIn("id", storyIds).where("scriptId", scriptId).update({ state: "生成中", shouldGenerateImage: 1 });
-    } else {
-      await u.db("o_storyboard").whereIn("id", storyIds).where("scriptId", scriptId).where("shouldGenerateImage", 0).update({ state: "未生成" });
-      await u.db("o_storyboard").whereIn("id", storyIds).where("scriptId", scriptId).where("shouldGenerateImage", 1).update({ state: "生成中" });
-    }
-
-    const storyboardNegativePromptSource = u.getArtPrompt(projectSettingData?.artStyle ?? "", "art_skills", "director_storyboard");
-
-    // 按 sort 顺序查出每个 storyboard 关联的 assetId 有序列表
-    const assets2StoryboardRows = await u
-      .db("o_assets2Storyboard")
-      .whereIn("storyboardId", storyIds)
-      .orderBy("sort", "asc").orderBy("assetId", "asc")
-      .select("storyboardId", "assetId");
-
-    // 收集所有 assetId，批量查对应的 imageId
-    const allAssetIds = [...new Set(assets2StoryboardRows.map((r: any) => r.assetId))];
-    const assetImageMap: Record<number, number> = {};
-    if (allAssetIds.length > 0) {
-      const assetRows = await u.db("o_assets").whereIn("id", allAssetIds).select("id", "imageId");
-      assetRows.forEach((row: any) => {
-        assetImageMap[row.id] = row.imageId;
-      });
-    }
-
-    // 按 sort 顺序重建 assetRecord，值为有序的 imageId 列表
-    const assetRecord: Record<number, number[]> = {};
-    assets2StoryboardRows.forEach((item: any) => {
-      if (!assetRecord[item.storyboardId]) {
-        assetRecord[item.storyboardId] = [];
-      }
-      const imageId = assetImageMap[item.assetId];
-      if (imageId != null) {
-        assetRecord[item.storyboardId].push(imageId);
-      }
-    });
-    const realStoryData = await u.db("o_storyboard").where("scriptId", scriptId).where("projectId", projectId).whereIn("id", storyIds);
-    const holdMap = new Map<number, Awaited<ReturnType<typeof reserveModelCallPoints>>>();
-    const billingAttemptId = u.uuid();
-    try {
-      const pointsPerCall = quote.items[0]?.pointsPerCall || 0;
-      for (const item of generateList) {
-        const itemQuote = {
-          ...quote,
-          enough: true,
-          items: quote.items[0] ? [{ ...quote.items[0], count: 1, requiredPoints: pointsPerCall }] : [],
-          requiredPoints: pointsPerCall,
-        };
-        const hold = await reserveModelCallPoints({
-          billingMeta: itemQuote,
-          description: `分镜图片生成：${quote.items[0]?.modelLabel || projectSettingData?.imageModel}`,
-          episodeId: scriptId,
-          idempotencyKey: `model-call:storyboard:${item.id}:${billingAttemptId}`,
-          projectId,
-          quote: itemQuote,
-          relatedId: item.id,
-          taskType: "storyboard_image_generation",
-          userId,
-        });
-        holdMap.set(item.id!, hold);
-      }
-    } catch (err: any) {
-      await Promise.all([...holdMap.values()].map((hold) => releasePointHold(hold?.id)));
-      await u.db("o_storyboard").whereIn("id", storyIds).where("scriptId", scriptId).update({ reason: err?.message || "积分冻结失败", state: "生成失败" });
-      return res.status(400).send(error(err?.message || "积分不足"));
-    }
-
-    res.status(200).send(
-      success(
-        realStoryData.map((i) => ({
-          id: i.id,
-          prompt: i.prompt,
-          associateAssetsIds: assetRecord[i.id!],
-          src: null,
-          state: i.state,
-          videoDesc: i.videoDesc,
-          negativePrompt: i.negativePrompt,
-          shouldGenerateImage: i.shouldGenerateImage,
-        })),
-      ),
-    );
-
-    const generateTask = async (item: (typeof storyboardData)[number]) => {
-      const billingHold = holdMap.get(item.id!);
-      const promptContext = await loadVideoPromptContext([{ id: item.id!, sources: "storyboard" }]);
-      const requestPrompt = appendStoryboardImageConsistencyGuard(item.prompt || item.videoDesc || "", promptContext);
-      const negativePrompt = resolveNegativePrompt(
-        { prompt: requestPrompt, negativePromptSource: storyboardNegativePromptSource },
-        { mediaType: "image", modelKey: projectSettingData?.imageModel as `${string}:${string}` },
-      );
-      const repeloadObj = {
-        billingHoldId: billingHold?.id || null,
-        billingRelatedId: item.id,
-        billingTaskType: "storyboard_image_generation",
+      const {
+        storyboardIds,
         projectId,
-        prompt: requestPrompt,
         scriptId,
-        storyboardId: item.id,
-        negativePrompt,
-        size: projectSettingData?.imageQuality as "1K" | "2K" | "4K",
-        aspectRatio: projectSettingData?.videoRatio as `${number}:${number}`,
-      };
-      try {
-        await u.db("o_storyboard").where("id", item.id).update({
-          negativePrompt: repeloadObj.negativePrompt,
-        });
-        const imageCls = await u.Ai.Image(projectSettingData?.imageModel as `${string}:${string}`).run(
-          {
-            referenceList: await getStoryboardImageReferenceList(item.id!, assetRecord[item.id!] || []),
-            negativePromptSource: storyboardNegativePromptSource,
-            ...repeloadObj,
-          },
-          {
-            taskClass: "生成分镜图片",
-            describe: "分镜图片生成",
-            relatedObjects: JSON.stringify(repeloadObj),
-            projectId: projectId,
-          },
-        );
-        const savePath = `/${projectId}/assets/${scriptId}/${u.uuid()}.jpg`;
-        const storageProvider = u.oss.getStorageProvider();
-        await imageCls.save(savePath, storageProvider);
-        await settlePointHold(billingHold?.id);
-        await u.db("o_storyboard").where("id", item.id).update({
-          filePath: savePath,
-          storageProvider,
-          state: "已完成",
-        });
-      } catch (e) {
-        await releasePointHold(billingHold?.id);
-        u.db("o_storyboard")
-          .where("id", item.id)
-          .update({
-            filePath: "",
-            storageProvider: null,
-            reason: u.error(e).message,
-            state: "生成失败",
-          });
-      }
-    };
-    // 按 concurrentCount 控制并发数，分批执行；跳过 shouldGenerateImage === 0 的分镜
-    for (let i = 0; i < generateList.length; i += concurrentCount) {
-      const batch = generateList.slice(i, i + concurrentCount);
-      await Promise.all(batch.map(generateTask));
+        concurrentCount = 5,
+        compulsory = false,
+      }: {
+        storyboardIds: number[];
+        projectId: number;
+        scriptId: number;
+        concurrentCount: number;
+        compulsory: boolean;
+      } = req.body;
+      const userId = String((req as any).user?.id || "");
+      const generation = await startStoryboardImageGeneration({
+        compulsory,
+        concurrentCount,
+        projectId,
+        scriptId,
+        storyboardIds,
+        userId,
+      });
+
+      res.status(200).send(success(generation.data));
+      void generation.background.catch((err) => {
+        console.error("[storyboard] batchGenerateImage background error:", u.error(err).message);
+      });
+    } catch (err: any) {
+      res.status(err?.statusCode || 400).send(error(err?.message || "分镜图片生成失败"));
     }
   },
 );
-
-async function getStoryboardImageReferenceList(storyboardId: number, assetImageIds: number[]) {
-  const assetRefs = await getAssetsImageBase64(assetImageIds.slice(0, MAX_IMAGE_REFERENCE_COUNT));
-  const remaining = MAX_IMAGE_REFERENCE_COUNT - assetRefs.length;
-  if (remaining <= 0) return assetRefs;
-
-  const continuityPaths = await getStoryboardContinuityFilePaths(storyboardId, remaining);
-  const continuityRefs = await getImageFilePathsBase64(continuityPaths);
-  return [...assetRefs, ...continuityRefs].slice(0, MAX_IMAGE_REFERENCE_COUNT);
-}
-
-async function getStoryboardContinuityFilePaths(storyboardId: number, limit: number): Promise<string[]> {
-  if (limit <= 0) return [];
-  const current = await u.db("o_storyboard").where("id", storyboardId).select("id", "projectId", "scriptId", "trackId", "index").first();
-  if (!current?.projectId || !current?.scriptId) return [];
-
-  const rows = await u
-    .db("o_storyboard")
-    .where({ projectId: current.projectId, scriptId: current.scriptId })
-    .whereNot("id", storyboardId)
-    .whereNotNull("filePath")
-    .select("id", "filePath", "trackId", "index")
-    .orderBy("index", "asc")
-    .orderBy("id", "asc");
-
-  const currentIndex = Number(current.index ?? current.id ?? 0);
-  const seen = new Set<string>();
-  const paths: string[] = [];
-  const add = (row?: { filePath?: string | null }) => {
-    const filePath = row?.filePath;
-    if (!filePath || seen.has(filePath)) return;
-    seen.add(filePath);
-    paths.push(filePath);
-  };
-
-  const withDistance = rows.map((row) => ({
-    ...row,
-    distance: Math.abs(Number(row.index ?? row.id ?? 0) - currentIndex),
-    position: Number(row.index ?? row.id ?? 0),
-  }));
-  add(
-    withDistance
-      .filter((row) => row.position < currentIndex)
-      .sort((a, b) => b.position - a.position)[0],
-  );
-  add(
-    withDistance
-      .filter((row) => row.position > currentIndex)
-      .sort((a, b) => a.position - b.position)[0],
-  );
-  withDistance
-    .filter((row) => row.trackId != null && current.trackId != null && Number(row.trackId) === Number(current.trackId))
-    .sort((a, b) => a.distance - b.distance || a.position - b.position)
-    .forEach(add);
-
-  return paths.slice(0, limit);
-}
-
-async function getImageFilePathsBase64(filePaths: string[]) {
-  const imageUrls = await Promise.all(
-    filePaths.map(async (filePath) => {
-      try {
-        return await u.oss.getImageBase64(filePath);
-      } catch {
-        return null;
-      }
-    }),
-  );
-  return (imageUrls.filter(Boolean) as string[]).map((url) => ({ type: "image" as const, base64: url }));
-}
-
-async function getAssetsImageBase64(imageIds: number[]) {
-  if (!imageIds.length) return [];
-
-  const imagePaths = await u.db("o_image").whereIn("o_image.id", imageIds).select("o_image.id", "o_image.filePath");
-
-  // 建立 id 到 filePath 的映射
-  const id2Path = new Map<number, string>();
-  for (const row of imagePaths) {
-    id2Path.set(row.id, row.filePath);
-  }
-
-  // 保证输出顺序与 imageIds 一致
-  const imageUrls = await Promise.all(
-    imageIds.map(async (id) => {
-      const filePath = id2Path.get(id);
-      if (filePath) {
-        try {
-          return await u.oss.getImageBase64(filePath);
-        } catch {
-          return null;
-        }
-      }
-      return null;
-    }),
-  );
-  // 保留顺序，并且过滤掉无效项
-  return (imageUrls.filter(Boolean) as string[]).map((url) => ({ type: "image" as const, base64: url }));
-}

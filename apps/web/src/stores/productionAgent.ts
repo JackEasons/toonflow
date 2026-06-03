@@ -5,12 +5,20 @@ import axios from "#/utils/axios";
 import projectStore from "#/stores/project";
 import settingStore from "#/stores/setting";
 import { useChat } from "#/utils/useChat";
+import { normalizeStoryboardTableMarkdown } from "#/utils/storyboardTableMarkdown";
 import type { FlowData, Storyboard } from "#/views/production/utils/flowBuilder";
 import type { ChatMessagesData } from "@tdesign-vue-next/chat";
 import { useThrottleFn } from "@vueuse/core";
 
 function getRequestErrorMessage(error: unknown, fallback: string) {
   return (error as any)?.message || fallback;
+}
+
+function normalizeFlowData(data: FlowData): FlowData {
+  return {
+    ...data,
+    storyboardTable: normalizeStoryboardTableMarkdown(data.storyboardTable ?? ""),
+  };
 }
 
 function makeProductionAgentStore(projectId: string) {
@@ -68,7 +76,7 @@ function makeProductionAgentStore(projectId: string) {
         } else if (tag === "scriptPlan") {
           flowData.value.scriptPlan = value ?? "";
         } else if (tag === "storyboardTable") {
-          flowData.value.storyboardTable = value ?? "";
+          flowData.value.storyboardTable = normalizeStoryboardTableMarkdown(value ?? "");
         } else if (tag === "storyboardItem") {
           if (status === "complete") {
             const prompt = attrs.prompt ?? "";
@@ -137,7 +145,7 @@ function makeProductionAgentStore(projectId: string) {
             getHistory();
           });
           s.on("getFlowData", (_, callback) => {
-            const returnData = JSON.parse(JSON.stringify(flowData.value));
+            const returnData = normalizeFlowData(JSON.parse(JSON.stringify(flowData.value)));
             returnData.assets.forEach((item: any) => {
               delete item.prompt;
               delete item.flowId;
@@ -198,6 +206,12 @@ function makeProductionAgentStore(projectId: string) {
               callback({ success: false, message: getRequestErrorMessage(error, "资产图片生成失败") });
             }
           });
+          s.on("assetGenerationStarted", (payload) => {
+            applyAssetGenerationItems(payload?.items);
+          });
+          s.on("assetGenerationFinished", (payload) => {
+            applyAssetGenerationItems(payload?.items);
+          });
           s.on("generateStoryboard", async (data, callback) => {
             try {
               const storyData = await batchGenerateStoryboard(data.ids);
@@ -206,15 +220,32 @@ function makeProductionAgentStore(projectId: string) {
               callback({ success: false, message: getRequestErrorMessage(error, "分镜图片生成失败") });
             }
           });
+          s.on("storyboardGenerationStarted", (payload) => {
+            const items = Array.isArray(payload?.items) ? payload.items : [];
+            if (!items.length) return;
+            if (flowData.value.storyboard.length === 0) {
+              flowData.value.storyboard = items;
+              return;
+            }
+            flowData.value.storyboard.forEach((item) => {
+              const findData = items.find((record: any) => record.id == item.id);
+              if (findData) {
+                item.state = findData.state;
+                item.src = findData.src;
+              }
+            });
+          });
         }
       },
       { immediate: true },
     );
 
     async function setFlowData(scriptId?: number) {
+      const normalizedFlowData = normalizeFlowData(flowData.value);
+      flowData.value.storyboardTable = normalizedFlowData.storyboardTable;
       await axios.post("/production/saveFlowData", {
         projectId: projectId,
-        data: flowData.value,
+        data: normalizedFlowData,
         episodesId: scriptId || episodesId.value,
       });
     }
@@ -224,7 +255,7 @@ function makeProductionAgentStore(projectId: string) {
         projectId: projectId,
         episodesId: episodesId.value,
       });
-      flowData.value = data;
+      flowData.value = normalizeFlowData(data);
     }
     async function batchGenerateStoryboard(allIds: number[], compulsory: boolean = false) {
       const { data } = await axios.post("/production/storyboard/batchGenerateImage", {
@@ -250,6 +281,22 @@ function makeProductionAgentStore(projectId: string) {
       }
       return data;
     }
+    function applyAssetGenerationItems(items: any) {
+      const records = Array.isArray(items) ? items : [];
+      if (!records.length) return;
+      records.forEach((record: { errorReason?: string; id: number; prompt?: string; state: "未生成" | "生成中" | "已完成" | "生成失败"; src: string | null }) => {
+        flowData.value.assets.forEach((asset) => {
+          asset.derive?.forEach((derive) => {
+            if (derive.id === record.id) {
+              derive.state = record.state;
+              derive.src = record.src || "";
+              if (record.prompt) derive.prompt = record.prompt;
+              derive.errorReason = record.errorReason ?? "";
+            }
+          });
+        });
+      });
+    }
     async function batchGenerateAssets(allIds: number[]) {
       const previousStates = new Map<number, "未生成" | "生成中" | "已完成" | "生成失败">();
       flowData.value.assets.forEach((asset) => {
@@ -269,20 +316,7 @@ function makeProductionAgentStore(projectId: string) {
           scriptId: episodesId.value,
           concurrentCount: settingStore().otherSetting.assetsBatchGenereateSize,
         });
-        if (data) {
-          data.forEach((record: { id: number; state: "未生成" | "生成中" | "已完成" | "生成失败"; src: string }) => {
-            flowData.value.assets.forEach((asset) => {
-              if (asset.derive) {
-                asset.derive.forEach((derive) => {
-                  if (derive.id === record.id) {
-                    derive.state = record.state;
-                    derive.src = record.src;
-                  }
-                });
-              }
-            });
-          });
-        }
+        applyAssetGenerationItems(data);
         return data;
       } catch (error) {
         flowData.value.assets.forEach((asset) => {

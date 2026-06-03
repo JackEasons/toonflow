@@ -114,7 +114,7 @@ export async function runDecisionAI(ctx: AgentContext) {
       abortSignal,
       tools: {
         ...memory.getTools(),
-        ...useTools({ resTool: ctx.resTool, msg: ctx.msg }),
+        ...useTools({ resTool: ctx.resTool, msg: ctx.msg, userId: ctx.userId }),
         ...(await createSubAgent(ctx)),
       },
       onFinish: async (completion) => {
@@ -176,7 +176,7 @@ async function createSubAgent(parentCtx: AgentContext) {
         system,
         messages: messages ?? [{ role: "user", content: prompt }],
         abortSignal,
-        tools: { ...extraTools, ...useTools({ resTool, msg: subMsg }) },
+        tools: { ...extraTools, ...useTools({ resTool, msg: subMsg, userId: parentCtx.userId }) },
       });
       const fullResponse = await consumeFullStream(fullStream, subMsg, undefined, heartbeat);
       heartbeat.stop();
@@ -390,7 +390,8 @@ async function createSubAgent(parentCtx: AgentContext) {
       const skill = path.join(u.getPath("skills"), "production_execution_storyboard_table.md");
       const systemPrompt = await fs.promises.readFile(skill, "utf-8");
 
-      const addPrompt = "\n你必须使用如下XML格式写入工作区：\n```\n<storyboardTable>内容</storyboardTable>\n```";
+      const addPrompt =
+        "\n你必须使用如下XML格式写入工作区：\n```\n<storyboardTable>内容</storyboardTable>\n```\n其中 `<storyboardTable>` 内容必须是单个连续 Markdown 表格：表头、分隔线、所有数据行之间不得有空行；每行严格 14 列；单元格内禁止出现 ASCII 竖线 `|`，并列信息请用 `；`、`、` 或中文括号。";
 
       return runAgent({
         key: "productionAgent:storyboardTableAgent",

@@ -23,14 +23,16 @@ description: >-
 | 操作 | 调用 |
 |------|------|
 | 读取资产列表 | `get_flowData("assets")` |
-| 生成资产图片 | `generate_assets_images({ ids: [资产id列表] })` |
+| 生成资产图片 | `generate_deriveAsset({ ids: [资产id列表] })` |
 
 ### 执行流程
 
-1. 获取 `assets`，收集所有需要生成图片的资产 id
-2. 调用 `generate_assets_images({ ids: [资产id列表] })` 生成图片（异步，发起即返回）
+1. 获取 `assets`，收集所有需要生成图片且尚未完成的衍生资产 id
+2. 调用 `generate_deriveAsset({ ids: [资产id列表] })` 生成图片，并等待工具返回最终完成结果
+3. 只有工具返回全部完成后，才可回复“衍生资产图片已全部生成完成”
 
 ### 约束
 
 - 前置条件：衍生资产分析已完成并写入
 - 仅对有衍生状态且尚未生成图片的资产发起生成
+- 不得只回复“已启动”而不等待 `generate_deriveAsset` 的完成结果

@@ -23,16 +23,18 @@ description: >-
 | 操作 | 调用 |
 |------|------|
 | 读取分镜面板 | `get_flowData("storyboard")` |
-| 生成图片 | `generate_storyboard_images({ ids: [分镜ID列表] })` |
+| 生成图片 | `generate_storyboard({ ids: [分镜ID列表] })` |
 
 ### 执行流程
 
 1. 获取 `storyboard`
-2. 提取真实分镜 ID 列表
-3. 调用 `generate_storyboard_images({ ids: [真实分镜ID列表] })` 生成分镜图片（异步，发起即返回）
+2. 提取 `shouldGenerateImage=true` 且 `state!="已完成"` 的真实分镜 ID 列表
+3. 调用 `generate_storyboard({ ids: [真实分镜ID列表] })` 生成分镜图片（服务端异步提交，发起即返回）
+4. 只有 `generate_storyboard` 返回成功后，才可回复“分镜图生成任务已启动”
 
 ### 约束
 
 - 前置条件：分镜面板已写入完成
 - 图片必须与分镜描述匹配
 - 仅使用 `storyboard` 中的真实分镜 ID，禁止编造或复用无效 ID
+- 不得只回复启动状态而不调用 `generate_storyboard`

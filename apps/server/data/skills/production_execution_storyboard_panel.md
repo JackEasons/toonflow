@@ -70,7 +70,7 @@ description: >-
 - **音乐排除**（所有模式）：`videoDesc` 与 `prompt` 中均**禁止包含任何音乐/配乐描述**，仅可承载 `音效` 列对应的环境音/动作音
 - 行数一致性约束：分镜面板 `items` 数量必须与 `storyboardTable` 的分镜数据行数量完全一致（不包含表头与分隔行）
 - 时长一致性约束：分镜面板 `duration` 必须与 `storyboardTable` 对应行时长完全一致
-- 阶段边界：本阶段禁止调用 `generate_storyboard_images`
+- 阶段边界：本阶段禁止调用 `generate_storyboard`
 
 **模式差异化约束：**
 
