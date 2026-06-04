@@ -427,6 +427,17 @@ onMounted(async () => {
     background: #2c2c2e !important;
   }
 
+  :deep(.t-chat__inner.user),
+  :deep(t-chat-item[role="user"]),
+  :deep(t-chat-item[placement="right"]) {
+    width: 100% !important;
+  }
+
+  :deep(.t-chat__inner.user .t-chat__content) {
+    width: 100% !important;
+    align-items: flex-end !important;
+  }
+
   :deep(.t-chat__detail),
   :deep(.t-chat__text--variant--base .t-chat__detail),
   :deep(.t-chat__text--variant--outline .t-chat__detail),
@@ -447,12 +458,15 @@ onMounted(async () => {
   :deep(.t-chat__inner.user .t-chat__text--variant--base .t-chat__detail),
   :deep(t-chat-item[role="user"]::part(t-chat__item__content)),
   :deep(t-chat-item[placement="right"]::part(t-chat__item__content)) {
-    width: max-content !important;
-    max-width: min(340px, 78%) !important;
-    min-width: 64px !important;
+    display: inline-flex !important;
+    width: fit-content !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    margin-left: auto !important;
+    margin-right: 0 !important;
     padding: 0 !important;
     white-space: pre-wrap !important;
-    word-break: normal !important;
+    word-break: keep-all !important;
     overflow-wrap: break-word !important;
     border: 0 !important;
     background: transparent !important;
@@ -473,14 +487,14 @@ onMounted(async () => {
   :deep(t-chat-item[role="user"]::part(t-chat__text--user)),
   :deep(t-chat-item[placement="right"]::part(t-chat__text--user)) {
     display: inline-block !important;
-    width: max-content !important;
+    width: fit-content !important;
     max-width: 100% !important;
-    min-width: 64px !important;
+    min-width: 0 !important;
     padding: 10px 16px !important;
     color: rgba(225, 241, 255, 0.88);
     text-align: left;
     white-space: pre-wrap !important;
-    word-break: normal !important;
+    word-break: keep-all !important;
     overflow-wrap: break-word !important;
     border: 1px solid rgba(255, 255, 255, 0.05) !important;
     border-radius: 14px !important;
