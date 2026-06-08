@@ -9,6 +9,7 @@ dist
 **/.turbo
 dist.zip
 **/dist.zip
+scripts/deploy/build-local-docker-image.log
 docker/data
 docker/www
 docker/server
