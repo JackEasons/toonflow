@@ -641,12 +641,14 @@ async function getVideoList() {
     videoIds: hasGenerateVideoIds.value,
   });
   if (data && data.length) {
-    data.forEach((item: { id: number; state: "生成中" | "未生成" | "已完成" | "生成失败"; src?: string; errorReason?: string }) => {
+    data.forEach((item: { id: number; state: "生成中" | "未生成" | "已完成" | "生成失败"; src?: string; lastFramePath?: string; lastFrameSrc?: string; errorReason?: string }) => {
       for (const track of trackList.value) {
         const findData = track.videoList.find((i) => i.id == item.id);
         if (findData) {
           findData.state = item.state;
           findData.src = item?.src ?? "";
+          findData.lastFramePath = item?.lastFramePath ?? "";
+          findData.lastFrameSrc = item?.lastFrameSrc ?? "";
           findData.errorReason = item?.errorReason ?? "";
           break;
         }

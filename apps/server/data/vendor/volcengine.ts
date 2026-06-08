@@ -79,6 +79,7 @@ interface VideoConfig {
   referenceList?: ReferenceList[];
   audio?: boolean;
   mode: VideoMode[];
+  returnLastFrame?: boolean;
 }
 
 interface TTSConfig {
@@ -93,8 +94,11 @@ interface TTSConfig {
 interface PollResult {
   completed: boolean;
   data?: string;
+  lastFrame?: string;
   error?: string;
 }
+
+type VideoRequestResult = string | { video: string; lastFrame?: string | null };
 
 // ============================================================
 // 全局声明
@@ -121,7 +125,7 @@ declare const exports: {
   vendor: VendorConfig;
   textRequest: (m: TextModel, t: boolean, tl: 0 | 1 | 2 | 3) => any;
   imageRequest: (c: ImageConfig, m: ImageModel) => Promise<string>;
-  videoRequest: (c: VideoConfig, m: VideoModel) => Promise<string>;
+  videoRequest: (c: VideoConfig, m: VideoModel) => Promise<VideoRequestResult>;
   ttsRequest: (c: TTSConfig, m: TTSModel) => Promise<string>;
   checkForUpdates?: () => Promise<{ hasUpdate: boolean; latestVersion: string; notice: string }>;
   updateVendor?: () => Promise<string>;
@@ -133,7 +137,7 @@ declare const exports: {
 
 const vendor: VendorConfig = {
   id: "volcengine",
-  version: "2.3",
+  version: "2.4",
   author: "leeqi",
   name: "火山引擎(豆包)",
   description: "火山引擎豆包大模型，支持文本、图片生成、视频生成等能力。\n\n需要在[火山引擎控制台](https://console.volcengine.com/ark)获取API密钥。",
@@ -284,6 +288,19 @@ const getHeaders = () => {
 };
 
 const getBaseUrl = () => vendor.inputValues.baseUrl.replace(/\/+$/, "");
+
+const supportsReturnLastFrame = (modelName: string): boolean => /seedance-2-0/i.test(modelName);
+
+const extractLastFrameUrl = (task: any): string | undefined => {
+  const candidates = [
+    task?.content?.last_frame_url,
+    task?.content?.last_frame?.url,
+    task?.content?.last_frame,
+    task?.output?.last_frame_url,
+    task?.data?.last_frame_url,
+  ];
+  return candidates.find((value) => typeof value === "string" && value);
+};
 
 // ============================================================
 // 适配器函数
@@ -444,9 +461,10 @@ const imageRequest = async (config: ImageConfig, model: ImageModel): Promise<str
   throw new Error("图片生成失败：未返回有效结果");
 };
 
-const videoRequest = async (config: VideoConfig, model: VideoModel): Promise<string> => {
+const videoRequest = async (config: VideoConfig, model: VideoModel): Promise<VideoRequestResult> => {
   const baseUrl = getBaseUrl();
   const headers = getHeaders();
+  const shouldReturnLastFrame = Boolean(config.returnLastFrame && supportsReturnLastFrame(model.modelName));
 
   const content: any[] = [];
 
@@ -571,6 +589,7 @@ const videoRequest = async (config: VideoConfig, model: VideoModel): Promise<str
     resolution: config.resolution || "720p",
     watermark: false,
   };
+  if (shouldReturnLastFrame) body.return_last_frame = true;
 
   if (model.audio === "optional") {
     body.generate_audio = config.audio !== false;
@@ -601,7 +620,7 @@ const videoRequest = async (config: VideoConfig, model: VideoModel): Promise<str
       switch (task.status) {
         case "succeeded":
           if (task.content?.video_url) {
-            return { completed: true, data: task.content.video_url };
+            return { completed: true, data: task.content.video_url, lastFrame: extractLastFrameUrl(task) };
           }
           return { completed: true, error: "任务成功但未返回视频URL" };
         case "failed":
@@ -622,7 +641,15 @@ const videoRequest = async (config: VideoConfig, model: VideoModel): Promise<str
     throw new Error(result.error);
   }
 
-  return await urlToBase64(result.data!);
+  const video = await urlToBase64(result.data!);
+  if (shouldReturnLastFrame && result.lastFrame) {
+    try {
+      return { video, lastFrame: await urlToBase64(result.lastFrame) };
+    } catch (error) {
+      logger(`[视频生成] 尾帧下载失败，已返回视频结果: ${String((error as any)?.message || error)}`);
+    }
+  }
+  return video;
 };
 
 const ttsRequest = async (config: TTSConfig, model: TTSModel): Promise<string> => {
@@ -630,7 +657,7 @@ const ttsRequest = async (config: TTSConfig, model: TTSModel): Promise<string> =
 };
 
 const checkForUpdates = async (): Promise<{ hasUpdate: boolean; latestVersion: string; notice: string }> => {
-  return { hasUpdate: false, latestVersion: "2.0", notice: "" };
+  return { hasUpdate: false, latestVersion: "2.4", notice: "" };
 };
 
 const updateVendor = async (): Promise<string> => {

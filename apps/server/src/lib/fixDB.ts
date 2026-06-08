@@ -101,6 +101,7 @@ export default async (knex: Knex): Promise<void> => {
   await addColumn("o_video", "prompt", "text");
   await addColumn("o_video", "negativePrompt", "text");
   await addColumn("o_video", "storageProvider", "string");
+  await addColumn("o_video", "lastFramePath", "text");
   await addColumn("o_videoTrack", "negativePrompt", "text");
   await addColumn("o_imageFlow", "projectId", "bigInteger");
   await addColumn("o_user", "realName", "text");
@@ -409,7 +410,7 @@ export default async (knex: Knex): Promise<void> => {
   await dropColumn("o_vendorConfig", "createTime");
 
   const volcengineVer = getVendorVersion(vendorDir, "volcengine");
-  if (Number(volcengineVer) < 2.3) {
+  if (Number(volcengineVer) < 2.4) {
     writeVendorCode(vendorDir, "volcengine", vendorData["volcengine.ts"]);
   }
   const minimaxVer = getVendorVersion(vendorDir, "minimax");

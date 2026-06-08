@@ -3,6 +3,7 @@ import u from "@/utils";
 export interface PromptSourceInfo {
   id: number;
   sources: string;
+  slotType?: string;
 }
 
 interface VideoPromptAsset {
@@ -66,7 +67,7 @@ function uniqueSources(items: PromptSourceInfo[]): PromptSourceInfo[] {
   items.forEach((item) => {
     const id = Number(item.id);
     if (!Number.isFinite(id)) return;
-    const source = { id, sources: item.sources || "storyboard" };
+    const source = { id, sources: item.sources || "storyboard", slotType: item.slotType };
     const key = sourceKey(source);
     if (seen.has(key)) return;
     seen.add(key);

@@ -40,8 +40,8 @@ describe("videoUploadSources", () => {
 
     expect(ordered.map((item) => item.id)).toEqual([4, 9, 5]);
     expect(buildVideoReferenceInfoForMode(ordered, "startFrameOptional")).toEqual([
-      { id: 4, sources: "storyboard" },
-      { id: 9, sources: "storyboard" },
+      { id: 4, sources: "storyboard", slotType: "startImage" },
+      { id: 9, sources: "storyboard", slotType: "endImage" },
     ]);
   });
 });

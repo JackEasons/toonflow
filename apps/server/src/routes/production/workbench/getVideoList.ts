@@ -24,6 +24,7 @@ export default router.post(
           videoList.map(async (s) => ({
             ...s,
             src: s.filePath ? await u.oss.getSmallImageUrl(s.filePath) : "",
+            lastFrameSrc: s.lastFramePath ? await u.oss.getSmallImageUrl(s.lastFramePath) : "",
           })),
         ),
       ),

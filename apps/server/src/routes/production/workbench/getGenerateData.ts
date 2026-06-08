@@ -229,6 +229,8 @@ export default router.post(
             .map(async (v) => ({
               id: v.id!,
               src: v.filePath ? await u.oss.getFileUrl(v.filePath) : "",
+              lastFramePath: v.lastFramePath ?? "",
+              lastFrameSrc: v.lastFramePath ? await u.oss.getFileUrl(v.lastFramePath) : "",
               state: v.state === "已完成" ? "已完成" : v.state === "生成中" ? "生成中" : v.state === "生成失败" ? "生成失败" : "未生成",
               errorReason: v?.errorReason ?? "",
             })),

@@ -8,6 +8,7 @@ import { ReferenceList } from "@/utils/ai";
 import { resolveNegativePrompt } from "@/utils/negativePrompt";
 import { quoteModelCalls, releasePointHold, reserveModelCallPoints, settlePointHold } from "@/utils/modelBilling";
 import { appendVideoConsistencyGuard, buildVideoPromptSources, buildVideoReferenceSources, loadVideoPromptContext } from "@/utils/videoPromptContext";
+import { saveGeneratedVideoOutputs, shouldRequestVideoLastFrame } from "@/utils/videoGenerationContinuity";
 const router = express.Router();
 
 export default router.post(
@@ -19,6 +20,7 @@ export default router.post(
       z.object({
         id: z.number(),
         sources: z.string(),
+        slotType: z.string().optional(),
       }),
     ),
     prompt: z.string(),
@@ -59,6 +61,8 @@ export default router.post(
         modeData = JSON.parse(mode);
       } catch (e) {}
     }
+    const resolvedMode = modeData.length > 0 ? modeData : mode;
+    const returnLastFrame = shouldRequestVideoLastFrame(model, resolvedMode);
     //获取生成视频比例
     const project = await u.db("o_project").select("videoRatio", "artStyle").where("id", projectId).first();
     const negativePromptSource = u.getArtPrompt(project?.artStyle ?? "", "art_skills", "director_storyboard");
@@ -149,11 +153,12 @@ export default router.post(
           negativePrompt,
           negativePromptSource,
           referenceList: base64.filter(Boolean) as ReferenceList[],
-          mode: modeData.length > 0 ? modeData : mode,
+          mode: resolvedMode,
           duration,
           aspectRatio: (project?.videoRatio as "16:9" | "9:16") || "16:9",
           resolution,
           audio,
+          returnLastFrame,
         },
         {
           projectId,
@@ -162,9 +167,12 @@ export default router.post(
           relatedObjects: JSON.stringify(relatedObjects),
         },
       )
-      .then(async () => await aiVideo.save(videoPath, storageProvider))
-      .then(async () => await settlePointHold(billingHold?.id))
-      .then(async () => await u.db("o_video").where("id", videoId).update({ state: "生成成功" }))
+      .then(async () => {
+        const outputs = await saveGeneratedVideoOutputs({ aiVideo, projectId, storageProvider, videoPath });
+        await settlePointHold(billingHold?.id);
+        return outputs;
+      })
+      .then(async ({ lastFramePath }) => await u.db("o_video").where("id", videoId).update({ state: "生成成功", lastFramePath }))
       .catch(async (error: any) => {
         await releasePointHold(billingHold?.id);
         await u

@@ -514,6 +514,7 @@ export default async (knex: Knex, forceInit: boolean = false): Promise<void> => 
       builder: (table) => {
         table.bigIncrements("id");
         table.text("filePath");
+        table.text("lastFramePath");
         table.string("storageProvider");
         table.text("errorReason");
         table.bigInteger("time");

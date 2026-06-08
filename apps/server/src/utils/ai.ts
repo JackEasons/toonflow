@@ -256,6 +256,17 @@ function referenceList2imageBase642(id: string, input: any) {
 }
 
 export type ReferenceList = { type: "image"; base64: string } | { type: "audio"; base64: string } | { type: "video"; base64: string };
+type VideoRequestResult = string | { video: string; lastFrame?: string | null };
+
+async function normalizeVideoMediaResult(value?: string | null) {
+  if (!value) return "";
+  if (value.startsWith("http")) return await urlToBase64(value);
+  return value;
+}
+
+function isVideoRequestResult(value: unknown): value is { video: string; lastFrame?: string | null } {
+  return Boolean(value && typeof value === "object" && typeof (value as { video?: unknown }).video === "string");
+}
 
 interface ImageConfig {
   prompt: string;
@@ -377,11 +388,13 @@ interface VideoConfig {
   referenceList?: ReferenceList[];
   audio?: boolean;
   mode: VideoMode[];
+  returnLastFrame?: boolean;
 }
 
 class AiVideo {
   private key: `${string}:${string}`;
   private result: string = "";
+  private lastFrameResult: string = "";
   constructor(key: `${string}:${string}`) {
     this.key = key;
   }
@@ -393,9 +406,14 @@ class AiVideo {
         const requestInput = withNegativePrompt(input, { mediaType: "video", modelKey: mn });
         await referenceList2imageBase642(mn.split(/:(.+)/)[0], requestInput);
 
-        this.result = await fn(requestInput);
-
-        if (this.result.startsWith("http")) this.result = await urlToBase64(this.result);
+        const result = (await fn(requestInput)) as VideoRequestResult;
+        if (isVideoRequestResult(result)) {
+          this.result = await normalizeVideoMediaResult(result.video);
+          this.lastFrameResult = await normalizeVideoMediaResult(result.lastFrame);
+        } else {
+          this.result = await normalizeVideoMediaResult(result);
+          this.lastFrameResult = "";
+        }
       };
       if (taskRecord) {
         await withTaskRecord(this.key, taskRecord.taskClass, taskRecord.describe, taskRecord.relatedObjects, taskRecord.projectId, exec, (mn) =>
@@ -412,6 +430,14 @@ class AiVideo {
   async save(path: string, storageProvider = u.oss.getStorageProvider()) {
     await u.oss.writeFile(path, this.result, storageProvider);
     return this;
+  }
+  hasLastFrame() {
+    return Boolean(this.lastFrameResult);
+  }
+  async saveLastFrame(path: string, storageProvider = u.oss.getStorageProvider()) {
+    if (!this.lastFrameResult) return false;
+    await u.oss.writeFile(path, this.lastFrameResult, storageProvider);
+    return true;
   }
 }
 class AiAudio {

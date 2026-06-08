@@ -5,10 +5,25 @@ import { v4 as uuidv4 } from "uuid";
 import { success, error } from "@/lib/responseFormat";
 import { validateFields } from "@/middleware/middleware";
 import { ReferenceList } from "@/utils/ai";
+import type { OssStorageProvider } from "@/utils/oss";
 import { resolveNegativePrompt } from "@/utils/negativePrompt";
 import { quoteModelCalls, releasePointHold, reserveModelCallPoints, settlePointHold } from "@/utils/modelBilling";
 import { appendVideoConsistencyGuard, buildVideoPromptSources, buildVideoReferenceSources, loadVideoPromptContext } from "@/utils/videoPromptContext";
+import { saveGeneratedVideoOutputs, shouldRequestVideoLastFrame, withChainedFirstFrame } from "@/utils/videoGenerationContinuity";
 const router = express.Router();
+
+type BatchVideoImageSource = { path?: string | null; sources?: string | null } | null | undefined;
+type BatchVideoTask = {
+  billingHold: null | { id?: string };
+  duration: number;
+  images: BatchVideoImageSource[];
+  negativePrompt?: string;
+  prompt: string;
+  storageProvider: OssStorageProvider;
+  trackId: number;
+  videoId: number;
+  videoPath: string;
+};
 
 export default router.post(
   "/",
@@ -21,6 +36,7 @@ export default router.post(
           z.object({
             id: z.number(),
             sources: z.string(),
+            slotType: z.string().optional(),
           }),
         ),
         trackId: z.number(),
@@ -62,13 +78,15 @@ export default router.post(
         modeData = JSON.parse(mode);
       } catch (e) {}
     }
+    const resolvedMode = modeData.length > 0 ? modeData : mode;
+    const returnLastFrame = shouldRequestVideoLastFrame(model, resolvedMode);
 
     // 获取生成视频比例
     const project = await u.db("o_project").select("videoRatio", "artStyle").where("id", projectId).first();
     const negativePromptSource = u.getArtPrompt(project?.artStyle ?? "", "art_skills", "director_storyboard");
 
     // 为每个 track 预处理数据并插入数据库，返回任务列表
-    const tasks = [];
+    const tasks: BatchVideoTask[] = [];
     const reservedHolds: Array<null | { id: string }> = [];
     try {
       for (const track of trackData as { uploadData: { id: number; sources: string }[]; trackId: number; prompt: string; duration: number }[]) {
@@ -142,14 +160,17 @@ export default router.post(
     }
 
     res.status(200).send(success(tasks.map((t) => ({ videoId: t.videoId, trackId: t.trackId }))));
-    for (const { billingHold, videoId, videoPath, storageProvider, prompt, negativePrompt, duration, images } of tasks) {
-      // 所有任务全部并发后台执行，完全不阻塞任何进程
+    const runVideoTask = async (
+      { billingHold, videoId, videoPath, storageProvider, prompt, negativePrompt, duration, images }: (typeof tasks)[number],
+      chainedFirstFrame?: string | null,
+    ) => {
       const base64 = await Promise.all(
         images.map(async (item) => {
-          if (!item) return null;
+          if (!item?.path) return null;
           return { base64: await u.oss.getImageBase64(item.path), type: item.sources == "audio" ? "audio" : "image" };
         }),
       );
+      const referenceList = withChainedFirstFrame(base64.filter(Boolean) as ReferenceList[], chainedFirstFrame);
       const relatedObjects = {
         billingHoldId: billingHold?.id || null,
         billingRelatedId: videoId,
@@ -162,18 +183,19 @@ export default router.post(
         negativePrompt,
       };
       const aiVideo = u.Ai.Video(model);
-      aiVideo
-        .run(
+      try {
+        await aiVideo.run(
           {
             prompt,
             negativePrompt,
             negativePromptSource,
-            referenceList: base64.filter(Boolean) as ReferenceList[],
-            mode: modeData.length > 0 ? modeData : mode,
+            referenceList,
+            mode: resolvedMode,
             duration,
             aspectRatio: (project?.videoRatio as "16:9" | "9:16") || "16:9",
             resolution,
             audio,
+            returnLastFrame,
           },
           {
             projectId,
@@ -181,20 +203,43 @@ export default router.post(
             describe: "根据提示词生成视频",
             relatedObjects: JSON.stringify(relatedObjects),
           },
-        )
-        .then(async () => await aiVideo.save(videoPath, storageProvider))
-        .then(async () => await settlePointHold(billingHold?.id))
-        .then(async () => await u.db("o_video").where("id", videoId).update({ state: "生成成功" }))
-        .catch(async (error: any) => {
-          await releasePointHold(billingHold?.id);
-          await u
-            .db("o_video")
-            .where("id", videoId)
-            .update({
-              state: "生成失败",
-              errorReason: u.error(error).message,
-            });
-        });
+        );
+        const outputs = await saveGeneratedVideoOutputs({ aiVideo, projectId, storageProvider, videoPath });
+        await settlePointHold(billingHold?.id);
+        await u.db("o_video").where("id", videoId).update({ state: "生成成功", lastFramePath: outputs.lastFramePath });
+        if (!outputs.lastFramePath) return null;
+        try {
+          return await u.oss.getImageBase64(outputs.lastFramePath, storageProvider);
+        } catch (error) {
+          console.warn("[视频生成] 读取尾帧用于续接失败，后续任务将使用原参考图:", error);
+          return null;
+        }
+      } catch (error: any) {
+        await releasePointHold(billingHold?.id);
+        await u
+          .db("o_video")
+          .where("id", videoId)
+          .update({
+            state: "生成失败",
+            errorReason: u.error(error).message,
+          });
+        return null;
+      }
+    };
+
+    if (returnLastFrame) {
+      void (async () => {
+        let previousLastFrame: string | null = null;
+        for (const task of tasks) {
+          previousLastFrame = await runVideoTask(task, previousLastFrame);
+        }
+      })();
+      return;
+    }
+
+    for (const task of tasks) {
+      // 默认仍按原逻辑并发后台执行，完全不阻塞任何进程。
+      void runVideoTask(task);
     }
   },
 );

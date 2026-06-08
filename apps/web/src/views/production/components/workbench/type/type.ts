@@ -61,6 +61,8 @@ declare global {
   interface VideoItem {
     id: number;
     src: string;
+    lastFramePath?: string | null;
+    lastFrameSrc?: string | null;
     state: "未生成" | "生成中" | "已完成" | "生成失败";
     errorReason?: string | null;
   }
@@ -91,6 +93,8 @@ declare global {
   interface HistoryVideoItem {
     errorReason?: string | null;
     src: string;
+    lastFramePath?: string | null;
+    lastFrameSrc?: string | null;
     id: number;
     duration?: number | string | null;
     projectId?: number | null;

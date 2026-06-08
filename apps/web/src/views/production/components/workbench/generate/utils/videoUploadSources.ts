@@ -3,6 +3,7 @@ import "#/views/production/components/workbench/type/type";
 export type PromptSourceInfo = Array<{
   id: number | null | undefined;
   sources: string | undefined;
+  slotType?: Type;
 }>;
 
 const FRAME_VIDEO_MODES = new Set(["startEndRequired", "endFrameOptional", "startFrameOptional"]);
@@ -57,7 +58,7 @@ function toSourceInfo(items: Array<UploadItem | TrackMedia>): PromptSourceInfo {
     const key = `${sources}:${item.id}`;
     if (seen.has(key)) return;
     seen.add(key);
-    result.push({ id: item.id, sources });
+    result.push({ id: item.id, sources, slotType: item.slotType });
   });
   return result;
 }
