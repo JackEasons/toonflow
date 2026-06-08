@@ -97,11 +97,15 @@ export async function buildVideoPromptSources(
 ): Promise<PromptSourceInfo[]> {
   const parsedMode = parseVideoMode(options.mode);
   const base = uniqueSources(info);
+  if (base.length) return base;
+
   const trackStoryboards = await loadTrackStoryboardSources(options.trackId);
-  if (typeof parsedMode === "string" && (parsedMode === "singleImage" || FRAME_VIDEO_MODES.has(parsedMode))) {
-    return uniqueSources([...trackStoryboards, ...base]);
+  if (typeof parsedMode === "string") {
+    if (parsedMode === "singleImage") return trackStoryboards.slice(0, 1);
+    if (FRAME_VIDEO_MODES.has(parsedMode)) return trackStoryboards.slice(0, 2);
+    if (parsedMode === "text") return trackStoryboards.slice(0, 1);
   }
-  return uniqueSources([...base, ...trackStoryboards]);
+  return trackStoryboards;
 }
 
 export async function buildVideoReferenceSources(
@@ -112,17 +116,14 @@ export async function buildVideoReferenceSources(
   if (parsedMode === "text") return [];
 
   const base = uniqueSources(info);
-  const trackStoryboards = await loadTrackStoryboardSources(options.trackId, true);
-  const storyboardRefs = uniqueSources([...trackStoryboards, ...base.filter((item) => item.sources === "storyboard")]);
-
-  if (parsedMode === "singleImage") return storyboardRefs[0] ? [storyboardRefs[0]] : base.slice(0, 1);
+  if (parsedMode === "singleImage") return base.length ? base.slice(0, 1) : (await loadTrackStoryboardSources(options.trackId, true)).slice(0, 1);
   if (isFrameVideoMode(parsedMode)) {
-    if (storyboardRefs.length >= 2) return [storyboardRefs[0], storyboardRefs[storyboardRefs.length - 1]];
-    if (storyboardRefs.length === 1) return [storyboardRefs[0]];
-    return base.slice(0, 2);
+    if (base.length) return base.slice(0, 2);
+    return (await loadTrackStoryboardSources(options.trackId, true)).slice(0, 2);
   }
 
-  return uniqueSources([...base, ...trackStoryboards]);
+  if (base.length) return base;
+  return loadTrackStoryboardSources(options.trackId, true);
 }
 
 interface VideoPromptSequenceItem {

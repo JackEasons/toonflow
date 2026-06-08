@@ -120,7 +120,22 @@ const imageList = defineModel<UploadItem[]>({
 const storyboardDialogVisible = ref(false);
 
 /** 空占位项，用于首尾帧模式中未设置的槽位 */
-const EMPTY_SLOT: UploadItem = { fileType: "image", id: null, src: "" } as any;
+function createEmptySlot(slot: "start" | "end"): UploadItem {
+  return {
+    fileType: "image",
+    id: null,
+    slotType: slot === "start" ? "startImage" : "endImage",
+    src: "",
+  } as UploadItem;
+}
+
+function withFrameSlot(item: UploadItem, slot: "start" | "end"): UploadItem {
+  return {
+    ...item,
+    slotType: slot === "start" ? "startImage" : "endImage",
+  };
+}
+
 function isEmptySlot(item: UploadItem | undefined): boolean {
   return !item || !item.id;
 }
@@ -137,14 +152,16 @@ const buildLabel = computed(() => {
 /** 确保 imageList 始终有两个槽位（首帧 index=0，尾帧 index=1） */
 function ensureFrameSlots(): UploadItem[] {
   const list = [...imageList.value];
-  while (list.length < 2) list.push({ ...EMPTY_SLOT });
+  while (list.length < 2) list.push(createEmptySlot(list.length === 0 ? "start" : "end"));
+  list[0] = withFrameSlot(list[0] ?? createEmptySlot("start"), "start");
+  list[1] = withFrameSlot(list[1] ?? createEmptySlot("end"), "end");
   return list;
 }
 
 /** 将 item 设置到首帧或尾帧槽位 */
 function setFrameSlot(slot: "start" | "end", item: UploadItem) {
   const list = ensureFrameSlots();
-  list[slot === "start" ? 0 : 1] = item;
+  list[slot === "start" ? 0 : 1] = withFrameSlot(item, slot);
   imageList.value = list;
 }
 
@@ -247,7 +264,7 @@ function handleMixedAdd(slot: "start" | "end" | "" = "") {
 }
 function clearImage(index: number) {
   const list = ensureFrameSlots();
-  list[index] = { ...EMPTY_SLOT };
+  list[index] = createEmptySlot(index === 0 ? "start" : "end");
   imageList.value = list;
 }
 /** 分镜弹窗选中回调 */

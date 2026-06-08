@@ -6,6 +6,10 @@ export type PromptSourceInfo = Array<{
 }>;
 
 const FRAME_VIDEO_MODES = new Set(["startEndRequired", "endFrameOptional", "startFrameOptional"]);
+const FRAME_SLOT_RANK: Partial<Record<Type, number>> = {
+  startImage: 0,
+  endImage: 1,
+};
 
 function parseVideoMode(value: string): VideoMode | null {
   if (!value) return null;
@@ -35,6 +39,11 @@ function byStoryboardIndex(a: UploadItem | TrackMedia, b: UploadItem | TrackMedi
   return getStoryboardIndex(a) - getStoryboardIndex(b);
 }
 
+function getFrameSlotRank(item: UploadItem | TrackMedia): number | null {
+  const rank = item.slotType ? FRAME_SLOT_RANK[item.slotType] : undefined;
+  return typeof rank === "number" ? rank : null;
+}
+
 function isUsable(item: UploadItem | TrackMedia, filterEmpty: boolean): boolean {
   return item.id != null && (!filterEmpty || Boolean(item.src));
 }
@@ -54,25 +63,34 @@ function toSourceInfo(items: Array<UploadItem | TrackMedia>): PromptSourceInfo {
 }
 
 function selectFrameItems(items: Array<UploadItem | TrackMedia>, mode: VideoMode | null): Array<UploadItem | TrackMedia> {
-  const storyboards = items.filter(isStoryboard).sort(byStoryboardIndex);
+  const storyboards = items.filter(isStoryboard);
   if (mode === "singleImage") return storyboards[0] ? [storyboards[0]] : items.slice(0, 1);
   if (!isFrameVideoMode(mode)) return items;
-  if (storyboards.length >= 2) return [storyboards[0], storyboards[storyboards.length - 1]];
-  if (storyboards.length === 1) return [storyboards[0]];
+  const slotted = items
+    .filter((item) => getFrameSlotRank(item) != null)
+    .sort((a, b) => getFrameSlotRank(a)! - getFrameSlotRank(b)!);
+  if (slotted.length) return slotted.slice(0, 2);
+  if (storyboards.length) return storyboards.slice(0, 2);
   return items.slice(0, 2);
 }
 
 export function orderUploadItemsForMode(items: UploadItem[], modeValue: string): UploadItem[] {
   const mode = parseVideoMode(modeValue);
   const frameLike = mode === "singleImage" || isFrameVideoMode(mode);
-  return [...items].sort((a, b) => {
-    const priority = (item: UploadItem) => {
-      if (!item.src) return 2;
-      if (frameLike) return isStoryboard(item) ? 0 : 1;
-      return item.sources === "assets" ? 0 : 1;
-    };
-    return priority(a) - priority(b) || byStoryboardIndex(a, b);
-  });
+  return items
+    .map((item, index) => ({ index, item }))
+    .sort((a, b) => {
+      const priority = ({ item }: { item: UploadItem }) => {
+        const slotRank = getFrameSlotRank(item);
+        if (slotRank != null) return slotRank;
+        if (frameLike && !item.src) return 4;
+        if (frameLike) return isStoryboard(item) ? 2 : 3;
+        if (!item.src) return 2;
+        return item.sources === "assets" ? 0 : 1;
+      };
+      return priority(a) - priority(b) || byStoryboardIndex(a.item, b.item) || a.index - b.index;
+    })
+    .map(({ item }) => item);
 }
 
 export function buildPromptSourceInfoForMode(items: Array<UploadItem | TrackMedia>, modeValue: string): PromptSourceInfo {
